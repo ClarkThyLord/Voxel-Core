@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://addons/VoxelCore/assets/add.png" type="Texture" id=1]
+[ext_resource path="res://addons/VoxelCore/assets/remove.png" type="Texture" id=2]
+[ext_resource path="res://addons/VoxelCore/assets/paint.png" type="Texture" id=3]
+[ext_resource path="res://addons/VoxelCore/assets/picker.png" type="Texture" id=4]
+[ext_resource path="res://addons/VoxelCore/src/VoxelEditorGUI/components/ToolSelector/ToolSelector.gd" type="Script" id=5]
+
+[node name="ToolSelector" type="OptionButton"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -940.0
+margin_bottom = -578.0
+hint_tooltip = "Add Tool       :   (key : a)
+Add voxels to VoxelObject"
+text = "Add"
+items = [ "Add", ExtResource( 1 ), false, 0, null, "Remove", ExtResource( 2 ), false, 1, null, "Paint", ExtResource( 3 ), false, 2, null, "Color Picker", ExtResource( 4 ), false, 3, null ]
+selected = 0
+script = ExtResource( 5 )
+[connection signal="item_selected" from="." to="." method="set_tooltip"]

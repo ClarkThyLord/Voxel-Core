@@ -1,0 +1,404 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://addons/VoxelCore/src/VoxelEditorGUI/VoxelEditorGUI.default.gd" type="Script" id=1]
+[ext_resource path="res://addons/VoxelCore/src/VoxelObject.gd" type="Script" id=2]
+[ext_resource path="res://addons/VoxelCore/assets/VoxelCore.png" type="Texture" id=3]
+[ext_resource path="res://addons/VoxelCore/src/VoxelEditorGUI/components/ToolSelector/ToolSelector.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_x.png" type="Texture" id=5]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_y.png" type="Texture" id=6]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_z.png" type="Texture" id=7]
+[ext_resource path="res://addons/VoxelCore/assets/settings.png" type="Texture" id=8]
+[ext_resource path="res://addons/VoxelCore/src/VoxelEditorGUI/components/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=9]
+[ext_resource path="res://addons/VoxelCore/assets/Godot.png" type="Texture" id=10]
+[ext_resource path="res://addons/VoxelCore/assets/visible.png" type="Texture" id=11]
+
+[sub_resource type="ProceduralSky" id=1]
+
+[sub_resource type="Environment" id=2]
+background_mode = 3
+background_sky = SubResource( 1 )
+background_color = Color( 0.372549, 0.792157, 0.886275, 1 )
+
+[node name="VoxelEditorDefault" type="Control"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="root" type="PanelContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="root"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 593.0
+
+[node name="ViewportContainer" type="ViewportContainer" parent="root/VBoxContainer"]
+margin_right = 1010.0
+margin_bottom = 544.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="Viewport" type="Viewport" parent="root/VBoxContainer/ViewportContainer"]
+size = Vector2( 1010, 544 )
+own_world = true
+handle_input_locally = false
+render_target_update_mode = 0
+
+[node name="Origin" type="Spatial" parent="root/VBoxContainer/ViewportContainer/Viewport"]
+
+[node name="Camera" type="Camera" parent="root/VBoxContainer/ViewportContainer/Viewport/Origin"]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 5, 5 )
+environment = SubResource( 2 )
+current = true
+
+[node name="DirectionalLight" type="DirectionalLight" parent="root/VBoxContainer/ViewportContainer/Viewport/Origin/Camera"]
+shadow_enabled = true
+
+[node name="VoxelObject" type="MeshInstance" parent="root/VBoxContainer/ViewportContainer/Viewport"]
+script = ExtResource( 2 )
+__meta__ = {
+"Voxels": {
+
+},
+"_editor_icon": ExtResource( 3 )
+}
+BuildBody = true
+
+[node name="toolbar" type="PanelContainer" parent="root/VBoxContainer"]
+margin_top = 548.0
+margin_right = 1010.0
+margin_bottom = 586.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="root/VBoxContainer/toolbar"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1003.0
+margin_bottom = 31.0
+
+[node name="tools" type="HBoxContainer" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+margin_right = 116.0
+margin_bottom = 24.0
+
+[node name="ToolSelector" parent="root/VBoxContainer/toolbar/HBoxContainer/tools" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 84.0
+margin_bottom = 24.0
+hint_tooltip = "Add Tool       :   (key : a)
+Add voxels to VoxelObject"
+
+[node name="color" type="ColorPickerButton" parent="root/VBoxContainer/toolbar/HBoxContainer/tools"]
+margin_left = 88.0
+margin_right = 116.0
+margin_bottom = 24.0
+hint_tooltip = "Paint Color : (key : c)
+Set the paint color for voxels"
+text = "PC"
+color = Color( 1, 1, 1, 1 )
+
+[node name="HSplitContainer" type="VSeparator" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+margin_left = 120.0
+margin_right = 124.0
+margin_bottom = 24.0
+
+[node name="voxels" type="HBoxContainer" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+editor/display_folded = true
+margin_left = 128.0
+margin_right = 200.0
+margin_bottom = 24.0
+
+[node name="view" type="Button" parent="root/VBoxContainer/toolbar/HBoxContainer/voxels"]
+margin_right = 72.0
+margin_bottom = 24.0
+text = "Voxels"
+icon = ExtResource( 3 )
+
+[node name="HSplitContainer2" type="VSeparator" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+margin_left = 204.0
+margin_right = 208.0
+margin_bottom = 24.0
+
+[node name="mirror" type="HBoxContainer" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+editor/display_folded = true
+margin_left = 212.0
+margin_right = 516.0
+margin_bottom = 24.0
+
+[node name="x" type="CheckBox" parent="root/VBoxContainer/toolbar/HBoxContainer/mirror"]
+margin_right = 99.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror X : (key : q)
+Mirror actions over X axis"
+text = "Mirror X"
+icon = ExtResource( 5 )
+
+[node name="y" type="CheckBox" parent="root/VBoxContainer/toolbar/HBoxContainer/mirror"]
+margin_left = 103.0
+margin_right = 201.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror Y : (key : w)
+Mirror actions over Y axis"
+text = "Mirror Y"
+icon = ExtResource( 6 )
+
+[node name="z" type="CheckBox" parent="root/VBoxContainer/toolbar/HBoxContainer/mirror"]
+margin_left = 205.0
+margin_right = 304.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror Z : (key : e)
+Mirror actions over Z axis"
+text = "Mirror Z"
+icon = ExtResource( 7 )
+
+[node name="HSplitContainer3" type="VSeparator" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+margin_left = 520.0
+margin_right = 524.0
+margin_bottom = 24.0
+
+[node name="editor" type="HBoxContainer" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+editor/display_folded = true
+margin_left = 528.0
+margin_right = 609.0
+margin_bottom = 24.0
+
+[node name="settings" type="Button" parent="root/VBoxContainer/toolbar/HBoxContainer/editor"]
+margin_right = 81.0
+margin_bottom = 24.0
+text = "Settings"
+icon = ExtResource( 8 )
+
+[node name="HSplitContainer4" type="VSeparator" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+margin_left = 613.0
+margin_right = 617.0
+margin_bottom = 24.0
+
+[node name="options" type="HBoxContainer" parent="root/VBoxContainer/toolbar/HBoxContainer"]
+margin_left = 621.0
+margin_right = 725.0
+margin_bottom = 24.0
+
+[node name="commit" type="Button" parent="root/VBoxContainer/toolbar/HBoxContainer/options"]
+margin_right = 46.0
+margin_bottom = 24.0
+hint_tooltip = "Submit the changes to the VoxelObject"
+text = "Done"
+
+[node name="clear" type="Button" parent="root/VBoxContainer/toolbar/HBoxContainer/options"]
+margin_left = 50.0
+margin_right = 104.0
+margin_bottom = 24.0
+hint_tooltip = "Cacel the changes to the VoxelObject"
+text = "Cancel"
+
+[node name="VoxelSetViewer" parent="." instance=ExtResource( 9 )]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 14.0
+margin_top = -110.0
+margin_right = -14.0
+margin_bottom = -60.0
+
+[node name="editor_settings" type="WindowDialog" parent="."]
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -130.0
+margin_top = -110.0
+margin_right = 131.0
+margin_bottom = 93.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+window_title = "Editor Settings"
+
+[node name="CenterContainer" type="VBoxContainer" parent="editor_settings"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -114.0
+margin_top = -79.0
+margin_right = 114.0
+margin_bottom = 79.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Label3" type="Label" parent="editor_settings/CenterContainer"]
+margin_right = 228.0
+margin_bottom = 14.0
+text = "Editor:"
+align = 1
+valign = 1
+
+[node name="HSeparator" type="HSeparator" parent="editor_settings/CenterContainer"]
+margin_top = 18.0
+margin_right = 228.0
+margin_bottom = 22.0
+
+[node name="editor" type="HBoxContainer" parent="editor_settings/CenterContainer"]
+margin_top = 26.0
+margin_right = 228.0
+margin_bottom = 50.0
+alignment = 1
+
+[node name="custom_editor" type="CheckBox" parent="editor_settings/CenterContainer/editor"]
+margin_left = 14.0
+margin_right = 152.0
+margin_bottom = 24.0
+hint_tooltip = "Custom editor toggle
+true  : use default VoxelEditorGUI in-engine
+false : use plugin dock in-engine"
+text = "Custom Editor"
+icon = ExtResource( 10 )
+
+[node name="color" type="ColorPickerButton" parent="editor_settings/CenterContainer/editor"]
+margin_left = 156.0
+margin_right = 213.0
+margin_bottom = 24.0
+hint_tooltip = "Background color
+Change background color"
+text = "COLOR"
+color = Color( 1, 1, 1, 1 )
+
+[node name="Label" type="Label" parent="editor_settings/CenterContainer"]
+margin_top = 54.0
+margin_right = 228.0
+margin_bottom = 68.0
+text = "Cursor(s):"
+align = 1
+valign = 1
+
+[node name="HSeparator3" type="HSeparator" parent="editor_settings/CenterContainer"]
+margin_top = 72.0
+margin_right = 228.0
+margin_bottom = 76.0
+
+[node name="cursor" type="HBoxContainer" parent="editor_settings/CenterContainer"]
+margin_top = 80.0
+margin_right = 228.0
+margin_bottom = 104.0
+alignment = 1
+
+[node name="visible" type="CheckBox" parent="editor_settings/CenterContainer/cursor"]
+margin_left = 38.0
+margin_right = 129.0
+margin_bottom = 24.0
+hint_tooltip = "Cursor visibility toggle
+Toggle cursor visibility"
+pressed = true
+text = "Visible"
+icon = ExtResource( 11 )
+
+[node name="color" type="ColorPickerButton" parent="editor_settings/CenterContainer/cursor"]
+margin_left = 133.0
+margin_right = 190.0
+margin_bottom = 24.0
+hint_tooltip = "Cursor Color
+Change cursor color"
+text = "COLOR"
+color = Color( 0, 1, 0, 1 )
+
+[node name="VSplitContainer" type="VSplitContainer" parent="editor_settings/CenterContainer"]
+margin_top = 108.0
+margin_right = 228.0
+margin_bottom = 108.0
+
+[node name="Label2" type="Label" parent="editor_settings/CenterContainer"]
+margin_top = 112.0
+margin_right = 228.0
+margin_bottom = 126.0
+text = "Floor:"
+align = 1
+valign = 1
+
+[node name="HSeparator2" type="HSeparator" parent="editor_settings/CenterContainer"]
+margin_top = 130.0
+margin_right = 228.0
+margin_bottom = 134.0
+
+[node name="floor" type="HBoxContainer" parent="editor_settings/CenterContainer"]
+margin_top = 138.0
+margin_right = 228.0
+margin_bottom = 162.0
+alignment = 1
+
+[node name="solid" type="CheckBox" parent="editor_settings/CenterContainer/floor"]
+margin_right = 59.0
+margin_bottom = 24.0
+hint_tooltip = "Floor visual state toggle
+true  : solid
+false : grid"
+text = "Solid"
+
+[node name="constant" type="CheckBox" parent="editor_settings/CenterContainer/floor"]
+margin_left = 63.0
+margin_right = 167.0
+margin_bottom = 24.0
+hint_tooltip = "Floor Constant
+Toggle floor constant
+
+true  : will always show floor
+false : hide floor if VoxelObject has one or more voxels"
+pressed = true
+text = "Constant"
+icon = ExtResource( 11 )
+
+[node name="color" type="ColorPickerButton" parent="editor_settings/CenterContainer/floor"]
+margin_left = 171.0
+margin_right = 228.0
+margin_bottom = 24.0
+hint_tooltip = "Floor Color
+Change floor color"
+text = "COLOR"
+color = Color( 1, 1, 1, 1 )
+
+[node name="confirm_commit" type="ConfirmationDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -35.0
+margin_right = 100.0
+margin_bottom = 35.0
+dialog_text = "Make changes?"
+
+[node name="confirm_clear" type="ConfirmationDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -35.0
+margin_right = 100.0
+margin_bottom = 35.0
+dialog_text = "Cancel changes?"
+[connection signal="mouse_entered" from="root/VBoxContainer/ViewportContainer" to="." method="_on_ViewportContainer_mouse_entered"]
+[connection signal="mouse_exited" from="root/VBoxContainer/ViewportContainer" to="." method="_on_ViewportContainer_mouse_exited"]
+[connection signal="item_selected" from="root/VBoxContainer/toolbar/HBoxContainer/tools/ToolSelector" to="." method="_on_ToolSelector_item_selected"]
+[connection signal="color_changed" from="root/VBoxContainer/toolbar/HBoxContainer/tools/color" to="." method="_on_paint_color_changed"]
+[connection signal="pressed" from="root/VBoxContainer/toolbar/HBoxContainer/voxels/view" to="." method="_on_voxels_view_pressed"]
+[connection signal="toggled" from="root/VBoxContainer/toolbar/HBoxContainer/mirror/x" to="." method="_on_mirror_x_toggled"]
+[connection signal="toggled" from="root/VBoxContainer/toolbar/HBoxContainer/mirror/y" to="." method="_on_mirror_y_toggled"]
+[connection signal="toggled" from="root/VBoxContainer/toolbar/HBoxContainer/mirror/z" to="." method="_on_mirror_z_toggled"]
+[connection signal="pressed" from="root/VBoxContainer/toolbar/HBoxContainer/editor/settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="root/VBoxContainer/toolbar/HBoxContainer/options/commit" to="." method="_on_Commit_pressed"]
+[connection signal="pressed" from="root/VBoxContainer/toolbar/HBoxContainer/options/clear" to="." method="_on_clear_pressed"]
+[connection signal="set_active_voxel" from="VoxelSetViewer" to="." method="_on_set_active_voxel"]
+[connection signal="toggled" from="editor_settings/CenterContainer/editor/custom_editor" to="." method="_on_custom_editor_toggled"]
+[connection signal="color_changed" from="editor_settings/CenterContainer/editor/color" to="." method="_on_editor_color_changed"]
+[connection signal="toggled" from="editor_settings/CenterContainer/cursor/visible" to="." method="_on_cursor_visible_toggled"]
+[connection signal="color_changed" from="editor_settings/CenterContainer/cursor/color" to="." method="_on_cursor_color_changed"]
+[connection signal="toggled" from="editor_settings/CenterContainer/floor/solid" to="." method="_on_floor_solid_toggled"]
+[connection signal="toggled" from="editor_settings/CenterContainer/floor/constant" to="." method="_on_floor_constant_toggled"]
+[connection signal="color_changed" from="editor_settings/CenterContainer/floor/color" to="." method="_on_floor_color_changed"]
+[connection signal="confirmed" from="confirm_commit" to="." method="_on_confirm_commit_confirmed"]
+[connection signal="confirmed" from="confirm_clear" to="." method="_on_confirm_clear_confirmed"]

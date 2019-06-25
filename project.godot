@@ -8,9 +8,44 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Reference",
+"class": "MagicaVoxelReader",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/VoxelCore/imports/MagicaVoxel/MagicaVoxelReader.gd"
+}, {
+"base": "Reference",
+"class": "Voxel",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/src/Voxel.gd"
+}, {
+"base": "Spatial",
+"class": "VoxelEditor",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/src/VoxelEditor.gd"
+}, {
+"base": "Control",
+"class": "VoxelEditorGUI",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/src/VoxelEditorGUI.gd"
+}, {
+"base": "MeshInstance",
+"class": "VoxelObject",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/src/VoxelObject.gd"
+}, {
+"base": "Node",
+"class": "VoxelSet",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/src/VoxelSet.gd"
+} ]
 _global_script_class_icons={
-
+"MagicaVoxelReader": "res://addons/VoxelCore/assets/MagicaVoxel.png",
+"Voxel": "res://addons/VoxelCore/assets/Voxel.png",
+"VoxelEditor": "res://addons/VoxelCore/assets/VoxelEditor.png",
+"VoxelEditorGUI": "res://addons/VoxelCore/assets/VoxelEditorGUI.png",
+"VoxelObject": "res://addons/VoxelCore/assets/VoxelCore.png",
+"VoxelSet": "res://addons/VoxelCore/assets/VoxelSet.png"
 }
 
 [application]
@@ -18,6 +53,16 @@ _global_script_class_icons={
 config/name="Voxel-Core"
 boot_splash/image="res://assets/VoxelCore.splash.png"
 config/icon="res://icon.png"
+
+[autoload]
+
+CoreVoxelSet="*res://addons/VoxelCore/src/VoxelSet/VoxelSet.default.gd"
+CoreVoxelEditor="*res://addons/VoxelCore/src/VoxelEditor.gd"
+CoreVoxelEditorGUI="*res://addons/VoxelCore/src/VoxelEditorGUI/VoxelEditorGUI.default.tscn"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "VoxelCore" )
 
 [rendering]
 
