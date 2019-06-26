@@ -1,5 +1,6 @@
-extends Reference
-class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
+tool
+extends "res://addons/VoxelCore/src/VoxelObject.gd"
+class_name VoxelMesh, 'res://addons/VoxelCore/assets/VoxelMesh.png'
 
 # Declare member variables here. Examples:
 # var a = 2

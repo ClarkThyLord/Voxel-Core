@@ -1,5 +1,5 @@
-extends Reference
-class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
+tool
+extends EditorImportPlugin
 
 # Declare member variables here. Examples:
 # var a = 2
