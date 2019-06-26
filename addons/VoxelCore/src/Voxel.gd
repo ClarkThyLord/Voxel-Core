@@ -3,33 +3,34 @@ extends Reference
 class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
 
 # Every Voxel is a Dictionary, not every Dictionary is a Voxel
-# Voxels are represented with Dictionaries, following a strict schema, defined below, a wide variety of Voxels can be created
+# Voxels are represented with Dictionaries, following a strict schema, defined below, we can create a wide variety of Voxels
+# When getting and setting data of a Voxel it's best to make use of the helper function provided in this class so as to avoid issues
 # NOTE: Modifications to the Voxel schema can be done, but should be done in such a way that the original schema is unmodified so as to avoid issues
 #
 # Schema:
 # {
-#    const      :   bool         =   Engine.editor_hint,   #   Constant flag, Voxel isn't editable
-#    color      :   Color        =   Color(0, 0, 0),       #   Main albedo color when drawn; used as fall back when all else fails
-#    colors     :   Dictionary   =   {}, ::                #   Individual albedo colors, define an individual albedo color per face; when not defined fall back is color; used when individual textures positions fail
+#    const      :   bool         =   Engine.editor_hint,   #   Constant flag, true means Voxel is non editable, otherwise Voxel is editable
+#    color      :   Color        =   Color(0, 0, 0),       #   Main albedo color, typically used when individual albedo colors aren't present
+#    colors     :   Dictionary   =   {}, ::                #   Individual albedo colors, used to define an individual albedo color for any and all Voxel faces
 #       {
-#          Vector3.UP        :   Color     =   null   ||   color,
-#          Vector3.DOWN      :   Color     =   null   ||   color,
-#          Vector3.RIGHT     :   Color     =   null   ||   color,
-#          Vector3.LEFT      :   Color     =   null   ||   color,
-#          Vector3.BACK      :   Color     =   null   ||   color,
-#          Vector3.FORWARD   :   Color     =   null   ||   color
+#          Vector3.UP        :   Color     =   null || color,
+#          Vector3.DOWN      :   Color     =   null || color,
+#          Vector3.RIGHT     :   Color     =   null || color,
+#          Vector3.LEFT      :   Color     =   null || color,
+#          Vector3.BACK      :   Color     =   null || color,
+#          Vector3.FORWARD   :   Color     =   null || color
 #       }
-#    texture    :   Vector2      =   null   ||   color,    #   Main texture position when drawn; used as fall back when both individual texture positions and individual albedo colors fail
-#    textures   :   Dictionary   =   {}, ::                #   Individual texture position, define an individual texture position per face; when not defined fall back is individual albedo color, if individual albedo color fails fallback is main texture position
+#    texture    :   Vector2      =   null,                 #   Main texture position, typically used when individual texture positions and individual albedo colros aren't present
+#    textures   :   Dictionary   =   {}, ::                #   Individual texture positions, used to define an individual texture position for any and all Voxel faces
 #       {
-#          Vector3.UP        :   Vector2     =   null   ||   colors[Vector.UP]        ||   texture,
-#          Vector3.DOWN      :   Vector2     =   null   ||   colors[Vector.DOWN]      ||   texture,
-#          Vector3.RIGHT     :   Vector2     =   null   ||   colors[Vector.RIGHT]     ||   texture,
-#          Vector3.LEFT      :   Vector2     =   null   ||   colors[Vector.LEFT]      ||   texture,
-#          Vector3.BACK      :   Vector2     =   null   ||   colors[Vector.BACK]      ||   texture,
-#          Vector3.FORWARD   :   Vector2     =   null   ||   colors[Vector.FORWARD]   ||   texture
+#          Vector3.UP        :   Vector2   =   null || texture,
+#          Vector3.DOWN      :   Vector2   =   null || texture,
+#          Vector3.RIGHT     :   Vector2   =   null || texture,
+#          Vector3.LEFT      :   Vector2   =   null || texture,
+#          Vector3.BACK      :   Vector2   =   null || texture,
+#          Vector3.FORWARD   :   Vector2   =   null || texture
 #       }
-#    data       :   Dictionary   =   {}                    #   Custom data, any and all custom data should be placed here so as to avoid conflicts
+#    data       :   Dictionary   =   {}                    #   Custom data, any and all user defined data should be placed here so as to avoid issues
 # }
 #
 # Example:
@@ -47,8 +48,319 @@ class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
 #       Vector.RIGHT      :   Vector2(3, 3)
 #    },
 #    data       :   {
-#       custom   :   3,
-#       data     :   'wow'
+#       custom            :   3,
+#       data              :   'wow'
 #    }
 # }
 #
+
+
+
+# Static Declarations
+const VoxelScale : float = 1.0                             # Global Voxel scale
+const VoxelSize : float = VoxelScale  * 0.25               # Global actual Voxel size
+const GridStep : float = 0.25 * (VoxelSize / 0.125)        # Global distance between Voxels
+const GridCorrection : float = 0.25 * (VoxelSize / 0.25)   # Global correction between Voxels; for when and if the grid breaks
+
+
+
+# Core
+# Helper function for quick 'basic Voxel' creation
+# data       :   Dictionary   -   user defined data
+# constant   :   bool         -   whether Voxel is constant
+# @returns   :   Dictionary   -   basic Voxel; NOTE: contains only necessary information
+#
+# Example:
+#   basic()                 ->   { 'const': true }
+#   basic({}, false)        ->   { 'const': false }
+#   basic({ ... }, false)   ->   { 'const': false, data: { ... } }
+#
+static func basic(data : Dictionary = {}, constant : bool = Engine.editor_hint) -> Dictionary:
+	var basic = {
+		'const' : constant
+	}
+	
+	if not data.empty(): basic['data'] = data
+	
+	return basic
+
+
+# Helper function for getting 'const' of given Voxel
+# voxel      :   Dictionary   -   Voxel to get value from
+# @returns   :   bool         -   requested value, if found and valid; else, default value
+#
+# Example:
+#   get_constant({ ... })   ->   false
+#
+static func get_constant(voxel : Dictionary) -> bool:
+	return voxel['const'] if typeof(voxel.get('const')) == TYPE_BOOL else Engine.editor_hint
+
+# Helper function for setting 'const' of given Voxel
+# voxel      :   Dictionary   -   Voxel to modify
+# constant   :   bool         -   value to set to given Voxel
+#
+# Example:
+#   set_constant({ ... }, true)
+#
+static func set_constant(voxel : Dictionary, constant : bool = Engine.editor_hint) -> void:
+	voxel['const'] = constant
+
+# Helper function for getting 'data' of given Voxel
+# voxel      :   Dictionary   -   Voxel to get value from
+# @returns   :   Dictionary   -   requested value, if found and valid; else, default value
+#
+# Example:
+#   get_data({ ... })   ->   { ... }
+#
+static func get_data(voxel : Dictionary) -> Dictionary:
+	return voxel['data'] if typeof(voxel.get('data')) == TYPE_DICTIONARY else {}
+
+# Helper function for setting 'data' of given Voxel
+# voxel   :   Dictionary   -   Voxel to modify
+# data    :   Dictionary   -   value to set to given Voxel
+#
+# Example:
+#   set_data({ ... }, { ... })
+#
+static func set_data(voxel : Dictionary, data : Dictionary) -> void:
+	voxel['data'] = data
+
+
+# Helper function for quick 'colored Voxel' creation
+# color      :   Color        -   main albedo color used by Voxel
+# data       :   Dictionary   -   user defined data
+# constant   :   bool         -   whether Voxel is constant
+# @returns   :   Dictionary   -   colored Voxel; NOTE: contains only necessary information
+#
+# Example:
+#   colored([Color])                         ->   { 'const': true, 'color': [Color] }
+#   colored([Color], { ... }, -1.0, false)   ->   { 'const': false, data: { ... }, 'color': [Color] }
+#
+static func colored(color : Color, data : Dictionary = {}, constant : bool = Engine.editor_hint) -> Dictionary:
+	var colored = basic(data, constant)
+	
+	if not color == Color(): colored['color'] = color
+	
+	return colored
+
+
+# Helper function for retrieving 'color' of given Voxel
+# voxel      :   Dictionary   -   Voxel to get value from
+# @returns   :   Color        -   requested value, if found and valid; else, default value
+#
+# Example:
+#   get_color({ ... })   ->   [Color]
+#
+static func get_color(voxel : Dictionary) -> Color:
+	return voxel['color'] if typeof(voxel.get('color')) == TYPE_COLOR else Color()
+
+# Helper function for setting 'color', all-around, of given Voxel
+# voxel   :   Dictionary   -   Voxel to modify
+# color   :   Color        -   value to set to given Voxel
+#
+# Example:
+#   set_color({ ... }, [Color])
+#
+static func set_color(voxel : Dictionary, color : Color) -> void:
+	voxel['color'] = color
+
+# Helper function for retrieving Color of given side from given Voxel
+# voxel      :   Dictionary   -   Voxel to get value from
+# side       :   Vector3      -   side to get value from
+# @returns   :   Color        -   requested value, if found and valid; else, default value
+#
+# Example:
+#   get_color_side({ ... }, Vector.UP)   ->   [Color]
+#
+static func get_color_side(voxel : Dictionary, side : Vector3) -> Color:
+	return voxel['colors'][side] if typeof(voxel.get('colors')) == TYPE_DICTIONARY and typeof(voxel['colors'].get(side)) == TYPE_COLOR else get_color(voxel)
+
+# The following are helper functions for quick retrieving of the albedo color for specific sides
+# voxel      :   Dictionary   -   Voxel to get value from
+# @returns   :   Color        -   requested value, if found and valid; else, default value
+#
+# Example:
+#   get_color_right({ ... })   ->   [Color]
+#
+static func get_color_right(voxel : Dictionary) -> Color: return get_color_side(voxel, Vector3.RIGHT)
+static func get_color_left(voxel : Dictionary) -> Color: return get_color_side(voxel, Vector3.LEFT)
+static func get_color_up(voxel : Dictionary) -> Color: return get_color_side(voxel, Vector3.UP)
+static func get_color_down(voxel : Dictionary) -> Color: return get_color_side(voxel, Vector3.DOWN)
+static func get_color_back(voxel : Dictionary) -> Color: return get_color_side(voxel, Vector3.BACK)
+static func get_color_forward(voxel : Dictionary) -> Color: return get_color_side(voxel, Vector3.FORWARD)
+
+# Helper function for setting Color for given side from given Voxel
+# voxel   :   Dictionary   -   Voxel to modify
+# side    :   Vector3      -   side to modify
+# color   :   Color        -   value to set to given Voxel side
+#
+# Example:
+#   set_color_side({ ... }, Vector.RIGHT, [Color])
+#
+static func set_color_side(voxel : Dictionary, side : Vector3, color : Color) -> void:
+	if not typeof(voxel.get('colors')) == TYPE_DICTIONARY: voxel['colors'] = {}
+	voxel['colors'][side] = color
+
+# The following are helper functions for quick setting of the albedo color to specific sides
+# voxel   :   Dictionary   -   Voxel to modify
+# color   :   Color        -   value to set to Voxel side
+#
+# Example:
+#   set_color_down({ ... }, [Color])
+#
+static func set_color_right(voxel : Dictionary, color : Color) -> void: set_color_side(voxel, Vector3.RIGHT, color)
+static func set_color_left(voxel : Dictionary, color : Color) -> void: set_color_side(voxel, Vector3.LEFT, color)
+static func set_color_up(voxel : Dictionary, color : Color) -> void: set_color_side(voxel, Vector3.UP, color)
+static func set_color_down(voxel : Dictionary, color : Color) -> void: set_color_side(voxel, Vector3.DOWN, color)
+static func set_color_back(voxel : Dictionary, color : Color) -> void: set_color_side(voxel, Vector3.BACK, color)
+static func set_color_forward(voxel : Dictionary, color : Color) -> void: set_color_side(voxel, Vector3.FORWARD, color)
+
+
+# Helper function for quick 'textured Voxel' creation
+# texture_position   :   Vector2      -   position of main texture
+# color              :   Color        -   main albedo color used by Voxel
+# data               :   Dictionary   -   user defined data
+# constant           :   bool         -   whether Voxel is constant
+# @returns           :   Dictionary   -   textured Voxel; NOTE: contains only necessary information
+#
+# Example:
+#   textured([Vector2])                                  ->   { 'const': true, 'color': Color(0, 0, 0), 'texture': [Vector2] }
+#   textured([Vector2], [Color], { ... }, -1.0, false)   ->   { 'const': false, data: { ... }, 'color': [Color], 'texture': [Vector2] }
+#
+static func textured(texture_position : Vector2, color : Color = Color(), data : Dictionary = {}, constant : bool = Engine.editor_hint) -> Dictionary:
+	var colored = colored(color, data, constant)
+	
+	colored['texture'] = texture_position
+	
+	return colored
+
+
+# Helper function for retrieving 'main texture position' of given Voxel
+# voxel      :   Dictionary   -   Voxel to get value from
+# @returns   :   Vector2      -   requested value, if found and is valid; else, default value
+#
+# Example:
+#   get_color({ ... })   ->   [Vector2]
+#
+static func get_texture(voxel : Dictionary) -> Vector2:
+	return voxel['texture'] if typeof(voxel.get('texture')) == TYPE_VECTOR2 else null
+
+# Helper function for setting 'main texture position' of given Voxel
+# voxel              :   Dictionary   -   Voxel to modify
+# texture_position   :   Vector2      -   value to set
+#
+# Example:
+#   set_texture({ ... }, [Vector2])
+#
+static func set_texture(voxel : Dictionary, texture_position : Vector2) -> void:
+	voxel['texture'] = texture_position
+
+# Helper function for retrieving 'texture', of given side, for given Voxel
+# voxel      :   Dictionary   -   Voxel to get value from
+# side       :   Vector3      -   side to retrieve value from
+# @returns   :   Vector2      -   requested value, if found and is valid; else, default value
+#
+# Example:
+#   get_texture_side({ ... }, Vector.UP) -> [Vector2]
+#
+static func get_texture_side(voxel : Dictionary, side : Vector3) -> Vector2:
+	return voxel['textures'][side] if typeof(voxel.get('textures')) == TYPE_DICTIONARY and typeof(voxel['textures'].get(side)) == TYPE_VECTOR2 else get_texture(voxel)
+
+# The following are helper functions for quick retrieving of the texture position for specific sides
+# voxel      :   Dictionary   -   Voxel to retrieve value from
+# @returns   :   Vector2      -   requested value, if found and is valid; else, default value
+#
+# Example:
+#   get_texture_right({ ... }) -> [Vector2]
+#
+static func get_texture_right(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.RIGHT)
+static func get_texture_left(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.LEFT)
+static func get_texture_up(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.UP)
+static func get_texture_down(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.DOWN)
+static func get_texture_back(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.BACK)
+static func get_texture_forward(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.FORWARD)
+
+# Helper function for setting 'texture position', to given side, for given Voxel
+# voxel              :   Dictionary   -   Voxel to modify
+# side               :   Vector3      -   side to set
+# texture_position   :   Vector2      -   value to set
+#
+# Example:
+#   set_texture_side({ ... }, Vector.RIGHT, [Vector2])
+#
+static func set_texture_side(voxel : Dictionary, side : Vector3, texture_position : Vector2) -> void:
+	if not typeof(voxel.get('textures')) == TYPE_DICTIONARY: voxel['textures'] = {}
+	voxel['textures'][side] = texture_position
+
+# The following are helper functions for quick setting of texture position to specific sides
+# voxel              :   Dictionary     -   Voxel to modify
+# texture_position   :   Vector2        -   value to set
+#
+# Example:
+#   set_texture_left({ ... }, [Vector2])
+#
+static func set_texture_right(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.RIGHT, texture_position)
+static func set_texture_left(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.LEFT, texture_position)
+static func set_texture_up(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.UP, texture_position)
+static func set_texture_down(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.DOWN, texture_position)
+static func set_texture_back(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.BACK, texture_position)
+static func set_texture_forward(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.FORWARD, texture_position)
+
+
+# Transforms world space position to snapped position
+# abs_pos       :   Vector3   -   world position to be transformed
+# @returns   :   Vector3   -   given world position to snapped position
+#
+# Example:
+#   abs_to_pos(Vector3(20, 0.312, -4.6543)) -> Vector3(10, 0.25, -2.25)
+#
+static func abs_to_pos(abs_pos : Vector3) -> Vector3: return (abs_pos / GridStep).floor() * GridStep
+
+# Transforms world space position to grid position
+# grid       :   Vector3   -   world position to be transformed
+# @returns   :   Vector3   -   given world position transformed to grid position
+#
+# Example:
+#   abs_to_grid(Vector3(20, 0.312, -4.6543)) -> Vector3(20, 1, -4.5)
+#
+static func abs_to_grid(abs_pos : Vector3) -> Vector3: return pos_to_grid(abs_to_pos(abs_pos))
+
+# Transforms snapped position to grid position
+# pos        :   Vector3   -   snapped position to be transformed
+# @returns   :   Vector3   -   given snapped position transformed to grid position
+#
+# Example:
+#   pos_to_grid(Vector3(1, 0, -0.75)) -> Vector3(2, 0, -0.5)
+#
+static func pos_to_grid(pos : Vector3) -> Vector3: return pos / GridStep
+
+# Corrects snapped position
+# grid       :   Vector3   -   snapped position to be corrected
+# @returns   :   Vector3   -   given snapped position corrected
+#
+# Example:
+#   pos_correct(Vector3(3, 0, -3)) -> Vector3(3.5, 0, -3.5)
+#
+static func pos_correct(pos : Vector3) -> Vector3: return pos + Vector3(GridCorrection, GridCorrection, GridCorrection)
+
+# Transforms grid position to snapped position
+# grid       :   Vector3   -   grid position to be transformed
+# @returns   :   Vector3   -   given grid position transformed to snapped position
+#
+# Example:
+#   grid_to_pos(Vector3(3, 0, -3)) -> Vector3(1, 0, -0.75)
+#
+static func grid_to_pos(grid : Vector3) -> Vector3: return grid * GridStep
+
+
+# Returns Vector3 clamped the given range
+# grid       :   Vector3   -   Vector3 to be clamped
+# _min       :   Vector3   -   minimum values
+# _max       :   Vector3   -   maximum values
+# @returns   :   Vector3   -   Vector3 clamped to given range
+#
+# Example:
+#   vec3_clamp(Vector3(12, -3, -21), Vector3(-6, -3, 5), Vector3(23, -1, 32)) -> Vector3(12, -3, 5)
+#
+static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector3 = Vector3()) -> Vector3:
+	return Vector3(clamp(vec3.x, -_min.x, _max.x - 1), clamp(vec3.y, -_min.y, _max.y - 1), clamp(vec3.z, -_min.z, _max.z - 1))
