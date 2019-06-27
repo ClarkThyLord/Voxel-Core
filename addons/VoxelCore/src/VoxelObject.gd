@@ -35,14 +35,16 @@ signal set_greedy(greedy)
 export(bool) var Greedy : bool = false setget set_greedy
 # Setter for Greedy, emits 'set_greedy'
 # greedy   :   bool   -   value to set
+# update   :   bool   -   call on update
 # emit     :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_greedy(true, false)
 #
-func set_greedy(greedy : bool = !Greedy, emit : bool = true) -> void:
+func set_greedy(greedy : bool = !Greedy, update : bool = true, emit : bool = true) -> void:
 	Greedy = greedy
 	
+	if update: update(emit)
 	if emit: emit_signal('set_greedy', Greedy)
 
 
@@ -52,14 +54,16 @@ signal set_static_body(staticbody)
 export(bool) var StaticBody : bool = false setget set_static_body
 # Setter for StaticBody, emits 'set_static_body'
 # staticbody   :   bool   -   value to set
+# update       :   bool   -   call on staticbody update
 # emit         :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_static_body(true, false)
 #
-func set_static_body(staticbody : bool = !StaticBody, emit : bool = true) -> void:
+func set_static_body(staticbody : bool = !StaticBody, update : bool = true, emit : bool = true) -> void:
 	StaticBody = staticbody
 	
+	if update: update_staticbody(emit)
 	if emit: emit_signal('set_static_body', StaticBody)
 
 
@@ -114,14 +118,16 @@ signal set_voxelset(voxelset)
 var voxelset setget set_voxelset
 # Setter for voxelset, emits 'set_voxelset'
 # _voxelset   :   bool   -   value to set
+# update      :   bool   -   call on update
 # emit        :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_voxelset(true, false)
 #
-func set_voxelset(_voxelset = voxelset, emit : bool = true) -> void:
+func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true) -> void:
 	voxelset = _voxelset
 	
+	if update: update(emit)
 	if emit: emit_signal('set_voxelset', voxelset)
 
 # NodePath to VoxelSet
@@ -129,16 +135,17 @@ func set_voxelset(_voxelset = voxelset, emit : bool = true) -> void:
 export(NodePath) var VoxelSetPath : NodePath setget set_voxelset_path
 # Setter for VoxelSetPath, emits 'set_voxelset'
 # voxelsetpath   :   bool   -   value to set
+# update         :   bool   -   call on update
 # emit           :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_voxelset_path([NodePath], false)
 #
-func set_voxelset_path(voxelsetpath : NodePath, emit : bool = true) -> void:
+func set_voxelset_path(voxelsetpath : NodePath, update : bool = true, emit : bool = true) -> void:
 	# TODO check if valid VoxelSet
 	if true:
 		VoxelSetPath = voxelsetpath
-#		set_voxelset(get_node(voxelsetpath), emit)
+#		set_voxelset(get_node(voxelsetpath), update, emit)
 
 
 
@@ -146,30 +153,34 @@ func set_voxelset_path(voxelsetpath : NodePath, emit : bool = true) -> void:
 # NOTE: The following needs to be implemented by inheritor
 signal set_voxel(grid)
 # Set Voxel as given to grid position, emits 'set_voxel'
-# grid    :   Vector3          -   grid position to set Voxel to 
-# voxel   :   int/Dictionary   -   Voxel to be set
-# emit    :   bool   :   true, emit signal; false, don't emit signal
+# grid     :   Vector3          -   grid position to set Voxel to 
+# voxel    :   int/Dictionary   -   Voxel to be set
+# update   :   bool             -   call on update
+# emit     :   bool             -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxels ID
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
-func set_voxel(grid : Vector3, voxel, emit : bool = true) -> void: if emit: emit_signal('set_voxel', grid)
+func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
+	if update: update(emit)
+	if emit: emit_signal('set_voxel', grid)
 
 # Set raw Voxel data to given grid position, emits 'set_voxel'
-# grid    :   Vector3          -   grid position to set Voxel to 
-# voxel   :   int/Dictionary   -   Voxel to be set
-# emit    :   bool             -   true, emit signal; false, don't emit signal
+# grid     :   Vector3          -   grid position to set Voxel to 
+# voxel    :   int/Dictionary   -   Voxel to be set
+# update   :   bool             -   call on update
+# emit     :   bool             -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present Dictionary within the VoxelSet, not the ID itself
 #   set_rvoxel(Vector(11, -34, 2), { ... })
 #
-func set_rvoxel(grid : Vector3, voxel, emit : bool = true) -> void:
+func set_rvoxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
 	# TODO convert Voxel ID to Voxel data and set
 #	if typeof(voxel) == TYPE_INT: pass
 	
-	set_voxel(grid, voxel, emit)
+	set_voxel(grid, voxel, update, emit)
 
 # Get Voxel data from grid position
 # grid       :   Vector3      -   grid position to get Voxel from
@@ -198,24 +209,34 @@ func get_rvoxel(grid : Vector3): return
 
 signal erased_voxel(grid)
 # Erase Voxel from grid position, emits 'erased_voxel'
-# grid       :   Vector3   -   grid position to erase Voxel from
-# emit       :   bool      -   true, emit signal; false, don't emit signal
+# grid     :   Vector3   -   grid position to erase Voxel from
+# update   :   bool      -   call on update
+# emit     :   bool      -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   erase_voxel(Vector(11, -34, 2), false)
 #
-func erase_voxel(grid : Vector3, emit : bool = true) -> void: if emit: emit_signal('erased_voxel', grid)
+func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> void:
+	if update: update(emit)
+	if emit: emit_signal('erased_voxel', grid)
 
 
 signal set_voxels
 # Clears and replaces all Voxels with given Voxels, emits 'set_voxels'
 # voxels   :   Dictionary<Vector3, Voxel>   -   Voxels to set
+# update   :   bool                         -   call on update
 # emit     :   bool                         -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_voxel({ ... })
 #
-func set_voxels(voxels : Dictionary, emit : bool = true) -> void: if emit: emit_signal('set_voxels')
+func set_voxels(voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
+	erase_voxels(emit)
+	
+	for grid in voxels.keys(): set_voxel(grid, voxels[grid], false, emit)
+	
+	if update: update(emit)
+	if emit: emit_signal('set_voxels')
 
 # Gets all present Voxel positions
 # @returns   :   Array<Vector3>   -   Array containing positions for all Voxels present
@@ -227,12 +248,19 @@ func get_voxels() -> Array: return []
 
 signal erased_voxels
 # Erases all present Voxels, emits 'erased_voxels'
-# emit       :   bool      -   true, emit signal; false, don't emit signal
+# emit     :   bool   -   true, emit signal; false, don't emit signal
+# update   :   bool   -   call on update
 #
 # Example:
 #   erase_voxels(false)
 #
-func erase_voxels(emit : bool = true) -> void: if emit: emit_signal('erased_voxels')
+func erase_voxels(emit : bool = true, update : bool = true) -> void:
+	var voxels = get_voxels()
+	
+	for grid in voxels: erase_voxel(grid, false, emit)
+	
+	if update: update(emit)
+	if emit: emit_signal('erased_voxels')
 
 
 signal updated
