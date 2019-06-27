@@ -9,7 +9,7 @@ class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
 #
 # Schema:
 # {
-#    const      :   bool         =   Engine.editor_hint,   #   Constant flag, true means Voxel is non editable, otherwise Voxel is editable
+#    const      :   bool         =   Engine.editor_hint,   #   Constant flag, true means Voxel is not editable, otherwise Voxel is editable
 #    color      :   Color        =   Color(0, 0, 0),       #   Main albedo color, typically used when individual albedo colors aren't present
 #    colors     :   Dictionary   =   {}, ::                #   Individual albedo colors, used to define an individual albedo color for any and all Voxel faces
 #       {
@@ -240,7 +240,7 @@ static func textured(texture_position : Vector2, color : Color = Color(), data :
 # @returns   :   Vector2      -   requested value, if found and is valid; else, default value
 #
 # Example:
-#   get_color({ ... })   ->   [Vector2]
+#   get_texture({ ... })   ->   [Vector2]
 #
 static func get_texture(voxel : Dictionary) -> Vector2:
 	return voxel['texture'] if typeof(voxel.get('texture')) == TYPE_VECTOR2 else null
