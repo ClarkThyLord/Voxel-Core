@@ -115,7 +115,7 @@ func set_mirror_z(mirror : bool = !MirrorZ, emit : bool = true) -> void:
 
 signal set_voxelset(voxelset)
 # VoxelSet being used
-var voxelset setget set_voxelset
+var voxelset : VoxelSet setget set_voxelset
 # Setter for voxelset, emits 'set_voxelset'
 # _voxelset   :   bool   -   value to set
 # update      :   bool   -   call on update
@@ -142,10 +142,9 @@ export(NodePath) var VoxelSetPath : NodePath setget set_voxelset_path
 #   set_voxelset_path([NodePath], false)
 #
 func set_voxelset_path(voxelsetpath : NodePath, update : bool = true, emit : bool = true) -> void:
-	# TODO check if valid VoxelSet
-	if true:
+	if is_inside_tree() and has_node(voxelsetpath) and get_node(voxelsetpath) is VoxelSet:
 		VoxelSetPath = voxelsetpath
-#		set_voxelset(get_node(voxelsetpath), update, emit)
+		set_voxelset(get_node(voxelsetpath), update, emit)
 
 
 
@@ -190,9 +189,8 @@ func set_voxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit :
 #   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present Dictionary within the VoxelSet, not the ID itself
 #   set_rvoxel(Vector(11, -34, 2), { ... })
 #
-func set_rvoxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
-	# TODO convert Voxel ID to Voxel data and set
-#	if typeof(voxel) == TYPE_INT: pass
+func set_rvoxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
+	if typeof(voxel) == TYPE_INT: voxel = voxelset.get_voxel(voxel)
 	
 	set_voxel(grid, voxel, update, emit)
 
@@ -206,8 +204,7 @@ func set_rvoxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit 
 func get_voxel(grid : Vector3) -> Dictionary:
 	var voxel = get_rvoxel(grid)
 	
-	# TODO retrieve Voxel data from ID
-#	if typeof(voxel) == TYPE_INT: pass
+	if typeof(voxel) == TYPE_INT: voxel = voxelset.get_voxel(voxel)
 	
 	return voxel
 
