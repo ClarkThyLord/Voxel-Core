@@ -12,8 +12,10 @@ class_name VoxelSet, 'res://addons/VoxelCore/assets/VoxelSet.png'
 
 
 # Declarations
-var _id : int = 0 setget set_id # Auto-increments on Voxel append
-func set_id(id : int) -> void: return;
+signal update   # Emitted when VoxelSet is modified in such a way that it's dependents need to update
+
+var _id : int = 0 setget set_id          #   Auto-increments on Voxel append
+func set_id(id : int) -> void: return;   #   _id shouldn't be settable externally
 
 
 signal set_voxels
@@ -31,7 +33,28 @@ func set_voxels(voxels : Dictionary, emit : bool = true) -> void:
 	
 	_save()
 	
-	if emit: emit_signal('set_voxels')
+	if emit:
+		emit_signal('update')
+		emit_signal('set_voxels')
+
+
+signal set_albedo_texture(albedotexture)
+# Path to albedo texture used
+export(String, FILE, "*.png,*.jpg") var AlbedoTexture : String setget set_albedo_texture
+# Setter for AlbedoTexture path; emits 'set_albedo_texture'
+# albedotexture   :   String   -   path to set
+# emit            :   bool     -   true, emit signal; false, don't emit signal
+# 
+# Example:
+#   set_albedo_texture([String], false)
+#
+func set_albedo_texture(albedotexture : String = AlbedoTexture, emit : bool = true) -> void:
+	AlbedoTexture = albedotexture
+	
+	if emit:
+		emit_signal('update')
+		emit_signal('set_albedo_texture', AlbedoTexture)
+
 
 
 
@@ -80,11 +103,13 @@ func set_voxel(voxel : Dictionary, id : int = -1, emit : bool = true) -> int:
 	
 	_save()
 	
-	if emit: emit_signal('set_voxel', id)
+	if emit:
+		emit_signal('update')
+		emit_signal('set_voxel', id)
 	
 	return id
 
-signal erased_voxel(id)
+signal erased_voxel(id, voxel)
 # Erases a Voxel by its id, and return its data; emits 'erased_voxel'
 # id         :   int               -   id related to Voxel being retrieved
 # emit       :   bool              -   true, emit signal; false, don't emit signal
@@ -98,6 +123,8 @@ func erase_voxel(id : int, emit : bool = true) -> Dictionary:
 	
 	if typeof(voxel) == TYPE_DICTIONARY: voxels.erase(id)
 	
-	if emit: emit_signal('erased_voxel', id)
+	if emit:
+		emit_signal('update')
+		emit_signal('erased_voxel', id, voxel)
 	
 	return voxel
