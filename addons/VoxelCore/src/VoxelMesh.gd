@@ -25,8 +25,6 @@ func _save() -> void: set_meta('voxels', voxels)
 func set_voxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
 	voxels[grid] = voxel
 	
-#	if update: update(emit)
-#	if emit: emit_signal('set_voxel', grid)
 	.set_voxel(grid, voxel, update, emit)
 
 # Set raw Voxel data to given grid position, emits 'set_voxel'
@@ -40,10 +38,7 @@ func set_voxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit :
 #   set_rvoxel(Vector(11, -34, 2), { ... })
 #
 func set_rvoxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
-	# TODO convert Voxel ID to Voxel data and set
-#	if typeof(voxel) == TYPE_INT: pass
-	
-	set_voxel(grid, voxel, update, emit)
+	.set_rvoxel(grid, voxel, update, emit)
 
 # Get Voxel data from grid position
 # grid       :   Vector3      -   grid position to get Voxel from
@@ -54,9 +49,6 @@ func set_rvoxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit 
 #
 func get_voxel(grid : Vector3) -> Dictionary:
 	var voxel = get_rvoxel(grid)
-	
-	# TODO retrieve Voxel data from ID
-#	if typeof(voxel) == TYPE_INT: pass
 	
 	return voxel
 
@@ -81,8 +73,6 @@ func get_rvoxel(grid : Vector3): return voxels.get(grid)
 func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> void:
 	voxels.erase(grid)
 	
-#	if update: update(emit)
-#	if emit: emit_signal('erased_voxel', grid)
 	.erase_voxel(grid, update, emit)
 
 
@@ -97,7 +87,6 @@ func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> v
 func set_voxels(voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
 	erase_voxels(emit)
 	
-#	for grid in voxels: set_voxel(grid, voxels[grid], false, emit)
 	voxels = voxels.duplicate(true)
 	
 	if update: update(emit)
@@ -119,9 +108,6 @@ func get_voxels() -> Dictionary: return voxels
 #   erase_voxels(false)
 #
 func erase_voxels(emit : bool = true, update : bool = true) -> void:
-#	var voxels = get_voxels()
-#
-#	for grid in voxels: erase_voxel(grid, false, emit)
 	voxels.clear()
 	
 	if update: update(emit)
@@ -156,10 +142,6 @@ func update(emit : bool = true) -> void:
 		mesh = ST.commit()
 	else: mesh = null
 	
-	update_staticbody(emit)
-	
-#	if StaticBody: update_staticbody(emit)
-#	if emit: emit_signal('updated')
 	.update(emit)
 	_save()
 
@@ -197,6 +179,4 @@ func update_staticbody(emit : bool = true) -> void:
 		remove_child(staticbody)
 		staticbody.queue_free()
 	
-	
-#	if emit: emit_signal('updated_staticbody')
 	.update_staticbody(emit)
