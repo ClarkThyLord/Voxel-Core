@@ -2,6 +2,8 @@ tool
 extends Reference
 class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
 
+
+
 # Every Voxel is a Dictionary, not every Dictionary is a Voxel
 # Voxels are represented with Dictionaries, following a strict schema, defined below, we can create a wide variety of Voxels
 # When getting and setting data of a Voxel it's best to make use of the helper function provided in this class so as to avoid issues
@@ -261,7 +263,7 @@ static func set_texture(voxel : Dictionary, texture_position : Vector2) -> void:
 # @returns   :   Vector2      -   requested value, if found and is valid; else, default value
 #
 # Example:
-#   get_texture_side({ ... }, Vector.UP) -> [Vector2]
+#   get_texture_side({ ... }, Vector.UP)   ->   [Vector2]
 #
 static func get_texture_side(voxel : Dictionary, side : Vector3) -> Vector2:
 	return voxel['textures'][side] if typeof(voxel.get('textures')) == TYPE_DICTIONARY and typeof(voxel['textures'].get(side)) == TYPE_VECTOR2 else get_texture(voxel)
@@ -271,7 +273,7 @@ static func get_texture_side(voxel : Dictionary, side : Vector3) -> Vector2:
 # @returns   :   Vector2      -   requested value, if found and is valid; else, default value
 #
 # Example:
-#   get_texture_right({ ... }) -> [Vector2]
+#   get_texture_right({ ... })   ->   [Vector2]
 #
 static func get_texture_right(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.RIGHT)
 static func get_texture_left(voxel : Dictionary) -> Vector2: return get_texture_side(voxel, Vector3.LEFT)
@@ -308,11 +310,11 @@ static func set_texture_forward(voxel : Dictionary, texture_position : Vector2) 
 
 
 # Transforms world space position to snapped position
-# abs_pos       :   Vector3   -   world position to be transformed
+# abs_pos    :   Vector3   -   world position to be transformed
 # @returns   :   Vector3   -   given world position to snapped position
 #
 # Example:
-#   abs_to_pos(Vector3(20, 0.312, -4.6543)) -> Vector3(10, 0.25, -2.25)
+#   abs_to_pos(Vector3(20, 0.312, -4.6543))   ->   Vector3(10, 0.25, -2.25)
 #
 static func abs_to_pos(abs_pos : Vector3) -> Vector3: return (abs_pos / GridStep).floor() * GridStep
 
@@ -321,7 +323,7 @@ static func abs_to_pos(abs_pos : Vector3) -> Vector3: return (abs_pos / GridStep
 # @returns   :   Vector3   -   given world position transformed to grid position
 #
 # Example:
-#   abs_to_grid(Vector3(20, 0.312, -4.6543)) -> Vector3(20, 1, -4.5)
+#   abs_to_grid(Vector3(20, 0.312, -4.6543))   ->   Vector3(20, 1, -4.5)
 #
 static func abs_to_grid(abs_pos : Vector3) -> Vector3: return pos_to_grid(abs_to_pos(abs_pos))
 
@@ -330,7 +332,7 @@ static func abs_to_grid(abs_pos : Vector3) -> Vector3: return pos_to_grid(abs_to
 # @returns   :   Vector3   -   given snapped position transformed to grid position
 #
 # Example:
-#   pos_to_grid(Vector3(1, 0, -0.75)) -> Vector3(2, 0, -0.5)
+#   pos_to_grid(Vector3(1, 0, -0.75))   ->   Vector3(2, 0, -0.5)
 #
 static func pos_to_grid(pos : Vector3) -> Vector3: return pos / GridStep
 
@@ -339,7 +341,7 @@ static func pos_to_grid(pos : Vector3) -> Vector3: return pos / GridStep
 # @returns   :   Vector3   -   given snapped position corrected
 #
 # Example:
-#   pos_correct(Vector3(3, 0, -3)) -> Vector3(3.5, 0, -3.5)
+#   pos_correct(Vector3(3, 0, -3))   ->   Vector3(3.5, 0, -3.5)
 #
 static func pos_correct(pos : Vector3) -> Vector3: return pos + Vector3(GridCorrection, GridCorrection, GridCorrection)
 
@@ -348,7 +350,7 @@ static func pos_correct(pos : Vector3) -> Vector3: return pos + Vector3(GridCorr
 # @returns   :   Vector3   -   given grid position transformed to snapped position
 #
 # Example:
-#   grid_to_pos(Vector3(3, 0, -3)) -> Vector3(1, 0, -0.75)
+#   grid_to_pos(Vector3(3, 0, -3))   ->   Vector3(1, 0, -0.75)
 #
 static func grid_to_pos(grid : Vector3) -> Vector3: return grid * GridStep
 
@@ -360,7 +362,7 @@ static func grid_to_pos(grid : Vector3) -> Vector3: return grid * GridStep
 # @returns   :   Vector3   -   Vector3 clamped to given range
 #
 # Example:
-#   vec3_clamp(Vector3(12, -3, -21), Vector3(-6, -3, 5), Vector3(23, -1, 32)) -> Vector3(12, -3, 5)
+#   vec3_clamp(Vector3(12, -3, -21), Vector3(-6, -3, 5), Vector3(23, -1, 32))   ->   Vector3(12, -3, 5)
 #
 static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector3 = Vector3()) -> Vector3:
 	return Vector3(clamp(vec3.x, -_min.x, _max.x - 1), clamp(vec3.y, -_min.y, _max.y - 1), clamp(vec3.z, -_min.z, _max.z - 1))
