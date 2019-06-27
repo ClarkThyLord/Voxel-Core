@@ -161,7 +161,7 @@ func _save() -> void: pass
 # The following will initialize the object as needed
 func _init() -> void: _load()
 func _ready() -> void:
-	set_voxelset_path(VoxelSetPath)
+	set_voxelset_path(VoxelSetPath, false)
 	_load()
 
 

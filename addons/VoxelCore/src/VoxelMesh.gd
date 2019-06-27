@@ -68,7 +68,7 @@ func get_voxel(grid : Vector3) -> Dictionary:
 #   get_rvoxel(Vector(11, -34, 2))   ->   3         #   NOTE: Returned ID representing  Voxel data
 #   get_rvoxel(Vector(-7, 0, 96))    ->   { ... }   #   NOTE: Returned Voxel data
 #
-func get_rvoxel(grid : Vector3): voxels.get(grid)
+func get_rvoxel(grid : Vector3): return voxels.get(grid)
 
 # Erase Voxel from grid position, emits 'erased_voxel'
 # grid     :   Vector3   -   grid position to erase Voxel from

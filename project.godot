@@ -61,6 +61,10 @@ run/main_scene="res://examples/simple.tscn"
 boot_splash/image="res://assets/VoxelCore.splash.png"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "VoxelCore" )
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
