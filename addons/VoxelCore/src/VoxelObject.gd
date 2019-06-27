@@ -51,7 +51,7 @@ func set_greedy(greedy : bool = !Greedy, update : bool = true, emit : bool = tru
 signal set_static_body(staticbody)
 # Create and maintain a trimesh static body
 # NOTE: StaticBody updates with every update
-export(bool) var StaticBody : bool = false setget set_static_body
+export(bool) var Static_Body : bool = false setget set_static_body
 # Setter for StaticBody, emits 'set_static_body'
 # staticbody   :   bool   -   value to set
 # update       :   bool   -   call on staticbody update
@@ -60,11 +60,11 @@ export(bool) var StaticBody : bool = false setget set_static_body
 # Example:
 #   set_static_body(true, false)
 #
-func set_static_body(staticbody : bool = !StaticBody, update : bool = true, emit : bool = true) -> void:
-	StaticBody = staticbody
+func set_static_body(staticbody : bool = !Static_Body, update : bool = true, emit : bool = true) -> void:
+	Static_Body = staticbody
 	
 	if update: update_staticbody(emit)
-	if emit: emit_signal('set_static_body', StaticBody)
+	if emit: emit_signal('set_static_body', Static_Body)
 
 
 signal set_mirror_x(mirror)
@@ -159,8 +159,8 @@ func _save() -> void: pass
 
 
 # The following will initialize the object as needed
-func _init(): _load()
-func _ready():
+func _init() -> void: _load()
+func _ready() -> void:
 	set_voxelset_path(VoxelSetPath)
 	_load()
 
@@ -285,7 +285,7 @@ signal updated
 #   update(false)
 #
 func update(emit : bool = true) -> void:
-	if StaticBody: update_staticbody(emit)
+	if Static_Body: update_staticbody(emit)
 	if emit: emit_signal('updated')
 
 signal updated_staticbody

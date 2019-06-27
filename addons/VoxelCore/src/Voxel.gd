@@ -371,10 +371,10 @@ static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector
 # The following are helper functions used to generate Voxel faces
 # st      :   SurfaceTool   -   SurfaceTool to work with
 # voxel   :   Dictionary    -   Voxel data
-# g1      :   Vector3       -   Voxels starting vertex position
-# g2      :   Vector3       -   Voxels second vertex position; uses Voxels starting position if not given
-# g3      :   Vector3       -   Voxels third vertes position; uses Voxels starting position if not given
-# g4      :   Vector3       -   Voxels last vertex position; uses Voxels starting position if not given
+# g1      :   Vector3       -   Voxels starting vertex position, as a grid position
+# g2      :   Vector3       -   Voxels second vertex position, as a grid position; uses Voxels starting position if not given
+# g3      :   Vector3       -   Voxels third vertes position, as a grid position; uses Voxels starting position if not given
+# g4      :   Vector3       -   Voxels last vertex position, as a grid position; uses Voxels starting position if not given
 #
 # Example:
 #   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
