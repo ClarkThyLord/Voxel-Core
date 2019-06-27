@@ -2,14 +2,13 @@ tool
 extends "res://addons/VoxelCore/src/VoxelObject.gd"
 class_name VoxelMesh, 'res://addons/VoxelCore/assets/VoxelMesh.png'
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+# Declarations
+var voxels : Dictionary = {}
+
+# Core
+func _load() -> void: voxels = get_meta('voxels') if has_meta('voxels') else {}
+func _save() -> void: set_meta('voxels', voxels)
+
+

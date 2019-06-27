@@ -366,3 +366,88 @@ static func grid_to_pos(grid : Vector3) -> Vector3: return grid * GridStep
 #
 static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector3 = Vector3()) -> Vector3:
 	return Vector3(clamp(vec3.x, -_min.x, _max.x - 1), clamp(vec3.y, -_min.y, _max.y - 1), clamp(vec3.z, -_min.z, _max.z - 1))
+
+
+# The following are helper functions used to generate Voxel faces
+# st      :   SurfaceTool   -   SurfaceTool to work with
+# voxel   :   Dictionary    -   Voxel data
+# g1      :   Vector3       -   Voxels starting vertex position
+# g2      :   Vector3       -   Voxels second vertex position; uses Voxels starting position if not given
+# g3      :   Vector3       -   Voxels third vertes position; uses Voxels starting position if not given
+# g4      :   Vector3       -   Voxels last vertex position; uses Voxels starting position if not given
+#
+# Example:
+#   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
+#   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
+#
+static func generate_right(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	st.add_normal(Vector3.RIGHT)
+	st.add_color(get_color_right(voxel))
+	
+	st.add_vertex(grid_to_pos(g1 + Vector3.RIGHT))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
+
+static func generate_left(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	st.add_normal(Vector3.LEFT)
+	st.add_color(get_color_left(voxel))
+	
+	st.add_vertex(grid_to_pos(g1))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.BACK))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP))
+	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.UP + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.BACK))
+
+static func generate_up(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	st.add_normal(Vector3.UP)
+	st.add_color(get_color_up(voxel))
+	
+	st.add_vertex(grid_to_pos(g1 + Vector3.UP))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.UP))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.UP))
+	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
+
+static func generate_down(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	st.add_normal(Vector3.DOWN)
+	st.add_color(get_color_down(voxel))
+	
+	st.add_vertex(grid_to_pos(g1))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT))
+
+static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	st.add_normal(Vector3.BACK)
+	st.add_color(get_color_back(voxel))
+	
+	st.add_vertex(grid_to_pos(g1 + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+
+static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	st.add_normal(Vector3.FORWARD)
+	st.add_color(get_color_forward(voxel))
+	
+	st.add_vertex(grid_to_pos(g1))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT))
+	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.RIGHT + Vector3.UP))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))

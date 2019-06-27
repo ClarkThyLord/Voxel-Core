@@ -151,6 +151,20 @@ func set_voxelset_path(voxelsetpath : NodePath, update : bool = true, emit : boo
 
 # Abstract
 # NOTE: The following needs to be implemented by inheritor
+# Load necessary data
+func _load() -> void: pass
+
+# Save necessary data
+func _save() -> void: pass
+
+
+# The following will initialize the object as needed
+func _init(): _load()
+func _ready():
+	set_voxelset_path(VoxelSetPath)
+	_load()
+
+
 signal set_voxel(grid)
 # Set Voxel as given to grid position, emits 'set_voxel'
 # grid     :   Vector3          -   grid position to set Voxel to 
@@ -162,7 +176,7 @@ signal set_voxel(grid)
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxels ID
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
-func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
+func set_voxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
 	if update: update(emit)
 	if emit: emit_signal('set_voxel', grid)
 
@@ -176,7 +190,7 @@ func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true)
 #   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present Dictionary within the VoxelSet, not the ID itself
 #   set_rvoxel(Vector(11, -34, 2), { ... })
 #
-func set_rvoxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
+func set_rvoxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
 	# TODO convert Voxel ID to Voxel data and set
 #	if typeof(voxel) == TYPE_INT: pass
 	
@@ -233,18 +247,18 @@ signal set_voxels
 func set_voxels(voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
 	erase_voxels(emit)
 	
-	for grid in voxels.keys(): set_voxel(grid, voxels[grid], false, emit)
+	for grid in voxels: set_voxel(grid, voxels[grid], false, emit)
 	
 	if update: update(emit)
 	if emit: emit_signal('set_voxels')
 
 # Gets all present Voxel positions
-# @returns   :   Array<Vector3>   -   Array containing positions for all Voxels present
+# @returns   :   Dictionary<Vector3, Voxel>   -   Dictionary containing grid positions, as keys, and Voxels, as values
 #
 # Example:
-#   get_voxels() -> [ ... ]
+#   get_voxels()   ->   { ... }
 #
-func get_voxels() -> Array: return []
+func get_voxels() -> Dictionary: return {}
 
 signal erased_voxels
 # Erases all present Voxels, emits 'erased_voxels'
