@@ -136,7 +136,7 @@ func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true
 
 # NodePath to VoxelSet
 # NOTE: When getting voxelset used call on voxelset, so as to avoid issues
-export(NodePath) var VoxelSetPath : NodePath setget set_voxelset_path
+export(NodePath) var VoxelSetPath : NodePath = NodePath('/root/CoreVoxelSet') setget set_voxelset_path
 # Setter for VoxelSetPath, emits 'set_voxelset'
 # voxelsetpath   :   bool   -   value to set
 # update         :   bool   -   call on update
@@ -181,7 +181,7 @@ signal set_voxel(grid)
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxels ID
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
-func set_voxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
+func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
 	if update: update(emit)
 	if emit: emit_signal('set_voxel', grid)
 

@@ -177,6 +177,7 @@ margin_right = 153.0
 margin_bottom = 24.0
 hint_tooltip = "Floor Visible
 Toggle floor visiblity"
+pressed = true
 text = "Visible"
 icon = ExtResource( 8 )
 
@@ -218,6 +219,7 @@ text = "Constant"
 [connection signal="toggled" from="options/mirrors/x" to="." method="_on_x_toggled"]
 [connection signal="toggled" from="options/mirrors/y" to="." method="_on_y_toggled"]
 [connection signal="toggled" from="options/mirrors/z" to="." method="_on_z_toggled"]
+[connection signal="set_active_voxel" from="options/VoxelSetViewer" to="." method="_on_set_active_voxel"]
 [connection signal="toggled" from="settings/editor/HBoxContainer2/edit" to="." method="_on_edit_toggled"]
 [connection signal="toggled" from="settings/editor/HBoxContainer2/autosave" to="." method="_on_autosave_toggled"]
 [connection signal="toggled" from="settings/cursor/visible" to="." method="_on_cursor_visible_toggled"]

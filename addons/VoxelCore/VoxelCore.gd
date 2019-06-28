@@ -77,7 +77,7 @@ func set_gui_visible(visible : bool = !GuiVisible) -> void:
 		
 		add_control_to_dock(EditorPlugin.DOCK_SLOT_LEFT_BR, VoxelCoreDockInstance)
 		
-#		VoxelCoreDockInstance.set_autosave(AutoSave)
+		VoxelCoreDockInstance.set_autosave(AutoSave)
 	elif !visible && VoxelCoreDockInstance != null:
 		disconnect('set_autosave', VoxelCoreDockInstance, 'set_autosave')
 

@@ -22,7 +22,7 @@ func _save() -> void: set_meta('voxels', voxels)
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxels ID
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
-func set_voxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit : bool = true) -> void:
+func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
 	voxels[grid] = voxel
 	
 	.set_voxel(grid, voxel, update, emit)
@@ -47,10 +47,7 @@ func set_rvoxel(grid : Vector3, voxel : Dictionary, update : bool = false, emit 
 # Example:
 #   get_voxel(Vector(11, -34, 2))   ->   { ... }
 #
-func get_voxel(grid : Vector3) -> Dictionary:
-	var voxel = get_rvoxel(grid)
-	
-	return voxel
+func get_voxel(grid : Vector3) -> Dictionary: return .get_voxel(grid)
 
 # Get raw Voxel from grid position
 # grid       :   Vector3          -   grid position to get Voxel from
