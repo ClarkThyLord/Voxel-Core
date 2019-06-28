@@ -84,12 +84,12 @@ func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> v
 # Example:
 #   set_voxel({ ... })
 #
-func set_voxels(voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
+func set_voxels(_voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
 	erase_voxels(emit)
 	
-	voxels = voxels.duplicate(true)
+	voxels = _voxels.duplicate(true)
 	
-	if update: update(emit)
+	if update: update(false, emit)
 	if emit: emit_signal('set_voxels')
 
 # Gets all present Voxel positions
@@ -110,17 +110,18 @@ func get_voxels() -> Dictionary: return voxels
 func erase_voxels(emit : bool = true, update : bool = true) -> void:
 	voxels.clear()
 	
-	if update: update(emit)
+	if update: update(false, emit)
 	if emit: emit_signal('erased_voxels')
 
 
 # Updates mesh and StaticBody, emits 'updated'
-# emit       :   bool      -   true, emit signal; false, don't emit signal
+# temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody
+# emit   :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   update(false)
 #
-func update(emit : bool = true) -> void:
+func update(temp : bool = false, emit : bool = true) -> void:
 	if voxels.size() > 0:
 		var ST = SurfaceTool.new()
 		ST.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -142,22 +143,23 @@ func update(emit : bool = true) -> void:
 		mesh = ST.commit()
 	else: mesh = null
 	
-	.update(emit)
+	.update(temp, emit)
 	_save()
 
 # Sets and updates static trimesh body, emits 'updated_staticbody'
-# emit       :   bool      -   true, emit signal; false, don't emit signal
+# temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody
+# emit   :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   update_staticbody(false)
 #
-func update_staticbody(emit : bool = true) -> void:
+func update_staticbody(temp : bool = false, emit : bool = true) -> void:
 	var staticbody
 	if has_node('StaticBody'): staticbody = get_node('StaticBody')
 	
-	if Static_Body and mesh and voxels.size() > 0:
+	if (temp or Static_Body) and mesh and voxels.size() > 0:
 		var collisionshape
-		if !staticbody:
+		if not staticbody:
 			staticbody = StaticBody.new()
 			staticbody.set_name('StaticBody')
 		
@@ -166,16 +168,15 @@ func update_staticbody(emit : bool = true) -> void:
 		else:
 			collisionshape = CollisionShape.new()
 			collisionshape.set_name('CollisionShape')
-		
 			staticbody.add_child(collisionshape)
 		
 		collisionshape.shape = mesh.create_trimesh_shape()
 		
-		if !has_node('StaticBody'): add_child(staticbody)
+		if not has_node('StaticBody'): add_child(staticbody)
 		
-		if Static_Body and !staticbody.owner: staticbody.set_owner(get_tree().get_edited_scene_root())
-		if Static_Body and !collisionshape.owner: collisionshape.set_owner(get_tree().get_edited_scene_root())
-	elif (!Static_Body or voxels.size() <= 0) and staticbody:
+		if Static_Body and not staticbody.owner: staticbody.set_owner(get_tree().get_edited_scene_root())
+		if Static_Body and not collisionshape.owner: collisionshape.set_owner(get_tree().get_edited_scene_root())
+	elif ((not temp and not Static_Body) or voxels.size() <= 0) and staticbody:
 		remove_child(staticbody)
 		staticbody.queue_free()
 	

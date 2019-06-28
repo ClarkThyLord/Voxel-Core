@@ -125,7 +125,11 @@ var voxelset : VoxelSet setget set_voxelset
 #   set_voxelset(true, false)
 #
 func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true) -> void:
+	if voxelset == _voxelset: return;
+	elif voxelset is VoxelSet: voxelset.disconnect('update', self, 'update')
+	
 	voxelset = _voxelset
+	voxelset.connect('update', self, 'update')
 	
 	if update: update(emit)
 	if emit: emit_signal('set_voxelset', voxelset)
@@ -142,7 +146,9 @@ export(NodePath) var VoxelSetPath : NodePath setget set_voxelset_path
 #   set_voxelset_path([NodePath], false)
 #
 func set_voxelset_path(voxelsetpath : NodePath, update : bool = true, emit : bool = true) -> void:
-	if is_inside_tree() and has_node(voxelsetpath) and get_node(voxelsetpath) is VoxelSet:
+	# TODO clear voxeset
+	if voxelsetpath.is_empty(): VoxelSetPath = voxelsetpath
+	elif is_inside_tree() and has_node(voxelsetpath) and get_node(voxelsetpath) is VoxelSet:
 		VoxelSetPath = voxelsetpath
 		set_voxelset(get_node(voxelsetpath), update, emit)
 
@@ -276,20 +282,22 @@ func erase_voxels(emit : bool = true, update : bool = true) -> void:
 
 signal updated
 # Updates mesh and StaticBody, emits 'updated'
-# emit       :   bool      -   true, emit signal; false, don't emit signal
+# temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody
+# emit   :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   update(false)
 #
-func update(emit : bool = true) -> void:
-	if Static_Body: update_staticbody(emit)
+func update(temp : bool = false, emit : bool = true) -> void:
+	if Static_Body: update_staticbody(temp, emit)
 	if emit: emit_signal('updated')
 
 signal updated_staticbody
 # Sets and updates static trimesh body, emits 'updated_staticbody'
-# emit       :   bool      -   true, emit signal; false, don't emit signal
+# temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody
+# emit   :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   update_staticbody(false)
 #
-func update_staticbody(emit : bool = true) -> void: if emit: emit_signal('updated_staticbody')
+func update_staticbody(temp : bool = false, emit : bool = true) -> void: if emit: emit_signal('updated_staticbody')

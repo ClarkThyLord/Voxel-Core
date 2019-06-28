@@ -28,12 +28,12 @@ var voxels : Dictionary = {} setget set_voxels
 # Example:
 #   set_voxels({ ... })
 #
-func set_voxels(voxels_ : Dictionary, emit : bool = true) -> void:
-	var ids = voxels.keys()
+func set_voxels(_voxels : Dictionary, emit : bool = true) -> void:
+	var ids = _voxels.keys()
 	ids.sort()
 	_id = ids[-1] + 1
 	
-	voxels = voxels_.duplicate(true)
+	voxels = _voxels.duplicate(true)
 	
 	_save()
 	

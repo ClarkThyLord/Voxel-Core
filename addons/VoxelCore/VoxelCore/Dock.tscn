@@ -1,0 +1,228 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/VoxelCore/VoxelCore/Dock.gd" type="Script" id=1]
+[ext_resource path="res://addons/VoxelCore/src/components.gui/ToolSelector/ToolSelector.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_x.png" type="Texture" id=3]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_y.png" type="Texture" id=4]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_z.png" type="Texture" id=5]
+[ext_resource path="res://addons/VoxelCore/src/components.gui/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/VoxelCore/assets/VoxelCore.png" type="Texture" id=7]
+[ext_resource path="res://addons/VoxelCore/assets/visible.png" type="Texture" id=8]
+
+[node name="VoxelCore" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -774.0
+margin_bottom = -300.0
+script = ExtResource( 1 )
+
+[node name="options" type="VBoxContainer" parent="."]
+margin_right = 250.0
+margin_bottom = 104.0
+alignment = 1
+
+[node name="tools" type="HBoxContainer" parent="options"]
+margin_right = 250.0
+margin_bottom = 22.0
+alignment = 1
+
+[node name="ToolSelector" parent="options/tools" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 215.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+
+[node name="color" type="ColorPickerButton" parent="options/tools"]
+margin_left = 219.0
+margin_right = 250.0
+margin_bottom = 22.0
+hint_tooltip = "Paint Color : (key : c)
+Color used to paint voxels"
+text = "CO"
+color = Color( 1, 1, 1, 1 )
+
+[node name="mirrors" type="HBoxContainer" parent="options"]
+editor/display_folded = true
+margin_top = 26.0
+margin_right = 250.0
+margin_bottom = 50.0
+alignment = 1
+
+[node name="x" type="CheckBox" parent="options/mirrors"]
+margin_left = 37.0
+margin_right = 93.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror X : (key : q)
+Mirror actions over X axis"
+text = "X"
+icon = ExtResource( 3 )
+
+[node name="y" type="CheckBox" parent="options/mirrors"]
+margin_left = 97.0
+margin_right = 152.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror Y : (key : w)
+Mirror actions over Y axis"
+text = "Y"
+icon = ExtResource( 4 )
+
+[node name="z" type="CheckBox" parent="options/mirrors"]
+margin_left = 156.0
+margin_right = 212.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror Z : (key : e)
+Mirror actions over Z axis"
+text = "Z"
+icon = ExtResource( 5 )
+
+[node name="VoxelSetViewer" parent="options" instance=ExtResource( 6 )]
+margin_top = 54.0
+margin_right = 250.0
+margin_bottom = 104.0
+
+[node name="HSeparator2" type="HSeparator" parent="."]
+margin_top = 108.0
+margin_right = 250.0
+margin_bottom = 112.0
+
+[node name="settings" type="VBoxContainer" parent="."]
+margin_top = 116.0
+margin_right = 250.0
+margin_bottom = 260.0
+alignment = 1
+
+[node name="editor" type="VBoxContainer" parent="settings"]
+margin_right = 250.0
+margin_bottom = 24.0
+alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="settings/editor"]
+margin_right = 250.0
+margin_bottom = 24.0
+alignment = 1
+
+[node name="edit" type="CheckBox" parent="settings/editor/HBoxContainer2"]
+margin_left = 41.0
+margin_right = 113.0
+margin_bottom = 24.0
+hint_tooltip = "Edit : (key : space)
+Toggle edit mode"
+text = "Edit"
+icon = ExtResource( 7 )
+
+[node name="autosave" type="CheckBox" parent="settings/editor/HBoxContainer2"]
+margin_left = 117.0
+margin_right = 208.0
+margin_bottom = 24.0
+hint_tooltip = "Auto Save - Manual Save (key : alt)
+Toggle auto save"
+text = "Auto Save"
+
+[node name="Label" type="Label" parent="settings"]
+margin_top = 28.0
+margin_right = 250.0
+margin_bottom = 42.0
+text = "Cursor:"
+align = 1
+valign = 1
+
+[node name="cursor" type="HBoxContainer" parent="settings"]
+margin_top = 46.0
+margin_right = 250.0
+margin_bottom = 70.0
+alignment = 1
+
+[node name="visible" type="CheckBox" parent="settings/cursor"]
+margin_left = 62.0
+margin_right = 153.0
+margin_bottom = 24.0
+hint_tooltip = "Cursor visibility toggle
+Toggle cursor visibility"
+pressed = true
+text = "Visible"
+icon = ExtResource( 8 )
+
+[node name="color" type="ColorPickerButton" parent="settings/cursor"]
+margin_left = 157.0
+margin_right = 188.0
+margin_bottom = 24.0
+hint_tooltip = "Cursor Color
+Change cursor color"
+text = "CO"
+color = Color( 1, 0, 0, 0.6 )
+
+[node name="floor" type="VBoxContainer" parent="settings"]
+margin_top = 74.0
+margin_right = 250.0
+margin_bottom = 144.0
+alignment = 1
+
+[node name="Label" type="Label" parent="settings/floor"]
+margin_right = 250.0
+margin_bottom = 14.0
+text = "Floor:"
+align = 1
+valign = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="settings/floor"]
+margin_top = 18.0
+margin_right = 250.0
+margin_bottom = 42.0
+alignment = 1
+
+[node name="visible" type="CheckBox" parent="settings/floor/HBoxContainer"]
+margin_left = 62.0
+margin_right = 153.0
+margin_bottom = 24.0
+hint_tooltip = "Floor Visible
+Toggle floor visiblity"
+text = "Visible"
+icon = ExtResource( 8 )
+
+[node name="color" type="ColorPickerButton" parent="settings/floor/HBoxContainer"]
+margin_left = 157.0
+margin_right = 188.0
+margin_bottom = 24.0
+hint_tooltip = "Floor Color
+Change floor color"
+text = "CO"
+color = Color( 0, 1, 0, 1 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="settings/floor"]
+margin_top = 46.0
+margin_right = 250.0
+margin_bottom = 70.0
+alignment = 1
+
+[node name="solid" type="CheckBox" parent="settings/floor/HBoxContainer2"]
+margin_left = 51.0
+margin_right = 110.0
+margin_bottom = 24.0
+hint_tooltip = "Floor visual state toggle
+true  : solid
+false : grid"
+text = "Solid"
+
+[node name="constant" type="CheckBox" parent="settings/floor/HBoxContainer2"]
+margin_left = 114.0
+margin_right = 198.0
+margin_bottom = 24.0
+hint_tooltip = "Floor Constant
+Toggle floor constant
+
+true  : will always show floor
+false : hide floor if VoxelObject has one or more voxels"
+text = "Constant"
+[connection signal="color_changed" from="options/tools/color" to="." method="_on_color_color_changed"]
+[connection signal="toggled" from="options/mirrors/x" to="." method="_on_x_toggled"]
+[connection signal="toggled" from="options/mirrors/y" to="." method="_on_y_toggled"]
+[connection signal="toggled" from="options/mirrors/z" to="." method="_on_z_toggled"]
+[connection signal="toggled" from="settings/editor/HBoxContainer2/edit" to="." method="_on_edit_toggled"]
+[connection signal="toggled" from="settings/editor/HBoxContainer2/autosave" to="." method="_on_autosave_toggled"]
+[connection signal="toggled" from="settings/cursor/visible" to="." method="_on_cursor_visible_toggled"]
+[connection signal="color_changed" from="settings/cursor/color" to="." method="_on_cursor_color_changed"]
+[connection signal="toggled" from="settings/floor/HBoxContainer/visible" to="." method="_on_floor_visible_toggled"]
+[connection signal="color_changed" from="settings/floor/HBoxContainer/color" to="." method="_on_floor_color_changed"]
+[connection signal="toggled" from="settings/floor/HBoxContainer2/solid" to="." method="_on_solid_toggled"]
+[connection signal="toggled" from="settings/floor/HBoxContainer2/constant" to="." method="_on_floor_constant_toggled"]
