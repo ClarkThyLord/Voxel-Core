@@ -1,10 +1,10 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/VoxelCore/VoxelCore/Dock.gd" type="Script" id=1]
-[ext_resource path="res://addons/VoxelCore/src/components.gui/ToolSelector/ToolSelector.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/VoxelCore/assets/mirror_x.png" type="Texture" id=3]
-[ext_resource path="res://addons/VoxelCore/assets/mirror_y.png" type="Texture" id=4]
-[ext_resource path="res://addons/VoxelCore/assets/mirror_z.png" type="Texture" id=5]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_x.png" type="Texture" id=2]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_y.png" type="Texture" id=3]
+[ext_resource path="res://addons/VoxelCore/assets/mirror_z.png" type="Texture" id=4]
+[ext_resource path="res://addons/VoxelCore/src/components.gui/ToolSelector/ToolSelector.tscn" type="PackedScene" id=5]
 [ext_resource path="res://addons/VoxelCore/src/components.gui/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/VoxelCore/assets/VoxelCore.png" type="Texture" id=7]
 [ext_resource path="res://addons/VoxelCore/assets/visible.png" type="Texture" id=8]
@@ -21,12 +21,46 @@ margin_right = 250.0
 margin_bottom = 104.0
 alignment = 1
 
-[node name="tools" type="HBoxContainer" parent="options"]
+[node name="mirrors" type="HBoxContainer" parent="options"]
+editor/display_folded = true
 margin_right = 250.0
-margin_bottom = 22.0
+margin_bottom = 24.0
 alignment = 1
 
-[node name="ToolSelector" parent="options/tools" instance=ExtResource( 2 )]
+[node name="x" type="CheckBox" parent="options/mirrors"]
+margin_left = 37.0
+margin_right = 93.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror X : (key : q)
+Mirror actions over X axis"
+text = "X"
+icon = ExtResource( 2 )
+
+[node name="y" type="CheckBox" parent="options/mirrors"]
+margin_left = 97.0
+margin_right = 152.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror Y : (key : w)
+Mirror actions over Y axis"
+text = "Y"
+icon = ExtResource( 3 )
+
+[node name="z" type="CheckBox" parent="options/mirrors"]
+margin_left = 156.0
+margin_right = 212.0
+margin_bottom = 24.0
+hint_tooltip = "Mirror Z : (key : e)
+Mirror actions over Z axis"
+text = "Z"
+icon = ExtResource( 4 )
+
+[node name="tools" type="HBoxContainer" parent="options"]
+margin_top = 28.0
+margin_right = 250.0
+margin_bottom = 50.0
+alignment = 1
+
+[node name="ToolSelector" parent="options/tools" instance=ExtResource( 5 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 215.0
@@ -41,40 +75,6 @@ hint_tooltip = "Paint Color : (key : c)
 Color used to paint voxels"
 text = "CO"
 color = Color( 1, 1, 1, 1 )
-
-[node name="mirrors" type="HBoxContainer" parent="options"]
-editor/display_folded = true
-margin_top = 26.0
-margin_right = 250.0
-margin_bottom = 50.0
-alignment = 1
-
-[node name="x" type="CheckBox" parent="options/mirrors"]
-margin_left = 37.0
-margin_right = 93.0
-margin_bottom = 24.0
-hint_tooltip = "Mirror X : (key : q)
-Mirror actions over X axis"
-text = "X"
-icon = ExtResource( 3 )
-
-[node name="y" type="CheckBox" parent="options/mirrors"]
-margin_left = 97.0
-margin_right = 152.0
-margin_bottom = 24.0
-hint_tooltip = "Mirror Y : (key : w)
-Mirror actions over Y axis"
-text = "Y"
-icon = ExtResource( 4 )
-
-[node name="z" type="CheckBox" parent="options/mirrors"]
-margin_left = 156.0
-margin_right = 212.0
-margin_bottom = 24.0
-hint_tooltip = "Mirror Z : (key : e)
-Mirror actions over Z axis"
-text = "Z"
-icon = ExtResource( 5 )
 
 [node name="VoxelSetViewer" parent="options" instance=ExtResource( 6 )]
 margin_top = 54.0
@@ -128,6 +128,7 @@ align = 1
 valign = 1
 
 [node name="cursor" type="HBoxContainer" parent="settings"]
+editor/display_folded = true
 margin_top = 46.0
 margin_right = 250.0
 margin_bottom = 70.0
@@ -153,6 +154,7 @@ text = "CO"
 color = Color( 1, 0, 0, 0.6 )
 
 [node name="floor" type="VBoxContainer" parent="settings"]
+editor/display_folded = true
 margin_top = 74.0
 margin_right = 250.0
 margin_bottom = 144.0
@@ -215,10 +217,10 @@ Toggle floor constant
 true  : will always show floor
 false : hide floor if VoxelObject has one or more voxels"
 text = "Constant"
-[connection signal="color_changed" from="options/tools/color" to="." method="_on_color_color_changed"]
 [connection signal="toggled" from="options/mirrors/x" to="." method="_on_x_toggled"]
 [connection signal="toggled" from="options/mirrors/y" to="." method="_on_y_toggled"]
 [connection signal="toggled" from="options/mirrors/z" to="." method="_on_z_toggled"]
+[connection signal="color_changed" from="options/tools/color" to="." method="_on_color_color_changed"]
 [connection signal="set_active_voxel" from="options/VoxelSetViewer" to="." method="_on_set_active_voxel"]
 [connection signal="toggled" from="settings/editor/HBoxContainer2/edit" to="." method="_on_edit_toggled"]
 [connection signal="toggled" from="settings/editor/HBoxContainer2/autosave" to="." method="_on_autosave_toggled"]

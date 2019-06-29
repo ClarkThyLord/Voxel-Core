@@ -7,9 +7,15 @@ class_name VoxelMesh, 'res://addons/VoxelCore/assets/VoxelMesh.png'
 # Declarations
 var voxels : Dictionary = {} setget set_voxels
 
+
+
 # Core
-func _load() -> void: voxels = get_meta('voxels') if has_meta('voxels') else {}
+func _load() -> void: if has_meta('voxels'): voxels = get_meta('voxels')
 func _save() -> void: set_meta('voxels', voxels)
+
+
+func _init() -> void: ._init()
+#func _ready() -> void: ._ready()
 
 
 # Set Voxel as given to grid position, emits 'set_voxel'
@@ -119,6 +125,7 @@ func erase_voxels(emit : bool = true, update : bool = true) -> void:
 #   update(false)
 #
 func update(temp : bool = false, emit : bool = true) -> void:
+	if voxels == null: return;
 	if voxels.size() > 0:
 		var ST = SurfaceTool.new()
 		ST.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -141,7 +148,6 @@ func update(temp : bool = false, emit : bool = true) -> void:
 	else: mesh = null
 	
 	.update(temp, emit)
-	_save()
 
 # Sets and updates static trimesh body, emits 'updated_staticbody'
 # temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody

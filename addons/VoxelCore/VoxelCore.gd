@@ -7,6 +7,11 @@ extends EditorPlugin
 const VoxelObject = preload('res://addons/VoxelCore/src/VoxelObject.gd')
 const VoxelCoreDock = preload('res://addons/VoxelCore/VoxelCore/Dock.tscn')
 
+const ImageMesh = preload("res://addons/VoxelCore/VoxelCore/imports/Images/img.mesh.gd")
+const ImageVoxelObject = preload("res://addons/VoxelCore/VoxelCore/imports/Images/img.voxelobject.gd")
+const MagicaVoxelMesh = preload("res://addons/VoxelCore/VoxelCore/imports/MagicaVoxel/mv.mesh.gd")
+const MagicaVoxelVoxelObject = preload("res://addons/VoxelCore/VoxelCore/imports/MagicaVoxel/mv.voxelobject.gd")
+
 
 
 # Utils
@@ -34,6 +39,12 @@ static func is_voxelcore_object(object : Object) -> int:
 var ScreenName : String = ''        #   Type of current screen(e.g. 2D, 3D, Script and etc.)
 var ObjectHandled : Object          #   Object being handled in-engine
 var VoxelCoreDockInstance           #   Dock being used in-engine
+
+
+var ImageMeshInstance : ImageMesh = ImageMesh.new()
+var ImageVoxelObjectInstance : ImageVoxelObject = ImageVoxelObject.new()
+var MagicaVoxelMeshInstance : MagicaVoxelMesh = MagicaVoxelMesh.new()
+var MagicaVoxelVoxelObjectInstance : MagicaVoxelVoxelObject = MagicaVoxelVoxelObject.new()
 
 
 func set_editing(editing : bool, save : bool = false):
@@ -94,6 +105,11 @@ func set_gui_visible(visible : bool = !GuiVisible) -> void:
 # Core
 # Setup everything the plugin will use in-engine and in-game
 func _enter_tree() -> void:
+	add_import_plugin(ImageMeshInstance)
+	add_import_plugin(ImageVoxelObjectInstance)
+	add_import_plugin(MagicaVoxelMeshInstance)
+	add_import_plugin(MagicaVoxelVoxelObjectInstance)
+	
 	add_autoload_singleton('CoreVoxelSet', 'res://addons/VoxelCore/defaults/VoxelSet.default.gd')
 	add_autoload_singleton('CoreVoxelEditor', 'res://addons/VoxelCore/src/VoxelEditor.gd')
 	
@@ -106,6 +122,11 @@ func _enter_tree() -> void:
 # Remove everything the plugin uses; since the plugin is being disabled
 func _exit_tree() -> void:
 	set_gui_visible(false)
+	
+	remove_import_plugin(ImageMeshInstance)
+	remove_import_plugin(ImageVoxelObjectInstance)
+	remove_import_plugin(MagicaVoxelMeshInstance)
+	remove_import_plugin(MagicaVoxelVoxelObjectInstance)
 	
 	remove_autoload_singleton('CoreVoxelSet')
 	remove_autoload_singleton('CoreVoxelEditor')

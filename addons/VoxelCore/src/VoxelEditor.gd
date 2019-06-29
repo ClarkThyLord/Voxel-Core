@@ -34,8 +34,8 @@ func begin(voxelobject : VoxelObject, edit : bool = false, emit : bool = true) -
 	VoxelObjectRef.set_greedy(false, false, false)
 	VoxelObjectRef.connect('set_greedy', self, 'set_original_greedy')
 	
-	set_edit(edit, false)
-	set_edit_lock(VoxelObjectRef.Lock, emit)
+	set_edit(edit, false, false)
+	set_edit_lock(VoxelObjectRef.Lock, false, emit)
 	VoxelObjectRef.connect('set_lock', self, 'set_edit_lock')
 	
 	set_mirror_x_lock(VoxelObjectRef.MirrorX, emit)
@@ -54,6 +54,7 @@ func begin(voxelobject : VoxelObject, edit : bool = false, emit : bool = true) -
 	for cursor in Cursors:
 		cursor.visible = false
 		VoxelObjectRef.add_child(cursor)
+	Floor.visible = false
 	VoxelObjectRef.add_child(Floor)
 	
 	if emit: emit_signal('began')
@@ -70,7 +71,7 @@ func commit(voxels = null, emit : bool = true) -> void:
 	if typeof(voxels) == TYPE_DICTIONARY: VoxelObjectRef.set_voxels(voxels, false, emit)
 	
 	clear(emit)
-	set_edit(false, emit)
+	set_edit(false, false, emit)
 	
 	if emit: emit_signal('committed')
 
@@ -127,20 +128,23 @@ signal set_edit(editing)
 # Whether VoxelEditor is 'editing'
 export var Edit : bool = true setget set_edit
 # Setter for Edit; emits 'set_edit'
-# edit   :   bool   -   true, editing; false, not editing
-# emit   :   bool   -   true, emit signal; false, don't emit signal
+# edit     :   bool   -   true, editing; false, not editing
+# update   :   bool   -   call on VoxelObjectRef update
+# emit     :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_edit(false, false)
 #
-func set_edit(edit : bool = !Edit, emit : bool = true) -> void:
+func set_edit(edit : bool = !Edit, update : bool = true, emit : bool = true) -> void:
 	if EditLock: edit = false
 	
 	Edit = edit
 	
-	if VoxelObjectRef is VoxelObject:
-		VoxelObjectRef.set_greedy(false if edit else original_greedy, false, false)
-		VoxelObjectRef.update(true, emit)
+	set_floor_visibility(edit)
+	
+	if update and VoxelObjectRef is VoxelObject:
+		VoxelObjectRef.set_greedy(false if Edit else original_greedy, false, false)
+		VoxelObjectRef.update(Edit, emit)
 	
 	if emit: emit_signal('set_edit', edit)
 
@@ -148,16 +152,17 @@ signal set_edit_lock(locked)
 # Whether VoxelEditor is able to edit; emits 'set_edit_lock'
 export var EditLock : bool = false setget set_edit_lock
 # Setter for EditLock
-# lock   :   bool   -   true, able to edit; false, unable to edit
-# emit   :   bool   -   true, emit signal; false, don't emit signal
+# lock     :   bool   -   true, able to edit; false, unable to edit
+# update   :   bool   -   call on VoxelObjectRef update
+# emit     :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_edit_lock(false, false)
 #
-func set_edit_lock(lock : bool = true, emit : bool = true) -> void:
+func set_edit_lock(lock : bool = true, update : bool = true, emit : bool = true) -> void:
 	EditLock = lock
 	
-	set_edit(Edit, emit)
+	set_edit(Edit, update, emit)
 	
 	if emit: emit_signal('set_edit_lock', lock)
 
@@ -323,10 +328,18 @@ export(bool) var CursorVisible : bool = true setget set_cursor_visible
 func set_cursor_visible(visible : bool = !CursorVisible, emit : bool = true) -> void:
 	CursorVisible = visible
 	
-	for cursor in Cursors:
-		cursor.visible = CursorVisible
+#	set_cursor_visibility()
 	
 	if emit: emit_signal('set_cursor_visible', visible)
+
+# Helper function for setting Cursor(s) visibility
+# visible   :   bool   -   value to set Cursor(s) visibility
+#
+# Example:
+#   set_cursors_visible(false)
+#
+func set_cursor_visibility(visible : bool = CursorVisible) -> void:
+	for cursor in Cursors: cursor.visible = visible
 
 signal set_cursor_color(color)
 # Color for Cursors
@@ -380,15 +393,26 @@ export var FloorVisible : bool = true setget set_floor_visible
 # Example:
 #   set_floor_visible(false false)
 #
-func set_floor_visible(visible : bool = (!Floor.visible if Floor != null else true), emit : bool = true) -> void:
+func set_floor_visible(visible : bool = !FloorVisible, emit : bool = true) -> void:
 	if FloorConstant: visible = true
 	
 	FloorVisible = visible
 	
-	Floor.visible = visible
-	if Floor.has_node('VEFloor_col'): Floor.get_node('VEFloor_col').get_children()[0].disabled = !FloorVisible
+	set_floor_visibility()
 	
 	if emit: emit_signal('set_floor_visible', visible)
+
+# Helper function for setting Floor visibility
+# visible   :   bool   -   value to set Floor visibility
+#
+# Example:
+#   set_floor_visibility(false)
+#
+func set_floor_visibility(visible : bool = FloorVisible) -> void:
+	if VoxelObjectRef is VoxelObject and (!FloorConstant and VoxelObjectRef.get_voxels().size() > 0): visible = false
+	
+	Floor.visible = visible
+	if Floor.has_node('VEFloor_col'): Floor.get_node('VEFloor_col').get_children()[0].disabled = !visible
 
 signal set_floor_constant(constant)
 # Whether Floor is visible regardless of context (e.g. present voxels)
@@ -608,7 +632,7 @@ func _init() -> void:
 # Example:
 #   handle_input([InputEvent], [Camera], [VoxelObject], { ... }) -> false
 #
-func handle_input(event : InputEvent, camera : Camera = get_viewport().get_camera(), working := VoxelObjectRef) -> bool:
+func handle_input(event : InputEvent, camera : Camera = get_viewport().get_camera(), working = VoxelObjectRef) -> bool:
 	if Edit and VoxelObjectRef and event is InputEventMouse and !(event is InputEventMouseMotion and Input.is_mouse_button_pressed(BUTTON_RIGHT)):
 		var hit = raycast_for_voxelobject(event, camera, working)
 		if hit and working.is_a_parent_of(hit.collider):
@@ -635,12 +659,12 @@ func handle_input(event : InputEvent, camera : Camera = get_viewport().get_camer
 							Undo_Redo.add_undo_method(working, 'erase_voxel', mirror)
 						Tools.REMOVE:
 							var voxel = working.get_rvoxel(mirror)
-							if voxel:
+							if not voxel == null:
 								Undo_Redo.add_do_method(working, 'erase_voxel', mirror)
 								Undo_Redo.add_undo_method(working, 'set_voxel', mirror, voxel)
 						Tools.PAINT:
 							var voxel = working.get_voxel(mirror)
-							if voxel:
+							if not voxel == null:
 								var new_voxel = voxel.duplicate(true)
 								Voxel.set_color(new_voxel, PaintColor)
 								
@@ -648,7 +672,7 @@ func handle_input(event : InputEvent, camera : Camera = get_viewport().get_camer
 								Undo_Redo.add_undo_method(working, 'set_voxel', mirror, voxel, false, false)
 						Tools.COLOR_PICKER:
 							var voxel = working.get_voxel(mirror)
-							if voxel:
+							if not voxel == null:
 								Undo_Redo.add_do_method(self, 'set_paint_color', Voxel.get_color(voxel))
 								Undo_Redo.add_undo_method(self, 'set_paint_color', PaintColor)
 								break
@@ -664,10 +688,12 @@ func handle_input(event : InputEvent, camera : Camera = get_viewport().get_camer
 				
 				return true
 		else:
-			for cursor in Cursors:
-				cursor.visible = false
+			set_cursor_visibility(false)
+#			for cursor in Cursors:
+#				cursor.visible = false
 	else:
-		for cursor in Cursors:
-			cursor.visible = false
+		set_cursor_visibility(false)
+#		for cursor in Cursors:
+#			cursor.visible = false
 	
 	return false

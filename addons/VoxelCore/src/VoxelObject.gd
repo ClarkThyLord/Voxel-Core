@@ -44,7 +44,7 @@ export(bool) var Greedy : bool = false setget set_greedy
 func set_greedy(greedy : bool = !Greedy, update : bool = true, emit : bool = true) -> void:
 	Greedy = greedy
 	
-	if update: update(emit)
+	if update and is_inside_tree(): update(false, emit)
 	if emit: emit_signal('set_greedy', Greedy)
 
 
@@ -63,7 +63,7 @@ export(bool) var Static_Body : bool = false setget set_static_body
 func set_static_body(staticbody : bool = !Static_Body, update : bool = true, emit : bool = true) -> void:
 	Static_Body = staticbody
 	
-	if update: update_staticbody(emit)
+	if update and is_inside_tree(): update_staticbody(false, emit)
 	if emit: emit_signal('set_static_body', Static_Body)
 
 
@@ -129,9 +129,9 @@ func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true
 	elif voxelset is VoxelSet: voxelset.disconnect('update', self, 'update')
 	
 	voxelset = _voxelset
-	voxelset.connect('update', self, 'update')
+	if not voxelset.is_connected('update', self, 'update'): voxelset.connect('update', self, 'update')
 	
-	if update: update(emit)
+	if update and is_inside_tree(): update(false, emit)
 	if emit: emit_signal('set_voxelset', voxelset)
 
 # NodePath to VoxelSet
@@ -151,6 +151,10 @@ func set_voxelset_path(voxelsetpath : NodePath, update : bool = true, emit : boo
 	elif is_inside_tree() and has_node(voxelsetpath) and get_node(voxelsetpath) is VoxelSet:
 		VoxelSetPath = voxelsetpath
 		set_voxelset(get_node(voxelsetpath), update, emit)
+
+
+var loaded : bool = false
+func has_loaded() -> bool: return loaded
 
 
 
@@ -182,7 +186,7 @@ signal set_voxel(grid)
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
 func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
-	if update: update(emit)
+	if update: update(false, emit)
 	if emit: emit_signal('set_voxel', grid)
 
 # Set raw Voxel data to given grid position, emits 'set_voxel'
@@ -234,7 +238,7 @@ signal erased_voxel(grid)
 #   erase_voxel(Vector(11, -34, 2), false)
 #
 func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> void:
-	if update: update(emit)
+	if update: update(false, emit)
 	if emit: emit_signal('erased_voxel', grid)
 
 
@@ -252,7 +256,7 @@ func set_voxels(voxels : Dictionary, update : bool = true, emit : bool = true) -
 	
 	for grid in voxels: set_voxel(grid, voxels[grid], false, emit)
 	
-	if update: update(emit)
+	if update: update(false, emit)
 	if emit: emit_signal('set_voxels')
 
 # Gets all present Voxel positions
@@ -276,7 +280,7 @@ func erase_voxels(emit : bool = true, update : bool = true) -> void:
 	
 	for grid in voxels: erase_voxel(grid, false, emit)
 	
-	if update: update(emit)
+	if update: update(false, emit)
 	if emit: emit_signal('erased_voxels')
 
 
@@ -286,11 +290,12 @@ signal updated
 # emit   :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
-#   update(false)
+#   update(true, false)
 #
-func update(temp : bool = false, emit : bool = true) -> void:
-	if Static_Body: update_staticbody(temp, emit)
+func update(temp : bool = false, emit : bool = true) -> void:	
+	if temp or Static_Body: update_staticbody(temp, emit)
 	if emit: emit_signal('updated')
+	_save()
 
 signal updated_staticbody
 # Sets and updates static trimesh body, emits 'updated_staticbody'

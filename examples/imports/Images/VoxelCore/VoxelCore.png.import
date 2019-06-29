@@ -1,0 +1,17 @@
+[remap]
+
+importer="VoxelCore.Img.VoxelObject"
+type="PackedScene"
+path="res://.import/VoxelCore.png-47751e25dec9583fb848a027d86b7f61.tscn"
+
+[deps]
+
+source_file="res://examples/imports/Images/VoxelCore/VoxelCore.png"
+dest_files=[ "res://.import/VoxelCore.png-47751e25dec9583fb848a027d86b7f61.tscn" ]
+
+[params]
+
+Name=""
+Greedy=true
+Center=1
+VoxelObject=0

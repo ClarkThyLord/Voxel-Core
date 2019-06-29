@@ -14,10 +14,10 @@ func get_visible_name():
 	return 'VoxelObject'
 
 func get_importer_name():
-	return 'VoxelCore.Vox.VoxelObject'
+	return 'VoxelCore.Img.VoxelObject'
 
 func get_recognized_extensions():
-	return ['vox']
+	return ['png', 'jpg']
 
 func get_resource_type():
 	return 'PackedScene'
@@ -105,7 +105,7 @@ func get_option_visibility(option, options):
 
 
 func import(source_file, save_path, options, r_platform_variants, r_gen_files):
-	var voxels = MagicaVoxelReader.read(source_file)
+	var voxels = ImageReader.read(source_file)
 	if typeof(voxels) == TYPE_DICTIONARY:
 		var voxelobject : VoxelObject
 		var VoxelObject_type : int = options.get('VoxelObject', 0)

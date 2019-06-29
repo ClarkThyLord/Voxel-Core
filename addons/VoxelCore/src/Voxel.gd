@@ -11,7 +11,6 @@ class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
 #
 # Schema:
 # {
-#    const      :   bool         =   Engine.editor_hint,   #   Constant flag, true means Voxel is not editable, otherwise Voxel is editable
 #    color      :   Color        =   Color(0, 0, 0),       #   Main albedo color, typically used when individual albedo colors aren't present
 #    colors     :   Dictionary   =   {}, ::                #   Individual albedo colors, used to define an individual albedo color for any and all Voxel faces
 #       {
@@ -37,7 +36,6 @@ class_name Voxel, 'res://addons/VoxelCore/assets/Voxel.png'
 #
 # Example:
 # {
-#    const      :   true,
 #    color      :   Color(0.6, 0.12, 1),
 #    colors     :   {
 #       Vector3.FORWARD   :   Color(0, 0.33, 0.11),
@@ -69,43 +67,20 @@ const GridCorrection : float = 0.25 * (VoxelSize / 0.25)   # Global correction b
 # Core
 # Helper function for quick 'basic Voxel' creation
 # data       :   Dictionary   -   user defined data
-# constant   :   bool         -   whether Voxel is constant
 # @returns   :   Dictionary   -   basic Voxel; NOTE: contains only necessary information
 #
 # Example:
-#   basic()                 ->   { 'const': true }
-#   basic({}, false)        ->   { 'const': false }
-#   basic({ ... }, false)   ->   { 'const': false, data: { ... } }
+#   basic()          ->   {}
+#   basic({})        ->   {}
+#   basic({ ... })   ->   { data: { ... } }
 #
-static func basic(data : Dictionary = {}, constant : bool = Engine.editor_hint) -> Dictionary:
-	var basic = {
-		'const' : constant
-	}
+static func basic(data : Dictionary = {}) -> Dictionary:
+	var basic = {}
 	
 	if not data.empty(): basic['data'] = data
 	
 	return basic
 
-
-# Helper function for getting 'const' of given Voxel
-# voxel      :   Dictionary   -   Voxel to get value from
-# @returns   :   bool         -   requested value, if found and valid; else, default value
-#
-# Example:
-#   get_constant({ ... })   ->   false
-#
-static func get_constant(voxel : Dictionary) -> bool:
-	return voxel['const'] if typeof(voxel.get('const')) == TYPE_BOOL else Engine.editor_hint
-
-# Helper function for setting 'const' of given Voxel
-# voxel      :   Dictionary   -   Voxel to modify
-# constant   :   bool         -   value to set to given Voxel
-#
-# Example:
-#   set_constant({ ... }, true)
-#
-static func set_constant(voxel : Dictionary, constant : bool = Engine.editor_hint) -> void:
-	voxel['const'] = constant
 
 # Helper function for getting 'data' of given Voxel
 # voxel      :   Dictionary   -   Voxel to get value from
@@ -131,15 +106,14 @@ static func set_data(voxel : Dictionary, data : Dictionary) -> void:
 # Helper function for quick 'colored Voxel' creation
 # color      :   Color        -   main albedo color used by Voxel
 # data       :   Dictionary   -   user defined data
-# constant   :   bool         -   whether Voxel is constant
 # @returns   :   Dictionary   -   colored Voxel; NOTE: contains only necessary information
 #
 # Example:
-#   colored([Color])                         ->   { 'const': true, 'color': [Color] }
-#   colored([Color], { ... }, -1.0, false)   ->   { 'const': false, data: { ... }, 'color': [Color] }
+#   colored([Color])            ->   { 'color': [Color] }
+#   colored([Color], { ... })   ->   { data: { ... }, 'color': [Color] }
 #
-static func colored(color : Color, data : Dictionary = {}, constant : bool = Engine.editor_hint) -> Dictionary:
-	var colored = basic(data, constant)
+static func colored(color : Color, data : Dictionary = {}) -> Dictionary:
+	var colored = basic(data)
 	
 	if not color == Color(): colored['color'] = color
 	
@@ -222,15 +196,14 @@ static func set_color_forward(voxel : Dictionary, color : Color) -> void: set_co
 # texture_position   :   Vector2      -   position of main texture
 # color              :   Color        -   main albedo color used by Voxel
 # data               :   Dictionary   -   user defined data
-# constant           :   bool         -   whether Voxel is constant
 # @returns           :   Dictionary   -   textured Voxel; NOTE: contains only necessary information
 #
 # Example:
-#   textured([Vector2])                                  ->   { 'const': true, 'color': Color(0, 0, 0), 'texture': [Vector2] }
-#   textured([Vector2], [Color], { ... }, -1.0, false)   ->   { 'const': false, data: { ... }, 'color': [Color], 'texture': [Vector2] }
+#   textured([Vector2])                     ->   { 'color': Color(0, 0, 0), 'texture': [Vector2] }
+#   textured([Vector2], [Color], { ... })   ->   { 'data': { ... }, 'color': [Color], 'texture': [Vector2] }
 #
-static func textured(texture_position : Vector2, color : Color = Color(), data : Dictionary = {}, constant : bool = Engine.editor_hint) -> Dictionary:
-	var colored = colored(color, data, constant)
+static func textured(texture_position : Vector2, color : Color = Color(), data : Dictionary = {}) -> Dictionary:
+	var colored = colored(color, data)
 	
 	colored['texture'] = texture_position
 	

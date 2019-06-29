@@ -8,10 +8,10 @@ func get_visible_name():
 	return 'VoxelMesh'
 
 func get_importer_name():
-	return 'VoxelCore.Vox.Mesh'
+	return 'VoxelCore.Img.Mesh'
 
 func get_recognized_extensions():
-	return ['vox']
+	return ['png', 'jpg']
 
 func get_resource_type():
 	return 'Mesh'
@@ -56,7 +56,7 @@ func get_option_visibility(option, options):
 
 
 func import(source_file, save_path, options, r_platform_variants, r_gen_files):
-	var voxels = MagicaVoxelReader.read(source_file)
+	var voxels = ImageReader.read(source_file)
 	if typeof(voxels) == TYPE_DICTIONARY:
 		print('IMPORTED ' + source_file.get_file() + ' AS Mesh')
 		

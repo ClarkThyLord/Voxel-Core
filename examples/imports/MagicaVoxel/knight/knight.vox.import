@@ -1,0 +1,17 @@
+[remap]
+
+importer="VoxelCore.Vox.VoxelObject"
+type="PackedScene"
+path="res://.import/knight.vox-ff0e4b6b1d83788a38f780e2a9f960b6.tscn"
+
+[deps]
+
+source_file="res://examples/imports/MagicaVoxel/knight/knight.vox"
+dest_files=[ "res://.import/knight.vox-ff0e4b6b1d83788a38f780e2a9f960b6.tscn" ]
+
+[params]
+
+Name=""
+Greedy=true
+Center=1
+VoxelObject=0

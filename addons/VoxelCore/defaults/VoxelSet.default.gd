@@ -11,6 +11,12 @@ extends "res://addons/VoxelCore/src/VoxelSet.gd"
 
 # The following will initialize the object as needed
 func _load():
-	.set_voxel(Voxel.colored(Color(1, 0, 0), {'color': 'red'}))
-	.set_voxel(Voxel.colored(Color(0, 1, 0), {'color': 'green'}))
-	.set_voxel(Voxel.colored(Color(0, 0, 1), {'color': 'blue'}))
+	set_voxel(Voxel.colored(Color.black, {'name': 'black'}))
+	set_voxel(Voxel.colored(Color.white, {'name': 'white'}))
+	set_voxel(Voxel.colored(Color.red, {'name': 'red'}))
+	set_voxel(Voxel.colored(Color.green, {'name': 'green'}))
+	set_voxel(Voxel.colored(Color.blue, {'name': 'blue'}))
+	set_voxel(Voxel.colored(Color.yellow, {'name': 'yellow'}))
+	set_voxel(Voxel.colored(Color.cyan, {'name': 'cyan'}))
+	set_voxel(Voxel.colored(Color.purple, {'name': 'purple'}))
+	set_voxel(Voxel.colored(Color.magenta, {'name': 'magenta'}))

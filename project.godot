@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "ImageReader",
+"language": "GDScript",
+"path": "res://addons/VoxelCore/VoxelCore/imports/Images/img.reader.gd"
+}, {
+"base": "Reference",
 "class": "MagicaVoxelReader",
 "language": "GDScript",
 "path": "res://addons/VoxelCore/VoxelCore/imports/MagicaVoxel/mv.reader.gd"
@@ -45,6 +50,7 @@ _global_script_classes=[ {
 "path": "res://addons/VoxelCore/src/VoxelSet.gd"
 } ]
 _global_script_class_icons={
+"ImageReader": "",
 "MagicaVoxelReader": "res://addons/VoxelCore/assets/MagicaVoxel.png",
 "Voxel": "res://addons/VoxelCore/assets/Voxel.png",
 "VoxelEditor": "res://addons/VoxelCore/assets/VoxelEditor.png",
