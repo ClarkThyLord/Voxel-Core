@@ -117,8 +117,27 @@ func erase_voxels(emit : bool = true, update : bool = true) -> void:
 	if emit: emit_signal('erased_voxels')
 
 
+
+# Helper function for quick face validation
+# grid        :    Vector3   -   face location
+# direction   :    Vector3   -   face direction
+# used        :    Array     -   Array of faces already used
+#
+# Example:
+#   is_valid_face([Vector3], [Vector3], Array<Vector3>) -> false
+#
 func is_valid_face(grid : Vector3, direction : Vector3, used : Array = []) -> bool: return not (voxels.has(grid + direction) or used.has(grid))
 
+# Main function used when Greedy Meshing on update
+# st           :   SurfaceTool      -   SurfaceTool to append Greedy Mesh to
+# origin       :   Vector3          -   grid position from which to start Greedy Meshing
+# direction    :   Vector3          -   orientation of face
+# directions   :   Array<Vector3>   -   directions for Greedy Meshing
+# used         :   Array<Vector3>   -   positions already used
+#
+# Example:
+#   greed([SurfaceTool], [Vector3], [Vector3], Array<Vector3>, Array<Vector3>) -> Array<Vector3>
+#
 func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions : Array, used : Array) -> Array:
 	used.append(origin)
 	
@@ -149,7 +168,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 		length += temp.size()
 		g1 += directions[0] * temp.size()
 		g3 += directions[0] * temp.size()
-		print('moved g1 and g3 :' + str(temp.size()))
 		
 		temp = []
 		offset = 1
@@ -167,7 +185,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 		length += temp.size()
 		g2 += directions[1] * temp.size()
 		g4 += directions[1] * temp.size()
-		print('moved g2 and g4 :' + str(temp.size()))
 
 		temp = []
 		offset = 1
@@ -181,7 +198,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 				var temp_voxel = get_voxel(_temp_grid)
 
 				if voxels.has(_temp_grid) and is_valid_face(_temp_grid, direction, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
-#					offset += 1
 					temp.append(_temp_grid)
 				else:
 					valid = false
@@ -194,7 +210,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 
 		g1 += directions[2] * (offset - 1)
 		g2 += directions[2] * (offset - 1)
-		print('moved g1 and g2 :' + str(temp.size()))
 
 		temp = []
 		offset = 1
@@ -207,7 +222,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 				var temp_voxel = get_voxel(_temp_grid)
 
 				if voxels.has(_temp_grid) and is_valid_face(_temp_grid, direction, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
-#					offset += 1
 					temp.append(_temp_grid)
 				else:
 					valid = false
@@ -220,19 +234,12 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 
 		g3 += directions[3] * (offset - 1)
 		g4 += directions[3] * (offset - 1)
-		print('moved g3 and g4 :' + str(temp.size()))
-		
-		print('---')
-	
-#	g1 = origin
-#	g2 = origin
-#	g3 = origin
-#	g4 = origin
-#	used.clear()
 	
 	Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4)
 	
 	return used
+
+
 
 # Updates mesh and StaticBody, emits 'updated'
 # temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody
@@ -253,19 +260,18 @@ func update(temp : bool = false, emit : bool = true) -> void:
 		ST.set_material(material)
 		
 		if Greedy:
-			print('GREEDY')
 			var rights = []
-			var right_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ] # ok
+			var right_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
 			var lefts = []
-			var left_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ] # ok?
+			var left_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
 			var ups = []
-			var up_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ] # ok?
+			var up_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ]
 			var downs = []
-			var down_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ] # ok
+			var down_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ]
 			var backs = []
-			var back_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ] # ok?
+			var back_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
 			var forwards = []
-			var forward_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ] # ok
+			var forward_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
 			
 			for voxel_grid in voxels:
 				if is_valid_face(voxel_grid, Vector3.RIGHT, rights): rights = greed(ST, voxel_grid, Vector3.RIGHT, right_directions, rights)
