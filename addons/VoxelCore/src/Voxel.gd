@@ -364,6 +364,14 @@ static func generate_right(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g
 	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
+	
+#	st.add_vertex(grid_to_pos(g1 + Vector3.RIGHT) + Vector3.RIGHT * 1)
+#	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK) + Vector3.RIGHT * 2)
+#	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP) + Vector3.RIGHT * 3)
+#
+#	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK) + Vector3.RIGHT * 4)
+#	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE) + Vector3.RIGHT * 5)
+#	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP) + Vector3.RIGHT * 6)
 
 static func generate_left(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	st.add_normal(Vector3.LEFT)
@@ -424,3 +432,25 @@ static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3,
 	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT))
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.RIGHT + Vector3.UP))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
+
+# The following is a helper functions used to generate Voxel
+# direction   :
+# st          :   SurfaceTool   -   SurfaceTool to work with
+# voxel       :   Dictionary    -   Voxel data
+# g1          :   Vector3       -   Voxels starting vertex position, as a grid position
+# g2          :   Vector3       -   Voxels second vertex position, as a grid position; uses Voxels starting position if not given
+# g3          :   Vector3       -   Voxels third vertes position, as a grid position; uses Voxels starting position if not given
+# g4          :   Vector3       -   Voxels last vertex position, as a grid position; uses Voxels starting position if not given
+#
+# Example:
+#   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
+#   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
+#
+static func generate_side(direction : Vector3, st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+	match direction:
+		Vector3.RIGHT: generate_right(st, voxel, g1, g2, g3, g4)
+		Vector3.LEFT: generate_left(st, voxel, g1, g2, g3, g4)
+		Vector3.UP: generate_up(st, voxel, g1, g2, g3, g4)
+		Vector3.DOWN: generate_down(st, voxel, g1, g2, g3, g4)
+		Vector3.BACK: generate_back(st, voxel, g1, g2, g3, g4)
+		Vector3.FORWARD: generate_forward(st, voxel, g1, g2, g3, g4)
