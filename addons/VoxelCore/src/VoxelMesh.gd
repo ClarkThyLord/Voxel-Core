@@ -255,17 +255,17 @@ func update(temp : bool = false, emit : bool = true) -> void:
 		if Greedy:
 			print('GREEDY')
 			var rights = []
-			var right_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
+			var right_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ] # ok
 			var lefts = []
-			var left_directions = [ Vector3.BACK, Vector3.FORWARD, Vector3.UP, Vector3.DOWN ]
+			var left_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ] # ok?
 			var ups = []
-			var up_directions = [ Vector3.RIGHT, Vector3.BACK, Vector3.LEFT, Vector3.FORWARD ]
+			var up_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ] # ok?
 			var downs = []
-			var down_directions = [ Vector3.RIGHT, Vector3.BACK, Vector3.LEFT, Vector3.FORWARD ]
+			var down_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ] # ok
 			var backs = []
-			var back_directions = [ Vector3.RIGHT, Vector3.DOWN, Vector3.BACK, Vector3.UP ]
+			var back_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ] # ok?
 			var forwards = []
-			var forward_directions = [ Vector3.RIGHT, Vector3.DOWN, Vector3.BACK, Vector3.UP ]
+			var forward_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ] # ok
 			
 			for voxel_grid in voxels:
 				if is_valid_face(voxel_grid, Vector3.RIGHT, rights): rights = greed(ST, voxel_grid, Vector3.RIGHT, right_directions, rights)

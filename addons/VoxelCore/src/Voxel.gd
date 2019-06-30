@@ -364,38 +364,30 @@ static func generate_right(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g
 	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
-	
-#	st.add_vertex(grid_to_pos(g1 + Vector3.RIGHT) + Vector3.RIGHT * 1)
-#	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK) + Vector3.RIGHT * 2)
-#	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP) + Vector3.RIGHT * 3)
-#
-#	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK) + Vector3.RIGHT * 4)
-#	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE) + Vector3.RIGHT * 5)
-#	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP) + Vector3.RIGHT * 6)
 
 static func generate_left(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	st.add_normal(Vector3.LEFT)
 	st.add_color(get_color_left(voxel))
 	
-	st.add_vertex(grid_to_pos(g1))
-	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP))
-	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.BACK))
-	
-	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP))
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.UP + Vector3.BACK))
-	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.BACK))
+	st.add_vertex(grid_to_pos(g1))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
 
 static func generate_up(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	st.add_normal(Vector3.UP)
 	st.add_color(get_color_up(voxel))
 	
-	st.add_vertex(grid_to_pos(g1 + Vector3.UP))
-	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.UP))
-	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
-	
-	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.UP))
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
-	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP + Vector3.BACK))
+	st.add_vertex(grid_to_pos(g1 + Vector3.UP))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
 
 static func generate_down(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	st.add_normal(Vector3.DOWN)
@@ -413,13 +405,13 @@ static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2
 	st.add_normal(Vector3.BACK)
 	st.add_color(get_color_back(voxel))
 	
-	st.add_vertex(grid_to_pos(g1 + Vector3.BACK))
-	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP + Vector3.BACK))
-	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.BACK))
-	
-	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.UP + Vector3.BACK))
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
-	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
+	
+	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	st.add_vertex(grid_to_pos(g1 + Vector3.BACK))
+	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
 
 static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	st.add_normal(Vector3.FORWARD)
