@@ -158,6 +158,89 @@ func has_loaded() -> bool: return loaded
 
 
 
+# Helper functions
+# NOTE: The following don't need to be implemented by inheritor, but could
+# Calculates the dimension of Voxels
+# @returns   :   Vector3   -   dimension
+func get_dimensions() -> Vector3:
+	var dimensions : Vector3 = Vector3()
+	
+	var extremes : Array = get_extremes()
+	
+	if extremes.size() > 0: dimensions = extremes[1] - extremes[0] + Vector3.ONE
+	
+	return dimensions.abs()
+
+# Calculates the extremes of Voxels
+# @returns   :   Array<Vector3>   -   empty, no Voxels are present; size 2, index 0 is min extreme and index 1 is max extreme
+func get_extremes() -> Array:
+	var extremes = []
+	
+	var voxels : Array = get_voxels().keys()
+	
+	if voxels.size() > 0:
+		var _min : Vector3 = voxels[0]
+		var _max : Vector3 = voxels[0]
+		
+		for voxel_grid in voxels:
+			if voxel_grid.x < _min.x: _min.x = voxel_grid.x
+			if voxel_grid.y < _min.y: _min.y = voxel_grid.y
+			if voxel_grid.z < _min.z: _min.z = voxel_grid.z
+			
+			if voxel_grid.x > _max.x: _max.x = voxel_grid.x
+			if voxel_grid.y > _max.y: _max.y = voxel_grid.y
+			if voxel_grid.z > _max.z: _max.z = voxel_grid.z
+		
+		extremes.append(_min)
+		extremes.append(_max)
+	
+	return extremes
+
+# Translates Voxels by given translation, emits 'set_voxels'
+# translate   :   Vector3   -   translation
+# update      :   bool      -   call on update
+# emit        :   bool      -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   translate([Vector3], false, false)
+#
+func translate(translate : Vector3, update : bool = true, emit : bool = true) -> void:
+	var voxels : Dictionary = get_voxels()
+	
+	if voxels.size() > 0:
+		var _voxels = {}
+		
+		for voxel_grid in voxels: _voxels[voxel_grid + translate] = get_rvoxel(voxel_grid)
+		
+		set_voxels(_voxels, update, emit)
+
+# Centers Voxels to origin, emits 'set_voxels'
+# options   :   Dictionary   -   options to configure Center ::
+#                                  above_axis   :   bool   - center Voxels above x and z axis
+# update    :   bool         -   call on update
+# emit      :   bool         -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   center({ ... }, false, false)
+#
+func center(options : Dictionary = {}, update : bool = true, emit : bool = true) -> void:
+	var extremes : Array = get_extremes()
+	
+	if extremes.size() > 0:
+		var dimensions = extremes[1] - extremes[0] + Vector3.ONE
+		
+		var center_point = (extremes[0] + dimensions / 2).floor()
+		
+		if options.get('above_axis', false): center_point.y += dimensions.y / 2 * -1
+		
+		var voxels = {}
+		
+		for voxel_grid in get_voxels(): voxels[(voxel_grid + (center_point * -1)).floor()] = get_rvoxel(voxel_grid)
+		
+		set_voxels(voxels, update, emit)
+
+
+
 # Abstract
 # NOTE: The following needs to be implemented by inheritor
 # Load necessary data

@@ -31,7 +31,7 @@ func begin(voxelobject : VoxelObject, edit : bool = false, emit : bool = true) -
 	VoxelObjectRef = voxelobject
 	
 	original_greedy = VoxelObjectRef.Greedy
-	VoxelObjectRef.set_greedy(false, false, false)
+#	VoxelObjectRef.set_greedy(false, false, false)
 	VoxelObjectRef.connect('set_greedy', self, 'set_original_greedy')
 	
 	set_edit(edit, false, false)
