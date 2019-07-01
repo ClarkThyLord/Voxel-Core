@@ -65,7 +65,7 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		voxelmesh.set_voxels(voxels, false, false)
 		voxelmesh.set_greedy(options.get('Greedy', true), false, false)
 		
-		# TODO center Voxels if asked
+		if options.get('Center', 0) > 0: voxelmesh.center({'above_axis': options.get('Center', 1) == 2})
 		
 		voxelmesh.update()
 		

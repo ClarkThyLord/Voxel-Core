@@ -11,5 +11,5 @@ dest_files=[ "res://.import/The Starry Night.png-49f4f1bcf1b62f7cc3ab9c50c6ed473
 
 [params]
 
-Greedy=true
-Center=1
+Greedy=false
+Center=2

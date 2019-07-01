@@ -13,5 +13,5 @@ dest_files=[ "res://.import/knight.vox-ff0e4b6b1d83788a38f780e2a9f960b6.tscn" ]
 
 Name=""
 Greedy=true
-Center=1
+Center=2
 VoxelObject=0
