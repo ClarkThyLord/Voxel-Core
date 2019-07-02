@@ -10,8 +10,14 @@ var voxels : Dictionary = {} setget set_voxels
 
 
 # Core
-func _load() -> void: if has_meta('voxels'): voxels = get_meta('voxels')
-func _save() -> void: set_meta('voxels', voxels)
+func _load() -> void:
+	._load()
+	
+	if has_meta('voxels'): voxels = get_meta('voxels')
+func _save() -> void:
+	._save()
+	
+	set_meta('voxels', voxels)
 
 
 func _init() -> void: ._init()
@@ -235,7 +241,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 		g3 += directions[3] * (offset - 1)
 		g4 += directions[3] * (offset - 1)
 	
-	Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4)
+	Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4, voxelset.UVScale)
 	
 	return used
 
@@ -257,6 +263,9 @@ func update(temp : bool = false, emit : bool = true) -> void:
 		material.roughness = 1
 		material.vertex_color_is_srgb = true
 		material.vertex_color_use_as_albedo = true
+		
+		if voxelset is VoxelSet and voxelset.AlbedoTexture != '': material.albedo_texture = load(voxelset.AlbedoTexture)
+		
 		ST.set_material(material)
 		
 		if Greedy:
@@ -282,12 +291,12 @@ func update(temp : bool = false, emit : bool = true) -> void:
 				if is_valid_face(voxel_grid, Vector3.FORWARD, forwards): forwards = greed(ST, voxel_grid, Vector3.FORWARD, forward_directions, forwards)
 		else:
 			for voxel_grid in voxels:
-				if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right(ST, get_voxel(voxel_grid), voxel_grid)
-				if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left(ST, get_voxel(voxel_grid), voxel_grid)
-				if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up(ST, get_voxel(voxel_grid), voxel_grid)
-				if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down(ST, get_voxel(voxel_grid), voxel_grid)
-				if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back(ST, get_voxel(voxel_grid), voxel_grid)
-				if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward(ST, get_voxel(voxel_grid), voxel_grid)
+				if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
+				if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
+				if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
+				if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
+				if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
+				if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
 		
 		ST.index()
 		mesh = ST.commit()

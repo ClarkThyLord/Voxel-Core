@@ -31,7 +31,6 @@ func begin(voxelobject : VoxelObject, edit : bool = false, emit : bool = true) -
 	VoxelObjectRef = voxelobject
 	
 	original_greedy = VoxelObjectRef.Greedy
-#	VoxelObjectRef.set_greedy(false, false, false)
 	VoxelObjectRef.connect('set_greedy', self, 'set_original_greedy')
 	
 	set_edit(edit, false, false)
@@ -50,6 +49,7 @@ func begin(voxelobject : VoxelObject, edit : bool = false, emit : bool = true) -
 	VoxelObjectRef.connect('tree_exiting', self, 'clear')
 	
 	VoxelObjectRef.update(true, emit)
+	VoxelObjectRef.connect('updated', self, 'updated_voxelobject_ref')
 	
 	for cursor in Cursors:
 		cursor.visible = false
@@ -95,6 +95,8 @@ func clear(emit : bool = true) -> void:
 		VoxelObjectRef.disconnect('set_mirror_z', self, 'set_mirror_z_lock')
 		
 		VoxelObjectRef.disconnect('tree_exiting', self, 'clear')
+		
+		VoxelObjectRef.disconnect('updated', self, 'updated_voxelobject_ref')
 		
 		VoxelObjectRef.remove_child(Floor)
 		for cursor in Cursors: VoxelObjectRef.remove_child(cursor)
@@ -622,6 +624,9 @@ func _init() -> void:
 	update_floor()
 
 
+func updated_voxelobject_ref() -> void: if Edit and VoxelObjectRef: VoxelObjectRef.update_staticbody(true)
+
+
 # Handle a input event and does operations if needs be
 # event      :   InputEvent    :   event to handle
 # camera     :   Caemra        :   camera from which to handle event
@@ -650,7 +655,7 @@ func handle_input(event : InputEvent, camera : Camera = get_viewport().get_camer
 						Cursors[cursor].translation = Voxel.pos_correct(Voxel.grid_to_pos(mirrors[cursor]))
 
 			# TODO multithreading?
-			if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+			if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and (!event.pressed or Input.is_key_pressed(KEY_SHIFT)):
 				Undo_Redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]) + ' Operation')
 				for mirror in mirrors:
 					match Tool:

@@ -244,10 +244,12 @@ func center(options : Dictionary = {}, update : bool = true, emit : bool = true)
 # Abstract
 # NOTE: The following needs to be implemented by inheritor
 # Load necessary data
-func _load() -> void: pass
+func _load() -> void:
+	if has_meta('voxelset_path'): set_voxelset_path(get_meta('voxelset_path'), false)
 
 # Save necessary data
-func _save() -> void: pass
+func _save() -> void:
+	set_meta('voxelset_path', VoxelSetPath)
 
 
 # The following will initialize the object as needed

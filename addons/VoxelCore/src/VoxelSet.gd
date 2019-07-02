@@ -42,12 +42,37 @@ func set_voxels(_voxels : Dictionary, emit : bool = true) -> void:
 		emit_signal('set_voxels')
 
 
+# UV Scale per tile
+var UVScale : float = 1.0
+func update_uv_scale() -> void:
+	if TileSize > 0 and AlbedoTexture != '':
+		UVScale = 1.0 / ((load(AlbedoTexture) as Texture).get_width() / TileSize)
+		
+		emit_signal('update')
+
+signal set_tile_size(tilesize)
+# Size of tiles within AlbedoTexture
+export(int) var TileSize : int = 0 setget set_tile_size
+# Setter for TileSize; emits 'update' and 'set_tile_size'
+# tilesize   :   int    -   size of tile
+# emit       :   bool   -   true, emit signal; false, don't emit signal   #   NOTE: Won't emit 'update' if AlbedoTexture isn't set
+# 
+# Example:
+#   set_tile_size(32, false)
+#
+func set_tile_size(tilesize : int, emit : bool = true) -> void:
+	TileSize = abs(tilesize)
+	
+	update_uv_scale()
+	
+	if emit: emit_signal('set_tile_size', TileSize)
+
 signal set_albedo_texture(albedotexture)
 # Path to albedo texture used
-export(String, FILE, "*.png,*.jpg") var AlbedoTexture : String setget set_albedo_texture
-# Setter for AlbedoTexture path; emits 'set_albedo_texture'
+export(String, FILE, "*.png,*.jpg") var AlbedoTexture : String = '' setget set_albedo_texture
+# Setter for AlbedoTexture path; emits 'update' and 'set_albedo_texture'
 # albedotexture   :   String   -   path to set
-# emit            :   bool     -   true, emit signal; false, don't emit signal
+# emit            :   bool     -   true, emit signal; false, don't emit signal   #   NOTE: Won't emit 'update' if TileSize isn't set
 # 
 # Example:
 #   set_albedo_texture([String], false)
@@ -55,9 +80,9 @@ export(String, FILE, "*.png,*.jpg") var AlbedoTexture : String setget set_albedo
 func set_albedo_texture(albedotexture : String = AlbedoTexture, emit : bool = true) -> void:
 	AlbedoTexture = albedotexture
 	
-	if emit:
-		emit_signal('update')
-		emit_signal('set_albedo_texture', AlbedoTexture)
+	update_uv_scale()
+	
+	if emit: emit_signal('set_albedo_texture', AlbedoTexture)
 
 
 

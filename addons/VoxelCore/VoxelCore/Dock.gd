@@ -35,6 +35,9 @@ func _ready() -> void:
 	paint_color.color = get_node('/root/CoreVoxelEditor').PaintColor
 	get_node('/root/CoreVoxelEditor').connect('set_paint_color', self, 'set_paint_color')
 	
+	voxel_set_viewer.voxelset = get_node('/root/CoreVoxelEditor').VoxelObjectRef.voxelset
+	get_node('/root/CoreVoxelEditor').VoxelObjectRef.connect('set_voxelset', voxel_set_viewer, 'set_voxelset')
+	
 	mirror_x.pressed = get_node('/root/CoreVoxelEditor').Mirror_X
 	mirror_x.disabled = get_node('/root/CoreVoxelEditor').Mirror_X_Lock
 	get_node('/root/CoreVoxelEditor').connect('set_mirror_x', mirror_x, 'set_pressed')

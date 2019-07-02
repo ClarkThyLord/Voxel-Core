@@ -98,7 +98,7 @@ func _ready() -> void: set_voxelsetpath(VoxelSetPath)
 #   update()
 #
 func update() -> void:
-	if voxels:
+	if voxels and voxelset is VoxelSet:
 		for child in voxels.get_children():
 			voxels.remove_child(child)
 			child.queue_free()

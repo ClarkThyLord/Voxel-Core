@@ -1,14 +1,13 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/VoxelCore/VoxelCore/Dock.gd" type="Script" id=1]
 [ext_resource path="res://addons/VoxelCore/assets/mirror_x.png" type="Texture" id=2]
 [ext_resource path="res://addons/VoxelCore/assets/mirror_y.png" type="Texture" id=3]
 [ext_resource path="res://addons/VoxelCore/assets/mirror_z.png" type="Texture" id=4]
 [ext_resource path="res://addons/VoxelCore/src/components.gui/ToolSelector/ToolSelector.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/VoxelCore/assets/remove.png" type="Texture" id=6]
-[ext_resource path="res://addons/VoxelCore/src/components.gui/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=7]
-[ext_resource path="res://addons/VoxelCore/assets/VoxelCore.png" type="Texture" id=8]
-[ext_resource path="res://addons/VoxelCore/assets/visible.png" type="Texture" id=9]
+[ext_resource path="res://addons/VoxelCore/src/components.gui/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/VoxelCore/assets/VoxelCore.png" type="Texture" id=7]
+[ext_resource path="res://addons/VoxelCore/assets/visible.png" type="Texture" id=8]
 
 [node name="VoxelCore" type="VBoxContainer"]
 anchor_right = 1.0
@@ -67,9 +66,6 @@ anchor_bottom = 0.0
 margin_right = 215.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-text = "Remove"
-icon = ExtResource( 6 )
-selected = 1
 VisibleTools = [ 0, 1, 2, 3 ]
 
 [node name="color" type="ColorPickerButton" parent="options/tools"]
@@ -81,12 +77,11 @@ Color used to paint voxels"
 text = "CO"
 color = Color( 1, 1, 1, 1 )
 
-[node name="VoxelSetViewer" parent="options" instance=ExtResource( 7 )]
+[node name="VoxelSetViewer" parent="options" instance=ExtResource( 6 )]
 margin_top = 54.0
 margin_right = 250.0
 margin_bottom = 106.0
-DataDisplay = ""
-VoxelSetPath = NodePath("/root/CoreVoxelSet")
+DataDisplay = "name"
 
 [node name="HSeparator2" type="HSeparator" parent="."]
 margin_top = 110.0
@@ -118,7 +113,7 @@ margin_bottom = 24.0
 hint_tooltip = "Edit : (key : space)
 Toggle edit mode"
 text = "Edit"
-icon = ExtResource( 8 )
+icon = ExtResource( 7 )
 
 [node name="autosave" type="CheckBox" parent="settings/editor/HBoxContainer2"]
 margin_left = 117.0
@@ -151,7 +146,7 @@ hint_tooltip = "Cursor visibility toggle
 Toggle cursor visibility"
 pressed = true
 text = "Visible"
-icon = ExtResource( 9 )
+icon = ExtResource( 8 )
 
 [node name="color" type="ColorPickerButton" parent="settings/cursor"]
 margin_left = 157.0
@@ -191,7 +186,7 @@ Toggle floor visiblity"
 disabled = true
 pressed = true
 text = "Visible"
-icon = ExtResource( 9 )
+icon = ExtResource( 8 )
 
 [node name="color" type="ColorPickerButton" parent="settings/floor/HBoxContainer"]
 margin_left = 157.0

@@ -342,30 +342,45 @@ static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector
 
 
 # The following are helper functions used to generate Voxel faces
-# st      :   SurfaceTool   -   SurfaceTool to work with
-# voxel   :   Dictionary    -   Voxel data
-# g1      :   Vector3       -   Voxels starting vertex position, as a grid position
-# g2      :   Vector3       -   Voxels second vertex position, as a grid position; uses Voxels starting position if not given
-# g3      :   Vector3       -   Voxels third vertes position, as a grid position; uses Voxels starting position if not given
-# g4      :   Vector3       -   Voxels last vertex position, as a grid position; uses Voxels starting position if not given
+# st        :   SurfaceTool   -   SurfaceTool to work with
+# voxel     :   Dictionary    -   Voxel data
+# g1        :   Vector3       -   Voxels starting vertex position, as a grid position
+# g2        :   Vector3       -   Voxels second vertex position, as a grid position; uses Voxels starting position if not given
+# g3        :   Vector3       -   Voxels third vertes position, as a grid position; uses Voxels starting position if not given
+# g4        :   Vector3       -   Voxels last vertex position, as a grid position; uses Voxels starting position if not given
+# uvscale   :   float         -   UV scale
 #
 # Example:
 #   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
 #   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
+#   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3), 0.13215)
 #
-static func generate_right(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_right(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.RIGHT)
 	st.add_color(get_color_right(voxel))
+	var uv_position : Vector2 = get_texture_right(voxel)
+	if uv_position == null: uv_position = Vector2(-1, -1)
 	
+	st.add_uv((uv_position + Vector2.ONE) * uvscale)
 	st.add_vertex(grid_to_pos(g1 + Vector3.RIGHT))
+	
+	st.add_uv((uv_position + Vector2.DOWN) * uvscale)
 	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	
+	st.add_uv((uv_position + Vector2.RIGHT) * uvscale)
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
 	
+	
+	st.add_uv((uv_position + Vector2.DOWN) * uvscale)
 	st.add_vertex(grid_to_pos((g2 if g2 != null else g1) + Vector3.RIGHT + Vector3.BACK))
+	
+	st.add_uv((uv_position) * uvscale)
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.ONE))
+	
+	st.add_uv((uv_position + Vector2.RIGHT) * uvscale)
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
 
-static func generate_left(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_left(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.LEFT)
 	st.add_color(get_color_left(voxel))
 	
@@ -377,7 +392,7 @@ static func generate_left(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2
 	st.add_vertex(grid_to_pos(g1))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
 
-static func generate_up(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_up(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.UP)
 	st.add_color(get_color_up(voxel))
 	
@@ -389,7 +404,7 @@ static func generate_up(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 =
 	st.add_vertex(grid_to_pos(g1 + Vector3.UP))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT + Vector3.UP))
 
-static func generate_down(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_down(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.DOWN)
 	st.add_color(get_color_down(voxel))
 	
@@ -401,7 +416,7 @@ static func generate_down(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2
 	st.add_vertex(grid_to_pos((g4 if g4 != null else g1) + Vector3.RIGHT + Vector3.BACK))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.RIGHT))
 
-static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.BACK)
 	st.add_color(get_color_back(voxel))
 	
@@ -413,7 +428,7 @@ static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2
 	st.add_vertex(grid_to_pos(g1 + Vector3.BACK))
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP + Vector3.BACK))
 
-static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.FORWARD)
 	st.add_color(get_color_forward(voxel))
 	
@@ -433,16 +448,17 @@ static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3,
 # g2          :   Vector3       -   Voxels second vertex position, as a grid position; uses Voxels starting position if not given
 # g3          :   Vector3       -   Voxels third vertes position, as a grid position; uses Voxels starting position if not given
 # g4          :   Vector3       -   Voxels last vertex position, as a grid position; uses Voxels starting position if not given
+# uvscale     :   float         -   UV scale
 #
 # Example:
 #   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
 #   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
 #
-static func generate_side(direction : Vector3, st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
+static func generate_side(direction : Vector3, st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	match direction:
-		Vector3.RIGHT: generate_right(st, voxel, g1, g2, g3, g4)
-		Vector3.LEFT: generate_left(st, voxel, g1, g2, g3, g4)
-		Vector3.UP: generate_up(st, voxel, g1, g2, g3, g4)
-		Vector3.DOWN: generate_down(st, voxel, g1, g2, g3, g4)
-		Vector3.BACK: generate_back(st, voxel, g1, g2, g3, g4)
-		Vector3.FORWARD: generate_forward(st, voxel, g1, g2, g3, g4)
+		Vector3.RIGHT: generate_right(st, voxel, g1, g2, g3, g4, uvscale)
+		Vector3.LEFT: generate_left(st, voxel, g1, g2, g3, g4, uvscale)
+		Vector3.UP: generate_up(st, voxel, g1, g2, g3, g4, uvscale)
+		Vector3.DOWN: generate_down(st, voxel, g1, g2, g3, g4, uvscale)
+		Vector3.BACK: generate_back(st, voxel, g1, g2, g3, g4, uvscale)
+		Vector3.FORWARD: generate_forward(st, voxel, g1, g2, g3, g4, uvscale)
