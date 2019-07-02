@@ -104,18 +104,21 @@ static func set_data(voxel : Dictionary, data : Dictionary) -> void:
 
 
 # Helper function for quick 'colored Voxel' creation
-# color      :   Color        -   main albedo color used by Voxel
-# data       :   Dictionary   -   user defined data
-# @returns   :   Dictionary   -   colored Voxel; NOTE: contains only necessary information
+# color      :   Color                        -   main albedo color used by Voxel
+# colors     :   Dictioanry<Vector3, Color>   -   albedo colors to specific sides
+# data       :   Dictionary                   -   user defined data
+# @returns   :   Dictionary                   -   colored Voxel; NOTE: contains only necessary information
 #
 # Example:
-#   colored([Color])            ->   { 'color': [Color] }
-#   colored([Color], { ... })   ->   { data: { ... }, 'color': [Color] }
+#   colored([Color])                                                 ->   { 'color': [Color] }
+#   colored([Color], { Vector.UP : Color(0.3, 0, 0.66) })            ->   { data: { ... }, 'colors': { Vector.UP : Color(0.3, 0, 0.66) } }
+#   colored([Color], { Vector.UP : Color(0.3, 0, 0.66) }, { ... })   ->   { data: { ... }, 'colors': { Vector.UP : Color(0.3, 0, 0.66) }, 'color': [Color] }
 #
-static func colored(color : Color, data : Dictionary = {}) -> Dictionary:
+static func colored(color : Color, colors : Dictionary = {}, data : Dictionary = {}) -> Dictionary:
 	var colored = basic(data)
 	
-	if not color == Color(): colored['color'] = color
+	if not color == Color(): set_color(colored, color)
+	for side in colors: if typeof(side) == TYPE_VECTOR3 and typeof(colors[side]) == TYPE_COLOR: set_color_side(colored, side, colors[side])
 	
 	return colored
 
@@ -193,21 +196,24 @@ static func set_color_forward(voxel : Dictionary, color : Color) -> void: set_co
 
 
 # Helper function for quick 'textured Voxel' creation
-# texture_position   :   Vector2      -   position of main texture
-# color              :   Color        -   main albedo color used by Voxel
-# data               :   Dictionary   -   user defined data
-# @returns           :   Dictionary   -   textured Voxel; NOTE: contains only necessary information
+# texture_position   :   Vector2                        -   position of main texture
+# textures           :   Dictioanry<Vector3, Vector2>   -   texture positions for specific sides
+# color              :   Color                          -   main albedo color used by Voxel
+# colors             :   Dictioanry<Vector3, Color>     -   albedo colors to specific sides
+# data               :   Dictionary                     -   user defined data
+# @returns           :   Dictionary                     -   textured Voxel; NOTE: contains only necessary information
 #
 # Example:
-#   textured([Vector2])                     ->   { 'color': Color(0, 0, 0), 'texture': [Vector2] }
-#   textured([Vector2], [Color], { ... })   ->   { 'data': { ... }, 'color': [Color], 'texture': [Vector2] }
+#   textured([Vector2])                                                    ->   { 'color': Color(0, 0, 0), 'texture': [Vector2] }
+#   textured([Vector2], { Vector.UP : Vector2(0, 3) }, [Color], { ... })   ->   { 'data': { ... }, 'color': [Color], 'texture': [Vector2], 'textures': { Vector.UP : Vector2(0, 3) } }
 #
-static func textured(texture_position : Vector2, color : Color = Color(), data : Dictionary = {}) -> Dictionary:
-	var colored = colored(color, data)
+static func textured(texture_position : Vector2, textures : Dictionary, color : Color = Color(), colors : Dictionary = {}, data : Dictionary = {}) -> Dictionary:
+	var textured = colored(color, colors, data)
 	
-	colored['texture'] = texture_position
+	set_texture(textured, texture_position)
+	for side in textures: if typeof(side) == TYPE_VECTOR3 and typeof(textures[side]) == TYPE_VECTOR2: set_texture_side(textured, side, textures[side])
 	
-	return colored
+	return textured
 
 
 # Helper function for retrieving 'main texture position' of given Voxel
@@ -458,7 +464,7 @@ static func generate_down(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2
 static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.BACK)
 	st.add_color(get_color_back(voxel))
-	var uv_position : Vector2 = get_texture_up(voxel)
+	var uv_position : Vector2 = get_texture_back(voxel)
 	if uv_position == null: uv_position = Vector2(-1, -1)
 	
 	st.add_uv((uv_position) * uvscale)
@@ -483,7 +489,7 @@ static func generate_back(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2
 static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	st.add_normal(Vector3.FORWARD)
 	st.add_color(get_color_forward(voxel))
-	var uv_position : Vector2 = get_texture_down(voxel)
+	var uv_position : Vector2 = get_texture_forward(voxel)
 	if uv_position == null: uv_position = Vector2(-1, -1)
 	
 	st.add_uv((uv_position + Vector2.ONE) * uvscale)

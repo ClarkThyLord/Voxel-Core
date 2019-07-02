@@ -104,6 +104,7 @@ func clear(emit : bool = true) -> void:
 		VoxelObjectRef.update(false, emit)
 		
 		VoxelObjectRef = null
+		WorkingVoxel = null
 	
 	if emit: emit_signal('cleared')
 
