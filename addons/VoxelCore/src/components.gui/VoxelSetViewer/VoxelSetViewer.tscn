@@ -2,13 +2,59 @@
 
 [ext_resource path="res://addons/VoxelCore/src/components.gui/VoxelSetViewer/VoxelSetViewer.gd" type="Script" id=1]
 
-
 [node name="VoxelSetViewer" type="ScrollContainer"]
 margin_right = 50.0
-margin_bottom = 50.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 50, 50 )
 scroll_vertical_enabled = false
 script = ExtResource( 1 )
 
 [node name="Voxels" type="HBoxContainer" parent="."]
+margin_right = 320.0
+margin_bottom = 40.0
 custom_constants/separation = -5
+[connection signal="focus_entered" from="Voxels/VoxelViewer" to="Voxels/VoxelViewer" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer" to="Voxels/VoxelViewer" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer" to="Voxels/VoxelViewer" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer" to="Voxels/VoxelViewer" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer" to="Voxels/VoxelViewer" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer2" to="Voxels/VoxelViewer2" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer2" to="Voxels/VoxelViewer2" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer2" to="Voxels/VoxelViewer2" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer2" to="Voxels/VoxelViewer2" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer2" to="Voxels/VoxelViewer2" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer3" to="Voxels/VoxelViewer3" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer3" to="Voxels/VoxelViewer3" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer3" to="Voxels/VoxelViewer3" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer3" to="Voxels/VoxelViewer3" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer3" to="Voxels/VoxelViewer3" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer4" to="Voxels/VoxelViewer4" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer4" to="Voxels/VoxelViewer4" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer4" to="Voxels/VoxelViewer4" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer4" to="Voxels/VoxelViewer4" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer4" to="Voxels/VoxelViewer4" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer5" to="Voxels/VoxelViewer5" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer5" to="Voxels/VoxelViewer5" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer5" to="Voxels/VoxelViewer5" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer5" to="Voxels/VoxelViewer5" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer5" to="Voxels/VoxelViewer5" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer6" to="Voxels/VoxelViewer6" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer6" to="Voxels/VoxelViewer6" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer6" to="Voxels/VoxelViewer6" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer6" to="Voxels/VoxelViewer6" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer6" to="Voxels/VoxelViewer6" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer7" to="Voxels/VoxelViewer7" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer7" to="Voxels/VoxelViewer7" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer7" to="Voxels/VoxelViewer7" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer7" to="Voxels/VoxelViewer7" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer7" to="Voxels/VoxelViewer7" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer8" to="Voxels/VoxelViewer8" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer8" to="Voxels/VoxelViewer8" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer8" to="Voxels/VoxelViewer8" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer8" to="Voxels/VoxelViewer8" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer8" to="Voxels/VoxelViewer8" method="_on_focus_exited"]
+[connection signal="focus_entered" from="Voxels/VoxelViewer9" to="Voxels/VoxelViewer9" method="_on_focus_entered"]
+[connection signal="focus_exited" from="Voxels/VoxelViewer9" to="Voxels/VoxelViewer9" method="_on_focus_exited"]
+[connection signal="gui_input" from="Voxels/VoxelViewer9" to="Voxels/VoxelViewer9" method="_on_gui_input"]
+[connection signal="mouse_entered" from="Voxels/VoxelViewer9" to="Voxels/VoxelViewer9" method="_on_focus_entered"]
+[connection signal="mouse_exited" from="Voxels/VoxelViewer9" to="Voxels/VoxelViewer9" method="_on_focus_exited"]

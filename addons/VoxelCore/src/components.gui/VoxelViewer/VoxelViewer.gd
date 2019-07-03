@@ -4,7 +4,8 @@ extends ColorRect
 
 
 # Refrences
-onready var voxel : ColorRect = get_node('VoxelColor')
+onready var _color : ColorRect = get_node('Color')
+onready var _texture : ColorRect = get_node('Texture')
 
 
 
@@ -81,14 +82,21 @@ export(Color) var voxel_color : Color = Color() setget set_voxel_color
 func set_voxel_color(color : Color) -> void:
 	voxel_color = color
 	
-	if voxel: voxel.color = voxel_color
+	if _color: _color.color = voxel_color
+
+export(Texture) var voxel_texture : Texture setget set_voxel_texture
+func set_voxel_texture(texture : Texture) -> void:
+	voxel_texture = texture
+	
+	if _texture: _texture.texture = voxel_texture
 
 
 
 # Core
 func _ready():
 	color = unfocused_color
-	voxel.color = voxel_color
+	_color.color = voxel_color
+	_texture.texture = voxel_texture
 	update_text(hint_tooltip)
 
 

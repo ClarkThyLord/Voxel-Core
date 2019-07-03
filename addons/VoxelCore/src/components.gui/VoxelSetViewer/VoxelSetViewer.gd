@@ -105,6 +105,10 @@ func update() -> void:
 		
 		var voxel_ids : Array = voxelset.voxels.keys()
 		voxel_ids.sort()
+		
+		var voxelset_texture : Image
+		if voxelset.AlbedoTexture != '': voxelset_texture = (load(voxelset.AlbedoTexture) as Texture).get_data()
+		
 		for voxel_id in voxel_ids:
 			var voxel = voxelset.get_voxel(voxel_id)
 			var voxelview := VoxelView.instance()
@@ -117,6 +121,18 @@ func update() -> void:
 			voxelview.update_text(text)
 			
 			voxelview.set_voxel_color(Voxel.get_color(voxel))
+			
+			var texture_pos : Vector2 = Voxel.get_texture(voxel)
+			if voxelset_texture and not texture_pos == null:
+				var img_tex := ImageTexture.new()
+				var rec := Rect2(Vector2.ONE * texture_pos * voxelset.TileSize, Vector2.ONE * voxelset.TileSize)
+				var tile_tex := voxelset_texture.get_rect(rec)
+				
+				tile_tex.resize(30, 30)
+				
+				img_tex.create_from_image(tile_tex)
+				
+				voxelview.set_voxel_texture(img_tex)
 			
 			voxelview.connect('set_active', self, 'set_active_voxel')
 			
