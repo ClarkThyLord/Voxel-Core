@@ -130,6 +130,7 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		if options.get('Center', 0) > 0: voxelobject.center({'above_axis': options.get('Center', 1) == 2})
 		
 		voxelobject.update()
+		voxelobject._save()
 		
 		var scene = PackedScene.new()
 		if scene.pack(voxelobject) == OK:

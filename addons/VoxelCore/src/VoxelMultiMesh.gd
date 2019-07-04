@@ -30,7 +30,7 @@ func set_chunks(_chunks : Dictionary, emit : bool = true) -> void:
 	for chunk in _chunks:
 		if typeof(chunk) == TYPE_VECTOR3 and _chunks[chunk] is VoxelMesh:
 			chunks[chunk] = _chunks[chunk]
-#			add_child((_chunks[chunk] as VoxelMesh))
+			add_child((_chunks[chunk] as VoxelMesh))
 	queue_chunks = chunks.keys()
 
 signal set_chunk_size(chunksize)

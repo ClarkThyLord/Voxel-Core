@@ -4,7 +4,6 @@ extends EditorImportPlugin
 
 
 # Refrences
-# TODO make use of VoxelMultiMesh
 const VoxelObject = preload('res://addons/VoxelCore/src/VoxelObject.gd')
 
 
@@ -26,8 +25,7 @@ func get_save_extension():
 	return 'tscn'
 
 
-enum Presets { DEFAULT, VOXELMESH }
-#enum Presets { DEFAULT, VOXELMESH, VOXELMULTIMESH }
+enum Presets { DEFAULT, VOXELMESH, VOXELMULTIMESH }
 
 func get_preset_count():
 	return Presets.size()
@@ -111,9 +109,8 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		var VoxelObject_type : int = options.get('VoxelObject', 0)
 		
 		if VoxelObject_type == 0:
-			VoxelObject_type = 1
-#			if voxels.size() < 1000: VoxelObject_type = 1
-#			else: VoxelObject_type = 2
+			if voxels.size() > 1000: VoxelObject_type = 2
+			else: VoxelObject_type = 1
 		
 		match VoxelObject_type:
 			1:
@@ -121,17 +118,19 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 				voxelobject = VoxelMesh.new()
 			2: 
 				VoxelObject_type = 2
+				voxelobject = VoxelMultiMesh.new()
 		
 		print('IMPORTED ' + source_file.get_file() + ' AS VoxelObject : ' + str(Presets.keys()[VoxelObject_type]).capitalize())
 		
 		voxelobject.set_name(options['Name'] if options['Name'] != '' else source_file.get_file().replace('.' + source_file.get_extension(), ''))
 		
-		voxelobject.set_voxels(voxels, false, false)
 		voxelobject.set_greedy(options.get('Greedy', true), false, false)
+		voxelobject.set_voxels(voxels, false, false)
 		
 		if options.get('Center', 0) > 0: voxelobject.center({'above_axis': options.get('Center', 1) == 2})
 		
 		voxelobject.update()
+		voxelobject._save()
 		
 		var scene = PackedScene.new()
 		if scene.pack(voxelobject) == OK:
