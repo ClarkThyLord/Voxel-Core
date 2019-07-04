@@ -204,7 +204,7 @@ func get_extremes() -> Array:
 # Example:
 #   translate([Vector3], false, false)
 #
-func translate(translate : Vector3, update : bool = true, emit : bool = true) -> void:
+func _translate(translate : Vector3, update : bool = true, emit : bool = true) -> void:
 	var voxels : Dictionary = get_voxels()
 	
 	if voxels.size() > 0:
@@ -380,7 +380,7 @@ signal updated
 func update(temp : bool = false, emit : bool = true) -> void:	
 	if temp or Static_Body: update_staticbody(temp, emit)
 	if emit: emit_signal('updated')
-	_save()
+#	_save()
 
 signal updated_staticbody
 # Sets and updates static trimesh body, emits 'updated_staticbody'

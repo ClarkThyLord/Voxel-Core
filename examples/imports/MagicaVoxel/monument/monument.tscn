@@ -1,9 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://examples/imports/MagicaVoxel/monument/monument.vox" type="ArrayMesh" id=1]
+[ext_resource path="res://examples/imports/MagicaVoxel/monument/monument.vox" type="PackedScene" id=1]
 
 [node name="Spatial" type="Spatial"]
 
-[node name="monument" type="MeshInstance" parent="."]
-mesh = ExtResource( 1 )
-material/0 = null
+[node name="monument" parent="." instance=ExtResource( 1 )]

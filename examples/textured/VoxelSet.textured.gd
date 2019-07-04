@@ -5,6 +5,9 @@ extends "res://addons/VoxelCore/src/VoxelSet.gd"
 
 # The following will initialize the object as needed
 func _load():
+	set_tile_size(16)
+	set_albedo_texture("res://examples/textured/Tileset.png")
+	
 	set_voxel(Voxel.colored(Color.black, {}, {'name': 'black'}))
 	set_voxel(Voxel.colored(Color.white, {}, {'name': 'white'}))
 	

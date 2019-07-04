@@ -21,7 +21,6 @@ func _save() -> void:
 
 
 func _init() -> void: ._init()
-#func _ready() -> void: ._ready()
 
 
 # Set Voxel as given to grid position, emits 'set_voxel'
@@ -241,7 +240,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 		g3 += directions[3] * (offset - 1)
 		g4 += directions[3] * (offset - 1)
 	
-	Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4, voxelset.UVScale)
+	Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4, voxelset.UVScale if voxelset else 1.0)
 	
 	return used
 
@@ -255,6 +254,8 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 #   update(false)
 #
 func update(temp : bool = false, emit : bool = true) -> void:
+	print('updating VoxelMesh')
+	
 	if voxels == null: return;
 	if voxels.size() > 0:
 		var ST = SurfaceTool.new()
@@ -291,18 +292,19 @@ func update(temp : bool = false, emit : bool = true) -> void:
 				if is_valid_face(voxel_grid, Vector3.FORWARD, forwards): forwards = greed(ST, voxel_grid, Vector3.FORWARD, forward_directions, forwards)
 		else:
 			for voxel_grid in voxels:
-				if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
-				if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
-				if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
-				if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
-				if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
-				if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale)
+				if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale if voxelset else 1.0)
+				if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale if voxelset else 1.0)
+				if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale if voxelset else 1.0)
+				if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale if voxelset else 1.0)
+				if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale if voxelset else 1.0)
+				if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, voxelset.UVScale if voxelset else 1.0)
 		
 		ST.index()
 		mesh = ST.commit()
 	else: mesh = null
 	
 	.update(temp, emit)
+	_save()
 
 # Sets and updates static trimesh body, emits 'updated_staticbody'
 # temp   :   bool   -   true, build temporary StaticBody; false, don't build temporary StaticBody
@@ -338,4 +340,4 @@ func update_staticbody(temp : bool = false, emit : bool = true) -> void:
 		remove_child(staticbody)
 		staticbody.queue_free()
 	
-	.update_staticbody(emit)
+	.update_staticbody(temp, emit)

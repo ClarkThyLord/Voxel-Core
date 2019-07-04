@@ -1,15 +1,17 @@
 [remap]
 
-importer="VoxelCore.Vox.Mesh"
-type="Mesh"
-path="res://.import/monument.vox-4deebf469f923ae16e4e1f742020f63d.mesh"
+importer="VoxelCore.Vox.VoxelObject"
+type="PackedScene"
+path="res://.import/monument.vox-4deebf469f923ae16e4e1f742020f63d.tscn"
 
 [deps]
 
 source_file="res://examples/imports/MagicaVoxel/monument/monument.vox"
-dest_files=[ "res://.import/monument.vox-4deebf469f923ae16e4e1f742020f63d.mesh" ]
+dest_files=[ "res://.import/monument.vox-4deebf469f923ae16e4e1f742020f63d.tscn" ]
 
 [params]
 
+Name=""
 Greedy=true
 Center=2
+VoxelObject=0
