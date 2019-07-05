@@ -4,46 +4,11 @@ class_name VoxelMultiMesh, 'res://addons/VoxelCore/assets/VoxelMultiMesh.png'
 
 
 
+# VoxeMultiMesh is a more complex VoxelObject, with the objective of visualizing large amounts of Voxels with little to no latency between operations and updates
+
+
+
 # Declarations
-var thread : Thread = Thread.new()
-
-
-signal set_processing(processing)
-var Processing : bool = false setget set_processing
-func set_processing(processing : bool = !Processing, emit : bool = true) -> void:
-	if emit and Processing != processing: emit_signal('set_processing', Processing)
-	
-	Processing = processing
-
-
-var queue_chunks : Array = [] setget set_queue_chunks
-func set_queue_chunks(queuechunks : Array) -> void: return
-
-var update_chunks : Array = [] setget set_update_chunks
-func set_update_chunks(updatechunks : Array) -> void: return
-
-
-var chunks : Dictionary = {} setget set_chunks
-func set_chunks(_chunks : Dictionary, emit : bool = true) -> void:
-	erase_voxels(false, emit)
-	
-	for chunk in _chunks:
-		if typeof(chunk) == TYPE_VECTOR3 and _chunks[chunk] is VoxelMesh:
-			chunks[chunk] = _chunks[chunk]
-			add_child((_chunks[chunk] as VoxelMesh))
-	queue_chunks = chunks.keys()
-
-signal set_chunk_size(chunksize)
-export(int, 2, 16, 2) var ChunkSize : int = 10 setget set_chunk_size
-func set_chunk_size(chunksize : int, update : bool = true, emit : bool = true) -> void:
-	ChunkSize = chunksize
-	
-	remake_chunks(false, emit)
-	
-	if update: update(emit)
-	if emit: emit_signal('set_chunk_size', ChunkSize)
-
-
 # Setter for Greedy, emits 'set_greedy'
 # greedy   :   bool   -   value to set
 # update   :   bool   -   call on update
@@ -55,7 +20,7 @@ func set_chunk_size(chunksize : int, update : bool = true, emit : bool = true) -
 func set_greedy(greedy : bool = !Greedy, update : bool = true, emit : bool = true) -> void:
 	Greedy = greedy
 	
-	for chunk in chunks: (chunks[chunk] as VoxelMesh).set_greedy(greedy, false, false)
+	for chunk_position in chunks: (chunks[chunk_position] as VoxelMesh).set_greedy(greedy, false, false)
 	
 	queue_chunks = chunks.keys()
 	
@@ -72,6 +37,7 @@ func set_greedy(greedy : bool = !Greedy, update : bool = true, emit : bool = tru
 #
 func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true) -> void:
 	if voxelset == _voxelset: return;
+	elif _voxelset == null: _voxelset = get_node('/root/CoreVoxelSet')
 	elif voxelset is VoxelSet: voxelset.disconnect('update', self, 'update')
 	
 	voxelset = _voxelset
@@ -84,26 +50,72 @@ func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true
 	if emit: emit_signal('set_voxelset', voxelset)
 
 
+# Thread used for loading, creating and updating Voxels/Chunks
+var thread : Thread = Thread.new() setget set_thread
+func set_thread(_thread : Thread) -> void: return               #   Shouldn't be settable externally
+
+
+signal set_chunk_size(chunksize)
+# Dimensions for Chunks
+export(int, 2, 16, 2) var ChunkSize : int = 10 setget set_chunk_size
+# Setter for ChunkSize, emits 'set_chunk_size'
+# chunksize   :   bool   -   value to set
+# emit        :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_chunk_size(16, false, false)
+#
+func set_chunk_size(chunksize : int, emit : bool = true) -> void:
+	ChunkSize = chunksize
+	
+	remake_chunks(false, emit)
+	if emit: emit_signal('set_chunk_size', ChunkSize)
+
+# Chunks are VoxelMeshes that compose this VoxelObject
+var chunks : Dictionary = {} setget set_chunks
+func set_chunks(_chunks : Dictionary) -> void: return           #   Shouldn't be settable externally
+
+var chunks_data : Dictionary = {} setget set_chunks_data
+func set_chunks_data(chunksdata : Dictionary) -> void: return   #   Shouldn't be settable externally
+
+
+# Queue Chunks will be placed into update chunks on the next update call
+var queue_chunks : Array = [] setget set_queue_chunks
+func set_queue_chunks(queuechunks : Array) -> void: return      #   Shouldn't be settable externally
+
+func queue_chunk(chunk_position : Vector3) -> void:
+	if not queue_chunks.has(chunk_position) and not update_chunks.has(chunk_position): queue_chunks.append(chunk_position)
+
+# Update Chunks will be updated in order within thread
+var update_chunks : Array = [] setget set_update_chunks
+func set_update_chunks(updatechunks : Array) -> void: return    #   Shouldn't be settable externally
+
+
 
 # Core
 func _load() -> void:
 	._load()
 	
-	if has_meta('chunks'): set_chunks(get_meta('chunks'))
+	if has_meta('chunks_data'):
+		chunks_data = get_meta('chunks_data')
+		update_chunks = chunks_data.keys()
 func _save() -> void:
 	._save()
 	
-	set_meta('chunks', chunks)
+	set_meta('chunks_data', chunks_data)
 
 
-func _init() -> void: ._init()
+# The following will initialize the object as needed
+func _init() -> void: _load()
+func _ready() -> void:
+	set_voxelset_path(VoxelSetPath, false)
+	_load()
 
 func _exit_tree(): if thread.is_active(): thread.wait_to_finish()
 
 
 func _process(delta):
-	if not thread.is_active() and update_chunks.size() > 0:
-		set_processing(true)
+	if update_chunks.size() > 0 and not thread.is_active():
 		thread.start(self, 'update_chunk', [thread, update_chunks[0]])
 
 
@@ -118,13 +130,15 @@ func _process(delta):
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
 func set_voxel(grid : Vector3, voxel, update : bool = false, emit : bool = true) -> void:
-	var chunk_grid = grid_to_chunk(grid)
+	var chunk_position = grid_to_chunk(grid)
 	
-	if not chunks.has(chunk_grid): create_chunk(chunk_grid)
+	if not chunks_data.has(chunk_position): create_chunk_in_data(chunk_position)
 	
-	(chunks[chunk_grid] as VoxelMesh).set_voxel(grid, voxel, false, false)
+#	(chunks[chunk_position] as VoxelMesh).set_voxel(grid, voxel, false, false)
+	chunks_data[chunk_position][grid] = voxel
 	
-	if not queue_chunks.has(chunk_grid): queue_chunks.append(chunk_grid)
+	queue_chunk(chunk_position)
+#	if not queue_chunks.has(chunk_position) and not update_chunks.has(chunk_position): queue_chunks.append(chunk_position)
 	
 	if update: update(false, emit)
 	if emit: emit_signal('set_voxel', grid)
@@ -160,12 +174,13 @@ func get_voxel(grid : Vector3) -> Dictionary: return .get_voxel(grid)
 #   get_rvoxel(Vector(-7, 0, 96))    ->   { ... }   #   NOTE: Returned Voxel data
 #
 func get_rvoxel(grid : Vector3):
-	var chunk_grid = grid_to_chunk(grid)
+	var chunk_position = grid_to_chunk(grid)
 	
-#	if chunks.has(chunk_grid):
-#		return (chunks[chunk_grid] as VoxelMesh).get_voxel(grid)
+#	if chunks.has(chunk_position):
+#		return (chunks[chunk_position] as VoxelMesh).get_voxel(grid)
 #	else: return null
-	return (chunks[chunk_grid] as VoxelMesh).get_voxel(grid) if chunks.has(chunk_grid) else null
+#	return (chunks[chunk_position] as VoxelMesh).get_voxel(grid) if chunks.has(chunk_position) else null
+	return (chunks_data[chunk_position] as Dictionary).get(grid) if chunks_data.has(chunk_position) else null
 
 # Erase Voxel from grid position, emits 'erased_voxel'
 # grid     :   Vector3   -   grid position to erase Voxel from
@@ -176,13 +191,13 @@ func get_rvoxel(grid : Vector3):
 #   erase_voxel(Vector(11, -34, 2), false)
 #
 func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> void:
-	var chunk_grid = grid_to_chunk(grid)
+	var chunk_position = grid_to_chunk(grid)
 	
-	if chunks.has(chunk_grid):
-		(chunks[chunk_grid] as VoxelMesh).erase_voxel(grid, false, false)
-	
-	if not queue_chunks.has(chunk_grid): queue_chunks.append(chunk_grid)
-#	update_chunks.append(chunk_grid)
+	if chunks_data.has(chunk_position):
+		(chunks_data[chunk_position] as Dictionary).erase(grid)
+		
+		queue_chunk(chunk_position)
+#		if not queue_chunks.has(chunk_position): queue_chunks.append(chunk_position)
 	
 	.erase_voxel(grid, update, emit)
 
@@ -214,29 +229,31 @@ func set_voxels(_voxels : Dictionary, update : bool = true, emit : bool = true) 
 func get_voxels() -> Dictionary:
 	var voxels = {}
 	
-	for chunk_grid in chunks:
-		var _voxels = (chunks[chunk_grid] as VoxelMesh).get_voxels()
+	for chunk_position in chunks_data:
+		var _voxels = chunks_data[chunk_position]
 		for _voxel_grid in _voxels: voxels[_voxel_grid] = _voxels[_voxel_grid]
 	
 	return voxels
 
 # Erases all present Voxels, emits 'erased_voxels'
-# emit     :   bool   -   true, emit signal; false, don't emit signal
 # update   :   bool   -   call on update
+# emit     :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
-#   erase_voxels(false)
+#   erase_voxels(false, false)
 #
-func erase_voxels(emit : bool = true, update : bool = true) -> void:
-	for chunk in chunks:
-		remove_child(chunks[chunk])
-		chunks[chunk].queue_free()
+func erase_voxels(update : bool = true, emit : bool = true) -> void:
+	for chunk_position in chunks:
+		remove_child((chunks[chunk_position] as VoxelMesh))
+		(chunks[chunk_position] as VoxelMesh).queue_free()
 	
 	chunks.clear()
+	chunks_data.clear()
 	queue_chunks.clear()
 	update_chunks.clear()
 	
-	if update: update(false, emit)
+	# no need to update
+#	if update: update(false, emit)
 	if emit: emit_signal('erased_voxels')
 
 
@@ -248,7 +265,6 @@ func erase_voxels(emit : bool = true, update : bool = true) -> void:
 #   update(false)
 #
 func update(temp : bool = false, emit : bool = true) -> void:
-	print('updating VoxelMultiMesh')
 	if queue_chunks.size() > 0:
 		update_chunks = queue_chunks
 		queue_chunks = []
@@ -264,7 +280,7 @@ func update(temp : bool = false, emit : bool = true) -> void:
 #   update_staticbody(false)
 #
 func update_staticbody(temp : bool = false, emit : bool = true) -> void:
-	for chunk_grid in chunks: (chunks[chunk_grid] as VoxelMesh).update_staticbody(temp, false)
+	for chunk_position in chunks: (chunks[chunk_position] as VoxelMesh).update_staticbody(temp, false)
 	
 	.update_staticbody(temp, emit)
 
@@ -272,31 +288,37 @@ func update_staticbody(temp : bool = false, emit : bool = true) -> void:
 func grid_to_chunk(grid : Vector3) -> Vector3: return Vector3(floor(grid.x / ChunkSize), floor(grid.y / ChunkSize), floor(grid.z / ChunkSize))
 
 
-func create_chunk(chunk_position, update : bool = true, emit : bool = true) -> void:
+func create_chunk(chunk_position : Vector3, add : bool = false) -> VoxelMesh:
 	var chunk : VoxelMesh = VoxelMesh.new()
 	
 	chunk.set_greedy(Greedy, false, false)
-#	chunk.Static_Body = Static_Body
 	
 	chunks[chunk_position] = chunk
-	add_child(chunk)
+	if add: call_deferred('add_child', chunk)
+	
+	return chunk
+
+func create_chunk_in_data(chunk_position) -> void:
+	chunks_data[chunk_position] = {}
 
 
+signal updated_chunks
 func update_chunk(data : Array) -> void:
 	var thread : Thread = data[0]
-	var chunk : VoxelMesh = chunks[data[1]]
+	var chunk : VoxelMesh = chunks[data[1]] if chunks.has(data[1]) else create_chunk(data[1])
+	var chunk_data : Dictionary = chunks_data[data[1]]
 	
-	chunk.update(false, false)
+	chunk.set_voxels(chunk_data, true, false)
 	
 	if not is_a_parent_of(chunk): call_deferred('add_child', chunk)
 	
 	call_deferred('updated_chunk', thread, data[1])
 
-func updated_chunk(thread : Thread, chunk_grid : Vector3) -> void:
-	update_chunks.erase(chunk_grid)
+func updated_chunk(thread : Thread, chunk_position : Vector3) -> void:
+	update_chunks.erase(chunk_position)
 	if queue_chunks.size() == 0 and update_chunks.size() == 0:
 		_save()
-		set_processing(false)
+		emit_signal('updated_chunks')
 	thread.wait_to_finish()
 
 

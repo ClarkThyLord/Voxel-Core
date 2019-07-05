@@ -126,6 +126,7 @@ var voxelset : VoxelSet setget set_voxelset
 #
 func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true) -> void:
 	if voxelset == _voxelset: return;
+	elif _voxelset == null: _voxelset = get_node('/root/CoreVoxelSet')
 	elif voxelset is VoxelSet: voxelset.disconnect('update', self, 'update')
 	
 	voxelset = _voxelset
@@ -253,10 +254,10 @@ func _save() -> void:
 
 
 # The following will initialize the object as needed
-func _init() -> void: _load()
-func _ready() -> void:
-	set_voxelset_path(VoxelSetPath, false)
-	_load()
+#func _init() -> void: _load()
+#func _ready() -> void:
+#	set_voxelset_path(VoxelSetPath, false)
+#	_load()
 
 
 signal set_voxel(grid)
@@ -337,7 +338,7 @@ signal set_voxels
 #   set_voxel({ ... })
 #
 func set_voxels(voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
-	erase_voxels(emit)
+	erase_voxels(false, emit)
 	
 	for grid in voxels: set_voxel(grid, voxels[grid], false, emit)
 	
@@ -354,13 +355,13 @@ func get_voxels() -> Dictionary: return {}
 
 signal erased_voxels
 # Erases all present Voxels, emits 'erased_voxels'
-# emit     :   bool   -   true, emit signal; false, don't emit signal
 # update   :   bool   -   call on update
+# emit     :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
-#   erase_voxels(false)
+#   erase_voxels(false, false)
 #
-func erase_voxels(emit : bool = true, update : bool = true) -> void:
+func erase_voxels(update : bool = true, emit : bool = true) -> void:
 	var voxels = get_voxels()
 	
 	for grid in voxels: erase_voxel(grid, false, emit)

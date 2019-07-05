@@ -4,6 +4,10 @@ class_name VoxelMesh, 'res://addons/VoxelCore/assets/VoxelMesh.png'
 
 
 
+# VoxeMesh is the most basic VoxelObject class, should be used to display a small amount of Voxels, n <= 1000
+
+
+
 # Declarations
 var voxels : Dictionary = {} setget set_voxels
 
@@ -20,7 +24,11 @@ func _save() -> void:
 	set_meta('voxels', voxels)
 
 
-func _init() -> void: ._init()
+# The following will initialize the object as needed
+func _init() -> void: _load()
+func _ready() -> void:
+	set_voxelset_path(VoxelSetPath, false)
+	_load()
 
 
 # Set Voxel as given to grid position, emits 'set_voxel'
@@ -93,7 +101,7 @@ func erase_voxel(grid : Vector3, update : bool = false, emit : bool = true) -> v
 #   set_voxel({ ... })
 #
 func set_voxels(_voxels : Dictionary, update : bool = true, emit : bool = true) -> void:
-	erase_voxels(emit)
+	erase_voxels(false, emit)
 	
 	voxels = _voxels.duplicate(true)
 	
@@ -109,13 +117,13 @@ func set_voxels(_voxels : Dictionary, update : bool = true, emit : bool = true) 
 func get_voxels() -> Dictionary: return voxels
 
 # Erases all present Voxels, emits 'erased_voxels'
-# emit     :   bool   -   true, emit signal; false, don't emit signal
 # update   :   bool   -   call on update
+# emit     :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
-#   erase_voxels(false)
+#   erase_voxels(false, false)
 #
-func erase_voxels(emit : bool = true, update : bool = true) -> void:
+func erase_voxels(update : bool = true, emit : bool = true) -> void:
 	voxels.clear()
 	
 	if update: update(false, emit)
@@ -254,8 +262,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 #   update(false)
 #
 func update(temp : bool = false, emit : bool = true) -> void:
-	print('updating VoxelMesh')
-	
 	if voxels == null: return;
 	if voxels.size() > 0:
 		var ST = SurfaceTool.new()
