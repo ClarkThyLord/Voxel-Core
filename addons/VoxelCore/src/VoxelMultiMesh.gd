@@ -268,7 +268,7 @@ func update(temp : bool = false, emit : bool = true) -> void:
 	if queue_chunks.size() > 0:
 		update_chunks = queue_chunks
 		queue_chunks = []
-	else: update_chunks = chunks.keys()
+	elif update_chunks.size() == 0: update_chunks = chunks.keys()
 	
 	.update(temp, emit)
 
@@ -280,6 +280,7 @@ func update(temp : bool = false, emit : bool = true) -> void:
 #   update_staticbody(false)
 #
 func update_staticbody(temp : bool = false, emit : bool = true) -> void:
+	# TODO build and maintain StaticBody in thread!
 	for chunk_position in chunks: (chunks[chunk_position] as VoxelMesh).update_staticbody(temp, false)
 	
 	.update_staticbody(temp, emit)
