@@ -49,10 +49,46 @@ func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true
 	if update and is_inside_tree(): update(false, emit)
 	if emit: emit_signal('set_voxelset', voxelset)
 
+# Setter for StaticBody, emits 'set_static_body'
+# staticbody   :   bool   -   value to set
+# update       :   bool   -   call on staticbody update
+# emit         :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_static_body(true, false)
+#
+func set_static_body(staticbody : bool = !Static_Body, update : bool = true, emit : bool = true) -> void:
+	if staticbody != Static_Body: staticbody_chunks = chunks_data.keys()
+	
+	set_static_body_temp(false, false)
+	Static_Body = staticbody
+	
+	# No need to call on StaticBody update
+#	if update and is_inside_tree(): update_staticbody(false, emit)
+	if update: staticbody_chunks = chunks_data.keys()
+	if emit: emit_signal('set_static_body', Static_Body)
+
+# Whether a StaticBody should be built temporarily
+var static_body_temp : bool = false setget set_static_body_temp
+# Setter for StaticBody, emits 'set_static_body'
+# staticbody   :   bool   -   value to set
+# update       :   bool   -   call on staticbody update
+# emit         :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_static_body(true, false)
+#
+func set_static_body_temp(staticbody_temp : bool = !static_body_temp, update : bool = true) -> void:
+	if staticbody_temp != static_body_temp:
+		static_body_temp = staticbody_temp
+		if update: staticbody_chunks = chunks_data.keys()
+	
+	static_body_temp = staticbody_temp
+
 
 # Thread used for loading, creating and updating Voxels/Chunks
 var thread : Thread = Thread.new() setget set_thread
-func set_thread(_thread : Thread) -> void: return               #   Shouldn't be settable externally
+func set_thread(_thread : Thread) -> void: return                      #   Shouldn't be settable externally
 
 
 signal set_chunk_size(chunksize)
@@ -73,22 +109,26 @@ func set_chunk_size(chunksize : int, emit : bool = true) -> void:
 
 # Chunks are VoxelMeshes that compose this VoxelObject
 var chunks : Dictionary = {} setget set_chunks
-func set_chunks(_chunks : Dictionary) -> void: return           #   Shouldn't be settable externally
+func set_chunks(_chunks : Dictionary) -> void: return                  #   Shouldn't be settable externally
 
 var chunks_data : Dictionary = {} setget set_chunks_data
-func set_chunks_data(chunksdata : Dictionary) -> void: return   #   Shouldn't be settable externally
+func set_chunks_data(chunksdata : Dictionary) -> void: return          #   Shouldn't be settable externally
 
 
 # Queue Chunks will be placed into update chunks on the next update call
 var queue_chunks : Array = [] setget set_queue_chunks
-func set_queue_chunks(queuechunks : Array) -> void: return      #   Shouldn't be settable externally
+func set_queue_chunks(queuechunks : Array) -> void: return             #   Shouldn't be settable externally
 
 func queue_chunk(chunk_position : Vector3) -> void:
 	if not queue_chunks.has(chunk_position) and not update_chunks.has(chunk_position): queue_chunks.append(chunk_position)
 
 # Update Chunks will be updated in order within thread
 var update_chunks : Array = [] setget set_update_chunks
-func set_update_chunks(updatechunks : Array) -> void: return    #   Shouldn't be settable externally
+func set_update_chunks(updatechunks : Array) -> void: return           #   Shouldn't be settable externally
+
+# StaticBody Chunks will have their StaticBody updated
+var staticbody_chunks : Array = [] setget set_staticbody_chunks
+func set_staticbody_chunks(staticbodychunks : Array) -> void: return   #   Shouldn't be settable externally
 
 
 
@@ -281,7 +321,11 @@ func update(temp : bool = false, emit : bool = true) -> void:
 #
 func update_staticbody(temp : bool = false, emit : bool = true) -> void:
 	# TODO build and maintain StaticBody in thread!
-	for chunk_position in chunks: (chunks[chunk_position] as VoxelMesh).update_staticbody(temp, false)
+	set_static_body_temp(temp)
+#	if temp != staticbody_temp:
+#		staticbody_temp = temp
+#		staticbody_chunks = chunks_data.keys()
+#	for chunk_position in chunks: (chunks[chunk_position] as VoxelMesh).update_staticbody(temp, false)
 	
 	.update_staticbody(temp, emit)
 
@@ -309,7 +353,8 @@ func update_chunk(data : Array) -> void:
 	var chunk : VoxelMesh = chunks[data[1]] if chunks.has(data[1]) else create_chunk(data[1])
 	var chunk_data : Dictionary = chunks_data[data[1]]
 	
-	chunk.set_voxels(chunk_data, true, false)
+	chunk.set_voxels(chunk_data, false, false)
+	chunk.update(Static_Body or static_body_temp, false)
 	
 	if not is_a_parent_of(chunk): call_deferred('add_child', chunk)
 	
