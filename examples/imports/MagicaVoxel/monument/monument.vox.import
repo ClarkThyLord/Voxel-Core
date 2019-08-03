@@ -12,6 +12,6 @@ dest_files=[ "res://.import/monument.vox-4deebf469f923ae16e4e1f742020f63d.tscn" 
 [params]
 
 Name=""
-Greedy=true
+Greedy=false
 Center=2
 VoxelObject=0

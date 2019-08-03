@@ -18,6 +18,7 @@ func _load() -> void:
 	._load()
 	
 	if has_meta('voxels'): voxels = get_meta('voxels')
+
 func _save() -> void:
 	._save()
 	
@@ -26,6 +27,7 @@ func _save() -> void:
 
 # The following will initialize the object as needed
 func _init() -> void: _load()
+
 func _ready() -> void:
 	set_voxelset_path(VoxelSetPath, false)
 	_load()

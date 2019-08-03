@@ -58,30 +58,28 @@ func set_voxelset(_voxelset = voxelset, update : bool = true, emit : bool = true
 #   set_static_body(true, false)
 #
 func set_static_body(staticbody : bool = !Static_Body, update : bool = true, emit : bool = true) -> void:
-	if staticbody != Static_Body: staticbody_chunks = chunks_data.keys()
+	if staticbody != Static_Body: update_chunks = chunks_data.keys()
 	
-	set_static_body_temp(false, false)
 	Static_Body = staticbody
 	
 	# No need to call on StaticBody update
 #	if update and is_inside_tree(): update_staticbody(false, emit)
-	if update: staticbody_chunks = chunks_data.keys()
+	if update: update_chunks = chunks_data.keys()
 	if emit: emit_signal('set_static_body', Static_Body)
 
 # Whether a StaticBody should be built temporarily
 var static_body_temp : bool = false setget set_static_body_temp
-# Setter for StaticBody, emits 'set_static_body'
-# staticbody   :   bool   -   value to set
-# update       :   bool   -   call on staticbody update
-# emit         :   bool   -   true, emit signal; false, don't emit signal
+# Setter for StaticBody temp
+# staticbody_temp   :   bool   -   value to set
+# update            :   bool   -   call on staticbody update
 #
 # Example:
-#   set_static_body(true, false)
+#   set_static_body_temp(true, false)
 #
 func set_static_body_temp(staticbody_temp : bool = !static_body_temp, update : bool = true) -> void:
 	if staticbody_temp != static_body_temp:
 		static_body_temp = staticbody_temp
-		if update: staticbody_chunks = chunks_data.keys()
+		if update: update_chunks = chunks_data.keys()
 	
 	static_body_temp = staticbody_temp
 
@@ -126,10 +124,6 @@ func queue_chunk(chunk_position : Vector3) -> void:
 var update_chunks : Array = [] setget set_update_chunks
 func set_update_chunks(updatechunks : Array) -> void: return           #   Shouldn't be settable externally
 
-# StaticBody Chunks will have their StaticBody updated
-var staticbody_chunks : Array = [] setget set_staticbody_chunks
-func set_staticbody_chunks(staticbodychunks : Array) -> void: return   #   Shouldn't be settable externally
-
 
 
 # Core
@@ -139,6 +133,7 @@ func _load() -> void:
 	if has_meta('chunks_data'):
 		chunks_data = get_meta('chunks_data')
 		update_chunks = chunks_data.keys()
+
 func _save() -> void:
 	._save()
 	
@@ -147,6 +142,7 @@ func _save() -> void:
 
 # The following will initialize the object as needed
 func _init() -> void: _load()
+
 func _ready() -> void:
 	set_voxelset_path(VoxelSetPath, false)
 	_load()
