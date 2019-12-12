@@ -33,19 +33,13 @@ _global_script_classes=[ {
 "class": "VoxelMultiMesh",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/src/VoxelMultiMesh.gd"
-}, {
-"base": "Node",
-"class": "VoxelSet",
-"language": "GDScript",
-"path": "res://addons/Voxel-Core/src/VoxelSet.gd"
 } ]
 _global_script_class_icons={
 "Voxel": "res://addons/Voxel-Core/assets/Voxel.png",
 "VoxelEmbeddedMesh": "res://addons/Voxel-Core/assets/VoxelEmbeddedMesh.png",
 "VoxelLayeredMesh": "res://addons/Voxel-Core/assets/VoxelLayeredMesh.png",
 "VoxelMesh": "res://addons/Voxel-Core/assets/VoxelMesh.png",
-"VoxelMultiMesh": "res://addons/Voxel-Core/assets/VoxelMultiMesh.png",
-"VoxelSet": "res://addons/Voxel-Core/assets/VoxelSet.png"
+"VoxelMultiMesh": "res://addons/Voxel-Core/assets/VoxelMultiMesh.png"
 }
 
 [application]
@@ -54,6 +48,10 @@ config/name="Voxel-Core"
 boot_splash/image="res://assets/VoxelCore.splash.png"
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://icon.png"
+
+[autoload]
+
+VoxelSet="*res://addons/Voxel-Core/defaults/VoxelSet.default.gd"
 
 [editor_plugins]
 
