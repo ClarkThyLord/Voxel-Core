@@ -1,3 +1,4 @@
+tool
 extends MeshInstance
 
 
@@ -73,11 +74,9 @@ func _ready() -> void:
 func get_voxel(position : Vector3) -> Dictionary:
 	return {}
 
-func get_rvoxel(position : Vector3):
-	pass
+func get_rvoxel(position : Vector3): pass
 
-func get_voxels() -> Dictionary:
-	return {}
+func get_voxels() -> Dictionary: return {}
 
 
 func set_voxel(position : Vector3, voxel, update := true) -> void:

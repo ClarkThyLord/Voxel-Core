@@ -15,9 +15,9 @@ _global_script_classes=[ {
 "path": "res://addons/Voxel-Core/src/Voxel.gd"
 }, {
 "base": "MeshInstance",
-"class": "VoxelEmbeddedMesh",
+"class": "VoxelEmbeddedMultiMesh",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/src/VoxelEmbeddedMesh.gd"
+"path": "res://addons/Voxel-Core/src/VoxelEmbeddedMultiMesh.gd"
 }, {
 "base": "MeshInstance",
 "class": "VoxelLayeredMesh",
@@ -36,7 +36,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Voxel": "res://addons/Voxel-Core/assets/Voxel.png",
-"VoxelEmbeddedMesh": "res://addons/Voxel-Core/assets/VoxelEmbeddedMesh.png",
+"VoxelEmbeddedMultiMesh": "res://addons/Voxel-Core/assets/VoxelEmbeddedMultiMesh.png",
 "VoxelLayeredMesh": "res://addons/Voxel-Core/assets/VoxelLayeredMesh.png",
 "VoxelMesh": "res://addons/Voxel-Core/assets/VoxelMesh.png",
 "VoxelMultiMesh": "res://addons/Voxel-Core/assets/VoxelMultiMesh.png"

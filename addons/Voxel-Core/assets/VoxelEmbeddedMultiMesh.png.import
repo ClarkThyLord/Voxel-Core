@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/VoxelEmbeddedMesh.png-11c0c74ddc5255e39af374384771cb45.stex"
+path="res://.import/VoxelEmbeddedMultiMesh.png-4516067800c6ae741e300e56b8e88060.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/VoxelEmbeddedMesh.png"
-dest_files=[ "res://.import/VoxelEmbeddedMesh.png-11c0c74ddc5255e39af374384771cb45.stex" ]
+source_file="res://addons/Voxel-Core/assets/VoxelEmbeddedMultiMesh.png"
+dest_files=[ "res://.import/VoxelEmbeddedMultiMesh.png-4516067800c6ae741e300e56b8e88060.stex" ]
 
 [params]
 
