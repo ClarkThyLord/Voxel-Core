@@ -54,5 +54,48 @@ func set_voxel_set_path(voxelsetpath : NodePath, update := true, emit := true) -
 
 
 # Core
+func _load() -> void:
+	if has_meta('voxel_set_path'): set_voxel_set_path(get_meta('voxel_set_path'), false, false)
+
+func _save() -> void:
+	set_meta('voxel_set_path', VoxelSetPath)
+
+
+func _setup() -> void: pass
+
+
+func _init() -> void: _load()
+func _ready() -> void:
+	set_voxel_set_path(VoxelSetPath, false, false)
+	_load()
+
+
+func get_voxel(position : Vector3) -> Dictionary:
+	return {}
+
+func get_rvoxel(position : Vector3):
+	pass
+
+func get_voxels() -> Dictionary:
+	return {}
+
+
+func set_voxel(position : Vector3, voxel, update := true) -> void:
+	pass
+
+func set_rvoxel(position : Vector3, voxel, update := true) -> void:
+	pass
+
+func set_voxels(voxels : Dictionary) -> void:
+	pass
+
+
+func erase_voxel(position : Vector3) -> void:
+	pass
+
+
 func update() -> void:
+	pass
+
+func update_staticbody() -> void:
 	pass
