@@ -72,7 +72,9 @@ func _ready() -> void:
 
 
 func get_voxel(position : Vector3) -> Dictionary:
-	return {}
+	var voxel = get_rvoxel(position)
+	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
+	return voxel
 
 func get_rvoxel(position : Vector3): pass
 
@@ -83,7 +85,8 @@ func set_voxel(position : Vector3, voxel, update := true) -> void:
 	pass
 
 func set_rvoxel(position : Vector3, voxel, update := true) -> void:
-	pass
+	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
+	set_voxel(voxel, update)
 
 func set_voxels(voxels : Dictionary) -> void:
 	pass
@@ -92,9 +95,13 @@ func set_voxels(voxels : Dictionary) -> void:
 func erase_voxel(position : Vector3) -> void:
 	pass
 
+func erase_voxels() -> void:
+	for voxel_position in get_voxels().keys():
+		erase_voxel(voxel_position)
+
 
 func update() -> void:
-	pass
+	if BuildStaticBody: update_staticbody()
 
 func update_staticbody() -> void:
 	pass
