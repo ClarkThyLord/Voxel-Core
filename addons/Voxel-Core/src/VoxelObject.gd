@@ -93,9 +93,9 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 		if has_node('/root/VoxelSet'): voxelset = get_node('/root/CoreVoxelSet')
 		else: return
 	
-	if VoxelSet is VoxelSetClass: VoxelSet.disconnect('update', self, 'update')
+	if VoxelSet is VoxelSetClass and VoxelSet.is_connected('updated', self, 'update'): VoxelSet.disconnect('update', self, 'update')
 	VoxelSet = voxelset
-	if not VoxelSet.is_connected('update', self, 'update'): VoxelSet.connect('update', self, 'update')
+	if not VoxelSet.is_connected('updated', self, 'update'): VoxelSet.connect('updated', self, 'update')
 	
 	if update: self.update()
 	if emit: emit_signal('set_voxel_set', VoxelSet)
@@ -128,6 +128,10 @@ func _save() -> void:
 	set_meta('voxel_set_path', VoxelSetPath)
 
 
+func _exit_tree():
+	if VoxelSet is VoxelSetClass and VoxelSet.is_connected('updated', self, 'update'): VoxelSet.disconnect('updated', self, 'update')
+
+
 # Get Voxel data at given grid position.
 # grid       :   Vector3      -   grid position to get Voxel data from
 # @returns   :   Dictionary   -   Voxel data
@@ -145,7 +149,7 @@ func get_voxel(position : Vector3) -> Dictionary:
 # @returns   :   int/Dictionary   -   raw Voxel
 #
 # Example:
-#   get_rvoxel(Vector(11, -34, 2))   ->   3         #   NOTE: Returned ID representing  Voxel data
+#   get_rvoxel(Vector(11, -34, 2))   ->   3         #   NOTE: Returned ID representing Voxel data
 #   get_rvoxel(Vector(-7, 0, 96))    ->   { ... }   #   NOTE: Returned Voxel data
 #
 func get_rvoxel(position : Vector3): pass

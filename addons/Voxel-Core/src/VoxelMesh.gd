@@ -29,7 +29,6 @@ func _save() -> void:
 
 # The following will initialize the object as needed
 func _init() -> void: _load()
-
 func _ready() -> void:
 	set_voxel_set_path(VoxelSetPath, false)
 	_load()
@@ -183,7 +182,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 		g3 += directions[3] * (offset - 1)
 		g4 += directions[3] * (offset - 1)
 
-	if UVMapping: Voxel.generate_side_with_uv(direction, st, get_voxel(origin), g1, g2, g3, g4, VoxelSet.UVScale if voxelset else 1.0)
+	if UVMapping: Voxel.generate_side_with_uv(direction, st, get_voxel(origin), g1, g2, g3, g4, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 	else: Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4)
 
 	return used
@@ -200,7 +199,8 @@ func update(temp : bool = false, emit : bool = true) -> void:
 		material.vertex_color_is_srgb = true
 		material.vertex_color_use_as_albedo = true
 
-		if VoxelSet is VoxelSetClass and VoxelSet.AlbedoTexture != '': material.albedo_texture = load(VoxelSet.AlbedoTexture)
+		if UVMapping and VoxelSet is VoxelSetClass and not VoxelSet.AlbedoTexture == null:
+			material.albedo_texture = VoxelSet.AlbedoTexture
 
 		ST.set_material(material)
 
@@ -228,12 +228,12 @@ func update(temp : bool = false, emit : bool = true) -> void:
 		else:
 			for voxel_grid in voxels:
 				if UVMapping:
-					if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UVScale if VoxelSet else 1.0)
-					if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UVScale if VoxelSet else 1.0)
-					if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UVScale if VoxelSet else 1.0)
-					if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UVScale if VoxelSet else 1.0)
-					if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UVScale if VoxelSet else 1.0)
-					if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UVScale if VoxelSet else 1.0)
+					if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+					if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+					if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+					if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+					if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+					if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 				else:
 					if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right(ST, get_voxel(voxel_grid), voxel_grid)
 					if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left(ST, get_voxel(voxel_grid), voxel_grid)
