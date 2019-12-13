@@ -29,7 +29,7 @@ export(bool) var UVMapping := false setget set_uv_mapping
 func set_uv_mapping(uvmapping : bool, update := true, emit := true) -> void:
 	UVMapping = uvmapping
 	
-	if update: update()
+	if update: self.update()
 	if emit: emit_signal('set_uv_mapping', uvmapping)
 
 
@@ -73,14 +73,14 @@ export(MeshTypes) var MeshType := MeshTypes.NAIVE setget set_mesh_type
 func set_mesh_type(meshtype : int, update := true, emit := true) -> void:
 	MeshType = meshtype
 	
-	if update: update()
+	if update: self.update()
 	if emit: emit_signal('set_mesh_type', meshtype)
 
 
-# VoxelSet being used, emits 'set_voxel_set'
-# _voxelset   :   bool   -   value to set
-# update      :   bool   -   call on update
-# emit        :   bool   -   true, emit signal; false, don't emit signal
+# VoxelSet being used, emits 'set_voxel_set'.
+# voxelset   :   bool   -   value to set
+# update     :   bool   -   call on update
+# emit       :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
 #   set_voxel_set(true, false, false)
@@ -90,11 +90,10 @@ var VoxelSet : VoxelSetClass setget set_voxel_set
 func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> void:
 	VoxelSet = voxelset
 	
-	if update: update()
+	if update: self.update()
 	if emit: emit_signal('set_voxel_set', voxelset)
 
-# NodePath to VoxelSet being used
-# Setter for VoxelSetPath, emits 'set_voxel_set'
+# NodePath to VoxelSet being used, emits 'set_voxel_set'.
 # voxelsetpath   :   bool   -   value to set
 # update         :   bool   -   call on update
 # emit           :   bool   -   true, emit signal; false, don't emit signal
@@ -111,44 +110,119 @@ func set_voxel_set_path(voxelsetpath : NodePath, update := true, emit := true) -
 
 
 # Core
+# Load necessary data from meta
 func _load() -> void:
 	if has_meta('voxel_set_path'): set_voxel_set_path(get_meta('voxel_set_path'), false, false)
 
+# Save necessary data in meta
 func _save() -> void:
 	set_meta('voxel_set_path', VoxelSetPath)
 
 
+# Get Voxel data at given grid position
+# grid       :   Vector3      -   grid position to get Voxel data from
+# @returns   :   Dictionary   -   Voxel data
+#
+# Example:
+#   get_voxel(Vector(11, -34, 2))   ->   { ... }
+#
 func get_voxel(position : Vector3) -> Dictionary:
 	var voxel = get_rvoxel(position)
 	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
 	return voxel
 
+# Get raw Voxel data at given grid position
+# grid       :   Vector3          -   grid position to get Voxel from
+# @returns   :   int/Dictionary   -   raw Voxel
+#
+# Example:
+#   get_rvoxel(Vector(11, -34, 2))   ->   3         #   NOTE: Returned ID representing  Voxel data
+#   get_rvoxel(Vector(-7, 0, 96))    ->   { ... }   #   NOTE: Returned Voxel data
+#
 func get_rvoxel(position : Vector3): pass
 
+# Returns a copy of all current Voxel data.
+# @returns   :   Dictionary<Vector3, Voxel>   -   Dictionary containing grid positions, as keys, and Voxels, as values
+#
+# Example:
+#   get_voxels()   ->   { ... }
+#
 func get_voxels() -> Dictionary: return {}
 
 
+# Set Voxel at given grid position.
+# grid     :   Vector3          -   grid position to set Voxel to 
+# voxel    :   int/Dictionary   -   Voxel to be set
+# update   :   bool             -   call on update
+#
+# Example:
+#   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxel's ID associated with it within VoxelSet
+#   set_voxel(Vector(11, -34, 2), { ... })
+#
 func set_voxel(position : Vector3, voxel, update := true) -> void:
-	pass
+	if update: self.update()
 
+# Set raw Voxel's data at given grid position.
+# grid     :   Vector3          -   grid position to set Voxel to 
+# voxel    :   int/Dictionary   -   Voxel to be set
+# update   :   bool             -   call on update
+#
+# Example:
+#   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present date(Dictionary) within the VoxelSet, not the ID associated with it within VoxelSet
+#   set_rvoxel(Vector(11, -34, 2), { ... })
+#
 func set_rvoxel(position : Vector3, voxel, update := true) -> void:
 	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
 	set_voxel(voxel, update)
 
-func set_voxels(voxels : Dictionary) -> void:
-	pass
+# Erases current Voxel data, then sets given Voxel data.
+# voxels   :   Dictionary<Vector3, Voxel>   -   Voxels to set
+# update   :   bool                         -   call on update
+#
+# Example:
+#   set_voxels({ ... }, false)
+#
+func set_voxels(voxels : Dictionary, update := true) -> void:
+	erase_voxels(false)
+	for voxel_position in voxels.keys():
+		set_voxel(voxel_position, voxels[voxel_position], false)
+	if update: self.update()
 
 
-func erase_voxel(position : Vector3) -> void:
-	pass
+# Erase Voxel at given grid position.
+# grid     :   Vector3   -   grid position to erase Voxel from
+# update   :   bool      -   call on update
+#
+# Example:
+#   erase_voxel(Vector(11, -34, 2), false)
+#
+func erase_voxel(position : Vector3, update := true) -> void:
+	if update: self.update()
 
-func erase_voxels() -> void:
+# Erases all current Voxels.
+# update   :   bool   -   call on update
+#
+# Example:
+#   erase_voxels(false)
+#
+func erase_voxels(update := true) -> void:
 	for voxel_position in get_voxels().keys():
-		erase_voxel(voxel_position)
+		erase_voxel(voxel_position, false)
+	if update: self.update()
 
 
+# Updates Mesh with current Voxel data, and StaticBody.
+#
+# Example:
+#   update()
+#
 func update() -> void:
 	if BuildStaticBody: update_static_body()
 
+# Sets and updates trimesh StaticBody.
+#
+# Example:
+#   update_staticbody()
+#
 func update_static_body() -> void:
 	pass
