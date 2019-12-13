@@ -8,3 +8,5 @@ signal update
 
 var _ID := 0 setget set_id
 func set_id(id : int) -> void: pass
+
+export(float) var UVScale := 1

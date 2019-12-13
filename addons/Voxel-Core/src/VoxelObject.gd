@@ -5,7 +5,7 @@ extends MeshInstance
 
 # VoxelObject:
 # This is a makeshift abstract class intended to be inherited by all classes that will visualize Voxels.
-# NOTE: This class isn't meant to be instanced!
+# NOTE: This class is intended to be inherited, and isn't meant to be instanced itself!
 
 
 
@@ -88,10 +88,18 @@ func set_mesh_type(meshtype : int, update := true, emit := true) -> void:
 signal set_voxel_set(voxelset)
 var VoxelSet : VoxelSetClass setget set_voxel_set
 func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> void:
+	if voxelset == VoxelSet: return
+	elif typeof(voxelset) == TYPE_NIL:
+		if has_node('/root/VoxelSet'): voxelset = get_node('/root/CoreVoxelSet')
+		else: return
+	
+	if VoxelSet is VoxelSetClass: VoxelSet.disconnect('update', self, 'update')
 	VoxelSet = voxelset
+	if not VoxelSet.is_connected('update', self, 'update'): VoxelSet.connect('update', self, 'update')
 	
 	if update: self.update()
-	if emit: emit_signal('set_voxel_set', voxelset)
+	if emit: emit_signal('set_voxel_set', VoxelSet)
+
 
 # NodePath to VoxelSet being used, emits 'set_voxel_set'.
 # voxelsetpath   :   bool   -   value to set
@@ -103,23 +111,24 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 #
 export(NodePath) var VoxelSetPath := NodePath('/root/VoxelSet')  setget set_voxel_set_path
 func set_voxel_set_path(voxelsetpath : NodePath, update := true, emit := true) -> void:
-	if is_inside_tree() and has_node(voxelsetpath) and get_node(voxelsetpath) is VoxelSetClass:
+	if voxelsetpath.is_empty(): VoxelSetPath = voxelsetpath
+	elif is_inside_tree() and has_node(voxelsetpath) and get_node(voxelsetpath) is VoxelSetClass:
 		VoxelSetPath = voxelsetpath
 		set_voxel_set(get_node(voxelsetpath), update, emit)
 
 
 
 # Core
-# Load necessary data from meta
+# Load necessary data from meta.
 func _load() -> void:
 	if has_meta('voxel_set_path'): set_voxel_set_path(get_meta('voxel_set_path'), false, false)
 
-# Save necessary data in meta
+# Save necessary data in meta.
 func _save() -> void:
 	set_meta('voxel_set_path', VoxelSetPath)
 
 
-# Get Voxel data at given grid position
+# Get Voxel data at given grid position.
 # grid       :   Vector3      -   grid position to get Voxel data from
 # @returns   :   Dictionary   -   Voxel data
 #
@@ -131,7 +140,7 @@ func get_voxel(position : Vector3) -> Dictionary:
 	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
 	return voxel
 
-# Get raw Voxel data at given grid position
+# Get raw Voxel data at given grid position.
 # grid       :   Vector3          -   grid position to get Voxel from
 # @returns   :   int/Dictionary   -   raw Voxel
 #
