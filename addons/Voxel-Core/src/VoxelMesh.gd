@@ -27,7 +27,6 @@ func _save() -> void:
 	set_meta('voxels', voxels)
 
 
-# The following will initialize the object as needed
 func _init() -> void: _load()
 func _ready() -> void:
 	set_voxel_set_path(VoxelSetPath, false)

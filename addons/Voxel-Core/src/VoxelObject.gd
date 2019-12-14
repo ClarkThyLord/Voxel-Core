@@ -128,6 +128,13 @@ func _save() -> void:
 	set_meta('voxel_set_path', VoxelSetPath)
 
 
+# The following will initialize the object as needed
+# NOTE: Should be copied pasted to inheriting class
+#func _init() -> void: _load()
+#func _ready() -> void:
+#	set_voxel_set_path(VoxelSetPath, false)
+#	_load()
+
 func _exit_tree():
 	if VoxelSet is VoxelSetClass and VoxelSet.is_connected('updated', self, 'update'): VoxelSet.disconnect('updated', self, 'update')
 

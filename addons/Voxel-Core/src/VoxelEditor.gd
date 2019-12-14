@@ -42,11 +42,12 @@ func _save() -> void:
 
 
 # The following will initialize the object as needed
-func _init() -> void: _load()
-func _ready() -> void:
-	set_default_options()
-	set_options()
-	_load()
+# NOTE: Should be copied pasted to inheriting class
+#func _init() -> void: _load()
+#func _ready() -> void:
+#	set_default_options()
+#	set_options()
+#	_load()
 
 
 signal editing

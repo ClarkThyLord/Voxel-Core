@@ -131,6 +131,12 @@ func set_default_options(defaultoptions := {
 
 
 # Core
+func _init() -> void: _load()
+func _ready() -> void:
+	set_default_options()
+	set_options()
+	_load()
+
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
 	._edit(true, false)
 	
