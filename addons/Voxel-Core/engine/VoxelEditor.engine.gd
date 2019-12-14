@@ -166,5 +166,71 @@ func cancel(update := true, emit := true) -> void:
 	if emit: emit_signal('canceled')
 
 
+# Helper function for easy Raycasting
+# event      :   InputEventMouse       -   MouseEvent to Raycast for
+# camera     :   Camera                -   Camera from which to Raycast
+# @returns   :   Raycast[Dictionary]   -   Dictionary containing all Raycast info
+#
+# Example:
+#   raycast([InputEventMouse], [Camera]) -> [Raycast]
+#
+func raycast(event : InputEventMouse, camera : Camera = get_viewport().get_camera()) -> Dictionary:
+	var from = camera.project_ray_origin(event.position)
+	var to = from + camera.project_ray_normal(event.position) * 1000
+	return camera.get_world().direct_space_state.intersect_ray(from, to)
+
+# Helper function for easy Raycasting to a VoxelObject
+# event         :   InputEventMouse       -   MouseEvent to Raycast for
+# camera        :   Camera                -   Camera from which to Raycast
+# exclude       :   Array                 -   Collision shapes to exclude from raycast
+# @returns      :   Raycast[Dictionary]   -   Dictionary containing all Raycast info
+#
+# Example:
+#   raycast_for_voxelobject([InputEventMouse], [Camera], [VoxelObject], [ ... ]) -> [Raycast]
+#
+func raycast_for_voxelobject(event : InputEventMouse, camera : Camera = get_viewport().get_camera(), exclude : Array = []) -> Dictionary:
+	var hit : Dictionary
+	var from = camera.project_ray_origin(event.position)
+	var to = from + camera.project_ray_normal(event.position) * 1000
+	while true:
+		hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
+		if hit:
+			if VoxelObject.is_a_parent_of(hit.collider): break
+			else: exclude.append(hit.collider)
+		else: break
+	
+	return hit
+
+# Helper function for getting mirrors
+# grid       :   Vector3            -   Grid position to mirror according to Mirror options
+# @returns   :   Array[Vector3]     -   Array containing original position and all mirrored position
+#
+# Example:
+#   grid_to_mirrors(Vector(3, 1, -3)) -> [ Vector(3, 1, -3), ... ]
+#
+func grid_to_mirrors(grid : Vector3) -> Array:
+	var mirrors = [grid]
+	
+	if MirrorX:
+		mirrors.append(Vector3(grid.x, grid.y, (grid.z + 1) * -1))
+		if MirrorZ:
+			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
+	if MirrorY:
+		mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, grid.z))
+		if MirrorX:
+			mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1))
+		if MirrorZ:
+			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z))
+		if MirrorX && MirrorZ:
+			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1))
+	if MirrorZ:
+		mirrors.append(Vector3((grid.x + 1) * -1, grid.y, grid.z))
+		if MirrorX:
+			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
+	
+	return mirrors
+
+
 func __input(event : InputEvent, camera := get_viewport().get_camera()):
-	pass
+	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
+		pass
