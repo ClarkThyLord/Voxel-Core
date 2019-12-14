@@ -59,6 +59,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 tab_align = 0
 
+[node name="Settings" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
 [node name="Floor" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -69,35 +78,37 @@ margin_bottom = -4.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
 margin_right = 320.0
-margin_bottom = 40.0
+margin_bottom = 24.0
+alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_top = 13.0
-margin_right = 83.0
-margin_bottom = 27.0
+margin_left = 42.0
+margin_top = 5.0
+margin_right = 125.0
+margin_bottom = 19.0
 text = "Floor Visible:"
 
-[node name="ColorRect" type="CheckButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 87.0
-margin_right = 163.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 64, 0 )
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
+margin_left = 129.0
+margin_right = 153.0
+margin_bottom = 24.0
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 167.0
-margin_top = 13.0
-margin_right = 252.0
-margin_bottom = 27.0
+margin_left = 157.0
+margin_top = 5.0
+margin_right = 242.0
+margin_bottom = 19.0
 text = "Floor Color:   "
 
-[node name="ColorRect2" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 256.0
-margin_right = 320.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 64, 0 )
+[node name="ColorRect" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
+margin_left = 246.0
+margin_right = 278.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
 
 [node name="Cursor" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -107,31 +118,32 @@ margin_right = -4.0
 margin_bottom = -4.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor"]
-margin_right = 350.0
-margin_bottom = 40.0
+margin_right = 320.0
+margin_bottom = 24.0
+alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_top = 13.0
-margin_right = 104.0
-margin_bottom = 27.0
+margin_left = 33.0
+margin_top = 5.0
+margin_right = 125.0
+margin_bottom = 19.0
 text = "Cursor Visible:"
 
-[node name="ColorRect" type="CheckButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 108.0
-margin_right = 184.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 64, 0 )
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
+margin_left = 129.0
+margin_right = 153.0
+margin_bottom = 24.0
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 188.0
-margin_top = 13.0
-margin_right = 282.0
-margin_bottom = 27.0
+margin_left = 157.0
+margin_top = 5.0
+margin_right = 251.0
+margin_bottom = 19.0
 text = "Cursor Color:   "
 
-[node name="ColorRect2" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 286.0
-margin_right = 350.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 64, 0 )
+[node name="ColorRect" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
+margin_left = 255.0
+margin_right = 287.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
