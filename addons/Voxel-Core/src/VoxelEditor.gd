@@ -13,6 +13,13 @@ const VoxelObjectClass = preload('res://addons/Voxel-Core/src/VoxelObject.gd')
 var undo_redo := UndoRedo.new()
 
 
+signal set_lock(lock)
+export(bool) var Lock := true setget set_lock
+func set_lock(lock := !Lock, emit := true) -> void:
+	Lock = lock
+	if emit: emit_signal('set_lock', Lock)
+
+
 signal set_tool(_tool)
 enum Tools { PAN, ADD, SUB, PICK, SELECT, FILL }
 export(Tools) var Tool := Tools.PAN setget set_tool
@@ -41,13 +48,6 @@ func set_color_secondary(color : Color, emit := true) -> void:
 	if emit: emit_signal('set_color_secondary', ColorSecondary)
 
 
-signal set_lock(lock)
-export(bool) var Lock := false setget set_lock
-func set_lock(lock := !Lock, emit := true) -> void:
-	Lock = lock
-	if emit: emit_signal('set_lock', Lock)
-
-
 signal set_mirror_x(mirror_x)
 export(bool) var MirrorX := false setget set_mirror_x
 func set_mirror_x(mirrorx := !MirrorX, emit := true) -> void:
@@ -67,12 +67,24 @@ func set_mirror_z(mirrorz := !MirrorZ, emit := true) -> void:
 	if emit: emit_signal('set_mirror_z', MirrorZ)
 
 
+signal set_cursor_visible(visible)
+export(bool) var CursorVisible := true setget set_cursor_visible
+func set_cursor_visible(visible := !CursorVisible, emit := true) -> void:
+	CursorVisible = visible
+	if emit: emit_signal('set_cursor_visible', CursorVisible)
+
 signal set_cursor_color(color)
 export(Color) var CursorColor := Color(1, 0, 0, 0.6) setget set_cursor_color
 func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
+
+signal set_floor_visible(visible)
+export(bool) var FloorVisible := true setget set_floor_visible
+func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
+	FloorVisible = visible
+	if emit: emit_signal('set_floor_visible', FloorVisible)
 
 signal set_floor_color(color)
 export(Color) var FloorColor := Color.green setget set_floor_color
@@ -88,14 +100,55 @@ func set_floor_type(floortype : int, emit := true) -> void:
 	if emit: emit_signal('set_floor_type', FloorType)
 
 
+export(Dictionary) var DefaultOptions : Dictionary setget set_default_options
+func set_default_options(defaultoptions := {
+		'Lock': true,
+		'Tool': Tools.PAN,
+		'ToolMode': ToolModes.INDIVIDUAL,
+		'ColorPrimary': Color.white,
+		'ColorSecondary': Color.black,
+		'MirrorX': false,
+		'MirrorY': false,
+		'MirrorZ': false
+	}, reset := false) -> void:
+	DefaultOptions = defaultoptions
+	_save()
+	if reset: reset_options()
+
+func reset_options() -> void:
+	for option in DefaultOptions.keys():
+		self.set(option, DefaultOptions[option])
+
+
 var VoxelObject : VoxelObjectClass setget edit
 
 
 
 # Core
+func _load() -> void:
+	if has_meta('DefaultOptions'): set_default_options(get_meta('DefaultOptions'), true)
+
+func _save() -> void:
+	set_meta('DefaultOptions', DefaultOptions)
+
+
+# The following will initialize the object as needed
+func _init() -> void: _load()
+func _ready() -> void:
+	set_default_options()
+	_load()
+
+
 signal editing
 func edit(voxelobject : VoxelObjectClass, options := {}, emit := true) -> void:
+	if VoxelObjectClass and VoxelObject is VoxelObjectClass:
+		cancel(emit)
+	
+	
+	reset_options()
 	VoxelObject = voxelobject
+	
+	
 	if emit: emit_signal('editing')
 
 signal committed
