@@ -100,6 +100,10 @@ func set_floor_type(floortype : int, emit := true) -> void:
 	if emit: emit_signal('set_floor_type', FloorType)
 
 
+func set_options(options := DefaultOptions) -> void:
+	for option in options.keys():
+		self.set(option, options[option])
+
 export(Dictionary) var DefaultOptions : Dictionary setget set_default_options
 func set_default_options(defaultoptions := {
 		'Lock': true,
@@ -113,11 +117,7 @@ func set_default_options(defaultoptions := {
 	}, reset := false) -> void:
 	DefaultOptions = defaultoptions
 	_save()
-	if reset: reset_options()
-
-func reset_options() -> void:
-	for option in DefaultOptions.keys():
-		self.set(option, DefaultOptions[option])
+	if reset: set_options()
 
 
 var VoxelObject : VoxelObjectClass setget edit
@@ -136,6 +136,7 @@ func _save() -> void:
 func _init() -> void: _load()
 func _ready() -> void:
 	set_default_options()
+	set_options()
 	_load()
 
 
@@ -145,7 +146,7 @@ func edit(voxelobject : VoxelObjectClass, options := {}, emit := true) -> void:
 		cancel(emit)
 	
 	
-	reset_options()
+	set_options(DefaultOptions if options.get('reset', false) else options)
 	VoxelObject = voxelobject
 	
 	
