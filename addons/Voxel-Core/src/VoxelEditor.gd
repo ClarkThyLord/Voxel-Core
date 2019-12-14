@@ -1,6 +1,11 @@
 tool
 extends Spatial
-class_name VoxelEditor, 'res://addons/Voxel-Core/assets/VoxelEditor.png'
+
+
+
+# VoxelEditor:
+# This is a makeshift abstract class intended to be inherited by all classes that will edit Voxels.
+# NOTE: This class is intended to be inherited, and isn't meant to be instanced itself!
 
 
 
@@ -35,17 +40,29 @@ func set_tool_mode(toolmode : int, emit := true) -> void:
 	if emit: emit_signal('set_tool_mode', ToolMode)
 
 
-signal set_color_primary(color)
-export(Color) var ColorPrimary := Color.white setget set_color_primary
-func set_color_primary(color : Color, emit := true) -> void:
-	ColorPrimary = color
-	if emit: emit_signal('set_color_primary', ColorPrimary)
+signal set_primary(voxel)
+var Primary := {} setget set_primary
+func set_primary(voxel : Dictionary, emit := true) -> void:
+	Primary = voxel
+	if emit: emit_signal('set_primary', Primary)
 
-signal set_color_secondary(color)
-export(Color) var ColorSecondary := Color.black setget set_color_secondary
-func set_color_secondary(color : Color, emit := true) -> void:
-	ColorSecondary = color
-	if emit: emit_signal('set_color_secondary', ColorSecondary)
+signal set_primary_color(color)
+export(Color) var PrimaryColor := Color.white setget set_primary_color
+func set_primary_color(color : Color, emit := true) -> void:
+	PrimaryColor = color
+	if emit: emit_signal('set_primary_color', PrimaryColor)
+
+signal set_secondary(voxel)
+var Secondary := {} setget set_secondary
+func set_secondary(voxel : Dictionary, emit := true) -> void:
+	Secondary = voxel
+	if emit: emit_signal('set_secondary', Secondary)
+
+signal set_secondary_color(color)
+export(Color) var SecondaryColor := Color.black setget set_secondary_color
+func set_secondary_color(color : Color, emit := true) -> void:
+	SecondaryColor = color
+	if emit: emit_signal('set_secondary_color', SecondaryColor)
 
 
 signal set_mirror_x(mirror_x)
@@ -109,8 +126,10 @@ func set_default_options(defaultoptions := {
 		'Lock': true,
 		'Tool': Tools.PAN,
 		'ToolMode': ToolModes.INDIVIDUAL,
-		'ColorPrimary': Color.white,
-		'ColorSecondary': Color.black,
+		'Primary': {},
+		'PrimaryColor': Color.white,
+		'Secondary': {},
+		'SecondaryColor': Color.black,
 		'MirrorX': false,
 		'MirrorY': false,
 		'MirrorZ': false
@@ -121,8 +140,6 @@ func set_default_options(defaultoptions := {
 
 
 var VoxelObject : VoxelObjectClass setget edit
-var VoxelObjectData : Dictionary setget set_voxel_object_data
-func set_voxel_object_data(voxelobjectdata : Dictionary) -> void: return   #   VoxelObjectData shouldn't be settable externally
 
 
 # Core
@@ -146,32 +163,21 @@ func edit(voxelobject : VoxelObjectClass, options := {}, emit := true) -> void:
 	if VoxelObjectClass and VoxelObject is VoxelObjectClass:
 		cancel(emit)
 	
-	
 	set_options(DefaultOptions if options.get('reset', false) else options)
 	VoxelObject = voxelobject
-	VoxelObjectData = {
-		'voxels': voxelobject.get_voxels(),
-		'MeshType': voxelobject.MeshType,
-		'BuildStaticBody': voxelobject.BuildStaticBody,
-	}
-	voxelobject.MeshType = voxelobject.MeshTypes.NAIVE
-	voxelobject.BuildStaticBody = true
 	
 	if emit: emit_signal('editing')
 
 signal committed
 func commit(emit := true) -> void:
+	cancel(false)
 	if emit: emit_signal('committed')
 
 signal canceled
 func cancel(emit := true) -> void:
-	VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
-	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
-	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
-	
 	VoxelObject = null
-	VoxelObjectData.clear()
 	undo_redo.clear_history()
+	
 	if emit: emit_signal('canceled')
 
 
