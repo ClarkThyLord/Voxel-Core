@@ -4,6 +4,18 @@ extends "res://addons/Voxel-Core/src/VoxelEditor.gd"
 
 
 # Declarations
+var undo_redo := UndoRedo.new()
+export(bool) var on_commit_clear_history := false
+export(bool) var on_cancel_clear_history := false
+
+
+signal set_lock(lock)
+export(bool) var Lock := true setget set_lock
+func set_lock(lock := !Lock, emit := true) -> void:
+	Lock = lock
+	if emit: emit_signal('set_lock', Lock)
+
+
 signal set_tool(_tool)
 enum Tools { PAN, ADD, SUB, PICK, SELECT, FILL }
 export(Tools) var Tool := Tools.PAN setget set_tool
@@ -115,3 +127,38 @@ func set_default_options(defaultoptions := {
 		'MirrorZ': false
 	}, reset := false) -> void:
 	.set_default_options(defaultoptions, reset)
+
+
+
+# Core
+func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
+	._edit(true, false)
+	
+	VoxelObjectData['voxels'] = voxelobject.get_voxels()
+	
+	if emit: emit_signal('editing')
+
+func commit(update := true, emit := true) -> void:
+	._commit(update, false)
+	
+	if on_commit_clear_history: undo_redo.clear_history()
+	
+	if emit: emit_signal('committed')
+
+signal canceled
+func cancel(update := true, emit := true) -> void:
+	VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
+	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
+	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
+	
+	if update: VoxelObject.update()
+	
+	VoxelObject = null
+	VoxelObjectData = {}
+	if on_cancel_clear_history: undo_redo.clear_history()
+	
+	if emit: emit_signal('canceled')
+
+
+func __input(event : InputEvent, camera := get_viewport().get_camera()):
+	pass

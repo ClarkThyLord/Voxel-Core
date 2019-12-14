@@ -15,16 +15,6 @@ const VoxelObjectClass = preload('res://addons/Voxel-Core/src/VoxelObject.gd')
 
 
 # Declarations
-var undo_redo := UndoRedo.new()
-
-
-signal set_lock(lock)
-export(bool) var Lock := true setget set_lock
-func set_lock(lock := !Lock, emit := true) -> void:
-	Lock = lock
-	if emit: emit_signal('set_lock', Lock)
-
-
 func set_options(options := DefaultOptions) -> void:
 	for option in options.keys():
 		self.set(option, options[option])
@@ -60,49 +50,33 @@ func _ready() -> void:
 
 
 signal editing
-func edit(voxelobject : VoxelObjectClass, options := {}, emit := true) -> void:
+func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
 	if VoxelObjectClass and VoxelObject is VoxelObjectClass:
-		cancel(emit)
+		commit(true, emit)
 	
 	set_options(DefaultOptions if options.get('reset', false) else options)
 	VoxelObject = voxelobject
 	VoxelObjectData = {
-		'voxels': voxelobject.get_voxels(),               #   TODO: store only modified data, instead of all the data
 		'MeshType': voxelobject.MeshType,
 		'BuildStaticBody': voxelobject.BuildStaticBody,
 	}
 	voxelobject.set_mesh_type(VoxelObjectClass.MeshTypes.NAIVE, false, false)
 	voxelobject.set_build_static_body(true, false, false)
-	voxelobject.update()                                  #   TODO: update only modified meshes, instead of all meshes
+	if update: voxelobject.update()                                  #   TODO: update only modified meshes, instead of all meshes
 	
 	if emit: emit_signal('editing')
 
 signal committed
-func commit(emit := true) -> void:
+func commit(update := true, emit := true) -> void:
 	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
 	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
 	
-	VoxelObject.update()
+	if update: VoxelObject.update()
 	
 	VoxelObject = null
 	VoxelObjectData = {}
-	undo_redo.clear_history()
 	
 	if emit: emit_signal('committed')
-
-signal canceled
-func cancel(emit := true) -> void:
-	VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
-	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
-	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
-	
-	VoxelObject.update()
-	
-	VoxelObject = null
-	VoxelObjectData = {}
-	undo_redo.clear_history()
-	
-	if emit: emit_signal('canceled')
 
 
 func __input(event : InputEvent, camera := get_viewport().get_camera()):
