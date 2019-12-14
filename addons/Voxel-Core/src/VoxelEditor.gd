@@ -121,7 +121,8 @@ func set_default_options(defaultoptions := {
 
 
 var VoxelObject : VoxelObjectClass setget edit
-
+var VoxelObjectData : Dictionary setget set_voxel_object_data
+func set_voxel_object_data(voxelobjectdata : Dictionary) -> void: return   #   VoxelObjectData shouldn't be settable externally
 
 
 # Core
@@ -148,7 +149,13 @@ func edit(voxelobject : VoxelObjectClass, options := {}, emit := true) -> void:
 	
 	set_options(DefaultOptions if options.get('reset', false) else options)
 	VoxelObject = voxelobject
-	
+	VoxelObjectData = {
+		'voxels': voxelobject.get_voxels(),
+		'MeshType': voxelobject.MeshType,
+		'BuildStaticBody': voxelobject.BuildStaticBody,
+	}
+	voxelobject.MeshType = voxelobject.MeshTypes.NAIVE
+	voxelobject.BuildStaticBody = true
 	
 	if emit: emit_signal('editing')
 
@@ -158,6 +165,13 @@ func commit(emit := true) -> void:
 
 signal canceled
 func cancel(emit := true) -> void:
+	VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
+	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
+	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
+	
+	VoxelObject = null
+	VoxelObjectData.clear()
+	undo_redo.clear_history()
 	if emit: emit_signal('canceled')
 
 
