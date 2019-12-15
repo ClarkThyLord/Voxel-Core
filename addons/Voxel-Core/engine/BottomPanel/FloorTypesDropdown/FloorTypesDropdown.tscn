@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="FloorTypesDropdown" type="OptionButton"]
+margin_right = 41.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 100, 0 )
+text = "FloorTypesDropdowns"

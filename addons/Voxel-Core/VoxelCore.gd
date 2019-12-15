@@ -8,7 +8,7 @@ const VoxelSetClass := preload('res://addons/Voxel-Core/src/VoxelSet.gd')
 const VoxelEditorClass := preload('res://addons/Voxel-Core/src/VoxelEditor.gd')
 const VoxelObjectClass := preload('res://addons/Voxel-Core/src/VoxelObject.gd')
 
-const BottomPanelScene := preload('res://addons/Voxel-Core/engine/gui/BottomPanel.tscn')
+const BottomPanelScene := preload('res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.tscn')
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
 
@@ -45,6 +45,8 @@ func set_bottom_panel_visible(visible := !BottomPanelVisible) -> void:
 		make_bottom_panel_item_visible(BottomPanelControl)
 		BottomPanelVisible = true
 	elif not visible and BottomPanelVisible:
+		BottomPanelControl.set_voxel_editor(null)
+		
 		disconnect('set_auto_save', BottomPanelControl, 'set_auto_save')
 		BottomPanelControl.disconnect('set_auto_save', self, 'set_auto_save')
 		
@@ -146,7 +148,7 @@ func main_screen_changed(mainscene : String) -> void:
 	else:
 		if VoxelEditor.Lock == false and VoxelEditor.VoxelObject:
 			VoxelEditor.Lock = true
-			_save()
+#			_save()
 		set_bottom_panel_visible(false)
 
 func handles(object) -> bool:
