@@ -10,7 +10,7 @@
 
 <p align="center">
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/releases">
-		<img src="https://img.shields.io/badge/Version-0.9.9-blue.svg" alt="Version">
+		<img src="https://img.shields.io/badge/Version-2.0.0-blue.svg" alt="Version">
 	</a>
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/blob/master/LICENSE">
 		<img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" alt="License">
