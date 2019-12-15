@@ -4,9 +4,15 @@ extends Panel
 
 
 # References
-const VoxelEditEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
+const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
 onready var SettingsTabs := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/')
+
+signal set_auto_save(autosave)
+onready var AutoSave := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/General/HBoxContainer/CheckBox')
+func set_auto_save(autosave, emit := true) -> void:
+	AutoSave.pressed = autosave
+	if emit: emit_signal('set_auto_save', autosave)
 
 onready var FloorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer/CheckBox')
 onready var FloorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer/ColorRect')
@@ -18,41 +24,38 @@ onready var CursorColor := get_node('MarginContainer/HBoxContainer/Settings/TabC
 
 # Declarations
 signal set_voxel_edit(voxeledit)
-var VoxelEdit : VoxelEditEngineClass setget set_voxel_edit
-func set_voxel_edit(voxeledit : VoxelEditEngineClass, emit := true) -> void:
-	if not voxeledit == VoxelEdit:
-		if VoxelEdit:
-			VoxelEdit.disconnect('set_floor_visible', FloorVisible, 'set_toggle_mode')
-			FloorVisible.disconnect('toggled', VoxelEdit, 'set_floor_visible')
-			VoxelEdit.disconnect('set_floor_color', FloorColor, 'set_pick_color')
-			FloorColor.disconnect('color_changed', VoxelEdit, 'set_floor_color')
+var VoxelEditor : VoxelEditorEngineClass setget set_voxel_edit
+func set_voxel_edit(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
+	if not voxeledit == VoxelEditor:
+		if VoxelEditor:
+			VoxelEditor.disconnect('set_floor_visible', FloorVisible, 'set_pressed')
+			FloorVisible.disconnect('toggled', VoxelEditor, 'set_floor_visible')
+			VoxelEditor.disconnect('set_floor_color', FloorColor, 'set_pick_color')
+			FloorColor.disconnect('color_changed', VoxelEditor, 'set_floor_color')
 			
-			VoxelEdit.disconnect('set_cursor_visible', CursorVisible, 'set_cursor_mode')
-			CursorVisible.disconnect('toggled', VoxelEdit, 'set_cursor_visible')
-			VoxelEdit.disconnect('set_cursor_color', CursorColor, 'set_cursor_color')
-			CursorColor.disconnect('color_changed', VoxelEdit, 'set_cursor_color')
+			VoxelEditor.disconnect('set_cursor_visible', CursorVisible, 'set_pressed')
+			CursorVisible.disconnect('toggled', VoxelEditor, 'set_cursor_visible')
+			VoxelEditor.disconnect('set_cursor_color', CursorColor, 'set_pick_color')
+			CursorColor.disconnect('color_changed', VoxelEditor, 'set_cursor_color')
 		
-		VoxelEdit = voxeledit
+		VoxelEditor = voxeledit
 		
-		VoxelEdit.connect('set_floor_visible', FloorVisible, 'set_toggle_mode')
-		FloorVisible.connect('toggled', VoxelEdit, 'set_floor_visible')
-		VoxelEdit.connect('set_floor_color', FloorColor, 'set_pick_color')
-		FloorColor.connect('color_changed', VoxelEdit, 'set_floor_color')
+		VoxelEditor.connect('set_floor_visible', FloorVisible, 'set_pressed')
+		FloorVisible.connect('toggled', VoxelEditor, 'set_floor_visible')
+		VoxelEditor.connect('set_floor_color', FloorColor, 'set_pick_color')
+		FloorColor.connect('color_changed', VoxelEditor, 'set_floor_color')
 		
-		VoxelEdit.connect('set_cursor_visible', CursorVisible, 'set_toggle_mode')
-		CursorVisible.connect('toggled', VoxelEdit, 'set_cursor_visible')
-		VoxelEdit.connect('set_cursor_color', CursorColor, 'set_pick_color')
-		CursorColor.connect('color_changed', VoxelEdit, 'set_cursor_color')
+		VoxelEditor.connect('set_cursor_visible', CursorVisible, 'set_pressed')
+		CursorVisible.connect('toggled', VoxelEditor, 'set_cursor_visible')
+		VoxelEditor.connect('set_cursor_color', CursorColor, 'set_pick_color')
+		CursorColor.connect('color_changed', VoxelEditor, 'set_cursor_color')
 		
-		if emit: emit_signal('set_voxel_edit', VoxelEdit)
+		if emit: emit_signal('set_voxel_edit', VoxelEditor)
 
 
 # Core
 func _ready():
 	SettingsTabs.set_tab_disabled(0, true)
 	SettingsTabs.current_tab = 1
-
-
-func set_floor_visible(visible : bool) -> void:
-	FloorVisible.pressed = visible
-
+	
+	AutoSave.connect('toggled', self, 'set_auto_save')

@@ -67,7 +67,7 @@ func select(object, select) -> void:
 
 
 func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
-	print()
+	print(msg)
 	get_editor_interface().save_scene()
 
 
@@ -91,20 +91,19 @@ func _enter_tree() -> void:
 	add_autoload_singleton('VoxelSet', 'res://addons/Voxel-Core/defaults/VoxelSet.default.gd')
 	
 	connect('scene_closed', self, 'scene_closed')
-	connect('scene_changed', self, 'engine_ready', [], CONNECT_ONESHOT)
+	connect('main_screen_changed', self, 'main_screen_changed')
 	
 	print('Loaded Voxel-Core.')
 
-# Called once after everything in the engine, including this plugin, is setup.
-# starting_scene   :   Node   -   Scene the engine opened with
-#
-# Example:
-#   engine_ready([Node])
-#
-func engine_ready(starting_scene) -> void:
+func _ready():
 	set_voxel_edit_undo_redo()
+	
+	connect('set_auto_save', BottomPanelControl, 'set_auto_save')
+	BottomPanelControl.connect('set_auto_save', self, 'set_auto_save', [false])
+	
 	VoxelEditor.connect('script_changed', self, 'set_voxel_edit_undo_redo', [], CONNECT_DEFERRED)
-	BottomPanelControl.set_voxel_edit(VoxelEditor)
+	
+	BottomPanelControl.connect('ready', BottomPanelControl, 'set_voxel_edit', [VoxelEditor], CONNECT_ONESHOT)
 
 func _exit_tree() -> void:
 	remove_autoload_singleton('VoxelSet')
@@ -112,6 +111,12 @@ func _exit_tree() -> void:
 	BottomPanelControl.queue_free()
 	
 	disconnect('scene_closed', self, 'scene_closed')
+	disconnect('main_screen_changed', self, 'main_screen_changed')
+	
+	disconnect('set_auto_save', BottomPanelControl, 'set_auto_save')
+	BottomPanelControl.disconnect('set_auto_save', self, 'set_auto_save')
+	
+	VoxelEditor.disconnect('script_changed', self, 'set_voxel_edit_undo_redo')
 	
 	print('Unloaded Voxel-Core.')
 
@@ -133,11 +138,16 @@ func main_screen_changed(mainscene : String) -> void:
 
 func handles(object) -> bool:
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
-		if AutoSave: _commit(false)
-		else: _cancel(false)
+		if VoxelEditor.VoxelObject:
+			if AutoSave: _commit(false)
+			else: _cancel(false)
 		_edit(object)
 		return true
-	else: return false
+	else:
+		if VoxelEditor.VoxelObject:
+			if AutoSave: _commit()
+			else: _cancel()
+		return false
 
 func forward_spatial_gui_input(camera, event) -> bool:
 	return VoxelEditor.__input(event, camera)
