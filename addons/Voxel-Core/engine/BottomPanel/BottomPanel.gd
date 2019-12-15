@@ -20,9 +20,6 @@ onready var MirrorY := get_node('MarginContainer/HBoxContainer/Tools/ScrollConta
 onready var MirrorZ := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorZ')
 
 
-onready var Properties := get_node('MarginContainer/HBoxContainer/Properties')
-
-
 onready var SettingsTabs := get_node('MarginContainer/HBoxContainer/Settings/TabContainer')
 
 signal set_auto_save(autosave)
@@ -71,6 +68,12 @@ func set_voxel_editor(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
 
 
 # Core
+func _ready():
+	SettingsTabs.set_tab_icon(0, preload('res://addons/Voxel-Core/assets/BottomPanel/general.png'))
+	SettingsTabs.set_tab_icon(1, preload('res://addons/Voxel-Core/assets/BottomPanel/individual.png'))
+	SettingsTabs.set_tab_icon(2, preload('res://addons/Voxel-Core/assets/BottomPanel/floor.png'))
+	SettingsTabs.set_tab_icon(3, preload('res://addons/Voxel-Core/assets/BottomPanel/about.png'))
+
 func _on_Godot_pressed():
 	OS.shell_open('https://godotengine.org/asset-library/asset')
 

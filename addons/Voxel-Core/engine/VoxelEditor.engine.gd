@@ -102,7 +102,7 @@ func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
 	if emit: emit_signal('set_floor_visible', FloorVisible)
 
 signal set_floor_color(color)
-export(Color) var FloorColor := Color.green setget set_floor_color
+export(Color) var FloorColor := Color.purple setget set_floor_color
 func set_floor_color(color : Color, emit := true) -> void:
 	FloorColor = color
 	if emit: emit_signal('set_floor_color', FloorColor)
