@@ -7,7 +7,7 @@ extends Panel
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
 
-onready var Lock := get_node('MarginContainer/HBoxContainer/Tools/HBoxContainer/HBoxContainer/Lock')
+onready var Lock := get_node('MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Lock')
 
 onready var Tool := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/Tools')
 onready var ToolMode := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/ToolMode')
