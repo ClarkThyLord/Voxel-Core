@@ -18,7 +18,7 @@ func set_lock(lock := !Lock, emit := true) -> void:
 
 
 signal set_tool(_tool)
-enum Tools { PAN, ADD, SUB, PICK, SELECT, FILL }
+enum Tools { PAN, SELECT, ADD, SUB, PICK, FILL }
 export(Tools) var Tool := Tools.PAN setget set_tool
 func set_tool(_tool : int, emit := true) -> void:
 	Tool = _tool
