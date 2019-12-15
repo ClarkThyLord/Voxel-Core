@@ -67,6 +67,65 @@ const GridCorrection : float = 0.25 * (VoxelSize / 0.25)   # Global correction b
 
 
 # Core
+# Transforms world space position to snapped position
+# abs_pos    :   Vector3   -   world position to be transformed
+# @returns   :   Vector3   -   given world position to snapped position
+#
+# Example:
+#   abs_to_pos(Vector3(20, 0.312, -4.6543))   ->   Vector3(10, 0.25, -2.25)
+#
+static func abs_to_pos(abs_pos : Vector3) -> Vector3: return (abs_pos / GridStep).floor() * GridStep
+
+# Transforms world space position to grid position
+# grid       :   Vector3   -   world position to be transformed
+# @returns   :   Vector3   -   given world position transformed to grid position
+#
+# Example:
+#   abs_to_grid(Vector3(20, 0.312, -4.6543))   ->   Vector3(20, 1, -4.5)
+#
+static func abs_to_grid(abs_pos : Vector3) -> Vector3: return pos_to_grid(abs_to_pos(abs_pos))
+
+# Transforms snapped position to grid position
+# pos        :   Vector3   -   snapped position to be transformed
+# @returns   :   Vector3   -   given snapped position transformed to grid position
+#
+# Example:
+#   pos_to_grid(Vector3(1, 0, -0.75))   ->   Vector3(2, 0, -0.5)
+#
+static func pos_to_grid(pos : Vector3) -> Vector3: return pos / GridStep
+
+# Corrects snapped position
+# grid       :   Vector3   -   snapped position to be corrected
+# @returns   :   Vector3   -   given snapped position corrected
+#
+# Example:
+#   pos_correct(Vector3(3, 0, -3))   ->   Vector3(3.5, 0, -3.5)
+#
+static func pos_correct(pos : Vector3) -> Vector3: return pos + Vector3(GridCorrection, GridCorrection, GridCorrection)
+
+# Transforms grid position to snapped position
+# grid       :   Vector3   -   grid position to be transformed
+# @returns   :   Vector3   -   given grid position transformed to snapped position
+#
+# Example:
+#   grid_to_pos(Vector3(3, 0, -3))   ->   Vector3(1, 0, -0.75)
+#
+static func grid_to_pos(grid : Vector3) -> Vector3: return grid * GridStep
+
+
+# Returns Vector3 clamped the given range
+# grid       :   Vector3   -   Vector3 to be clamped
+# _min       :   Vector3   -   minimum values
+# _max       :   Vector3   -   maximum values
+# @returns   :   Vector3   -   Vector3 clamped to given range
+#
+# Example:
+#   vec3_clamp(Vector3(12, -3, -21), Vector3(-6, -3, 5), Vector3(23, -1, 32))   ->   Vector3(12, -3, 5)
+#
+static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector3 = Vector3()) -> Vector3:
+	return Vector3(clamp(vec3.x, -_min.x, _max.x - 1), clamp(vec3.y, -_min.y, _max.y - 1), clamp(vec3.z, -_min.z, _max.z - 1))
+
+
 # Helper function for quick 'basic Voxel' creation
 # data       :   Dictionary   -   user defined data
 # @returns   :   Dictionary   -   basic Voxel; NOTE: contains only necessary information
@@ -288,65 +347,6 @@ static func set_texture_up(voxel : Dictionary, texture_position : Vector2) -> vo
 static func set_texture_down(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.DOWN, texture_position)
 static func set_texture_back(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.BACK, texture_position)
 static func set_texture_forward(voxel : Dictionary, texture_position : Vector2) -> void: set_texture_side(voxel, Vector3.FORWARD, texture_position)
-
-
-# Transforms world space position to snapped position
-# abs_pos    :   Vector3   -   world position to be transformed
-# @returns   :   Vector3   -   given world position to snapped position
-#
-# Example:
-#   abs_to_pos(Vector3(20, 0.312, -4.6543))   ->   Vector3(10, 0.25, -2.25)
-#
-static func abs_to_pos(abs_pos : Vector3) -> Vector3: return (abs_pos / GridStep).floor() * GridStep
-
-# Transforms world space position to grid position
-# grid       :   Vector3   -   world position to be transformed
-# @returns   :   Vector3   -   given world position transformed to grid position
-#
-# Example:
-#   abs_to_grid(Vector3(20, 0.312, -4.6543))   ->   Vector3(20, 1, -4.5)
-#
-static func abs_to_grid(abs_pos : Vector3) -> Vector3: return pos_to_grid(abs_to_pos(abs_pos))
-
-# Transforms snapped position to grid position
-# pos        :   Vector3   -   snapped position to be transformed
-# @returns   :   Vector3   -   given snapped position transformed to grid position
-#
-# Example:
-#   pos_to_grid(Vector3(1, 0, -0.75))   ->   Vector3(2, 0, -0.5)
-#
-static func pos_to_grid(pos : Vector3) -> Vector3: return pos / GridStep
-
-# Corrects snapped position
-# grid       :   Vector3   -   snapped position to be corrected
-# @returns   :   Vector3   -   given snapped position corrected
-#
-# Example:
-#   pos_correct(Vector3(3, 0, -3))   ->   Vector3(3.5, 0, -3.5)
-#
-static func pos_correct(pos : Vector3) -> Vector3: return pos + Vector3(GridCorrection, GridCorrection, GridCorrection)
-
-# Transforms grid position to snapped position
-# grid       :   Vector3   -   grid position to be transformed
-# @returns   :   Vector3   -   given grid position transformed to snapped position
-#
-# Example:
-#   grid_to_pos(Vector3(3, 0, -3))   ->   Vector3(1, 0, -0.75)
-#
-static func grid_to_pos(grid : Vector3) -> Vector3: return grid * GridStep
-
-
-# Returns Vector3 clamped the given range
-# grid       :   Vector3   -   Vector3 to be clamped
-# _min       :   Vector3   -   minimum values
-# _max       :   Vector3   -   maximum values
-# @returns   :   Vector3   -   Vector3 clamped to given range
-#
-# Example:
-#   vec3_clamp(Vector3(12, -3, -21), Vector3(-6, -3, 5), Vector3(23, -1, 32))   ->   Vector3(12, -3, 5)
-#
-static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector3 = Vector3()) -> Vector3:
-	return Vector3(clamp(vec3.x, -_min.x, _max.x - 1), clamp(vec3.y, -_min.y, _max.y - 1), clamp(vec3.z, -_min.z, _max.z - 1))
 
 
 # The following are helper functions used to generate Voxel faces

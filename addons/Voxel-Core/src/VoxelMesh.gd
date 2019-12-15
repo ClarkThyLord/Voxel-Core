@@ -274,4 +274,3 @@ func update_staticbody() -> void:
 	elif (not BuildStaticBody or voxels.size() <= 0) and staticbody:
 		remove_child(staticbody)
 		staticbody.queue_free()
-

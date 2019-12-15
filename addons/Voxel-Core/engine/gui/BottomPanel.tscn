@@ -67,8 +67,39 @@ margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
+__meta__ = {
+"_tab_disabled": true
+}
+
+[node name="General" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General"]
+margin_right = 320.0
+margin_bottom = 24.0
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General/HBoxContainer"]
+margin_left = 114.0
+margin_top = 5.0
+margin_right = 177.0
+margin_bottom = 19.0
+text = "AutoSave:"
+
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General/HBoxContainer"]
+margin_left = 181.0
+margin_right = 205.0
+margin_bottom = 24.0
+pressed = true
 
 [node name="Floor" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0

@@ -231,6 +231,8 @@ func grid_to_mirrors(grid : Vector3) -> Array:
 	return mirrors
 
 
-func __input(event : InputEvent, camera := get_viewport().get_camera()):
+func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
-		pass
+		print('event')
+		return false
+	else: return false

@@ -80,5 +80,5 @@ func commit(update := true, emit := true) -> void:
 	if emit: emit_signal('committed')
 
 
-func __input(event : InputEvent, camera := get_viewport().get_camera()):
-	pass
+func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
+	return false
