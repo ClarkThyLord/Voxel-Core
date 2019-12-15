@@ -27,6 +27,7 @@ margin_right = 1004.0
 margin_bottom = 580.0
 
 [node name="Tools" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+editor/display_folded = true
 margin_right = 326.0
 margin_bottom = 580.0
 size_flags_horizontal = 3
@@ -53,27 +54,29 @@ margin_right = 326.0
 margin_bottom = 54.0
 
 [node name="PrimaryColor" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer2"]
-margin_right = 32.0
+margin_right = 63.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer2"]
-margin_left = 36.0
+margin_left = 67.0
 margin_top = 3.0
-margin_right = 122.0
+margin_right = 153.0
 margin_bottom = 17.0
 text = "Primary Color"
 
 [node name="SecondaryColor" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer2"]
-margin_left = 126.0
-margin_right = 158.0
+margin_left = 157.0
+margin_right = 220.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer2"]
-margin_left = 162.0
+margin_left = 224.0
 margin_top = 3.0
-margin_right = 264.0
+margin_right = 326.0
 margin_bottom = 17.0
 text = "Secondary Color"
 
@@ -83,22 +86,25 @@ margin_right = 326.0
 margin_bottom = 82.0
 
 [node name="MirrorX" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer"]
-margin_right = 99.0
+margin_right = 106.0
 margin_bottom = 24.0
+size_flags_horizontal = 3
 text = "Mirror X"
 icon = ExtResource( 2 )
 
 [node name="MirrorY" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer"]
-margin_left = 103.0
-margin_right = 201.0
+margin_left = 110.0
+margin_right = 216.0
 margin_bottom = 24.0
+size_flags_horizontal = 3
 text = "Mirror Y"
 icon = ExtResource( 3 )
 
 [node name="MirrorZ" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer"]
-margin_left = 205.0
-margin_right = 304.0
+margin_left = 220.0
+margin_right = 326.0
 margin_bottom = 24.0
+size_flags_horizontal = 3
 text = "Mirror Z"
 icon = ExtResource( 4 )
 
@@ -108,7 +114,6 @@ margin_right = 334.0
 margin_bottom = 580.0
 
 [node name="Properties" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-editor/display_folded = true
 margin_left = 338.0
 margin_right = 664.0
 margin_bottom = 580.0
@@ -167,6 +172,7 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="General" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -174,21 +180,11 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General"]
+[node name="AutoSave" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General"]
 margin_right = 320.0
 margin_bottom = 24.0
-
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General/HBoxContainer"]
-margin_top = 5.0
-margin_right = 63.0
-margin_bottom = 19.0
-text = "AutoSave:"
-
-[node name="AutoSave" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General/HBoxContainer"]
-margin_left = 67.0
-margin_right = 91.0
-margin_bottom = 24.0
 pressed = true
+text = "       AutoSave"
 
 [node name="Floor" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
 visible = false
@@ -199,32 +195,30 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
+[node name="FloorVisible" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
 margin_right = 320.0
 margin_bottom = 24.0
+text = "       Floor Visible"
 
-[node name="FloorVisible" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 44.0
-margin_right = 151.0
-margin_bottom = 24.0
-text = "Floor Visible"
-
-[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 155.0
-margin_top = 5.0
-margin_right = 240.0
-margin_bottom = 19.0
-text = "Floor Color:   "
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
+margin_top = 28.0
+margin_right = 320.0
+margin_bottom = 48.0
 
 [node name="FloorColor" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 244.0
-margin_right = 276.0
-margin_bottom = 24.0
+margin_right = 32.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
 
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
+margin_left = 36.0
+margin_top = 3.0
+margin_right = 117.0
+margin_bottom = 17.0
+text = "   Floor Color"
+
 [node name="Cursor" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -232,26 +226,25 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor"]
+[node name="CursorVisible" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor"]
 margin_right = 320.0
 margin_bottom = 24.0
+text = "       Cursor Visible"
 
-[node name="CursorVisible" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 35.0
-margin_right = 151.0
-margin_bottom = 24.0
-text = "Cursor Visible"
-
-[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 155.0
-margin_top = 5.0
-margin_right = 249.0
-margin_bottom = 19.0
-text = "Cursor Color:   "
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor"]
+margin_top = 28.0
+margin_right = 320.0
+margin_bottom = 48.0
 
 [node name="CursorColor" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 253.0
-margin_right = 285.0
-margin_bottom = 24.0
+margin_right = 32.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
+
+[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
+margin_left = 36.0
+margin_top = 3.0
+margin_right = 126.0
+margin_bottom = 17.0
+text = "   Cursor Color"

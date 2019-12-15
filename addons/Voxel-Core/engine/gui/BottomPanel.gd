@@ -6,19 +6,31 @@ extends Panel
 # References
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
-onready var SettingsTabs := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/')
+
+onready var PrimaryColor := get_node('MarginContainer/HBoxContainer/Tools/HBoxContainer2/PrimaryColor')
+onready var SecondaryColor := get_node('MarginContainer/HBoxContainer/Tools/HBoxContainer2/SecondaryColor')
+
+onready var MirrorX := get_node('MarginContainer/HBoxContainer/Tools/HBoxContainer/MirrorX')
+onready var MirrorY := get_node('MarginContainer/HBoxContainer/Tools/HBoxContainer/MirrorY')
+onready var MirrorZ := get_node('MarginContainer/HBoxContainer/Tools/HBoxContainer/MirrorZ')
+
+
+onready var Properties := get_node('MarginContainer/HBoxContainer/Properties')
+
+
+onready var SettingsTabs := get_node('MarginContainer/HBoxContainer/Settings/TabContainer')
 
 signal set_auto_save(autosave)
-onready var AutoSave := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/General/HBoxContainer/CheckBox')
+onready var AutoSave := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/General/AutoSave')
 func set_auto_save(autosave, emit := true) -> void:
 	AutoSave.pressed = autosave
 	if emit: emit_signal('set_auto_save', autosave)
 
-onready var FloorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer/CheckBox')
-onready var FloorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer/ColorRect')
+onready var CursorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/CursorVisible')
+onready var CursorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer/CursorColor')
 
-onready var CursorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer/CheckBox')
-onready var CursorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer/ColorRect')
+onready var FloorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/FloorVisible')
+onready var FloorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer/FloorColor')
 
 
 
@@ -54,5 +66,9 @@ func set_voxel_editor(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
 
 
 # Core
-func _ready():	
+func _ready():
+	if Properties.get_children().size() <= 2:
+		Properties.hide()
+		get_node('MarginContainer/HBoxContainer/HSplitContainer').hide()
+	
 	AutoSave.connect('toggled', self, 'set_auto_save')
