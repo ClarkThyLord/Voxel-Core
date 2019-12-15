@@ -27,14 +27,17 @@ func set_voxel_edit_undo_redo() -> void: VoxelEditor.undo_redo = get_undo_redo()
 
 
 var BottomPanel : ToolButton
+var BottomPanelVisible := false
 var BottomPanelControl := preload('res://addons/Voxel-Core/engine/gui/BottomPanel.tscn').instance()
 func set_bottom_panel_visible(visible := !BottomPanelControl.visible) -> void:
-	if visible:
+	if visible and not BottomPanelVisible:
 		BottomPanel = add_control_to_bottom_panel(BottomPanelControl, 'Voxel-Core')
 		make_bottom_panel_item_visible(BottomPanelControl)
-	else:
+		BottomPanelVisible = true
+	elif not visible and BottomPanelVisible:
 		hide_bottom_panel()
 		remove_control_from_bottom_panel(BottomPanelControl)
+		BottomPanelVisible = false
 
 
 
@@ -87,6 +90,7 @@ func _cancel(hide := true) -> void:
 func _enter_tree() -> void:
 	add_autoload_singleton('VoxelSet', 'res://addons/Voxel-Core/defaults/VoxelSet.default.gd')
 	
+	connect('scene_closed', self, 'scene_closed')
 	connect('scene_changed', self, 'engine_ready', [], CONNECT_ONESHOT)
 	
 	print('Loaded Voxel-Core.')
@@ -107,14 +111,14 @@ func _exit_tree() -> void:
 	
 	BottomPanelControl.queue_free()
 	
+	disconnect('scene_closed', self, 'scene_closed')
+	
 	print('Unloaded Voxel-Core.')
 
 
 func scene_closed(path : String) -> void:
-	pass
-
-func scene_changed(scene : Node) -> void:
-	pass
+	VoxelEditor.Lock = true
+	_cancel()
 
 func main_screen_changed(mainscene : String) -> void:
 	MainScene = mainscene

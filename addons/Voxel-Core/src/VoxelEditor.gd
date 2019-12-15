@@ -52,8 +52,7 @@ func _save() -> void:
 
 signal editing
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
-	if VoxelObjectClass and VoxelObject is VoxelObjectClass:
-		commit(true, emit)
+	commit(true, true)
 	
 	set_options(DefaultOptions if options.get('reset', false) else options)
 	VoxelObject = voxelobject
@@ -69,15 +68,16 @@ func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit :=
 
 signal committed
 func commit(update := true, emit := true) -> void:
-	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
-	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
-	
-	if update: VoxelObject.update()
-	
-	VoxelObject = null
-	VoxelObjectData = {}
-	
-	if emit: emit_signal('committed')
+	if VoxelObject and VoxelObject is VoxelObjectClass:
+		VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
+		VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
+		
+		if update: VoxelObject.update()
+		
+		VoxelObject = null
+		VoxelObjectData = {}
+		
+		if emit: emit_signal('committed')
 
 
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:

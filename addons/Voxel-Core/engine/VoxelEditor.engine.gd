@@ -138,32 +138,34 @@ func _ready() -> void:
 	_load()
 
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
-	._edit(true, false)
+	.edit(voxelobject, options, true, false)
 	
 	VoxelObjectData['voxels'] = voxelobject.get_voxels()
 	
 	if emit: emit_signal('editing')
 
 func commit(update := true, emit := true) -> void:
-	._commit(update, false)
-	
-	if on_commit_clear_history: undo_redo.clear_history()
-	
-	if emit: emit_signal('committed')
+	if VoxelObject and VoxelObject is VoxelObjectClass:
+		.commit(update, false)
+		
+		if on_commit_clear_history: undo_redo.clear_history()
+		
+		if emit: emit_signal('committed')
 
 signal canceled
 func cancel(update := true, emit := true) -> void:
-	VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
-	VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
-	VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
-	
-	if update: VoxelObject.update()
-	
-	VoxelObject = null
-	VoxelObjectData = {}
-	if on_cancel_clear_history: undo_redo.clear_history()
-	
-	if emit: emit_signal('canceled')
+	if VoxelObject and VoxelObject is VoxelObjectClass:
+		VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
+		VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
+		VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
+		
+		if update: VoxelObject.update()
+		
+		VoxelObject = null
+		VoxelObjectData = {}
+		if on_cancel_clear_history: undo_redo.clear_history()
+		
+		if emit: emit_signal('canceled')
 
 
 # Helper function for easy Raycasting
