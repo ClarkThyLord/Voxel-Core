@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mirror_x.png-caf6f450d064f050cb1c81afb4eaa697.stex"
+path="res://.import/Godot.png-6ec4cea6340211e905fdcfc6ce1713f7.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/gui/mirror_x.png"
-dest_files=[ "res://.import/mirror_x.png-caf6f450d064f050cb1c81afb4eaa697.stex" ]
+source_file="res://addons/Voxel-Core/assets/icons/Godot.png"
+dest_files=[ "res://.import/Godot.png-6ec4cea6340211e905fdcfc6ce1713f7.stex" ]
 
 [params]
 

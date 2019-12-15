@@ -71,5 +71,8 @@ func set_voxel_editor(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
 
 
 # Core
-func _ready():
-	AutoSave.connect('toggled', self, 'set_auto_save')
+func _on_Godot_pressed():
+	OS.shell_open('https://godotengine.org/asset-library/asset')
+
+func _on_GitHub_pressed():
+	OS.shell_open('https://github.com/ClarkThyLord/Voxel-Core')

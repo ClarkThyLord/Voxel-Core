@@ -1,15 +1,17 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
-[ext_resource path="res://addons/Voxel-Core/assets/gui/lock.png" type="Texture" id=2]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/lock.png" type="Texture" id=2]
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolsDropdown/ToolsDropdown.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolModesDropdown/ToolModesDropdown.tscn" type="PackedScene" id=4]
-[ext_resource path="res://addons/Voxel-Core/assets/gui/mirror_x.png" type="Texture" id=5]
-[ext_resource path="res://addons/Voxel-Core/assets/gui/mirror_y.png" type="Texture" id=6]
-[ext_resource path="res://addons/Voxel-Core/assets/gui/mirror_z.png" type="Texture" id=7]
-[ext_resource path="res://addons/Voxel-Core/assets/gui/settings.png" type="Texture" id=8]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirror_x.png" type="Texture" id=5]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirror_y.png" type="Texture" id=6]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirror_z.png" type="Texture" id=7]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/settings.png" type="Texture" id=8]
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=9]
-[ext_resource path="res://addons/Voxel-Core/assets/gui/VoxelCore.svg" type="Texture" id=10]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=10]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=11]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=12]
 
 [node name="BottomPanel" type="Panel"]
 anchor_right = 1.0
@@ -237,7 +239,6 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="General" type="ScrollContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -295,7 +296,7 @@ margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
 
-[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
 margin_top = 3.0
 margin_right = 126.0
@@ -337,7 +338,7 @@ margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
 
-[node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
 margin_top = 3.0
 margin_right = 117.0
@@ -351,6 +352,7 @@ margin_bottom = 72.0
 size_flags_horizontal = 3
 
 [node name="About" type="ScrollContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -361,23 +363,71 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About"]
-margin_right = 320.0
-margin_bottom = 508.0
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About"]
+margin_right = 329.0
+margin_bottom = 50.0
 size_flags_horizontal = 3
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
+margin_right = 50.0
+margin_bottom = 50.0
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/VBoxContainer"]
-margin_right = 320.0
-margin_bottom = 75.0
-rect_min_size = Vector2( 75, 75 )
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer"]
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+size_flags_horizontal = 3
 texture = ExtResource( 10 )
 expand = true
 stretch_mode = 6
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/VBoxContainer"]
-margin_top = 79.0
-margin_right = 320.0
-margin_bottom = 93.0
-text = "Voxel-Core"
-align = 1
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
+margin_left = 54.0
+margin_top = 9.0
+margin_right = 159.0
+margin_bottom = 40.0
+text = "Voxel-Core
+Voxels in Godot!"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
+margin_left = 163.0
+margin_right = 329.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer"]
+margin_right = 86.0
+margin_bottom = 50.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Godot" type="ToolButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer"]
+margin_top = 13.0
+margin_right = 86.0
+margin_bottom = 37.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "AssetLib"
+icon = ExtResource( 11 )
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer"]
+margin_left = 90.0
+margin_right = 166.0
+margin_bottom = 50.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="GitHub" type="ToolButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 13.0
+margin_right = 76.0
+margin_bottom = 37.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "GitHub"
+icon = ExtResource( 12 )
+[connection signal="toggled" from="MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/AutoSave" to="." method="set_auto_save"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
