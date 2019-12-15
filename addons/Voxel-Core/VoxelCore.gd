@@ -90,13 +90,16 @@ func _cancel(hide := true) -> void:
 func _enter_tree() -> void:
 	add_autoload_singleton('VoxelSet', 'res://addons/Voxel-Core/defaults/VoxelSet.default.gd')
 	
+	
 	connect('scene_closed', self, 'scene_closed')
-	connect('main_screen_changed', self, 'main_screen_changed')
+	connect('main_screen_changed',self, 'main_screen_changed')
+	
 	
 	print('Loaded Voxel-Core.')
 
 func _ready():
 	set_voxel_edit_undo_redo()
+	
 	
 	connect('set_auto_save', BottomPanelControl, 'set_auto_save')
 	BottomPanelControl.connect('set_auto_save', self, 'set_auto_save', [false])
@@ -106,10 +109,6 @@ func _ready():
 	BottomPanelControl.connect('ready', BottomPanelControl, 'set_voxel_edit', [VoxelEditor], CONNECT_ONESHOT)
 
 func _exit_tree() -> void:
-	remove_autoload_singleton('VoxelSet')
-	
-	BottomPanelControl.queue_free()
-	
 	disconnect('scene_closed', self, 'scene_closed')
 	disconnect('main_screen_changed', self, 'main_screen_changed')
 	
@@ -117,6 +116,12 @@ func _exit_tree() -> void:
 	BottomPanelControl.disconnect('set_auto_save', self, 'set_auto_save')
 	
 	VoxelEditor.disconnect('script_changed', self, 'set_voxel_edit_undo_redo')
+	
+	
+	remove_autoload_singleton('VoxelSet')
+	set_bottom_panel_visible(false)
+	BottomPanelControl.queue_free()
+	
 	
 	print('Unloaded Voxel-Core.')
 
