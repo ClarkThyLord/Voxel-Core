@@ -87,20 +87,17 @@ func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
 
 
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
-	print('edit')
 	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
 	if show: set_bottom_panel_visible(true)
 
 func _commit(hide := true) -> void:
-	print('commit')
 	if VoxelEditor.VoxelObject:
 		VoxelEditor.commit()
 		if hide: set_bottom_panel_visible(false)
 		_save()
 
 func _cancel(hide := true) -> void:
-	print('hide')
 	if VoxelEditor.VoxelObject:
 		VoxelEditor.cancel()
 		if hide: set_bottom_panel_visible(false)
