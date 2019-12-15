@@ -4,11 +4,12 @@ extends EditorPlugin
 
 
 # Refrences
-const VoxelSetClass = preload('res://addons/Voxel-Core/src/VoxelSet.gd')
-const VoxelEditorClass = preload('res://addons/Voxel-Core/src/VoxelEditor.gd')
-const VoxelObjectClass = preload('res://addons/Voxel-Core/src/VoxelObject.gd')
+const VoxelSetClass := preload('res://addons/Voxel-Core/src/VoxelSet.gd')
+const VoxelEditorClass := preload('res://addons/Voxel-Core/src/VoxelEditor.gd')
+const VoxelObjectClass := preload('res://addons/Voxel-Core/src/VoxelObject.gd')
 
-const VoxelEditorEngineClass = preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
+const BottomPanelScene := preload('res://addons/Voxel-Core/engine/gui/BottomPanel.tscn')
+const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
 
 
@@ -27,16 +28,29 @@ func set_voxel_edit_undo_redo() -> void: VoxelEditor.undo_redo = get_undo_redo()
 
 
 var BottomPanel : ToolButton
+var BottomPanelControl
 var BottomPanelVisible := false
-var BottomPanelControl := preload('res://addons/Voxel-Core/engine/gui/BottomPanel.tscn').instance()
-func set_bottom_panel_visible(visible := !BottomPanelControl.visible) -> void:
-	if visible and not BottomPanelVisible:
+func set_bottom_panel_visible(visible := !BottomPanelVisible) -> void:
+	if visible and not BottomPanelVisible and MainScene == '3D':
+		BottomPanelControl = BottomPanelScene.instance()
+		
 		BottomPanel = add_control_to_bottom_panel(BottomPanelControl, 'Voxel-Core')
+		
+		BottomPanelControl.set_voxel_editor(VoxelEditor)
+		
+		BottomPanelControl.set_auto_save(AutoSave, false)
+		connect('set_auto_save', BottomPanelControl, 'set_auto_save')
+		BottomPanelControl.connect('set_auto_save', self, 'set_auto_save', [false])
+		
 		make_bottom_panel_item_visible(BottomPanelControl)
 		BottomPanelVisible = true
 	elif not visible and BottomPanelVisible:
+		disconnect('set_auto_save', BottomPanelControl, 'set_auto_save')
+		BottomPanelControl.disconnect('set_auto_save', self, 'set_auto_save')
+		
 		hide_bottom_panel()
 		remove_control_from_bottom_panel(BottomPanelControl)
+		BottomPanelControl.queue_free()
 		BottomPanelVisible = false
 
 
@@ -67,24 +81,30 @@ func select(object, select) -> void:
 
 
 func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
-	print(msg)
-	get_editor_interface().save_scene()
+	if not VoxelEditor.starting_version == VoxelEditor.undo_redo.get_version():
+		print(msg)
+		get_editor_interface().save_scene()
 
 
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
+	print('edit')
 	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
 	if show: set_bottom_panel_visible(true)
 
 func _commit(hide := true) -> void:
-	VoxelEditor.commit()
-	if hide: set_bottom_panel_visible(false)
-	_save()
+	print('commit')
+	if VoxelEditor.VoxelObject:
+		VoxelEditor.commit()
+		if hide: set_bottom_panel_visible(false)
+		_save()
 
 func _cancel(hide := true) -> void:
-	VoxelEditor.cancel()
-	if hide: set_bottom_panel_visible(false)
-	_save('CANCELED VOXEL OBJECT CHANGES')
+	print('hide')
+	if VoxelEditor.VoxelObject:
+		VoxelEditor.cancel()
+		if hide: set_bottom_panel_visible(false)
+		_save('CANCELED VOXEL OBJECT CHANGES')
 
 
 func _enter_tree() -> void:
@@ -101,26 +121,17 @@ func _ready():
 	set_voxel_edit_undo_redo()
 	
 	
-	connect('set_auto_save', BottomPanelControl, 'set_auto_save')
-	BottomPanelControl.connect('set_auto_save', self, 'set_auto_save', [false])
-	
 	VoxelEditor.connect('script_changed', self, 'set_voxel_edit_undo_redo', [], CONNECT_DEFERRED)
-	
-	BottomPanelControl.connect('ready', BottomPanelControl, 'set_voxel_edit', [VoxelEditor], CONNECT_ONESHOT)
 
 func _exit_tree() -> void:
 	disconnect('scene_closed', self, 'scene_closed')
 	disconnect('main_screen_changed', self, 'main_screen_changed')
-	
-	disconnect('set_auto_save', BottomPanelControl, 'set_auto_save')
-	BottomPanelControl.disconnect('set_auto_save', self, 'set_auto_save')
 	
 	VoxelEditor.disconnect('script_changed', self, 'set_voxel_edit_undo_redo')
 	
 	
 	remove_autoload_singleton('VoxelSet')
 	set_bottom_panel_visible(false)
-	BottomPanelControl.queue_free()
 	
 	
 	print('Unloaded Voxel-Core.')

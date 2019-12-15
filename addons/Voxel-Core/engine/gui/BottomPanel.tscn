@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/gui/BottomPanel.gd" type="Script" id=1]
+[ext_resource path="res://addons/Voxel-Core/assets/gui/mirror_x.png" type="Texture" id=2]
+[ext_resource path="res://addons/Voxel-Core/assets/gui/mirror_y.png" type="Texture" id=3]
+[ext_resource path="res://addons/Voxel-Core/assets/gui/mirror_z.png" type="Texture" id=4]
+[ext_resource path="res://addons/Voxel-Core/assets/gui/settings.png" type="Texture" id=5]
 
 [node name="BottomPanel" type="Panel"]
 anchor_right = 1.0
@@ -28,6 +32,41 @@ margin_bottom = 580.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Tools"]
+margin_right = 326.0
+margin_bottom = 14.0
+text = "Tools"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/Tools"]
+margin_top = 18.0
+margin_right = 326.0
+margin_bottom = 22.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools"]
+margin_top = 26.0
+margin_right = 326.0
+margin_bottom = 50.0
+
+[node name="CheckBox" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer"]
+margin_right = 99.0
+margin_bottom = 24.0
+text = "Mirror X"
+icon = ExtResource( 2 )
+
+[node name="CheckBox2" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer"]
+margin_left = 103.0
+margin_right = 201.0
+margin_bottom = 24.0
+text = "Mirror Y"
+icon = ExtResource( 3 )
+
+[node name="CheckBox3" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/HBoxContainer"]
+margin_left = 205.0
+margin_right = 304.0
+margin_bottom = 24.0
+text = "Mirror Z"
+icon = ExtResource( 4 )
+
 [node name="HSplitContainer" type="VSeparator" parent="MarginContainer/HBoxContainer"]
 margin_left = 330.0
 margin_right = 334.0
@@ -39,6 +78,16 @@ margin_right = 664.0
 margin_bottom = 580.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Properties"]
+margin_right = 326.0
+margin_bottom = 14.0
+text = "Properties"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/Properties"]
+margin_top = 18.0
+margin_right = 326.0
+margin_bottom = 22.0
 
 [node name="HSplitContainer2" type="VSeparator" parent="MarginContainer/HBoxContainer"]
 margin_left = 668.0
@@ -52,26 +101,38 @@ margin_bottom = 580.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings"]
+margin_right = 328.0
+margin_bottom = 16.0
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/Settings/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/HBoxContainer"]
+margin_left = 20.0
+margin_top = 1.0
+margin_right = 71.0
+margin_bottom = 15.0
+text = "Settings"
+
+[node name="VSplitContainer" type="HSeparator" parent="MarginContainer/HBoxContainer/Settings"]
+margin_top = 20.0
+margin_right = 328.0
+margin_bottom = 24.0
+
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/HBoxContainer/Settings"]
+margin_top = 28.0
 margin_right = 328.0
 margin_bottom = 580.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tab_align = 0
 
-[node name="Settings" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 32.0
-margin_right = -4.0
-margin_bottom = -4.0
-__meta__ = {
-"_tab_disabled": true
-}
-
 [node name="General" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
+editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -80,6 +141,7 @@ margin_right = -4.0
 margin_bottom = -4.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer/General"]
+editor/display_folded = true
 margin_right = 320.0
 margin_bottom = 24.0
 alignment = 1
@@ -103,7 +165,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 
@@ -112,35 +174,28 @@ margin_right = 320.0
 margin_bottom = 24.0
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 42.0
-margin_top = 5.0
-margin_right = 125.0
-margin_bottom = 19.0
-text = "Floor Visible:"
-
 [node name="CheckBox" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 129.0
-margin_right = 153.0
+margin_left = 44.0
+margin_right = 151.0
 margin_bottom = 24.0
+text = "Floor Visible"
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 157.0
+margin_left = 155.0
 margin_top = 5.0
-margin_right = 242.0
+margin_right = 240.0
 margin_bottom = 19.0
 text = "Floor Color:   "
 
 [node name="ColorRect" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Floor/HBoxContainer"]
-margin_left = 246.0
-margin_right = 278.0
+margin_left = 244.0
+margin_right = 276.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0
 
 [node name="Cursor" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
 editor/display_folded = true
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -153,28 +208,22 @@ margin_right = 320.0
 margin_bottom = 24.0
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 33.0
-margin_top = 5.0
-margin_right = 125.0
-margin_bottom = 19.0
-text = "Cursor Visible:"
-
 [node name="CheckBox" type="CheckBox" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 129.0
-margin_right = 153.0
+margin_left = 35.0
+margin_right = 151.0
 margin_bottom = 24.0
+text = "Cursor Visible"
 
 [node name="Label2" type="Label" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 157.0
+margin_left = 155.0
 margin_top = 5.0
-margin_right = 251.0
+margin_right = 249.0
 margin_bottom = 19.0
 text = "Cursor Color:   "
 
 [node name="ColorRect" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/HBoxContainer"]
-margin_left = 255.0
-margin_right = 287.0
+margin_left = 253.0
+margin_right = 285.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 0

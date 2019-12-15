@@ -4,6 +4,7 @@ extends "res://addons/Voxel-Core/src/VoxelEditor.gd"
 
 
 # Declarations
+var starting_version : int
 var undo_redo := UndoRedo.new()
 export(bool) var on_commit_clear_history := false
 export(bool) var on_cancel_clear_history := false
@@ -140,6 +141,7 @@ func _ready() -> void:
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
 	.edit(voxelobject, options, true, false)
 	
+	starting_version = undo_redo.get_version()
 	VoxelObjectData['voxels'] = voxelobject.get_voxels()
 	
 	if emit: emit_signal('editing')

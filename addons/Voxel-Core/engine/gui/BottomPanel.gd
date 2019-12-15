@@ -23,9 +23,9 @@ onready var CursorColor := get_node('MarginContainer/HBoxContainer/Settings/TabC
 
 
 # Declarations
-signal set_voxel_edit(voxeledit)
-var VoxelEditor : VoxelEditorEngineClass setget set_voxel_edit
-func set_voxel_edit(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
+signal set_voxel_editor(voxeledit)
+var VoxelEditor : VoxelEditorEngineClass setget set_voxel_editor
+func set_voxel_editor(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
 	if not voxeledit == VoxelEditor:
 		if VoxelEditor:
 			VoxelEditor.disconnect('set_floor_visible', FloorVisible, 'set_pressed')
@@ -50,12 +50,9 @@ func set_voxel_edit(voxeledit : VoxelEditorEngineClass, emit := true) -> void:
 		VoxelEditor.connect('set_cursor_color', CursorColor, 'set_pick_color')
 		CursorColor.connect('color_changed', VoxelEditor, 'set_cursor_color')
 		
-		if emit: emit_signal('set_voxel_edit', VoxelEditor)
+		if emit: emit_signal('set_voxel_editor', VoxelEditor)
 
 
 # Core
-func _ready():
-	SettingsTabs.set_tab_disabled(0, true)
-	SettingsTabs.current_tab = 1
-	
+func _ready():	
 	AutoSave.connect('toggled', self, 'set_auto_save')
