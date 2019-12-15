@@ -13,6 +13,8 @@ const VoxelEditorEngineClass = preload('res://addons/Voxel-Core/engine/VoxelEdit
 
 
 # Declarations
+var MainScene := ''
+
 signal set_auto_save(autosave)
 var AutoSave := true setget set_auto_save
 func set_auto_save(autosave := !AutoSave, emit := true) -> void:
@@ -26,6 +28,13 @@ func set_voxel_edit_undo_redo() -> void: VoxelEditor.undo_redo = get_undo_redo()
 
 var BottomPanel : ToolButton
 var BottomPanelControl := preload('res://addons/Voxel-Core/engine/gui/BottomPanel.tscn').instance()
+func set_bottom_panel_visible(visible := !BottomPanelControl.visible) -> void:
+	if visible:
+		BottomPanel = add_control_to_bottom_panel(BottomPanelControl, 'Voxel-Core')
+		make_bottom_panel_item_visible(BottomPanelControl)
+	else:
+		hide_bottom_panel()
+		remove_control_from_bottom_panel(BottomPanelControl)
 
 
 
@@ -49,23 +58,30 @@ static func voxel_type_of(object : Object) -> int:
 	else: return VoxelTypes.NVT
 
 
+func select(object, select) -> void:
+	if select: get_editor_interface().get_selection().add_node(object)
+	else: get_editor_interface().get_selection().remove_node(object)
+
+
+func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
+	print()
+	get_editor_interface().save_scene()
+
+
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
-	if show:
-		BottomPanel = add_control_to_bottom_panel(BottomPanelControl, 'Voxel-Core')
-		make_bottom_panel_item_visible(BottomPanelControl)
+	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
+	if show: set_bottom_panel_visible(true)
 
 func _commit(hide := true) -> void:
-	if hide:
-		hide_bottom_panel()
-		remove_control_from_bottom_panel(BottomPanelControl)
 	VoxelEditor.commit()
+	if hide: set_bottom_panel_visible(false)
+	_save()
 
 func _cancel(hide := true) -> void:
-	if hide:
-		hide_bottom_panel()
-		remove_control_from_bottom_panel(BottomPanelControl)
 	VoxelEditor.cancel()
+	if hide: set_bottom_panel_visible(false)
+	_save('CANCELED VOXEL OBJECT CHANGES')
 
 
 func _enter_tree() -> void:
@@ -100,8 +116,16 @@ func scene_closed(path : String) -> void:
 func scene_changed(scene : Node) -> void:
 	pass
 
-func main_screen_changed(scene : String) -> void:
-	pass
+func main_screen_changed(mainscene : String) -> void:
+	MainScene = mainscene
+	
+	if mainscene == '3D' and VoxelEditor.VoxelObject:
+		set_bottom_panel_visible(true)
+	else:
+		if VoxelEditor.Lock == false and VoxelEditor.VoxelObject:
+			VoxelEditor.Lock = true
+			_save()
+		set_bottom_panel_visible(false)
 
 func handles(object) -> bool:
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
