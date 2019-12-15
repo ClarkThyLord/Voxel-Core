@@ -4,7 +4,12 @@ extends "res://addons/Voxel-Core/src/VoxelEditor.gd"
 
 
 # Declarations
-var starting_version : int
+var StartingVersion : int
+signal modified(Modified)
+var Modified : bool = false setget set_modified
+func set_modified(modified := !Modified, emit := true) -> void:
+	Modified = modified
+	if emit: emit_signal('modified', modified)
 var undo_redo := UndoRedo.new()
 export(bool) var on_commit_clear_history := false
 export(bool) var on_cancel_clear_history := false
@@ -141,7 +146,8 @@ func _ready() -> void:
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
 	.edit(voxelobject, options, true, false)
 	
-	starting_version = undo_redo.get_version()
+	Modified = false
+	StartingVersion = undo_redo.get_version()
 	VoxelObjectData['voxels'] = voxelobject.get_voxels()
 	
 	if emit: emit_signal('editing')
@@ -150,6 +156,9 @@ func commit(update := true, emit := true) -> void:
 	if VoxelObject and VoxelObject is VoxelObjectClass:
 		.commit(update, false)
 		
+		
+		Modified = false
+		StartingVersion = -1
 		if on_commit_clear_history: undo_redo.clear_history()
 		
 		if emit: emit_signal('committed')
@@ -165,6 +174,9 @@ func cancel(update := true, emit := true) -> void:
 		
 		VoxelObject = null
 		VoxelObjectData = {}
+		
+		Modified = false
+		StartingVersion = -1
 		if on_cancel_clear_history: undo_redo.clear_history()
 		
 		if emit: emit_signal('canceled')

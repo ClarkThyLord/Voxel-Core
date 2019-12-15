@@ -87,12 +87,14 @@ margin_bottom = 22.0
 margin_right = 161.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
+Tool = 0
 
 [node name="ToolMode" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 4 )]
 margin_left = 165.0
 margin_right = 326.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
+Tool = 0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
@@ -238,7 +240,6 @@ margin_right = 672.0
 margin_bottom = 580.0
 
 [node name="Settings" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-editor/display_folded = true
 margin_left = 676.0
 margin_right = 1004.0
 margin_bottom = 580.0
@@ -395,6 +396,7 @@ margin_top = 52.0
 margin_right = 320.0
 margin_bottom = 74.0
 size_flags_horizontal = 3
+Tool = 0
 
 [node name="About" type="ScrollContainer" parent="MarginContainer/HBoxContainer/Settings/TabContainer"]
 visible = false
@@ -478,6 +480,5 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
 icon = ExtResource( 22 )
-[connection signal="toggled" from="MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/AutoSave" to="." method="set_auto_save"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
