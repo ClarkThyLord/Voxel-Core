@@ -53,10 +53,6 @@ func set_voxel_set_path(voxelsetpath : NodePath, update := true, emit := true) -
 
 
 # Core
-#func _ready():
-#	set_voxel_set_path(VoxelSetPath)
-
-
 func _update() -> void:
 	if VoxelSet and VoxelSet is VoxelSetClass:
 		for voxel_id in VoxelSet.Voxels:
