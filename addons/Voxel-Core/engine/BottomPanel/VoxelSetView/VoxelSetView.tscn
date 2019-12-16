@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelSetView.gd" type="Script" id=1]
+
+[node name="VoxelSetView" type="ScrollContainer"]
+anchor_right = 1.0
+margin_right = -970.0
+margin_bottom = 66.0
+size_flags_horizontal = 3
+scroll_vertical_enabled = false
+script = ExtResource( 1 )
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+margin_right = 54.0
+margin_bottom = 54.0
+size_flags_horizontal = 3
+
+[node name="Voxels" type="HBoxContainer" parent="PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 47.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 40, 40 )

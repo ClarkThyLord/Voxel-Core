@@ -19,25 +19,22 @@ var _ID := 0 setget set_id              #   Auto-increments on Voxel append
 func set_id(id : int) -> void: return   #   _ID shouldn't be settable externally
 
 
-# Sets Voxels of set, emits 'set_voxels' and 'update'.
+# Sets Voxels of set, emits 'update'.
 # voxels   :   Dictionary<int, Dictionary[Voxel]>   -   Voxels to duplicate
-# emit     :   bool                                 -   true, emit signal; false, don't emit signal
+# update   :   bool   -   whether to call on 'update'
 #
 # Example:
 #   set_voxels({ ... }, false)
 #
-signal set_voxels(voxels)
-var voxels : Dictionary = {} setget set_voxels
-func set_voxels(_voxels : Dictionary, emit := true) -> void:
-	var ids = _voxels.keys()
+var Voxels : Dictionary = {} setget set_voxels
+func set_voxels(voxels : Dictionary, update := true) -> void:
+	var ids = voxels.keys()
 	ids.sort()
 	_ID = ids[-1] + 1
 	
-	voxels = _voxels.duplicate(true)
+	Voxels = voxels.duplicate(true)
 	
-	if emit:
-		emit_signal('set_voxels', _voxels)
-		emit_signal('updated')
+	if update: self.update()
 
 
 
@@ -95,12 +92,12 @@ func set_albedo_texture(albedotexture : Texture = AlbedoTexture, update := true,
 # Load necessary data
 func _load() -> void:
 	_ID = get_meta('_ID') if has_meta('_ID') else 0
-	voxels = get_meta('voxels') if has_meta('voxels') else {}
+	Voxels = get_meta('Voxels') if has_meta('Voxels') else {}
 
 # Save necessary data
 func _save() -> void:
 	set_meta('_ID', _ID)
-	set_meta('voxels', voxels)
+	set_meta('Voxels', Voxels)
 
 
 # The following will initialize the object as needed
@@ -114,7 +111,7 @@ func _init(): _load()
 # Example:
 #   get_voxel(3) -> { ... }
 #
-func get_voxel(id : int) -> Dictionary: return voxels.get(id, {})
+func get_voxel(id : int) -> Dictionary: return Voxels.get(id)
 
 
 # Append a Voxel, or set Voxel by providing a ID to VoxelSet.
@@ -132,7 +129,7 @@ func set_voxel(voxel : Dictionary, id := -1, update := true) -> int:
 		id = _ID
 		_ID += 1
 	
-	voxels[id] = voxel
+	Voxels[id] = voxel
 	
 	if update: self.update()
 	
@@ -147,11 +144,11 @@ func set_voxel(voxel : Dictionary, id := -1, update := true) -> int:
 #   erase_voxel(33)   ->   { ... }
 #
 func erase_voxel(id : int, update := true) -> void:
-	voxels.erase(id)
+	Voxels.erase(id)
 	if update: self.update()
 
 
 # Saves VoxelSet data, and emits 'update'.
 func update() -> void:
 	_save()
-	emit_signal('update')
+	emit_signal('updated')

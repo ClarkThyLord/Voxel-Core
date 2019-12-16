@@ -94,7 +94,6 @@ margin_left = 165.0
 margin_right = 326.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-Tool = 0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
