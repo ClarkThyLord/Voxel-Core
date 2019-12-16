@@ -1,5 +1,5 @@
 tool
-extends ScrollContainer
+extends PanelContainer
 
 
 
@@ -8,6 +8,8 @@ const VoxelSetClass := preload('res://addons/Voxel-Core/src/VoxelSet.gd')
 
 const VoxelView := preload('res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelView/VoxelView.tscn')
 const VoxelViewClass := preload('res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelView/VoxelView.gd')
+
+onready var Voxels := get_node('HBoxContainer/VoxelSetView/Voxels')
 
 
 
@@ -69,7 +71,7 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 	VoxelSet = voxelset
 	if not VoxelSet.is_connected('updated', self, 'update'): VoxelSet.connect('updated', self, 'update')
 	
-	if update: _update()
+	if update: _update(VoxelSet.Voxels)
 	if emit: emit_signal('set_voxel_set', VoxelSet)
 
 
@@ -95,9 +97,35 @@ func set_voxel_set_path(voxelsetpath : NodePath, update := true, emit := true) -
 #	set_voxel_set_path(VoxelSetPath, true, false)
 
 
-func _update() -> void:
-	if VoxelSet and VoxelSet is VoxelSetClass:
-		for voxel_id in VoxelSet.Voxels:
-			var voxelview = VoxelView.instance()
-			voxelview.setup(voxel_id, VoxelSet.Voxels[voxel_id], self)
-			get_node('PanelContainer/Voxels').add_child(voxelview)
+func _on_Search_text_changed(new_text : String) -> void:
+	if VoxelSet:
+		if new_text.empty():
+			_update(VoxelSet.Voxels)
+		else:
+			var voxels := {}
+			
+			var keywords := new_text.split(',')
+			
+			for keyword in keywords:
+				if keyword.is_valid_integer():
+					keyword = keyword.to_int()
+					var voxel = VoxelSet.Voxels.get(keyword)
+					if voxel: voxels[keyword] = voxel
+			
+			_update(voxels)
+
+
+func _update(voxels : Dictionary) -> void:
+	for child in Voxels.get_children():
+		Voxels.remove_child(child)
+		child.queue_free()
+	
+	for voxel_id in voxels:
+		var voxelview = VoxelView.instance()
+		voxelview.setup(voxel_id, voxels[voxel_id], self)
+		Voxels.add_child(voxelview)
+#	if VoxelSet and VoxelSet is VoxelSetClass:
+#		for voxel_id in VoxelSet.Voxels:
+#			var voxelview = VoxelView.instance()
+#			voxelview.setup(voxel_id, VoxelSet.Voxels[voxel_id], self)
+#			Voxels.add_child(voxelview)

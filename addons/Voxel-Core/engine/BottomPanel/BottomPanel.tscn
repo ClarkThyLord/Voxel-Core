@@ -27,7 +27,7 @@
 [node name="BottomPanel" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 200 )
+rect_min_size = Vector2( 0, 210 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -95,6 +95,7 @@ margin_left = 165.0
 margin_right = 326.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
+Tool = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
@@ -163,9 +164,7 @@ margin_right = 326.0
 margin_bottom = 132.0
 
 [node name="VoxelSetView" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 8 )]
-anchor_right = 0.0
 margin_right = 326.0
-margin_bottom = 54.0
 SelectLimit = 2
 
 [node name="HSplitContainer" type="VSeparator" parent="MarginContainer/HBoxContainer"]

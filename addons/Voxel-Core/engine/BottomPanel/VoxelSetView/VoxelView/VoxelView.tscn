@@ -8,6 +8,8 @@ margin_bottom = 40.0
 rect_min_size = Vector2( 40, 40 )
 focus_mode = 2
 mouse_default_cursor_shape = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 color = Color( 0, 0, 0, 0.1 )
 script = ExtResource( 1 )
 
