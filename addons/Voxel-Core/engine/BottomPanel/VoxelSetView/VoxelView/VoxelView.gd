@@ -5,9 +5,11 @@ extends ColorRect
 
 # Declarations
 var ID : int setget set_id
-func set_id(id : int) -> void: return                  #   ID shouldn't be settable directly
+func set_id(id : int) -> void: return                     #   ID shouldn't be settable directly
 var Represents : Dictionary setget set_represents
-func set_represents(id : Dictionary) -> void: return   #   Represents shouldn't be settable directly
+func set_represents(id : Dictionary) -> void: return      #   Represents shouldn't be settable directly
+var VoxelSetView setget set_voxel_set_view   #   VoxelView shouldn't be settable directly
+func set_voxel_set_view(voxelsetview) -> void: return
 
 
 export(Color) var NormalColor := Color(0, 0, 0, 0.1)
@@ -23,17 +25,21 @@ var Selected := false
 export(Color) var SelectedColor := Color(1, 1, 1, 0.1)
 func set_selected(selected : bool = !Selected, emit := true) -> void:
 	Selected = selected
+	if emit: emit_signal('selected', Selected)
+	if emit and VoxelSetView:
+		if Selected: VoxelSetView.add_selected(self)
+		else: VoxelSetView.remove_selected(self)
 	_update()
-	if emit: emit_signal('selected', selected)
 
 
 
 # Core
 func _ready(): color = NormalColor
 
-func setup(id : int, voxel : Dictionary) -> void:
+func setup(id : int, voxel : Dictionary, voxelsetviewer) -> void:
 	ID = id
 	Represents = voxel
+	VoxelSetView = voxelsetviewer
 	
 	get_node('CenterContainer/Color').color = Voxel.get_color(voxel)
 	get_node('CenterContainer/Texture').texture = Voxel.get_texture(voxel)

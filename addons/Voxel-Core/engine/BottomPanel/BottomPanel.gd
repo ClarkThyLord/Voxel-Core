@@ -13,6 +13,8 @@ onready var ToolMode := get_node('MarginContainer/HBoxContainer/Tools/ScrollCont
 onready var PrimaryColor := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor')
 onready var SecondaryColor := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor')
 
+onready var VoxelSetView := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView')
+
 onready var MirrorX := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorX')
 onready var MirrorY := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorY')
 onready var MirrorZ := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorZ')
@@ -60,6 +62,10 @@ func setup(voxelcore) -> void:
 	SecondaryColor.set_pick_color(voxelcore.VoxelEditor.SecondaryColor)
 	voxelcore.VoxelEditor.connect('set_secondary_color', SecondaryColor, 'set_pick_color')
 	SecondaryColor.connect('color_changed', voxelcore.VoxelEditor, 'set_secondary_color')
+	
+	VoxelSetView.set_voxel_set(voxelcore.VoxelEditor.VoxelObject.VoxelSet)
+	voxelcore.VoxelEditor.VoxelObject.connect('set_voxel_set', VoxelSetView, 'set_voxel_set')
+	VoxelSetView.connect('set_voxel_set', voxelcore.VoxelEditor.VoxelObject, 'set_voxel_set')
 	
 	MirrorX.set_pressed(voxelcore.VoxelEditor.MirrorX)
 	voxelcore.VoxelEditor.connect('set_mirror_x', MirrorX, 'set_pressed')
