@@ -127,8 +127,10 @@ func _on_VoxelObject_modified(modified : bool) -> void:
 func _on_VoxelSetView_selected(index):
 	match index:
 		0:
+			VoxelSetView.Selected[index].SelectedColor = VoxelCore.VoxelEditor.PrimaryColor
 			VoxelCore.VoxelEditor.set_primary(VoxelSetView.Selected[index].ID)
 		1:
+			VoxelSetView.Selected[index].SelectedColor = VoxelCore.VoxelEditor.SecondaryColor
 			VoxelCore.VoxelEditor.set_secondary(VoxelSetView.Selected[index].ID)
 
 func _on_VoxelSetView_unselected(index):
