@@ -37,7 +37,7 @@ func set_bottom_panel_visible(visible := !BottomPanelVisible) -> void:
 		BottomPanelControl.setup(self)
 		make_bottom_panel_item_visible(BottomPanelControl)
 		BottomPanelVisible = true
-	elif not visible and BottomPanelVisible:
+	elif not visible and BottomPanelVisible and BottomPanelControl:
 		hide_bottom_panel()
 		remove_control_from_bottom_panel(BottomPanelControl)
 		BottomPanelControl.queue_free()
