@@ -35,21 +35,9 @@ func set_bottom_panel_visible(visible := !BottomPanelVisible) -> void:
 		BottomPanelControl = BottomPanelScene.instance()
 		BottomPanel = add_control_to_bottom_panel(BottomPanelControl, 'Voxel-Core')
 		BottomPanelControl.setup(self)
-		
-#		BottomPanelControl.set_voxel_editor(VoxelEditor)
-#
-#		BottomPanelControl.set_auto_save(AutoSave, false)
-#		connect('set_auto_save', BottomPanelControl, 'set_auto_save')
-#		BottomPanelControl.connect('set_auto_save', self, 'set_auto_save', [false])
-		
 		make_bottom_panel_item_visible(BottomPanelControl)
 		BottomPanelVisible = true
 	elif not visible and BottomPanelVisible:
-#		BottomPanelControl.set_voxel_editor(null)
-#
-#		disconnect('set_auto_save', BottomPanelControl, 'set_auto_save')
-#		BottomPanelControl.disconnect('set_auto_save', self, 'set_auto_save')
-		
 		hide_bottom_panel()
 		remove_control_from_bottom_panel(BottomPanelControl)
 		BottomPanelControl.queue_free()
@@ -162,6 +150,7 @@ func handles(object) -> bool:
 		if VoxelEditor.VoxelObject:
 			if AutoSave: _commit()
 			else: _cancel()
+		else: set_bottom_panel_visible(false)
 		return false
 
 func forward_spatial_gui_input(camera, event) -> bool:
