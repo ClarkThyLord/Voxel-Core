@@ -4,10 +4,10 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolsDropdown/ToolsDropdown.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolModesDropdown/ToolModesDropdown.tscn" type="PackedScene" id=4]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelSetView.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorx.png" type="Texture" id=6]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrory.png" type="Texture" id=7]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorz.png" type="Texture" id=8]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorx.png" type="Texture" id=5]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrory.png" type="Texture" id=6]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorz.png" type="Texture" id=7]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelSetView.tscn" type="PackedScene" id=8]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/info.png" type="Texture" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/lock.png" type="Texture" id=10]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/commit.png" type="Texture" id=11]
@@ -27,7 +27,7 @@
 [node name="BottomPanel" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 150 )
+rect_min_size = Vector2( 0, 200 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -96,10 +96,38 @@ margin_right = 326.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
 margin_right = 326.0
-margin_bottom = 46.0
+margin_bottom = 50.0
+
+[node name="MirrorX" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_right = 106.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Mirror X"
+icon = ExtResource( 5 )
+
+[node name="MirrorY" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 110.0
+margin_right = 216.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Mirror Y"
+icon = ExtResource( 6 )
+
+[node name="MirrorZ" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 220.0
+margin_right = 326.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Mirror Z"
+icon = ExtResource( 7 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
+margin_top = 54.0
+margin_right = 326.0
+margin_bottom = 74.0
 
 [node name="PrimaryColor" type="ColorPickerButton" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2"]
 margin_right = 63.0
@@ -130,43 +158,15 @@ margin_bottom = 17.0
 text = "Secondary Color"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
-margin_top = 50.0
+margin_top = 78.0
 margin_right = 326.0
-margin_bottom = 104.0
+margin_bottom = 132.0
 
-[node name="VoxelSetView" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 5 )]
+[node name="VoxelSetView" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 8 )]
 anchor_right = 0.0
 margin_right = 326.0
 margin_bottom = 54.0
 SelectLimit = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
-margin_top = 108.0
-margin_right = 326.0
-margin_bottom = 132.0
-
-[node name="MirrorX" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_right = 106.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "Mirror X"
-icon = ExtResource( 6 )
-
-[node name="MirrorY" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 110.0
-margin_right = 216.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "Mirror Y"
-icon = ExtResource( 7 )
-
-[node name="MirrorZ" type="CheckBox" parent="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
-margin_left = 220.0
-margin_right = 326.0
-margin_bottom = 24.0
-size_flags_horizontal = 3
-text = "Mirror Z"
-icon = ExtResource( 8 )
 
 [node name="HSplitContainer" type="VSeparator" parent="MarginContainer/HBoxContainer"]
 margin_left = 330.0
@@ -491,5 +491,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
 icon = ExtResource( 23 )
+[connection signal="selected" from="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView" to="." method="_on_VoxelSetView_selected"]
+[connection signal="unselected" from="MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView" to="." method="_on_VoxelSetView_unselected"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]

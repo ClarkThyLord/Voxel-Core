@@ -38,8 +38,8 @@ func set_tool_mode(toolmode : int, emit := true) -> void:
 
 
 signal set_primary(voxel)
-var Primary := {} setget set_primary
-func set_primary(voxel : Dictionary, emit := true) -> void:
+var Primary = null setget set_primary
+func set_primary(voxel, emit := true) -> void:
 	Primary = voxel
 	if emit: emit_signal('set_primary', Primary)
 
@@ -50,8 +50,8 @@ func set_primary_color(color : Color, emit := true) -> void:
 	if emit: emit_signal('set_primary_color', PrimaryColor)
 
 signal set_secondary(voxel)
-var Secondary := {} setget set_secondary
-func set_secondary(voxel : Dictionary, emit := true) -> void:
+var Secondary = null setget set_secondary
+func set_secondary(voxel, emit := true) -> void:
 	Secondary = voxel
 	if emit: emit_signal('set_secondary', Secondary)
 
@@ -124,9 +124,9 @@ func set_default_options(defaultoptions := {
 		'Lock': true,
 		'Tool': Tools.PAN,
 		'ToolMode': ToolModes.INDIVIDUAL,
-		'Primary': {},
+		'Primary': null,
 		'PrimaryColor': Color.white,
-		'Secondary': {},
+		'Secondary': null,
 		'SecondaryColor': Color.black,
 		'MirrorX': false,
 		'MirrorY': false,

@@ -38,6 +38,11 @@ onready var FloorType := get_node('MarginContainer/HBoxContainer/Settings/TabCon
 
 
 
+# Declarations
+var VoxelCore
+
+
+
 # Core
 func _ready():
 	SettingsTabs.set_tab_icon(0, preload('res://addons/Voxel-Core/assets/BottomPanel/general.png'))
@@ -47,6 +52,8 @@ func _ready():
 
 
 func setup(voxelcore) -> void:
+	VoxelCore = voxelcore
+	
 	Tool.select(voxelcore.VoxelEditor.Tool)
 	voxelcore.VoxelEditor.connect('set_tool', Tool, 'select')
 	Tool.connect('item_selected', voxelcore.VoxelEditor, 'set_tool')
@@ -115,6 +122,21 @@ func setup(voxelcore) -> void:
 func _on_VoxelObject_modified(modified : bool) -> void:
 	Commit.disabled = !modified
 	Cancel.disabled = !modified
+
+
+func _on_VoxelSetView_selected(index):
+	match index:
+		0:
+			VoxelCore.VoxelEditor.set_primary(VoxelSetView.Selected[index].ID)
+		1:
+			VoxelCore.VoxelEditor.set_secondary(VoxelSetView.Selected[index].ID)
+
+func _on_VoxelSetView_unselected(index):
+	match index:
+		0:
+			VoxelCore.VoxelEditor.set_primary(null)
+		1:
+			VoxelCore.VoxelEditor.set_secondary(null)
 
 
 func _on_Godot_pressed():
