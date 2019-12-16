@@ -124,8 +124,3 @@ func _update(voxels : Dictionary) -> void:
 		var voxelview = VoxelView.instance()
 		voxelview.setup(voxel_id, voxels[voxel_id], self)
 		Voxels.add_child(voxelview)
-#	if VoxelSet and VoxelSet is VoxelSetClass:
-#		for voxel_id in VoxelSet.Voxels:
-#			var voxelview = VoxelView.instance()
-#			voxelview.setup(voxel_id, VoxelSet.Voxels[voxel_id], self)
-#			Voxels.add_child(voxelview)
