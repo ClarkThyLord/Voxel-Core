@@ -381,9 +381,10 @@ func grid_to_mirrors(grid : Vector3) -> Array:
 
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
-		if event is InputEventMouse:
+		if event is InputEventMouse and Tool > Tools.PAN:
 			var hit = raycast_for_voxelobject(event, camera)
 			if hit:
+				if not Tool == Tools.ADD: hit.normal *= -1
 				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
 				var mirrors = grid_to_mirrors(Voxel.abs_to_grid(VoxelObject.to_local(hit.position)))
 				if event.button_mask == BUTTON_MASK_RIGHT: pass
@@ -393,6 +394,15 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 							Cursors[cursor_index].visible = cursor_index < mirrors.size()
 							if Cursors[cursor_index].visible:
 								Cursors[cursor_index].translation = Voxel.pos_correct(Voxel.grid_to_pos(mirrors[cursor_index]))
+					return true
+				elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
+					for mirror in mirrors:
+						match Tool:
+							Tools.ADD:
+								VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
+							Tools.SUB:
+								VoxelObject.erase_voxel(mirror, false)
+					VoxelObject.update()
 					return true
 		elif event is InputEventKey: return false
 	set_cursors_visible(false)
