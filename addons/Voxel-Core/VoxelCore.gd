@@ -67,9 +67,8 @@ static func voxel_type_of(object : Object) -> int:
 
 
 func select(select : bool, object := HandledObject) -> void:
-	if object is VoxelObjectClass:
-		if select: get_editor_interface().get_selection().add_node(object)
-		else: get_editor_interface().get_selection().remove_node(object)
+	if select: get_editor_interface().get_selection().add_node(object)
+	else: get_editor_interface().get_selection().remove_node(object)
 
 func select_toggle() -> void:
 	select(not get_editor_interface().get_selection().get_selected_nodes().has(HandledObject), HandledObject)
@@ -168,6 +167,7 @@ func handles(object : Object) -> bool:
 		return true
 	else:
 		if VoxelEditor.VoxelObject:
+			select(false, VoxelEditor.VoxelObject)
 			if AutoSave: _commit()
 			else: _cancel()
 		else: set_bottom_panel_visible(false)
