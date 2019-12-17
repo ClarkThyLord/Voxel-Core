@@ -277,14 +277,11 @@ func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit :=
 	VoxelObjectData['voxels'] = voxelobject.get_voxels()
 	
 	attach_editor_components()
-#	voxelobject.connect('tree_exiting', self, 'commit', [], CONNECT_ONESHOT)
 	
 	if emit: emit_signal('editing')
 
 func commit(update := true, emit := true) -> void:
 	if VoxelObject and VoxelObject is VoxelObjectClass:
-#		if VoxelObject.is_connected('tree_exiting', self, 'commit'):
-#			VoxelObject.disconnect('tree_exiting', self, 'commit')
 		.commit(update, false)
 		
 		
@@ -299,8 +296,6 @@ func commit(update := true, emit := true) -> void:
 signal canceled
 func cancel(update := true, emit := true) -> void:
 	if VoxelObject and VoxelObject is VoxelObjectClass:
-#		if VoxelObject.is_connected('tree_exiting', self, 'commit'):
-#			VoxelObject.disconnect('tree_exiting', self, 'commit')
 		VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
 		VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
 		VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)

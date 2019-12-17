@@ -85,8 +85,6 @@ func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
 
 func _commit(hide := true) -> void:
 	if VoxelEditor.VoxelObject:
-#		if VoxelEditor.VoxelObject.is_connected('tree_exiting', self, 'handle_remove'):
-#			VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.commit()
 		if hide: set_bottom_panel_visible(false)
@@ -94,8 +92,6 @@ func _commit(hide := true) -> void:
 
 func _cancel(hide := true) -> void:
 	if VoxelEditor.VoxelObject:
-#		if VoxelEditor.VoxelObject.is_connected('tree_exiting', self, 'handle_remove'):
-#			VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.cancel()
 		if hide: set_bottom_panel_visible(false)
