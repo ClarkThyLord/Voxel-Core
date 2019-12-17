@@ -80,16 +80,23 @@ func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
 	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
+	VoxelObject.connect('tree_exiting', self, 'handle_remove')
 	if show: set_bottom_panel_visible(true)
 
 func _commit(hide := true) -> void:
 	if VoxelEditor.VoxelObject:
+#		if VoxelEditor.VoxelObject.is_connected('tree_exiting', self, 'handle_remove'):
+#			VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
+		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.commit()
 		if hide: set_bottom_panel_visible(false)
 		_save()
 
 func _cancel(hide := true) -> void:
 	if VoxelEditor.VoxelObject:
+#		if VoxelEditor.VoxelObject.is_connected('tree_exiting', self, 'handle_remove'):
+#			VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
+		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.cancel()
 		if hide: set_bottom_panel_visible(false)
 		_save('CANCELED VOXEL OBJECT CHANGES')
@@ -138,6 +145,10 @@ func main_screen_changed(mainscene : String) -> void:
 		if AutoSave: _commit()
 		else: _cancel()
 
+func handle_remove() -> void:
+	if AutoSave: _commit()
+	else: _cancel()
+
 func handles(object : Object) -> bool:
 	HandledObject = object
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
@@ -158,7 +169,7 @@ func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
 	return VoxelEditor.__input(event, camera)
 
 func _unhandled_key_input(event : InputEventKey) -> void:
-	if event.pressed and not event.echo:
+	if VoxelEditor.VoxelObject and event.pressed and not event.echo:
 		match event.scancode:
 			KEY_SPACE:
 				VoxelEditor.set_lock()
