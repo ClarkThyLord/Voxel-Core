@@ -112,12 +112,15 @@ func _enter_tree() -> void:
 	
 	print('Loaded Voxel-Core.')
 
-func _ready():
+func _setup() -> void:
 	set_voxel_edit_undo_redo()
 	
 	
 	VoxelEditor.connect('set_lock', self, 'select')
 	VoxelEditor.connect('script_changed', self, 'set_voxel_edit_undo_redo', [], CONNECT_DEFERRED)
+
+func _init() -> void: _setup()
+func _ready() -> void: _setup()
 
 func _exit_tree() -> void:
 	disconnect('scene_closed', self, 'scene_closed')
