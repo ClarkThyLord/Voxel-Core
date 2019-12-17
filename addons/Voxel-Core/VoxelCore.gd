@@ -83,7 +83,8 @@ func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
 	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
-	VoxelObject.connect('tree_exiting', self, 'handle_remove')
+	if not VoxelObject.is_connected('tree_exiting', self, 'handle_remove'):
+		VoxelObject.connect('tree_exiting', self, 'handle_remove')
 	if show: set_bottom_panel_visible(true)
 
 func _commit(hide := true) -> void:
