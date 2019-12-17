@@ -381,5 +381,18 @@ func grid_to_mirrors(grid : Vector3) -> Array:
 
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
-		return false
-	else: return false
+		if event is InputEventMouse:
+			var hit = raycast(event, camera)
+			if hit:
+				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
+				var mirrors = grid_to_mirrors(Voxel.abs_to_grid(VoxelObject.to_local(hit.position)))
+				if event is InputEventMouseMotion and not event.is_pressed():
+					if CursorVisible:
+						for cursor_index in range(Cursors.size()):
+							Cursors[cursor_index].visible = cursor_index < mirrors.size()
+							if Cursors[cursor_index].visible:
+								Cursors[cursor_index].translation = Voxel.pos_correct(Voxel.grid_to_pos(mirrors[cursor_index]))
+					return true
+		elif event is InputEventKey: return false
+	set_cursors_visible(false)
+	return false
