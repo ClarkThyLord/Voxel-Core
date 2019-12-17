@@ -15,7 +15,7 @@ const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEdi
 
 # Declarations
 var MainScene := ''
-var HandledObject : Node
+var HandledObject : Object
 
 signal set_auto_save(autosave)
 var AutoSave := true setget set_auto_save
@@ -138,7 +138,7 @@ func main_screen_changed(mainscene : String) -> void:
 		if AutoSave: _commit()
 		else: _cancel()
 
-func handles(object) -> bool:
+func handles(object : Object) -> bool:
 	HandledObject = object
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
 		if not object == VoxelEditor.VoxelObject:
@@ -154,9 +154,9 @@ func handles(object) -> bool:
 		else: set_bottom_panel_visible(false)
 		return false
 
-func forward_spatial_gui_input(camera, event) -> bool:
+func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
 	return VoxelEditor.__input(event, camera)
 
-func _unhandled_key_input(event) -> void:
+func _unhandled_key_input(event : InputEventKey) -> void:
 	if false:
 		get_tree().set_input_as_handled()

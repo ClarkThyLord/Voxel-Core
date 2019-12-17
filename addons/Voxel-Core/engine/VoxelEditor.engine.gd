@@ -156,7 +156,6 @@ func update_floor() -> void:
 		
 		match FloorType:
 			FloorTypes.SOLID:
-				print('solid')
 				Floor.mesh = PlaneMesh.new()
 				Floor.scale = Vector3.ONE * 16 * Voxel.GridStep
 				Floor.create_trimesh_collision()
@@ -255,6 +254,7 @@ func _init() -> void:
 	_load()
 	setup_cursors()
 	setup_floor()
+	set_cursors_visible(false)
 func _ready() -> void:
 	set_default_options()
 	set_options()
