@@ -141,10 +141,11 @@ func main_screen_changed(mainscene : String) -> void:
 
 func handles(object) -> bool:
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
-		if VoxelEditor.VoxelObject:
-			if AutoSave: _commit(false)
-			else: _cancel(false)
-		_edit(object)
+		if not object == VoxelEditor.VoxelObject:
+			if VoxelEditor.VoxelObject:
+				if AutoSave: _commit(false)
+				else: _cancel(false)
+			_edit(object)
 		return true
 	else:
 		if VoxelEditor.VoxelObject:

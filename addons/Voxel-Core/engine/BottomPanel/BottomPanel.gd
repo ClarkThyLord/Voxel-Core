@@ -1,5 +1,5 @@
 tool
-extends Panel
+extends ScrollContainer
 
 
 
@@ -7,34 +7,34 @@ extends Panel
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
 
-onready var Tool := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/Tools')
-onready var ToolMode := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/ToolMode')
+onready var Tool := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/Tools')
+onready var ToolMode := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/ToolMode')
 
-onready var PrimaryColor := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor')
-onready var SecondaryColor := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor')
+onready var PrimaryColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor')
+onready var SecondaryColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor')
 
-onready var VoxelSetView := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView')
+onready var VoxelSetView := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView')
 
-onready var MirrorX := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorX')
-onready var MirrorY := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorY')
-onready var MirrorZ := get_node('MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorZ')
-
-
-onready var Lock := get_node('MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Lock')
-onready var Commit := get_node('MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit')
-onready var Cancel := get_node('MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Cancel')
+onready var MirrorX := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorX')
+onready var MirrorY := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorY')
+onready var MirrorZ := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer/MirrorZ')
 
 
-onready var SettingsTabs := get_node('MarginContainer/HBoxContainer/Settings/TabContainer')
+onready var Lock := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Lock')
+onready var Commit := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit')
+onready var Cancel := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Cancel')
 
-onready var AutoSave := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/AutoSave')
 
-onready var CursorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorVisible')
-onready var CursorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer/CursorColor')
+onready var SettingsTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer')
 
-onready var FloorVisible := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorVisible')
-onready var FloorColor := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer/FloorColor')
-onready var FloorType := get_node('MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorTypesDropdown')
+onready var AutoSave := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/AutoSave')
+
+onready var CursorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorVisible')
+onready var CursorColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer/CursorColor')
+
+onready var FloorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorVisible')
+onready var FloorColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer/FloorColor')
+onready var FloorType := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorTypesDropdown')
 
 
 

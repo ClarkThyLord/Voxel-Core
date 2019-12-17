@@ -20,7 +20,7 @@ margin_bottom = 40.0
 rect_min_size = Vector2( 150, 40 )
 size_flags_vertical = 0
 clear_button_enabled = true
-placeholder_text = "Search..."
+placeholder_text = "Search for ID..."
 
 [node name="VoxelSetView" type="ScrollContainer" parent="HBoxContainer"]
 margin_left = 154.0
