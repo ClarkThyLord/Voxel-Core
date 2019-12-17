@@ -119,6 +119,15 @@ func setup(voxelcore) -> void:
 	FloorType.connect('item_selected', voxelcore.VoxelEditor, 'set_floor_type')
 
 
+func primary_color_popup_visible(visible := !PrimaryColor.get_popup().visible) -> void:
+	if visible: PrimaryColor.get_popup().popup_centered()
+	else: PrimaryColor.get_popup().hide()
+
+func secondary_color_popup_visible(visible := !SecondaryColor.get_popup().visible) -> void:
+	if visible: SecondaryColor.get_popup().popup_centered()
+	else: SecondaryColor.get_popup().hide()
+
+
 func _on_VoxelObject_modified(modified : bool) -> void:
 	Commit.disabled = !modified
 	Cancel.disabled = !modified

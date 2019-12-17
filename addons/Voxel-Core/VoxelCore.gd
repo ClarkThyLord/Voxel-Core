@@ -158,5 +158,29 @@ func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
 	return VoxelEditor.__input(event, camera)
 
 func _unhandled_key_input(event : InputEventKey) -> void:
-	if false:
-		get_tree().set_input_as_handled()
+	if event.pressed and not event.echo:
+		match event.scancode:
+			KEY_SPACE:
+				VoxelEditor.set_lock()
+				get_tree().set_input_as_handled()
+			KEY_Z:
+				VoxelEditor.set_mirror_x()
+				get_tree().set_input_as_handled()
+			KEY_X:
+				VoxelEditor.set_mirror_y()
+				get_tree().set_input_as_handled()
+			KEY_C:
+				VoxelEditor.set_mirror_z()
+				get_tree().set_input_as_handled()
+			KEY_V:
+				BottomPanelControl.primary_color_popup_visible()
+				get_tree().set_input_as_handled()
+			KEY_B:
+				BottomPanelControl.secondary_color_popup_visible()
+				get_tree().set_input_as_handled()
+			KEY_0:
+				VoxelEditor.set_tool_mode((VoxelEditor.ToolMode + 1) % VoxelEditor.ToolModes.size())
+				get_tree().set_input_as_handled()
+		if event.scancode >= KEY_1 and event.scancode <= KEY_0 + VoxelEditor.Tools.size():
+			VoxelEditor.set_tool(event.scancode - 49)
+			get_tree().set_input_as_handled()
