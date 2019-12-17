@@ -248,7 +248,7 @@ func update(temp : bool = false, emit : bool = true) -> void:
 	.update()
 	_save()
 
-func update_staticbody() -> void:
+func update_static_body() -> void:
 	var staticbody
 	if has_node('StaticBody'): staticbody = get_node('StaticBody')
 
