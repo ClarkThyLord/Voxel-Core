@@ -66,9 +66,12 @@ static func voxel_type_of(object : Object) -> int:
 	else: return VoxelTypes.NVT
 
 
-func select(object, select) -> void:
+func select(select : bool, object := HandledObject) -> void:
 	if select: get_editor_interface().get_selection().add_node(object)
 	else: get_editor_interface().get_selection().remove_node(object)
+
+func select_toggle() -> void:
+	select(not get_editor_interface().get_selection().get_selected_nodes().has(HandledObject), HandledObject)
 
 
 func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
@@ -112,12 +115,14 @@ func _ready():
 	set_voxel_edit_undo_redo()
 	
 	
+	VoxelEditor.connect('set_lock', self, 'select')
 	VoxelEditor.connect('script_changed', self, 'set_voxel_edit_undo_redo', [], CONNECT_DEFERRED)
 
 func _exit_tree() -> void:
 	disconnect('scene_closed', self, 'scene_closed')
 	disconnect('main_screen_changed', self, 'main_screen_changed')
 	
+	VoxelEditor.disconnect('set_lock', self, 'select')
 	VoxelEditor.disconnect('script_changed', self, 'set_voxel_edit_undo_redo')
 	
 	
@@ -148,7 +153,9 @@ func handle_remove() -> void:
 func handles(object : Object) -> bool:
 	HandledObject = object
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
-		if not object == VoxelEditor.VoxelObject:
+		if object == VoxelEditor.VoxelObject:
+			if not VoxelEditor.Lock: select(false)
+		else:
 			if VoxelEditor.VoxelObject:
 				if AutoSave: _commit(false)
 				else: _cancel(false)

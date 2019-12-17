@@ -92,6 +92,7 @@ func setup(voxelcore) -> void:
 	Lock.set_pressed(voxelcore.VoxelEditor.Lock)
 	voxelcore.VoxelEditor.connect('set_lock', Lock, 'set_pressed')
 	Lock.connect('pressed', voxelcore.VoxelEditor, 'set_lock')
+	Lock.connect('toggled', voxelcore, 'select')
 	
 	
 	AutoSave.set_pressed(voxelcore.AutoSave)
