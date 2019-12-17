@@ -15,6 +15,12 @@ const VoxelSetClass := preload('res://addons/Voxel-Core/src/VoxelSet.gd')
 
 
 # Declarations
+var editing := false setget set_editing
+func set_editing(_editing := !editing, update := true) -> void:
+	editing = _editing
+	if update: update()
+
+
 # Adds UV mapping to mesh of VoxelObject, emits 'set_uv_mapping'.
 # NOTE: If active, UV mapping is added even if texture isn't present in region.
 # uvmapping   :   bool   -   value to set
@@ -237,7 +243,7 @@ func erase_voxels(update := true) -> void:
 #   update()
 #
 func update() -> void:
-	if BuildStaticBody: update_static_body()
+	update_static_body()
 
 # Sets and updates trimesh StaticBody.
 #

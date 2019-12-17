@@ -56,22 +56,15 @@ func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit :=
 	
 	set_options(DefaultOptions if options.get('reset', false) else options)
 	VoxelObject = voxelobject
-	VoxelObjectData = {
-		'MeshType': voxelobject.MeshType,
-		'BuildStaticBody': voxelobject.BuildStaticBody,
-	}
-	voxelobject.set_mesh_type(VoxelObjectClass.MeshTypes.NAIVE, false, false)
-	voxelobject.set_build_static_body(true, false, false)
-	if update: voxelobject.update()                                  #   TODO: update only modified meshes, instead of all meshes
+	VoxelObject.set_editing(true, false)
+	if update: VoxelObject.update()                                  #   TODO: update only modified meshes, instead of all meshes
 	
 	if emit: emit_signal('editing')
 
 signal committed
 func commit(update := true, emit := true) -> void:
 	if VoxelObject and VoxelObject is VoxelObjectClass:
-		VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
-		VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
-		
+		VoxelObject.set_editing(false, false)
 		if update: VoxelObject.update()
 		
 		VoxelObject = null

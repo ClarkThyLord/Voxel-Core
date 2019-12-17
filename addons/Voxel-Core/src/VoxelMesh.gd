@@ -203,7 +203,7 @@ func update(temp : bool = false, emit : bool = true) -> void:
 
 		ST.set_material(material)
 
-		if MeshType == MeshTypes.GREEDY:
+		if editing or MeshType == MeshTypes.GREEDY:
 			var rights = []
 			var right_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
 			var lefts = []
@@ -251,26 +251,28 @@ func update(temp : bool = false, emit : bool = true) -> void:
 func update_static_body() -> void:
 	var staticbody
 	if has_node('StaticBody'): staticbody = get_node('StaticBody')
-
-	if BuildStaticBody and mesh and voxels.size() > 0:
+	
+	if (editing or BuildStaticBody) and mesh:
 		var collisionshape
 		if not staticbody:
 			staticbody = StaticBody.new()
 			staticbody.set_name('StaticBody')
-
+		
 		if staticbody.has_node('CollisionShape'):
 			collisionshape = staticbody.get_node('CollisionShape')
 		else:
 			collisionshape = CollisionShape.new()
 			collisionshape.set_name('CollisionShape')
 			staticbody.add_child(collisionshape)
-
+		
 		collisionshape.shape = mesh.create_trimesh_shape()
-
+		
 		if not has_node('StaticBody'): add_child(staticbody)
-
+		
 		if BuildStaticBody and not staticbody.owner: staticbody.set_owner(get_tree().get_edited_scene_root())
+		elif not BuildStaticBody and staticbody.owner: staticbody.set_owner(null)
 		if BuildStaticBody and not collisionshape.owner: collisionshape.set_owner(get_tree().get_edited_scene_root())
-	elif (not BuildStaticBody or voxels.size() <= 0) and staticbody:
+		elif not BuildStaticBody and staticbody.owner: collisionshape.set_owner(null)
+	elif staticbody:
 		remove_child(staticbody)
 		staticbody.queue_free()

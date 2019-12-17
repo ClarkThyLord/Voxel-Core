@@ -297,9 +297,8 @@ signal canceled
 func cancel(update := true, emit := true) -> void:
 	if VoxelObject and VoxelObject is VoxelObjectClass:
 		VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
-		VoxelObject.set_mesh_type(VoxelObjectData['MeshType'], false, false)
-		VoxelObject.set_build_static_body(VoxelObjectData['BuildStaticBody'], false, false)
 		
+		VoxelObject.set_editing(false, false)
 		if update: VoxelObject.update()
 		
 		VoxelObject = null
