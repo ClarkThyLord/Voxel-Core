@@ -15,6 +15,7 @@ const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEdi
 
 # Declarations
 var MainScene := ''
+var HandledObject : Node
 
 signal set_auto_save(autosave)
 var AutoSave := true setget set_auto_save
@@ -77,17 +78,20 @@ func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
 
 
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
+	print('_edit')
 	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
 	if show: set_bottom_panel_visible(true)
 
 func _commit(hide := true) -> void:
+	print('_commit')
 	if VoxelEditor.VoxelObject:
 		VoxelEditor.commit()
 		if hide: set_bottom_panel_visible(false)
 		_save()
 
 func _cancel(hide := true) -> void:
+	print('_cancel')
 	if VoxelEditor.VoxelObject:
 		VoxelEditor.cancel()
 		if hide: set_bottom_panel_visible(false)
@@ -131,15 +135,14 @@ func scene_closed(path : String) -> void:
 func main_screen_changed(mainscene : String) -> void:
 	MainScene = mainscene
 	
-	if mainscene == '3D' and VoxelEditor.VoxelObject:
-		set_bottom_panel_visible(true)
+	if mainscene == '3D' and voxel_type_of(HandledObject) >= VoxelTypes.VoxelObject:
+		_edit(HandledObject)
 	else:
-		if VoxelEditor.Lock == false and VoxelEditor.VoxelObject:
-			VoxelEditor.Lock = true
-#			_save()
-		set_bottom_panel_visible(false)
+		if AutoSave: _commit()
+		else: _cancel()
 
 func handles(object) -> bool:
+	HandledObject = object
 	if voxel_type_of(object) >= VoxelTypes.VoxelObject:
 		if not object == VoxelEditor.VoxelObject:
 			if VoxelEditor.VoxelObject:

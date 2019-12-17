@@ -81,35 +81,148 @@ func set_mirror_z(mirrorz := !MirrorZ, emit := true) -> void:
 	if emit: emit_signal('set_mirror_z', MirrorZ)
 
 
-var Cursor : MeshInstance setget set_cursor
-func set_cursor(cursor : MeshInstance) -> void: return   #   Cursor shouldn't be settable externally
+# Contains a refrence to each Cursor
+var Cursors := [
+	MeshInstance.new(),
+	MeshInstance.new(),
+	MeshInstance.new(),
+	MeshInstance.new(),
+	MeshInstance.new(),
+	MeshInstance.new(),
+	MeshInstance.new(),
+	MeshInstance.new()
+] setget set_cursors
+func set_cursors(cursor : Array) -> void: return   #   Cursors shouldn't be settable externally
+
+func setup_cursors() -> void:
+	for cursor_index in range(Cursors.size()):
+		Cursors[cursor_index].set_name('VECursor_' + str(cursor_index))
+		Cursors[cursor_index].mesh = CubeMesh.new()
+		Cursors[cursor_index].scale = Vector3(Voxel.VoxelSize, Voxel.VoxelSize, Voxel.VoxelSize)
+		Cursors[cursor_index].material_override = SpatialMaterial.new()
+		Cursors[cursor_index].material_override.flags_transparent = true
+		Cursors[cursor_index].material_override.vertex_color_use_as_albedo = true
+		Cursors[cursor_index].material_override.albedo_color = CursorColor
+
+func set_cursors_parent(parent : Node) -> void:
+	unset_cursors_parent()
+	for cursor in Cursors:
+		if cursor:
+			parent.add_child(cursor)
+
+func unset_cursors_parent() -> void:
+	for cursor in Cursors:
+		if cursor and cursor.get_parent():
+			cursor.get_parent().remove_child(cursor)
+
+func set_cursors_visible(visible : bool) -> void:
+	for cursor in Cursors:
+		cursor.visible = visible
 
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible
 func set_cursor_visible(visible := !CursorVisible, emit := true) -> void:
 	CursorVisible = visible
+	
+	if not CursorVisible: set_cursors_visible(false)
+	
 	if emit: emit_signal('set_cursor_visible', CursorVisible)
 
 signal set_cursor_color(color)
 export(Color) var CursorColor := Color(1, 0, 0, 0.6) setget set_cursor_color
 func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
+	
+	for cursor in Cursors:
+		cursor.material_override.albedo_color = CursorColor
+	
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
 
-var Floor : MeshInstance setget set_floor
+var Floor : MeshInstance = MeshInstance.new() setget set_floor
 func set_floor(_floor : MeshInstance) -> void: return   #   Floor shouldn't be settable externally
+
+func setup_floor() -> void: update_floor()
+
+func update_floor() -> void:
+	pass
+	if Floor:
+		for child in Floor.get_children():
+			Floor.remove_child(child)
+			child.queue_free()
+		
+		Floor.set_name('VEFloor')
+		Floor.visible = FloorVisible
+		
+		match FloorType:
+			FloorTypes.SOLID:
+				print('solid')
+				Floor.mesh = PlaneMesh.new()
+				Floor.scale = Vector3.ONE * 16 * Voxel.GridStep
+				Floor.create_trimesh_collision()
+				Floor.material_override = SpatialMaterial.new()
+				Floor.material_override.set_cull_mode(2)
+				Floor.material_override.albedo_color = FloorColor
+			FloorTypes.WIRED:
+				Floor.scale = Vector3.ONE
+				var dimensions = Vector3.ONE * 16
+				
+				var ST = SurfaceTool.new()
+				ST.begin(Mesh.PRIMITIVE_LINES)
+				ST.add_color(FloorColor)
+				
+				var material = SpatialMaterial.new()
+				material.roughness = 1
+				material.vertex_color_is_srgb = true
+				material.vertex_color_use_as_albedo = true
+				material.set_cull_mode(2)
+				ST.set_material(material)
+				
+				var x : int = -dimensions.x
+				while x <= dimensions.x:
+					ST.add_normal(Vector3.UP)
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(x, 0, -abs(dimensions.z))))
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(x, 0, abs(dimensions.z))))
+					
+					x += 1
+				
+				var z : int = -dimensions.z
+				while z <= dimensions.z:
+					ST.add_normal(Vector3.UP)
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(-abs(dimensions.x), 0, z)))
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(abs(dimensions.x), 0, z)))
+					
+					z += 1
+				
+				ST.index()
+				
+				Floor.mesh = ST.commit()
+				Floor.create_convex_collision()
+		
+		if Floor.has_node('VEFloor_col'): Floor.get_node('VEFloor_col').get_children()[0].disabled = !FloorVisible
+
+func set_floor_parent(parent : Node) -> void:
+	unset_floor_parent()
+	if Floor:
+		parent.add_child(Floor)
+
+func unset_floor_parent() -> void:
+	if Floor and Floor.get_parent():
+		Floor.get_parent().remove_child(Floor)
 
 signal set_floor_visible(visible)
 export(bool) var FloorVisible := true setget set_floor_visible
 func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
 	FloorVisible = visible
+	if Floor: Floor.visible = FloorVisible
 	if emit: emit_signal('set_floor_visible', FloorVisible)
 
 signal set_floor_color(color)
 export(Color) var FloorColor := Color.purple setget set_floor_color
 func set_floor_color(color : Color, emit := true) -> void:
 	FloorColor = color
+	if Floor and Floor.material_override and Floor.material_override.albedo_color: 
+		Floor.material_override.albedo_color = FloorColor
 	if emit: emit_signal('set_floor_color', FloorColor)
 
 signal set_floor_type(floortype)
@@ -117,6 +230,7 @@ enum FloorTypes { SOLID, WIRED }
 export(FloorTypes) var FloorType := FloorTypes.WIRED setget set_floor_type
 func set_floor_type(floortype : int, emit := true) -> void:
 	FloorType = floortype
+	update_floor()
 	if emit: emit_signal('set_floor_type', FloorType)
 
 
@@ -137,11 +251,24 @@ func set_default_options(defaultoptions := {
 
 
 # Core
-func _init() -> void: _load()
+func _init() -> void:
+	_load()
+	setup_cursors()
+	setup_floor()
 func _ready() -> void:
 	set_default_options()
 	set_options()
 	_load()
+
+
+func attach_editor_components() -> void:
+	set_cursors_parent(VoxelObject)
+	set_floor_parent(VoxelObject)
+
+func detach_editor_components() -> void:
+	unset_cursors_parent()
+	unset_floor_parent()
+
 
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
 	.edit(voxelobject, options, true, false)
@@ -149,6 +276,8 @@ func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit :=
 	Modified = false
 	StartingVersion = undo_redo.get_version()
 	VoxelObjectData['voxels'] = voxelobject.get_voxels()
+	
+	attach_editor_components()
 	
 	if emit: emit_signal('editing')
 
@@ -160,6 +289,8 @@ func commit(update := true, emit := true) -> void:
 		Modified = false
 		StartingVersion = -1
 		if on_commit_clear_history: undo_redo.clear_history()
+		
+		detach_editor_components()
 		
 		if emit: emit_signal('committed')
 
@@ -178,6 +309,8 @@ func cancel(update := true, emit := true) -> void:
 		Modified = false
 		StartingVersion = -1
 		if on_cancel_clear_history: undo_redo.clear_history()
+		
+		detach_editor_components()
 		
 		if emit: emit_signal('canceled')
 

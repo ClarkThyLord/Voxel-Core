@@ -88,25 +88,23 @@ size_flags_vertical = 3
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_right = 328.0
-margin_bottom = 22.0
+margin_bottom = 20.0
 
 [node name="Tools" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
 margin_right = 162.0
-margin_bottom = 22.0
 size_flags_horizontal = 3
 Tool = 0
 
 [node name="ToolMode" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 4 )]
 margin_left = 166.0
 margin_right = 328.0
-margin_bottom = 22.0
 size_flags_horizontal = 3
 Tool = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
-margin_top = 26.0
+margin_top = 24.0
 margin_right = 328.0
-margin_bottom = 50.0
+margin_bottom = 48.0
 
 [node name="MirrorX" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_right = 106.0
@@ -132,9 +130,9 @@ text = "Mirror Z"
 icon = ExtResource( 7 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
-margin_top = 54.0
+margin_top = 52.0
 margin_right = 328.0
-margin_bottom = 74.0
+margin_bottom = 72.0
 
 [node name="PrimaryColor" type="ColorPickerButton" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2"]
 margin_right = 64.0
@@ -165,14 +163,15 @@ margin_bottom = 17.0
 text = "Secondary Color"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
-margin_top = 78.0
+margin_top = 76.0
 margin_right = 328.0
-margin_bottom = 144.0
+margin_bottom = 142.0
 
 [node name="VoxelSetView" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 8 )]
 margin_right = 328.0
 margin_bottom = 66.0
 SelectLimit = 2
+VoxelSetPath = NodePath("")
 
 [node name="HSplitContainer" type="VSeparator" parent="PanelContainer/MarginContainer/HBoxContainer"]
 margin_left = 332.0
