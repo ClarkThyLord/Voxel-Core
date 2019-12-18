@@ -3,6 +3,11 @@ extends "res://addons/Voxel-Core/src/VoxelEditor.gd"
 
 
 
+# Refrences
+const VoxelCursor := preload('res://addons/Voxel-Core/engine/VoxelCursor.gd')
+
+
+
 # Declarations
 var StartingVersion : int
 signal modified(Modified)
@@ -83,26 +88,35 @@ func set_mirror_z(mirrorz := !MirrorZ, emit := true) -> void:
 
 # Contains a refrence to each Cursor
 var Cursors := [
-	MeshInstance.new(),
-	MeshInstance.new(),
-	MeshInstance.new(),
-	MeshInstance.new(),
-	MeshInstance.new(),
-	MeshInstance.new(),
-	MeshInstance.new(),
-	MeshInstance.new()
+	VoxelCursor.new(),
+	VoxelCursor.new(),
+	VoxelCursor.new(),
+	VoxelCursor.new(),
+	VoxelCursor.new(),
+	VoxelCursor.new(),
+	VoxelCursor.new(),
+	VoxelCursor.new()
+#	MeshInstance.new(),
+#	MeshInstance.new(),
+#	MeshInstance.new(),
+#	MeshInstance.new(),
+#	MeshInstance.new(),
+#	MeshInstance.new(),
+#	MeshInstance.new(),
+#	MeshInstance.new()
 ] setget set_cursors
 func set_cursors(cursor : Array) -> void: return   #   Cursors shouldn't be settable externally
 
 func setup_cursors() -> void:
-	for cursor_index in range(Cursors.size()):
-		Cursors[cursor_index].set_name('VECursor_' + str(cursor_index))
-		Cursors[cursor_index].mesh = CubeMesh.new()
-		Cursors[cursor_index].scale = Vector3(Voxel.VoxelSize, Voxel.VoxelSize, Voxel.VoxelSize)
-		Cursors[cursor_index].material_override = SpatialMaterial.new()
-		Cursors[cursor_index].material_override.flags_transparent = true
-		Cursors[cursor_index].material_override.vertex_color_use_as_albedo = true
-		Cursors[cursor_index].material_override.albedo_color = CursorColor
+	for cursor in Cursors:
+		cursor.set_cursor_color(CursorColor)
+#		Cursors[cursor_index].set_name('VECursor_' + str(cursor_index))
+#		Cursors[cursor_index].mesh = CubeMesh.new()
+#		Cursors[cursor_index].scale = Vector3(Voxel.VoxelSize, Voxel.VoxelSize, Voxel.VoxelSize)
+#		Cursors[cursor_index].material_override = SpatialMaterial.new()
+#		Cursors[cursor_index].material_override.flags_transparent = true
+#		Cursors[cursor_index].material_override.vertex_color_use_as_albedo = true
+#		Cursors[cursor_index].material_override.albedo_color = CursorColor
 
 func set_cursors_parent(parent : Node) -> void:
 	unset_cursors_parent()
@@ -119,6 +133,23 @@ func set_cursors_visible(visible : bool) -> void:
 	for cursor in Cursors:
 		cursor.visible = visible
 
+var cursors_started_area := false
+var cursors_are_selecting_area := false
+func update_cursors(grid_pos : Vector3) -> void:
+	var mirrors = grid_to_mirrors(grid_pos, true, true, true)
+	for cursor_index in range(Cursors.size()):
+		Cursors[cursor_index].visible = CursorVisible and cursor_index < mirrors.size()
+		
+		if ToolMode == ToolModes.AREA:
+			if cursors_are_selecting_area:
+				Cursors[cursor_index].set_target_position(mirrors[cursor_index])
+				continue
+			elif cursors_started_area:
+				cursors_are_selecting_area = true
+		
+		Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
+		Cursors[cursor_index].set_target_position(mirrors[cursor_index])
+
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible
 func set_cursor_visible(visible := !CursorVisible, emit := true) -> void:
@@ -134,7 +165,7 @@ func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
 	
 	for cursor in Cursors:
-		cursor.material_override.albedo_color = CursorColor
+		cursor.set_cursor_color(CursorColor)
 	
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
@@ -349,30 +380,33 @@ func raycast_for_voxelobject(event : InputEventMouse, camera : Camera = get_view
 	return hit
 
 # Helper function for getting mirrors
-# grid       :   Vector3            -   Grid position to mirror according to Mirror options
-# @returns   :   Array[Vector3]     -   Array containing original position and all mirrored position
+# grid       :   Vector3          -   Grid position to mirror according to Mirror options
+# mirrorx    :   Vector3          -   Whether to mirror over x axis
+# mirrory    :   Vector3          -   Whether to mirror over y axis
+# mirrorz    :   Vector3          -   Whether to mirror over z axis
+# @returns   :   Array[Vector3]   -   Array containing original position and all mirrored position
 #
 # Example:
 #   grid_to_mirrors(Vector(3, 1, -3)) -> [ Vector(3, 1, -3), ... ]
 #
-func grid_to_mirrors(grid : Vector3) -> Array:
+func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mirrorz := MirrorZ) -> Array:
 	var mirrors = [grid]
 	
-	if MirrorX:
+	if mirrorx:
 		mirrors.append(Vector3(grid.x, grid.y, (grid.z + 1) * -1))
-		if MirrorZ:
+		if mirrorz:
 			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
-	if MirrorY:
+	if mirrory:
 		mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, grid.z))
-		if MirrorX:
+		if mirrorx:
 			mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1))
-		if MirrorZ:
+		if mirrorz:
 			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z))
-		if MirrorX && MirrorZ:
+		if mirrorx && mirrorz:
 			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1))
-	if MirrorZ:
+	if mirrorz:
 		mirrors.append(Vector3((grid.x + 1) * -1, grid.y, grid.z))
-		if MirrorX:
+		if mirrorx:
 			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
 	
 	return mirrors
@@ -385,24 +419,40 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 			if hit:
 				if not Tool == Tools.ADD: hit.normal *= -1
 				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
-				var mirrors = grid_to_mirrors(Voxel.abs_to_grid(VoxelObject.to_local(hit.position)))
+				var grid_pos = Voxel.abs_to_grid(VoxelObject.to_local(hit.position))
+				var mirrors = grid_to_mirrors(grid_pos)
 				if event.button_mask == BUTTON_MASK_RIGHT: pass
 				elif event is InputEventMouseMotion and not event.is_pressed():
-					if CursorVisible:
-						for cursor_index in range(Cursors.size()):
-							Cursors[cursor_index].visible = cursor_index < mirrors.size()
-							if Cursors[cursor_index].visible:
-								Cursors[cursor_index].translation = Voxel.pos_correct(Voxel.grid_to_pos(mirrors[cursor_index]))
+					update_cursors(grid_pos)
+#					if CursorVisible:
+#						update_cursors(mirrors)
+#						for cursor_index in range(Cursors.size()):
+#							Cursors[cursor_index].visible = cursor_index < mirrors.size()
+#							if Cursors[cursor_index].visible:
+#								Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
+#								Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
+#								Cursors[cursor_index].translation = Voxel.pos_correct(Voxel.grid_to_pos(mirrors[cursor_index]))
+					
 					return true
-				elif event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
-					for mirror in mirrors:
-						match Tool:
-							Tools.ADD:
-								VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
-							Tools.SUB:
-								VoxelObject.erase_voxel(mirror, false)
-					VoxelObject.update()
-					return true
+				elif event is InputEventMouseButton:
+					if event.button_index == BUTTON_LEFT:
+						if event.is_pressed():
+							if ToolMode == ToolModes.INDIVIDUAL:
+								for mirror in mirrors:
+									match Tool:
+										Tools.ADD:
+											VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
+										Tools.SUB:
+											VoxelObject.erase_voxel(mirror, false)
+								VoxelObject.update()
+							elif ToolMode == ToolModes.AREA:
+								cursors_started_area = true
+								update_cursors(grid_pos)
+						else:
+							cursors_started_area = false
+							cursors_are_selecting_area = false
+						
+						return true
 		elif event is InputEventKey: return false
 	set_cursors_visible(false)
 	return false
