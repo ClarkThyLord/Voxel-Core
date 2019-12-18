@@ -229,7 +229,8 @@ func update_floor() -> void:
 				Floor.mesh = ST.commit()
 				Floor.create_convex_collision()
 		
-		if Floor.has_node('VEFloor_col'): Floor.get_node('VEFloor_col').get_children()[0].disabled = !FloorVisible
+		if Floor.has_node('VEFloor_col'):
+			Floor.get_node('VEFloor_col').get_children()[0].disabled = !FloorVisible
 
 func set_floor_parent(parent : Node) -> void:
 	unset_floor_parent()
@@ -244,7 +245,10 @@ signal set_floor_visible(visible)
 export(bool) var FloorVisible := true setget set_floor_visible
 func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
 	FloorVisible = visible
-	if Floor: Floor.visible = FloorVisible
+	if Floor:
+		Floor.visible = FloorVisible
+		if Floor.has_node('VEFloor_col'):
+			Floor.get_node('VEFloor_col').get_children()[0].disabled = !visible
 	if emit: emit_signal('set_floor_visible', FloorVisible)
 
 signal set_floor_color(color)
