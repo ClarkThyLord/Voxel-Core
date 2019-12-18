@@ -117,8 +117,10 @@ func _setup() -> void:
 	set_voxel_edit_undo_redo()
 	
 	
-	VoxelEditor.connect('set_lock', self, 'select')
-	VoxelEditor.connect('script_changed', self, 'set_voxel_edit_undo_redo', [], CONNECT_DEFERRED)
+	if not VoxelEditor.is_connected('set_lock', self, 'select'):
+		VoxelEditor.connect('set_lock', self, 'select')
+	if not VoxelEditor.is_connected('script_changed', self, 'set_voxel_edit_undo_redo'):
+		VoxelEditor.connect('script_changed', self, 'set_voxel_edit_undo_redo', [], CONNECT_DEFERRED)
 
 func _init() -> void: _setup()
 func _ready() -> void: _setup()
