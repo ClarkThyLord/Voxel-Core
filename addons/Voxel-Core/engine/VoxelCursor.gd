@@ -4,16 +4,24 @@ extends ImmediateGeometry
 
 
 # Declarations
+export(Color) var CursorColor := Color.red setget set_cursor_color
+func set_cursor_color(cursorcolor : Color) -> void:
+	CursorColor = cursorcolor
+
+enum CursorTypes { SOLID, WIRED }
+export(CursorTypes) var CursorType := CursorTypes.SOLID setget set_cursor_type
+func set_cursor_type(cursortype : int) -> void:
+	 CursorType = cursortype
+
+
 export(Vector3) var CursorPosition := Vector3() setget set_cursor_position
 func set_cursor_position(cursorposition : Vector3) -> void:
 	CursorPosition = cursorposition
+
 export(Vector3) var TargetPosition := Vector3() setget set_target_position
 func set_target_position(targetposition : Vector3) -> void:
 	TargetPosition = targetposition
 
-export(Color) var CursorColor := Color.red setget set_cursor_color
-func set_cursor_color(cursorcolor : Color) -> void:
-	CursorColor = cursorcolor
 
 
 

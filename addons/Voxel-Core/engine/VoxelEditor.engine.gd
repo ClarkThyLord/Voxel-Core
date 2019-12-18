@@ -169,6 +169,16 @@ func set_cursor_color(color : Color, emit := true) -> void:
 	
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
+signal set_cursor_type(cursortype)
+export(VoxelCursor.CursorTypes) var CursorType := VoxelCursor.CursorTypes.SOLID setget set_cursor_type
+func set_cursor_type(cursortype : int, emit := true) -> void:
+	CursorType = cursortype
+	
+	for cursor in Cursors:
+		cursor.set_cursor_type(CursorType)
+	
+	if emit: emit_signal('set_cursor_type', CursorType)
+
 
 var Floor : MeshInstance = MeshInstance.new() setget set_floor
 func set_floor(_floor : MeshInstance) -> void: return   #   Floor shouldn't be settable externally
