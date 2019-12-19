@@ -36,11 +36,11 @@ func _init():
 
 func _process(delta):
 	if visible:
-		var dimensions := (TargetPosition - CursorPosition).abs()
+		var dimensions := (TargetPosition - CursorPosition).abs() + Vector3.ONE
 		
-		if CursorPosition.x <= 0 or TargetPosition.x <= 0: dimensions.x += 1
-		if CursorPosition.y <= 0 or TargetPosition.y <= 0: dimensions.y += 1
-		if CursorPosition.z <= 0 or TargetPosition.z <= 0: dimensions.z += 1
+#		if CursorPosition.x < 0 or TargetPosition.x < 0: dimensions.x += 1
+#		if CursorPosition.y < 0 or TargetPosition.y < 0: dimensions.y += 1
+#		if CursorPosition.z < 0 or TargetPosition.z < 0: dimensions.z += 1
 		
 		if dimensions.x == 0: dimensions.x += 1
 		if dimensions.y == 0: dimensions.y += 1
