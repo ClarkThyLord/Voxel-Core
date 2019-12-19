@@ -11,6 +11,20 @@ extends Node
 
 
 
+# Refrences
+class MyCustomSorter:
+	static func sort(a, b):
+		if typeof(a) == TYPE_STRING:
+			return true
+		elif typeof(b) == TYPE_STRING:
+			return false
+		elif a < b:
+			return true
+		else:
+			return false
+
+
+
 # Declarations
 signal updated
 
@@ -21,7 +35,7 @@ func set_id(id : int) -> void: return   #   _ID shouldn't be settable externally
 
 # Sets Voxels of set, emits 'update'.
 # voxels   :   Dictionary<int, Dictionary[Voxel]>   -   Voxels to duplicate
-# update   :   bool   -   whether to call on 'update'
+# update   :   bool                                 -   whether to call on 'update'
 #
 # Example:
 #   set_voxels({ ... }, false)
@@ -29,8 +43,8 @@ func set_id(id : int) -> void: return   #   _ID shouldn't be settable externally
 var Voxels : Dictionary = {} setget set_voxels
 func set_voxels(voxels : Dictionary, update := true) -> void:
 	var ids = voxels.keys()
-	ids.sort()
-	_ID = ids[-1] + 1
+	ids.sort_custom(MyCustomSorter, "sort")
+	_ID = (ids[-1] + 1) if typeof(ids[-1]) == TYPE_INT else 0
 	
 	Voxels = voxels.duplicate(true)
 	
@@ -105,27 +119,26 @@ func _init(): _load()
 
 
 # Returns the current value for the specified ID in the VoxelSet.
-# id         :   int          -   ID related to Voxel being retrieved
-# @returns   :   Dictionary   -   Dictionary representing Voxel; null, if ID isn't found
+# id         :   int/String        -   ID related to Voxel being retrieved
+# @returns   :   Dictionary/null   -   Dictionary representing Voxel; null, if ID isn't found
 #
 # Example:
 #   get_voxel(3) -> { ... }
 #
-func get_voxel(id : int) -> Dictionary: return Voxels.get(id)
-
+func get_voxel(id): return Voxels.get(id)
 
 # Append a Voxel, or set Voxel by providing a ID to VoxelSet.
 # voxel      :   Dictionary   -   Voxel data to store
-# id         :   int          -   ID to set to Voxel
+# id         :   int/String   -   ID to set to Voxel if not given, next available ID will be assigned and returned
 # update     :   bool         -   whether to call on 'update'
-# @returns   :   int          -   ID given to Voxel
+# @returns   :   int/String   -   ID given to Voxel
 #
 # Example:
 #   set_voxel({ ... })       ->   3
 #   set_voxel({ ... }, 45)   ->   45
 #
-func set_voxel(voxel : Dictionary, id := -1, update := true) -> int:
-	if id < 0:
+func set_voxel(voxel : Dictionary, id = null, update := true):
+	if typeof(id) == TYPE_NIL:
 		id = _ID
 		_ID += 1
 	
@@ -135,17 +148,15 @@ func set_voxel(voxel : Dictionary, id := -1, update := true) -> int:
 	
 	return id
 
-
 # Erase a Voxel by ID.
-# id         :   int    -   ID related to Voxel being retrieved
-# update     :   bool   -   whether to call on 'update'
+# id         :   int/String   -   ID related to Voxel being retrieved
+# update     :   bool         -   whether to call on 'update'
 #
 # Example:
 #   erase_voxel(33)   ->   { ... }
 #
-func erase_voxel(id : int, update := true) -> void:
-	Voxels.erase(id)
-	if update: self.update()
+func erase_voxel(id, update := true) -> void:
+	if Voxels.erase(id) and update: self.update()
 
 
 # Saves VoxelSet data, and emits 'update'.

@@ -99,9 +99,11 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 		if has_node('/root/VoxelSet'): voxelset = get_node('/root/CoreVoxelSet')
 		else: return
 	
-	if VoxelSet is VoxelSetClass and VoxelSet.is_connected('updated', self, 'update'): VoxelSet.disconnect('update', self, 'update')
+	if VoxelSet and VoxelSet.is_connected('updated', self, 'update'):
+		VoxelSet.disconnect('update', self, 'update')
 	VoxelSet = voxelset
-	if not VoxelSet.is_connected('updated', self, 'update'): VoxelSet.connect('updated', self, 'update')
+	if not VoxelSet.is_connected('updated', self, 'update'):
+		VoxelSet.connect('updated', self, 'update')
 	
 	if update: self.update()
 	if emit: emit_signal('set_voxel_set', VoxelSet)
@@ -146,15 +148,15 @@ func _exit_tree():
 
 
 # Get Voxel data at given grid position.
-# grid       :   Vector3      -   grid position to get Voxel data from
-# @returns   :   Dictionary   -   Voxel data
+# grid       :   Vector3           -   grid position to get Voxel data from
+# @returns   :   Dictionary/null   -   Voxel data; if not found returns null
 #
 # Example:
 #   get_voxel(Vector(11, -34, 2))   ->   { ... }
 #
-func get_voxel(position : Vector3) -> Dictionary:
+func get_voxel(position : Vector3):
 	var voxel = get_rvoxel(position)
-	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
+	if not typeof(voxel) == TYPE_DICTIONARY: voxel = VoxelSet.get_voxel(voxel)
 	return voxel
 
 # Get raw Voxel data at given grid position.
@@ -168,7 +170,7 @@ func get_voxel(position : Vector3) -> Dictionary:
 func get_rvoxel(position : Vector3): pass
 
 # Returns a copy of all current Voxel data.
-# @returns   :   Dictionary<Vector3, Voxel>   -   Dictionary containing grid positions, as keys, and Voxels, as values
+# @returns   :   Dictionary<Vector3, int/String/Dictionary>   -   Dictionary containing grid positions, as keys, and Voxels, as values
 #
 # Example:
 #   get_voxels()   ->   { ... }
@@ -177,9 +179,9 @@ func get_voxels() -> Dictionary: return {}
 
 
 # Set Voxel at given grid position.
-# grid     :   Vector3          -   grid position to set Voxel to 
-# voxel    :   int/Dictionary   -   Voxel to be set
-# update   :   bool             -   call on update
+# grid     :   Vector3                 -   grid position to set Voxel to 
+# voxel    :   int/String/Dictionary   -   Voxel to be set
+# update   :   bool                    -   call on update
 #
 # Example:
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxel's ID associated with it within VoxelSet
@@ -189,17 +191,17 @@ func set_voxel(position : Vector3, voxel, update := true) -> void:
 	if update: self.update()
 
 # Set raw Voxel's data at given grid position.
-# grid     :   Vector3          -   grid position to set Voxel to 
-# voxel    :   int/Dictionary   -   Voxel to be set
-# update   :   bool             -   call on update
+# grid     :   Vector3                 -   grid position to set Voxel to 
+# voxel    :   int/String/Dictionary   -   Voxel to be set
+# update   :   bool                    -   call on update
 #
 # Example:
 #   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present date(Dictionary) within the VoxelSet, not the ID associated with it within VoxelSet
 #   set_rvoxel(Vector(11, -34, 2), { ... })
 #
 func set_rvoxel(position : Vector3, voxel, update := true) -> void:
-	if typeof(voxel) == TYPE_INT: voxel = VoxelSet.get_voxel(voxel)
-	set_voxel(voxel, update)
+	if not typeof(voxel) == TYPE_DICTIONARY: voxel = VoxelSet.get_voxel(voxel)
+	if typeof(voxel) == TYPE_DICTIONARY: set_voxel(voxel, update)
 
 # Erases current Voxel data, then sets given Voxel data.
 # voxels   :   Dictionary<Vector3, Voxel>   -   Voxels to set

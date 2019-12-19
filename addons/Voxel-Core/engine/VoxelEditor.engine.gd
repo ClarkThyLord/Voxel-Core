@@ -46,8 +46,9 @@ signal set_primary(voxel)
 var Primary = null setget set_primary
 func get_primary() -> Dictionary:
 	var primary = get_rprimary()
-	if typeof(primary) == TYPE_INT:
-		VoxelObject.VoxelSet.get_voxel(primary)
+	if not typeof(primary) == TYPE_DICTIONARY:
+		primary = VoxelObject.VoxelSet.get_voxel(primary)
+		if typeof(primary) == TYPE_NIL: Voxel.colored(PrimaryColor)
 	return primary
 
 func get_rprimary():
@@ -67,12 +68,13 @@ signal set_secondary(voxel)
 var Secondary = null setget set_secondary
 func get_secondary() -> Dictionary:
 	var secondary = get_rsecondary()
-	if typeof(secondary) == TYPE_INT:
-		VoxelObject.VoxelSet.get_voxel(secondary)
+	if not typeof(secondary) == TYPE_DICTIONARY:
+		secondary = VoxelObject.VoxelSet.get_voxel(secondary)
+		if typeof(secondary) == TYPE_NIL: Voxel.colored(SecondaryColor)
 	return secondary
 
 func get_rsecondary():
-	return Voxel.colored(PrimaryColor) if typeof(Secondary) == TYPE_NIL else Secondary
+	return Voxel.colored(SecondaryColor) if typeof(Secondary) == TYPE_NIL else Secondary
 
 func set_secondary(voxel, emit := true) -> void:
 	Secondary = voxel
@@ -440,6 +442,11 @@ func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mir
 	return mirrors
 
 
+func pick_color(grid : Vector3):
+	var voxel = VoxelObject.get_voxel(grid)
+	return Voxel.get_color(voxel) if typeof(voxel) == TYPE_DICTIONARY else null
+
+
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
 		if event is InputEventMouse and Tool > Tools.PAN:
@@ -467,6 +474,9 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 										Tools.SUB:
 											undo_redo.add_do_method(VoxelObject, 'erase_voxel', mirror, false)
 											undo_redo.add_undo_method(VoxelObject, 'set_voxel', mirror, VoxelObject.get_rvoxel(mirror), false)
+#										Tools.PICK:
+#											undo_redo.add_do_method(VoxelObject, 'set_primary_color', )
+#											undo_redo.add_undo_method(VoxelObject, '', )
 								undo_redo.add_do_method(VoxelObject, 'update')
 								undo_redo.add_undo_method(VoxelObject, 'update')
 								

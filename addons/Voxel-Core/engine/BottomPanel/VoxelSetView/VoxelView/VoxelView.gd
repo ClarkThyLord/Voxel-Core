@@ -4,8 +4,8 @@ extends ColorRect
 
 
 # Declarations
-var ID : int setget set_id
-func set_id(id : int) -> void: return                     #   ID shouldn't be settable directly
+var ID setget set_id
+func set_id(id) -> void: return                     #   ID shouldn't be settable directly
 var Represents : Dictionary setget set_represents
 func set_represents(id : Dictionary) -> void: return      #   Represents shouldn't be settable directly
 var VoxelSetView setget set_voxel_set_view   #   VoxelView shouldn't be settable directly
@@ -36,7 +36,7 @@ func set_selected(selected : bool = !Selected, emit := true) -> void:
 # Core
 func _ready(): color = NormalColor
 
-func setup(id : int, voxel : Dictionary, voxelsetviewer) -> void:
+func setup(id, voxel : Dictionary, voxelsetviewer) -> void:
 	ID = id
 	Represents = voxel
 	VoxelSetView = voxelsetviewer

@@ -109,8 +109,8 @@ func _on_Search_text_changed(new_text : String) -> void:
 			for keyword in keywords:
 				if keyword.is_valid_integer():
 					keyword = keyword.to_int()
-					var voxel = VoxelSet.Voxels.get(keyword)
-					if voxel: voxels[keyword] = voxel
+				var voxel = VoxelSet.get_voxel(keyword)
+				if typeof(voxel) == TYPE_DICTIONARY: voxels[keyword] = voxel
 			
 			_update(voxels)
 
