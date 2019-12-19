@@ -318,6 +318,8 @@ text = "  AutoSave"
 icon = ExtResource( 15 )
 
 [node name="Cursor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
+editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -370,8 +372,6 @@ margin_right = 322.0
 margin_bottom = 74.0
 
 [node name="Floor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
-editor/display_folded = true
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -392,16 +392,24 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FloorVisible" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
-margin_right = 320.0
+margin_right = 322.0
 margin_bottom = 24.0
 pressed = true
 text = "  Floor Visible"
 icon = ExtResource( 17 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
+[node name="FloorConstant" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 28.0
-margin_right = 320.0
-margin_bottom = 48.0
+margin_right = 322.0
+margin_bottom = 52.0
+pressed = true
+text = "  Floor Constant"
+icon = ExtResource( 17 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
+margin_top = 56.0
+margin_right = 322.0
+margin_bottom = 76.0
 
 [node name="FloorColor" type="ColorPickerButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer"]
 margin_right = 32.0
@@ -418,12 +426,13 @@ margin_bottom = 17.0
 text = "   Floor Color"
 
 [node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 20 )]
-margin_top = 52.0
-margin_right = 320.0
-margin_bottom = 74.0
+margin_top = 80.0
+margin_right = 322.0
+margin_bottom = 102.0
 size_flags_horizontal = 3
 
 [node name="About" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
+editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0

@@ -280,6 +280,15 @@ func set_floor_type(floortype : int, emit := true) -> void:
 	update_floor()
 	if emit: emit_signal('set_floor_type', FloorType)
 
+signal set_floor_constant(constant)
+export(bool) var FloorConstant := false setget set_floor_constant
+func set_floor_constant(constant := !FloorConstant, emit := true) -> void:
+	FloorConstant = constant
+	
+	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+	
+	if emit: emit_signal('set_floor_constant', FloorConstant)
+
 
 func set_default_options(defaultoptions := {
 		'Lock': true,
@@ -471,7 +480,8 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 							else: return false
 						
 						update_cursors(mirrors)
+						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return true
-		elif event is InputEventKey: return false
-	set_cursors_visible(false)
+	if not event is InputEventKey:set_cursors_visible(false)
+	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 	return false

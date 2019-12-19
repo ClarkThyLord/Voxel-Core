@@ -34,6 +34,7 @@ onready var CursorColor := get_node('PanelContainer/MarginContainer/HBoxContaine
 onready var CursorType := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorTypesDropdown')
 
 onready var FloorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorVisible')
+onready var FloorConstant := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorConstant')
 onready var FloorColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer/FloorColor')
 onready var FloorType := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorTypesDropdown')
 
@@ -115,6 +116,10 @@ func setup(voxelcore) -> void:
 	FloorVisible.set_pressed(voxelcore.VoxelEditor.FloorVisible)
 	voxelcore.VoxelEditor.connect('set_floor_visible', FloorVisible, 'set_pressed')
 	FloorVisible.connect('pressed', voxelcore.VoxelEditor, 'set_floor_visible')
+	
+	FloorConstant.set_pressed(voxelcore.VoxelEditor.FloorConstant)
+	voxelcore.VoxelEditor.connect('set_floor_constant', FloorConstant, 'set_pressed')
+	FloorConstant.connect('pressed', voxelcore.VoxelEditor, 'set_floor_constant')
 	
 	FloorColor.set_pick_color(voxelcore.VoxelEditor.FloorColor)
 	voxelcore.VoxelEditor.connect('set_floor_color', FloorColor, 'set_pick_color')
