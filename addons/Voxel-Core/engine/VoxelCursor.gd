@@ -33,12 +33,50 @@ func _init():
 	material_override.params_cull_mode = SpatialMaterial.CULL_DISABLED
 	set_process(true)
 
+
+func abs_position() -> Vector3:
+	return Voxel.grid_to_pos(grid_position())
+#	var cursor_grid_pos = Voxel.grid_to_pos(CursorPosition)
+#	var target_grid_pos = Voxel.grid_to_pos(TargetPosition)
+#	return Vector3(
+#		cursor_grid_pos.x if cursor_grid_pos.x < target_grid_pos.x else target_grid_pos.x,
+#		cursor_grid_pos.y if cursor_grid_pos.y < target_grid_pos.y else target_grid_pos.y,
+#		cursor_grid_pos.z if cursor_grid_pos.z < target_grid_pos.z else target_grid_pos.z
+#	)
+
+func grid_position() -> Vector3:
+	return Vector3(
+		CursorPosition.x if CursorPosition.x < TargetPosition.x else TargetPosition.x,
+		CursorPosition.y if CursorPosition.y < TargetPosition.y else TargetPosition.y,
+		CursorPosition.z if CursorPosition.z < TargetPosition.z else TargetPosition.z
+	)
+
+
+func get_dimensions() -> Vector3:
+	var dimensions := (TargetPosition - CursorPosition).abs() + Vector3.ONE
+	if dimensions.x == 0: dimensions.x += 1
+	if dimensions.y == 0: dimensions.y += 1
+	if dimensions.z == 0: dimensions.z += 1
+	return dimensions
+
+func selected_grids() -> Array:
+	var points = []
+	var position = grid_position()
+	var dimensions = get_dimensions()
+	for x in range(dimensions.x):
+		for y in range(dimensions.y):
+			for z in range(dimensions.z):
+				points.append(position + Vector3(x, y, z))
+	return points
+
+
 func _process(delta):
 	if visible:
-		var dimensions := (TargetPosition - CursorPosition).abs() + Vector3.ONE
-		if dimensions.x == 0: dimensions.x += 1
-		if dimensions.y == 0: dimensions.y += 1
-		if dimensions.z == 0: dimensions.z += 1
+		var dimensions := get_dimensions()
+#		var dimensions := (TargetPosition - CursorPosition).abs() + Vector3.ONE
+#		if dimensions.x == 0: dimensions.x += 1
+#		if dimensions.y == 0: dimensions.y += 1
+#		if dimensions.z == 0: dimensions.z += 1
 		
 		
 		clear()
@@ -149,10 +187,11 @@ func _process(delta):
 		end()
 		
 		
-		var cursor_grid_pos = Voxel.grid_to_pos(CursorPosition)
-		var target_grid_pos = Voxel.grid_to_pos(TargetPosition)
-		translation = Vector3(
-			cursor_grid_pos.x if cursor_grid_pos.x < target_grid_pos.x else target_grid_pos.x,
-			cursor_grid_pos.y if cursor_grid_pos.y < target_grid_pos.y else target_grid_pos.y,
-			cursor_grid_pos.z if cursor_grid_pos.z < target_grid_pos.z else target_grid_pos.z
-		)
+		translation = abs_position()
+#		var cursor_grid_pos = Voxel.grid_to_pos(CursorPosition)
+#		var target_grid_pos = Voxel.grid_to_pos(TargetPosition)
+#		translation = Vector3(
+#			cursor_grid_pos.x if cursor_grid_pos.x < target_grid_pos.x else target_grid_pos.x,
+#			cursor_grid_pos.y if cursor_grid_pos.y < target_grid_pos.y else target_grid_pos.y,
+#			cursor_grid_pos.z if cursor_grid_pos.z < target_grid_pos.z else target_grid_pos.z
+#		)
