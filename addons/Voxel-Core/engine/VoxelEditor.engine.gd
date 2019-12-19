@@ -44,6 +44,15 @@ func set_tool_mode(toolmode : int, emit := true) -> void:
 
 signal set_primary(voxel)
 var Primary = null setget set_primary
+func get_primary() -> Dictionary:
+	var primary = get_rprimary()
+	if typeof(primary) == TYPE_INT:
+		VoxelObject.VoxelSet.get_voxel(primary)
+	return primary
+
+func get_rprimary():
+	return Voxel.colored(PrimaryColor) if typeof(Primary) == TYPE_NIL else Primary
+
 func set_primary(voxel, emit := true) -> void:
 	Primary = voxel
 	if emit: emit_signal('set_primary', Primary)
@@ -56,6 +65,15 @@ func set_primary_color(color : Color, emit := true) -> void:
 
 signal set_secondary(voxel)
 var Secondary = null setget set_secondary
+func get_secondary() -> Dictionary:
+	var secondary = get_rsecondary()
+	if typeof(secondary) == TYPE_INT:
+		VoxelObject.VoxelSet.get_voxel(secondary)
+	return secondary
+
+func get_rsecondary():
+	return Voxel.colored(PrimaryColor) if typeof(Secondary) == TYPE_NIL else Secondary
+
 func set_secondary(voxel, emit := true) -> void:
 	Secondary = voxel
 	if emit: emit_signal('set_secondary', Secondary)
@@ -426,20 +444,33 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 					if event.button_index == BUTTON_LEFT:
 						if event.is_pressed():
 							if ToolMode == ToolModes.INDIVIDUAL:
+								undo_redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]))
+								
 								for mirror in mirrors.values():
 									match Tool:
 										Tools.ADD:
-											VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
+											undo_redo.add_do_method(VoxelObject, 'set_voxel', mirror, get_rprimary(), false)
+											undo_redo.add_undo_method(VoxelObject, 'erase_voxel', mirror, false)
+#											VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
 										Tools.SUB:
-											VoxelObject.erase_voxel(mirror, false)
-								VoxelObject.update()
+											undo_redo.add_do_method(VoxelObject, 'erase_voxel', mirror, false)
+											undo_redo.add_undo_method(VoxelObject, 'set_voxel', mirror, VoxelObject.get_rvoxel(mirror), false)
+#											VoxelObject.erase_voxel(mirror, false)
+								undo_redo.add_do_method(VoxelObject, 'update')
+								undo_redo.add_undo_method(VoxelObject, 'update')
+#								VoxelObject.update()
+								
+								undo_redo.commit_action()
 							elif ToolMode == ToolModes.AREA:
 								cursors_started_area = true
-								update_cursors(mirrors)
+							else: return false
 						else:
-							cursors_started_area = false
-							cursors_are_selecting_area = false
+							if ToolMode == ToolModes.AREA:
+								cursors_started_area = false
+								cursors_are_selecting_area = false
+							else: return false
 						
+						update_cursors(mirrors)
 						return true
 		elif event is InputEventKey: return false
 	set_cursors_visible(false)
