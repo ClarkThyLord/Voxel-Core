@@ -170,7 +170,7 @@ func get_voxel(position : Vector3):
 func get_rvoxel(position : Vector3): pass
 
 # Returns a copy of all current Voxel data.
-# @returns   :   Dictionary<Vector3, int/String/Dictionary>   -   Dictionary containing grid positions, as keys, and Voxels, as values
+# @returns    :   Dictionary<Vector3, int/String/Dictionary>   -   Dictionary containing grid positions, as keys, and Voxels, as values
 #
 # Example:
 #   get_voxels()   ->   { ... }

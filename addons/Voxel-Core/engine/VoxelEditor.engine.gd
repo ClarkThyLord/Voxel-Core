@@ -44,6 +44,24 @@ func set_tool(_tool : int, emit := true) -> void:
 signal set_tool_palette(tool_palette)
 enum ToolPalettes { PRIMARY, SECONDARY }
 export(ToolPalettes) var ToolPalette := ToolPalettes.PRIMARY setget set_tool_palette
+func get_palette():
+	var palette
+	match ToolPalette:
+		ToolPalettes.PRIMARY:
+			palette = get_primary()
+		ToolPalettes.SECONDARY:
+			palette = get_secondary()
+	return palette
+
+func get_rpalette():
+	var palette
+	match ToolPalette:
+		ToolPalettes.PRIMARY:
+			palette = get_rprimary()
+		ToolPalettes.SECONDARY:
+			palette = get_rsecondary()
+	return palette
+
 func set_tool_palette(toolpalette : int, emit := true) -> void:
 	ToolPalette = toolpalette
 	if emit: emit_signal('set_tool_palette', ToolPalette)
@@ -55,14 +73,14 @@ func set_tool_mode(toolmode : int, emit := true) -> void:
 	ToolMode = toolmode
 	if emit: emit_signal('set_tool_mode', ToolMode)
 
-
+# TODO connect to VoxelSetView
 signal set_primary(voxel)
 var Primary = null setget set_primary
 func get_primary() -> Dictionary:
 	var primary = get_rprimary()
 	if not typeof(primary) == TYPE_DICTIONARY:
 		primary = VoxelObject.VoxelSet.get_voxel(primary)
-		if typeof(primary) == TYPE_NIL: Voxel.colored(PrimaryColor)
+		if typeof(primary) == TYPE_NIL: primary = Voxel.colored(PrimaryColor)
 	return primary
 
 func get_rprimary():
@@ -84,7 +102,7 @@ func get_secondary() -> Dictionary:
 	var secondary = get_rsecondary()
 	if not typeof(secondary) == TYPE_DICTIONARY:
 		secondary = VoxelObject.VoxelSet.get_voxel(secondary)
-		if typeof(secondary) == TYPE_NIL: Voxel.colored(SecondaryColor)
+		if typeof(secondary) == TYPE_NIL: secondary = Voxel.colored(SecondaryColor)
 	return secondary
 
 func get_rsecondary():
@@ -466,6 +484,75 @@ func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mir
 	return mirrors
 
 
+func use_tool(grids : Array) -> void:
+	undo_redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]))
+	match Tool:
+		Tools.ADD:
+			if RawData:
+				for grid in grids:
+					undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_palette(), false)
+					undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+			else:
+				for grid in grids:
+					undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_rpalette(), false)
+					undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+			
+			undo_redo.add_do_method(VoxelObject, 'update')
+			undo_redo.add_undo_method(VoxelObject, 'update')
+		Tools.SUB:
+			if RawData:
+				for grid in grids:
+					var voxel = VoxelObject.get_voxel(grid)
+					if not typeof(voxel) == TYPE_NIL:
+						undo_redo.add_do_method(VoxelObject, 'erase_voxel', grid, false)
+						undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
+			else:
+				for grid in grids:
+					var voxel = VoxelObject.get_rvoxel(grid)
+					if not typeof(voxel) == TYPE_NIL:
+						undo_redo.add_do_method(VoxelObject, 'erase_voxel', grid, false)
+						undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
+			
+			undo_redo.add_do_method(VoxelObject, 'update')
+			undo_redo.add_undo_method(VoxelObject, 'update')
+		Tools.PICK:
+			var voxel = VoxelObject.get_rvoxel(Cursors[Vector3(0, 0, 0)].CursorPosition)
+			print(Cursors[Vector3(0, 0, 0)].CursorPosition)
+			if typeof(voxel) == TYPE_NIL: pass
+			elif typeof(voxel) == TYPE_DICTIONARY:
+				match ToolPalette:
+					ToolPalettes.PRIMARY:
+						undo_redo.add_do_method(self, 'set_primary_color', Voxel.get_color(voxel))
+						undo_redo.add_undo_method(self, 'set_primary_color', PrimaryColor)
+					ToolPalettes.SECONDARY:
+						undo_redo.add_do_method(self, 'set_secondary_color', Voxel.get_color(voxel))
+						undo_redo.add_undo_method(self, 'set_secondary_color', SecondaryColor)
+			else:
+				match ToolPalette:
+					ToolPalettes.PRIMARY:
+						undo_redo.add_do_method(self, 'set_primary', voxel)
+						undo_redo.add_undo_method(self, 'set_primary', Primary)
+					ToolPalettes.SECONDARY:
+						undo_redo.add_do_method(self, 'set_secondary', voxel)
+						undo_redo.add_undo_method(self, 'set_secondary', Primary)
+	undo_redo.commit_action()
+
+#func tool_add(grids : Array) -> void:
+#	for grid in grids:
+#		voxelobject.set_voxel(grid, get_rpalette())
+#
+#func tool_remove(grids : Array) -> void:
+#	for grid in grids:
+#		voxelobject.erase_voxel(grid)
+#
+#func tool_pick(grids : Array):
+#	for grid in grids:
+#		var voxel = VoxelObject.get_voxel(grid)
+#		if typeof(voxel) == TYPE_DICTIONARY:
+#			return Voxel.get_color(voxel)
+#	return null
+
+
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
 		if event is InputEventMouse and Tool > Tools.PAN:
@@ -483,23 +570,31 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 					if event.button_index == BUTTON_LEFT:
 						if event.is_pressed():
 							if ToolMode == ToolModes.INDIVIDUAL:
-								undo_redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]))
-								
-								for mirror in mirrors.values():
-									match Tool:
-										Tools.ADD:
-											undo_redo.add_do_method(VoxelObject, 'set_voxel', mirror, get_rprimary(), false)
-											undo_redo.add_undo_method(VoxelObject, 'erase_voxel', mirror, false)
-										Tools.SUB:
-											undo_redo.add_do_method(VoxelObject, 'erase_voxel', mirror, false)
-											undo_redo.add_undo_method(VoxelObject, 'set_voxel', mirror, VoxelObject.get_rvoxel(mirror), false)
+								use_tool(mirrors.values())
+#								undo_redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]))
+#
+#								for mirror in mirrors.values():
+#									match Tool:
+#										Tools.ADD:
+#											undo_redo.add_do_method(VoxelObject, 'set_voxel', mirror, get_rpalette(), false)
+#											undo_redo.add_undo_method(VoxelObject, 'erase_voxel', mirror, false)
+#										Tools.SUB:
+#											undo_redo.add_do_method(VoxelObject, 'erase_voxel', mirror, false)
+#											undo_redo.add_undo_method(VoxelObject, 'set_voxel', mirror, VoxelObject.get_rvoxel(mirror), false)
 #										Tools.PICK:
-#											undo_redo.add_do_method(VoxelObject, 'set_primary_color', )
-#											undo_redo.add_undo_method(VoxelObject, '', )
-								undo_redo.add_do_method(VoxelObject, 'update')
-								undo_redo.add_undo_method(VoxelObject, 'update')
-								
-								undo_redo.commit_action()
+#											var color = tool_pick(grids.keys())
+#											if typeof(color) == TYPE_COLOR:
+#												match ToolPalette:
+#													ToolPalettes.PRIMARY:
+#														undo_redo.add_do_method(VoxelObject, '', )
+#														undo_redo.add_undo_method(VoxelObject, '', )
+#													ToolPalettes.SECONDARY:
+#														undo_redo.add_do_method(VoxelObject, '', )
+#														undo_redo.add_undo_method(VoxelObject, '', )
+#								undo_redo.add_do_method(VoxelObject, 'update')
+#								undo_redo.add_undo_method(VoxelObject, 'update')
+#
+#								undo_redo.commit_action()
 							elif ToolMode == ToolModes.AREA:
 								cursors_started_area = true
 							else: return false
@@ -508,14 +603,17 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 								cursors_started_area = false
 								cursors_are_selecting_area = false
 								
+								var grids := []
 								for mirror_index in mirrors:
-									var position = Cursors[mirror_index].grid_position()
-									var dimensions = Cursors[mirror_index].get_dimensions()
-									for x in range(dimensions.x):
-										for y in range(dimensions.y):
-											for z in range(dimensions.z):
-												VoxelObject.set_voxel(position + Vector3(x, y, z), get_rprimary(), false)
-								VoxelObject.update()
+									grids += Cursors[mirror_index].selected_grids()
+#									var position = Cursors[mirror_index].grid_position()
+#									var dimensions = Cursors[mirror_index].get_dimensions()
+#									for x in range(dimensions.x):
+#										for y in range(dimensions.y):
+#											for z in range(dimensions.z):
+#												VoxelObject.set_voxel(position + Vector3(x, y, z), get_rprimary(), false)
+#								VoxelObject.update()
+								use_tool(grids)
 							else: return false
 						
 						update_cursors(mirrors)
