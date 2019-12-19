@@ -115,6 +115,8 @@ func setup(voxelcore) -> void:
 	
 	FloorVisible.set_pressed(voxelcore.VoxelEditor.FloorVisible)
 	voxelcore.VoxelEditor.connect('set_floor_visible', FloorVisible, 'set_pressed')
+	FloorVisible.set_disabled(voxelcore.VoxelEditor.FloorConstant)
+	voxelcore.VoxelEditor.connect('set_floor_constant', FloorVisible, 'set_disabled')
 	FloorVisible.connect('pressed', voxelcore.VoxelEditor, 'set_floor_visible')
 	
 	FloorConstant.set_pressed(voxelcore.VoxelEditor.FloorConstant)

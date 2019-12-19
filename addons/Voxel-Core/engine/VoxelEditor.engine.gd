@@ -257,12 +257,21 @@ func unset_floor_parent() -> void:
 signal set_floor_visible(visible)
 export(bool) var FloorVisible := true setget set_floor_visible
 func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
-	FloorVisible = visible
+	FloorVisible = FloorConstant or visible
 	if Floor:
 		Floor.visible = FloorVisible
 		if Floor.has_node('VEFloor_col'):
 			Floor.get_node('VEFloor_col').get_children()[0].disabled = !visible
 	if emit: emit_signal('set_floor_visible', FloorVisible)
+
+signal set_floor_constant(constant)
+export(bool) var FloorConstant := false setget set_floor_constant
+func set_floor_constant(constant := !FloorConstant, emit := true) -> void:
+	FloorConstant = constant
+	
+	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+	
+	if emit: emit_signal('set_floor_constant', FloorConstant)
 
 signal set_floor_color(color)
 export(Color) var FloorColor := Color.purple setget set_floor_color
@@ -279,15 +288,6 @@ func set_floor_type(floortype : int, emit := true) -> void:
 	FloorType = floortype
 	update_floor()
 	if emit: emit_signal('set_floor_type', FloorType)
-
-signal set_floor_constant(constant)
-export(bool) var FloorConstant := false setget set_floor_constant
-func set_floor_constant(constant := !FloorConstant, emit := true) -> void:
-	FloorConstant = constant
-	
-	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
-	
-	if emit: emit_signal('set_floor_constant', FloorConstant)
 
 
 func set_default_options(defaultoptions := {
@@ -466,14 +466,11 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 										Tools.ADD:
 											undo_redo.add_do_method(VoxelObject, 'set_voxel', mirror, get_rprimary(), false)
 											undo_redo.add_undo_method(VoxelObject, 'erase_voxel', mirror, false)
-#											VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
 										Tools.SUB:
 											undo_redo.add_do_method(VoxelObject, 'erase_voxel', mirror, false)
 											undo_redo.add_undo_method(VoxelObject, 'set_voxel', mirror, VoxelObject.get_rvoxel(mirror), false)
-#											VoxelObject.erase_voxel(mirror, false)
 								undo_redo.add_do_method(VoxelObject, 'update')
 								undo_redo.add_undo_method(VoxelObject, 'update')
-#								VoxelObject.update()
 								
 								undo_redo.commit_action()
 							elif ToolMode == ToolModes.AREA:
