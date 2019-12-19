@@ -134,20 +134,6 @@ func update_cursors(mirrors : Dictionary) -> void:
 		
 		Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
 		Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
-	
-#	var all_mirrors = grid_to_mirrors(mirrors[0], true, true, true)
-#	for cursor_index in range(Cursors.size()):
-#		Cursors[cursor_index].visible = CursorVisible and cursor_index < mirrors.size()
-#
-#		if ToolMode == ToolModes.AREA:
-#			if cursors_are_selecting_area:
-#				Cursors[cursor_index].set_target_position(mirrors[cursor_index])
-#				continue
-#			elif cursors_started_area:
-#				cursors_are_selecting_area = true
-#
-#		Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
-#		Cursors[cursor_index].set_target_position(mirrors[cursor_index])
 
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible
@@ -407,28 +393,18 @@ func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mir
 	
 	if mirrorx:
 		mirrors[Vector3(1, 0, 0)] = Vector3(grid.x, grid.y, (grid.z + 1) * -1)
-#		mirrors.append(Vector3(grid.x, grid.y, (grid.z + 1) * -1))
 		if mirrorz:
 			mirrors[Vector3(1, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1)
-#			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
 	if mirrory:
 		mirrors[Vector3(0, 1, 0)] = Vector3(grid.x, (grid.y + 1) * -1, grid.z)
-#		mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, grid.z))
 		if mirrorx:
 			mirrors[Vector3(1, 1, 0)] = Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1)
-#			mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1))
 		if mirrorz:
 			mirrors[Vector3(0, 1, 1)] = Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z)
-#			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z))
 		if mirrorx && mirrorz:
 			mirrors[Vector3(1, 1, 1)] = Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1)
-#			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1))
 	if mirrorz:
 		mirrors[Vector3(0, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, grid.z)
-#		mirrors.append(Vector3((grid.x + 1) * -1, grid.y, grid.z))
-#		if mirrorx:
-#			mirrors[Vector3(1, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1)
-#			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
 	
 	return mirrors
 
