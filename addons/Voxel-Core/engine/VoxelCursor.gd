@@ -36,13 +36,6 @@ func _init():
 
 func abs_position() -> Vector3:
 	return Voxel.grid_to_pos(grid_position())
-#	var cursor_grid_pos = Voxel.grid_to_pos(CursorPosition)
-#	var target_grid_pos = Voxel.grid_to_pos(TargetPosition)
-#	return Vector3(
-#		cursor_grid_pos.x if cursor_grid_pos.x < target_grid_pos.x else target_grid_pos.x,
-#		cursor_grid_pos.y if cursor_grid_pos.y < target_grid_pos.y else target_grid_pos.y,
-#		cursor_grid_pos.z if cursor_grid_pos.z < target_grid_pos.z else target_grid_pos.z
-#	)
 
 func grid_position() -> Vector3:
 	return Vector3(
@@ -72,16 +65,8 @@ func selected_grids() -> Array:
 
 func _process(delta):
 	if visible:
-		var dimensions := get_dimensions()
-#		var dimensions := (TargetPosition - CursorPosition).abs() + Vector3.ONE
-#		if dimensions.x == 0: dimensions.x += 1
-#		if dimensions.y == 0: dimensions.y += 1
-#		if dimensions.z == 0: dimensions.z += 1
-		
-		
 		clear()
-		
-		
+		var dimensions := get_dimensions()
 		match CursorType:
 			CursorTypes.SOLID:
 				begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -182,16 +167,5 @@ func _process(delta):
 				
 				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
 				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-		
-		
 		end()
-		
-		
 		translation = abs_position()
-#		var cursor_grid_pos = Voxel.grid_to_pos(CursorPosition)
-#		var target_grid_pos = Voxel.grid_to_pos(TargetPosition)
-#		translation = Vector3(
-#			cursor_grid_pos.x if cursor_grid_pos.x < target_grid_pos.x else target_grid_pos.x,
-#			cursor_grid_pos.y if cursor_grid_pos.y < target_grid_pos.y else target_grid_pos.y,
-#			cursor_grid_pos.z if cursor_grid_pos.z < target_grid_pos.z else target_grid_pos.z
-#		)

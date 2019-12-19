@@ -480,29 +480,12 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 								cursors_are_selecting_area = false
 								
 								for mirror_index in mirrors:
-#									var cursor : VoxelMesh = Cursors[mirror_index]
-#									var dimensions : Vector3 = (cursor.TargetPosition - cursor.CursorPosition).abs() + Vector3.ONE
-#									if dimensions.x == 0: dimensions.x += 1
-#									if dimensions.y == 0: dimensions.y += 1
-#									if dimensions.z == 0: dimensions.z += 1
-#
-#									var position = Vector3(
-#										cursor.CursorPosition.x if cursor.CursorPosition.x < cursor.TargetPosition.x else cursor.TargetPosition.x,
-#										cursor.CursorPosition.y if cursor.CursorPosition.y < cursor.TargetPosition.y else cursor.TargetPosition.y,
-#										cursor.CursorPosition.z if cursor.CursorPosition.z < cursor.TargetPosition.z else cursor.TargetPosition.z
-#									)
-									
-									
-#									var points = []
 									var position = Cursors[mirror_index].grid_position()
 									var dimensions = Cursors[mirror_index].get_dimensions()
 									for x in range(dimensions.x):
 										for y in range(dimensions.y):
 											for z in range(dimensions.z):
 												VoxelObject.set_voxel(position + Vector3(x, y, z), get_rprimary(), false)
-#												var point = position + Vector3(x, y, z)
-#												points.append(point)
-#												VoxelObject.set_voxel(point, get_rprimary(), false)
 								VoxelObject.update()
 							else: return false
 						
