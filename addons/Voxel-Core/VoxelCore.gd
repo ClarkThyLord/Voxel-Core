@@ -180,7 +180,7 @@ func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
 	return VoxelEditor.__input(event, camera)
 
 func _unhandled_key_input(event : InputEventKey) -> void:
-	if VoxelEditor.VoxelObject and event.pressed and not event.echo:
+	if VoxelEditor.VoxelObject and event.pressed and not event.echo and not Input.is_key_pressed(KEY_SHIFT) and not Input.is_key_pressed(KEY_CONTROL) and not Input.is_key_pressed(KEY_ALT):
 		match event.scancode:
 			KEY_SPACE:
 				VoxelEditor.set_lock()
