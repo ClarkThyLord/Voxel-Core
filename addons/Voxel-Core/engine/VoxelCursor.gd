@@ -7,6 +7,7 @@ extends ImmediateGeometry
 export(Color) var CursorColor := Color(1, 0, 0, 0.6) setget set_cursor_color
 func set_cursor_color(cursorcolor : Color) -> void:
 	CursorColor = cursorcolor
+	material_override.albedo_color = CursorColor
 
 enum CursorTypes { SOLID, WIRED }
 export(CursorTypes) var CursorType := CursorTypes.SOLID setget set_cursor_type
@@ -29,7 +30,6 @@ func _init():
 	material_override = SpatialMaterial.new()
 	material_override.flags_transparent = true
 	material_override.albedo_color = CursorColor
-	material_override.vertex_color_use_as_albedo = true
 	material_override.params_cull_mode = SpatialMaterial.CULL_DISABLED
 	set_process(true)
 
@@ -47,7 +47,6 @@ func _process(delta):
 		match CursorType:
 			CursorTypes.SOLID:
 				begin(Mesh.PRIMITIVE_TRIANGLES)
-				set_color(CursorColor)
 				
 				# Right face
 				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
@@ -105,7 +104,7 @@ func _process(delta):
 				
 			CursorTypes.WIRED:
 				begin(Mesh.PRIMITIVE_LINES)
-				set_color(CursorColor)
+				
 				# Right lines
 				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
 				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
