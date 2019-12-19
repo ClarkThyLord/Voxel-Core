@@ -101,7 +101,8 @@ func setup(voxelcore) -> void:
 	MirrorZ.connect('pressed', voxelcore.VoxelEditor, 'set_mirror_z')
 	
 	
-	_on_VoxelObject_modified(false)
+	_on_VoxelObject_modified(voxelcore.VoxelEditor.Modified)
+	voxelcore.VoxelEditor.connect('modified', self, '_on_VoxelObject_modified')
 	
 	Lock.set_pressed(voxelcore.VoxelEditor.Lock)
 	voxelcore.VoxelEditor.connect('set_lock', Lock, 'set_pressed')
@@ -156,6 +157,12 @@ func secondary_color_popup_visible(visible := !SecondaryColor.get_popup().visibl
 func _on_VoxelObject_modified(modified : bool) -> void:
 	Commit.disabled = !modified
 	Cancel.disabled = !modified
+
+func _on_Commit_pressed():
+	VoxelCore._commit()
+
+func _on_Cancel_pressed():
+	VoxelCore._cancel()
 
 
 func _on_VoxelSetView_selected(index):

@@ -488,6 +488,7 @@ func use_tool(grids : Array) -> void:
 	undo_redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]))
 	match Tool:
 		Tools.ADD:
+			set_modified(true)
 			if RawData:
 				for grid in grids:
 					undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_palette(), false)
@@ -500,6 +501,7 @@ func use_tool(grids : Array) -> void:
 			undo_redo.add_do_method(VoxelObject, 'update')
 			undo_redo.add_undo_method(VoxelObject, 'update')
 		Tools.SUB:
+			set_modified(true)
 			if RawData:
 				for grid in grids:
 					var voxel = VoxelObject.get_voxel(grid)

@@ -122,13 +122,14 @@ margin_left = 104.0
 margin_right = 212.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
+Palette = 0
 
 [node name="ToolMode" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 6 )]
 margin_left = 216.0
 margin_right = 338.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-Palette = 0
+Tool = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
@@ -551,6 +552,8 @@ text = "GitHub"
 icon = ExtResource( 27 )
 [connection signal="selected" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView" to="." method="_on_VoxelSetView_selected"]
 [connection signal="unselected" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView" to="." method="_on_VoxelSetView_unselected"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Cancel" to="." method="_on_Cancel_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
