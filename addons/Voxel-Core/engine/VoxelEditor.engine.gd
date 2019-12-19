@@ -163,7 +163,7 @@ func set_cursor_visible(visible := !CursorVisible, emit := true) -> void:
 	if emit: emit_signal('set_cursor_visible', CursorVisible)
 
 signal set_cursor_color(color)
-export(Color) var CursorColor := Color(1, 0, 0, 0.6) setget set_cursor_color
+export(Color) var CursorColor := Color(1, 0, 0, 0.3) setget set_cursor_color
 func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
 	
@@ -329,10 +329,13 @@ func detach_editor_components() -> void:
 func edit(voxelobject : VoxelObjectClass, options := {}, update := true, emit := true) -> void:
 	.edit(voxelobject, options, true, false)
 	
+	set_lock(true)
 	Modified = false
 	StartingVersion = undo_redo.get_version()
 	VoxelObjectData['voxels'] = voxelobject.get_voxels()
 	
+	set_cursors_visible(false)
+	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 	attach_editor_components()
 	
 	if emit: emit_signal('editing')
@@ -342,6 +345,7 @@ func commit(update := true, emit := true) -> void:
 		.commit(update, false)
 		
 		
+		set_lock(true)
 		Modified = false
 		StartingVersion = -1
 		if on_commit_clear_history: undo_redo.clear_history()
@@ -358,6 +362,8 @@ func cancel(update := true, emit := true) -> void:
 		VoxelObject.set_editing(false, false)
 		if update: VoxelObject.update()
 		
+		
+		set_lock(true)
 		VoxelObject = null
 		VoxelObjectData = {}
 		
@@ -482,6 +488,6 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						update_cursors(mirrors)
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return true
-	if not event is InputEventKey:set_cursors_visible(false)
+	if not event is InputEventKey: set_cursors_visible(false)
 	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 	return false

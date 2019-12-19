@@ -82,7 +82,6 @@ func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
 
 
 func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
-	VoxelEditor.Lock = true
 	VoxelEditor.edit(VoxelObject)
 	if not VoxelObject.is_connected('tree_exiting', self, 'handle_remove'):
 		VoxelObject.connect('tree_exiting', self, 'handle_remove')
@@ -141,7 +140,6 @@ func _exit_tree() -> void:
 
 
 func scene_closed(path : String) -> void:
-	VoxelEditor.Lock = true
 	_cancel()
 
 func main_screen_changed(mainscene : String) -> void:
