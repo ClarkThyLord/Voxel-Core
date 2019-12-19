@@ -6,9 +6,12 @@ extends ScrollContainer
 # References
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
+onready var RawData := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/HBoxContainer/HBoxContainer/Raw')
 
 onready var Tool := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/Tools')
+onready var ToolPalette := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/ToolPalettesDropdown')
 onready var ToolMode := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3/ToolMode')
+
 
 onready var PrimaryColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor')
 onready var SecondaryColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor')
@@ -56,13 +59,22 @@ func _ready():
 func setup(voxelcore) -> void:
 	VoxelCore = voxelcore
 	
+	RawData.set_pressed(voxelcore.VoxelEditor.RawData)
+	voxelcore.VoxelEditor.connect('set_rawdata', RawData, 'set_pressed')
+	RawData.connect('toggled', voxelcore.VoxelEditor, 'set_rawdata')
+	
 	Tool.select(voxelcore.VoxelEditor.Tool)
 	voxelcore.VoxelEditor.connect('set_tool', Tool, 'select')
 	Tool.connect('item_selected', voxelcore.VoxelEditor, 'set_tool')
 	
+	ToolPalette.select(voxelcore.VoxelEditor.ToolPalette)
+	voxelcore.VoxelEditor.connect('set_tool_palette', ToolPalette, 'select')
+	ToolPalette.connect('item_selected', voxelcore.VoxelEditor, 'set_tool_palette')
+	
 	ToolMode.select(voxelcore.VoxelEditor.ToolMode)
 	voxelcore.VoxelEditor.connect('set_tool_mode', ToolMode, 'select')
 	ToolMode.connect('item_selected', voxelcore.VoxelEditor, 'set_tool_mode')
+	
 	
 	PrimaryColor.set_pick_color(voxelcore.VoxelEditor.PrimaryColor)
 	voxelcore.VoxelEditor.connect('set_primary_color', PrimaryColor, 'set_pick_color')
@@ -93,7 +105,7 @@ func setup(voxelcore) -> void:
 	
 	Lock.set_pressed(voxelcore.VoxelEditor.Lock)
 	voxelcore.VoxelEditor.connect('set_lock', Lock, 'set_pressed')
-	Lock.connect('pressed', voxelcore.VoxelEditor, 'set_lock')
+	Lock.connect('toggled', voxelcore.VoxelEditor, 'set_lock')
 	Lock.connect('toggled', voxelcore, 'select')
 	
 	
@@ -168,3 +180,7 @@ func _on_Godot_pressed():
 
 func _on_GitHub_pressed():
 	OS.shell_open('https://github.com/ClarkThyLord/Voxel-Core')
+
+
+func _on_Reset_pressed():
+	VoxelCore.VoxelEditor.set_options()

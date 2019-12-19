@@ -27,12 +27,26 @@ func set_lock(lock := !Lock, emit := true) -> void:
 	if emit: emit_signal('set_lock', Lock)
 
 
+signal set_rawdata(rawdata)
+export(bool) var RawData := false setget set_rawdata
+func set_rawdata(rawdata := !RawData, emit := true) -> void:
+	RawData = rawdata
+	if emit: emit_signal('set_rawdata', RawData)
+
+
 signal set_tool(_tool)
 enum Tools { PAN, SELECT, ADD, SUB, PICK, FILL }
 export(Tools) var Tool := Tools.PAN setget set_tool
 func set_tool(_tool : int, emit := true) -> void:
 	Tool = _tool
 	if emit: emit_signal('set_tool', Tool)
+
+signal set_tool_palette(tool_palette)
+enum ToolPalettes { PRIMARY, SECONDARY }
+export(ToolPalettes) var ToolPalette := ToolPalettes.PRIMARY setget set_tool_palette
+func set_tool_palette(toolpalette : int, emit := true) -> void:
+	ToolPalette = toolpalette
+	if emit: emit_signal('set_tool_palette', ToolPalette)
 
 signal set_tool_mode(tool_mode)
 enum ToolModes { INDIVIDUAL, AREA }
@@ -294,7 +308,9 @@ func set_floor_type(floortype : int, emit := true) -> void:
 
 func set_default_options(defaultoptions := {
 		'Lock': true,
+		'RawData': false,
 		'Tool': Tools.PAN,
+		'ToolPalette': ToolPalettes.PRIMARY,
 		'ToolMode': ToolModes.INDIVIDUAL,
 		'Primary': null,
 		'PrimaryColor': Color.white,
@@ -302,7 +318,14 @@ func set_default_options(defaultoptions := {
 		'SecondaryColor': Color.black,
 		'MirrorX': false,
 		'MirrorY': false,
-		'MirrorZ': false
+		'MirrorZ': false,
+		'CursorVisible': true,
+		'CursorColor': Color(1, 0, 0, 0.3),
+		'CursorType': VoxelCursor.CursorTypes.SOLID,
+		'FloorVisible': true,
+		'FloorConstant': false,
+		'FloorColor': Color.purple,
+		'FloorType': FloorTypes.WIRED
 	}, reset := false) -> void:
 	.set_default_options(defaultoptions, reset)
 
@@ -310,10 +333,11 @@ func set_default_options(defaultoptions := {
 
 # Core
 func _init() -> void:
-	_load()
 	setup_cursors()
 	setup_floor()
 	set_cursors_visible(false)
+	set_default_options()
+	_load()
 func _ready() -> void:
 	set_default_options()
 	set_options()
@@ -440,11 +464,6 @@ func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mir
 		mirrors[Vector3(0, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, grid.z)
 	
 	return mirrors
-
-
-func pick_color(grid : Vector3):
-	var voxel = VoxelObject.get_voxel(grid)
-	return Voxel.get_color(voxel) if typeof(voxel) == TYPE_DICTIONARY else null
 
 
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:

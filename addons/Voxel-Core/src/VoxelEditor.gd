@@ -43,7 +43,9 @@ func _save() -> void:
 
 # The following will initialize the object as needed
 # NOTE: Should be copied pasted to inheriting class
-#func _init() -> void: _load()
+#func _init() -> void:
+#	set_default_options()
+#	_load()
 #func _ready() -> void:
 #	set_default_options()
 #	set_options()
