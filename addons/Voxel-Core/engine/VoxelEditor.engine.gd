@@ -345,7 +345,6 @@ func commit(update := true, emit := true) -> void:
 		.commit(update, false)
 		
 		
-		set_lock(true)
 		Modified = false
 		StartingVersion = -1
 		if on_commit_clear_history: undo_redo.clear_history()
@@ -363,7 +362,6 @@ func cancel(update := true, emit := true) -> void:
 		if update: VoxelObject.update()
 		
 		
-		set_lock(true)
 		VoxelObject = null
 		VoxelObjectData = {}
 		
