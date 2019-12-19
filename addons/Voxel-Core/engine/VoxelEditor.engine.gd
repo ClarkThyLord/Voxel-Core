@@ -87,53 +87,67 @@ func set_mirror_z(mirrorz := !MirrorZ, emit := true) -> void:
 
 
 # Contains a refrence to each Cursor
-var Cursors := [
-	VoxelCursor.new(),
-	VoxelCursor.new(),
-	VoxelCursor.new(),
-	VoxelCursor.new(),
-	VoxelCursor.new(),
-	VoxelCursor.new(),
-	VoxelCursor.new(),
-	VoxelCursor.new()
-] setget set_cursors
-func set_cursors(cursor : Array) -> void: return   #   Cursors shouldn't be settable externally
+var Cursors := {
+	Vector3(0, 0, 0): VoxelCursor.new(),
+	Vector3(1, 0, 0): VoxelCursor.new(),
+	Vector3(1, 1, 0): VoxelCursor.new(),
+	Vector3(1, 1, 1): VoxelCursor.new(),
+	Vector3(0, 1, 1): VoxelCursor.new(),
+	Vector3(0, 1, 0): VoxelCursor.new(),
+	Vector3(0, 0, 1): VoxelCursor.new(),
+	Vector3(1, 0, 1): VoxelCursor.new()
+} setget set_cursors
+func set_cursors(cursor : Dictionary) -> void: return   #   Cursors shouldn't be settable externally
 
 func setup_cursors() -> void:
-	for cursor in Cursors:
+	for cursor in Cursors.values():
 		cursor.set_cursor_color(CursorColor)
 
 func set_cursors_parent(parent : Node) -> void:
 	unset_cursors_parent()
-	for cursor in Cursors:
+	for cursor in Cursors.values():
 		if cursor:
 			parent.add_child(cursor)
 
 func unset_cursors_parent() -> void:
-	for cursor in Cursors:
+	for cursor in Cursors.values():
 		if cursor and cursor.get_parent():
 			cursor.get_parent().remove_child(cursor)
 
 func set_cursors_visible(visible : bool) -> void:
-	for cursor in Cursors:
+	for cursor in Cursors.values():
 		cursor.visible = visible
 
 var cursors_started_area := false
 var cursors_are_selecting_area := false
-func update_cursors(grid_pos : Vector3) -> void:
-	var mirrors = grid_to_mirrors(grid_pos, true, true, true)
-	for cursor_index in range(Cursors.size()):
-		Cursors[cursor_index].visible = CursorVisible and cursor_index < mirrors.size()
+func update_cursors(mirrors : Dictionary) -> void:
+	var all_mirrors = grid_to_mirrors(mirrors[Vector3(0, 0, 0)], true, true, true)
+	for cursor_key in Cursors:
+		Cursors[cursor_key].visible = CursorVisible and mirrors.has(cursor_key)
 		
 		if ToolMode == ToolModes.AREA:
 			if cursors_are_selecting_area:
-				Cursors[cursor_index].set_target_position(mirrors[cursor_index])
+				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
 				continue
 			elif cursors_started_area:
 				cursors_are_selecting_area = true
 		
-		Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
-		Cursors[cursor_index].set_target_position(mirrors[cursor_index])
+		Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
+		Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
+	
+#	var all_mirrors = grid_to_mirrors(mirrors[0], true, true, true)
+#	for cursor_index in range(Cursors.size()):
+#		Cursors[cursor_index].visible = CursorVisible and cursor_index < mirrors.size()
+#
+#		if ToolMode == ToolModes.AREA:
+#			if cursors_are_selecting_area:
+#				Cursors[cursor_index].set_target_position(mirrors[cursor_index])
+#				continue
+#			elif cursors_started_area:
+#				cursors_are_selecting_area = true
+#
+#		Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
+#		Cursors[cursor_index].set_target_position(mirrors[cursor_index])
 
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible
@@ -149,7 +163,7 @@ export(Color) var CursorColor := Color(1, 0, 0, 0.6) setget set_cursor_color
 func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
 	
-	for cursor in Cursors:
+	for cursor in Cursors.values():
 		cursor.set_cursor_color(CursorColor)
 	
 	if emit: emit_signal('set_cursor_color', CursorColor)
@@ -159,7 +173,7 @@ export(VoxelCursor.CursorTypes) var CursorType := VoxelCursor.CursorTypes.SOLID 
 func set_cursor_type(cursortype : int, emit := true) -> void:
 	CursorType = cursortype
 	
-	for cursor in Cursors:
+	for cursor in Cursors.values():
 		cursor.set_cursor_type(CursorType)
 	
 	if emit: emit_signal('set_cursor_type', CursorType)
@@ -379,34 +393,42 @@ func raycast_for_voxelobject(event : InputEventMouse, camera : Camera = get_view
 	return hit
 
 # Helper function for getting mirrors
-# grid       :   Vector3          -   Grid position to mirror according to Mirror options
-# mirrorx    :   Vector3          -   Whether to mirror over x axis
-# mirrory    :   Vector3          -   Whether to mirror over y axis
-# mirrorz    :   Vector3          -   Whether to mirror over z axis
-# @returns   :   Array[Vector3]   -   Array containing original position and all mirrored position
+# grid       :   Vector3                        -   Grid position to mirror according to Mirror options
+# mirrorx    :   Vector3                        -   Whether to mirror over x axis
+# mirrory    :   Vector3                        -   Whether to mirror over y axis
+# mirrorz    :   Vector3                        -   Whether to mirror over z axis
+# @returns   :   Dictionary<Vector3, Vector3>   -   Array containing original position and all mirrored position
 #
 # Example:
 #   grid_to_mirrors(Vector(3, 1, -3)) -> [ Vector(3, 1, -3), ... ]
 #
-func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mirrorz := MirrorZ) -> Array:
-	var mirrors = [grid]
+func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mirrorz := MirrorZ) -> Dictionary:
+	var mirrors = { Vector3(0,0,0): grid }
 	
 	if mirrorx:
-		mirrors.append(Vector3(grid.x, grid.y, (grid.z + 1) * -1))
+		mirrors[Vector3(1, 0, 0)] = Vector3(grid.x, grid.y, (grid.z + 1) * -1)
+#		mirrors.append(Vector3(grid.x, grid.y, (grid.z + 1) * -1))
 		if mirrorz:
-			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
+			mirrors[Vector3(1, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1)
+#			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
 	if mirrory:
-		mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, grid.z))
+		mirrors[Vector3(0, 1, 0)] = Vector3(grid.x, (grid.y + 1) * -1, grid.z)
+#		mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, grid.z))
 		if mirrorx:
-			mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1))
+			mirrors[Vector3(1, 1, 0)] = Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1)
+#			mirrors.append(Vector3(grid.x, (grid.y + 1) * -1, (grid.z + 1) * -1))
 		if mirrorz:
-			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z))
+			mirrors[Vector3(0, 1, 1)] = Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z)
+#			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, grid.z))
 		if mirrorx && mirrorz:
-			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1))
+			mirrors[Vector3(1, 1, 1)] = Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1)
+#			mirrors.append(Vector3((grid.x + 1) * -1, (grid.y + 1) * -1, (grid.z + 1) * -1))
 	if mirrorz:
-		mirrors.append(Vector3((grid.x + 1) * -1, grid.y, grid.z))
-		if mirrorx:
-			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
+		mirrors[Vector3(0, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, grid.z)
+#		mirrors.append(Vector3((grid.x + 1) * -1, grid.y, grid.z))
+#		if mirrorx:
+#			mirrors[Vector3(1, 0, 1)] = Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1)
+#			mirrors.append(Vector3((grid.x + 1) * -1, grid.y, (grid.z + 1) * -1))
 	
 	return mirrors
 
@@ -422,13 +444,13 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 				var mirrors = grid_to_mirrors(grid_pos)
 				if event.button_mask == BUTTON_MASK_RIGHT: pass
 				elif event is InputEventMouseMotion and not event.is_pressed():
-					update_cursors(grid_pos)
+					update_cursors(mirrors)
 					return true
 				elif event is InputEventMouseButton:
 					if event.button_index == BUTTON_LEFT:
 						if event.is_pressed():
 							if ToolMode == ToolModes.INDIVIDUAL:
-								for mirror in mirrors:
+								for mirror in mirrors.values():
 									match Tool:
 										Tools.ADD:
 											VoxelObject.set_voxel(mirror, Primary if not typeof(Primary) == TYPE_NIL else Voxel.colored(PrimaryColor), false)
@@ -437,7 +459,7 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 								VoxelObject.update()
 							elif ToolMode == ToolModes.AREA:
 								cursors_started_area = true
-								update_cursors(grid_pos)
+								update_cursors(mirrors)
 						else:
 							cursors_started_area = false
 							cursors_are_selecting_area = false
