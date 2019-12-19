@@ -96,27 +96,12 @@ var Cursors := [
 	VoxelCursor.new(),
 	VoxelCursor.new(),
 	VoxelCursor.new()
-#	MeshInstance.new(),
-#	MeshInstance.new(),
-#	MeshInstance.new(),
-#	MeshInstance.new(),
-#	MeshInstance.new(),
-#	MeshInstance.new(),
-#	MeshInstance.new(),
-#	MeshInstance.new()
 ] setget set_cursors
 func set_cursors(cursor : Array) -> void: return   #   Cursors shouldn't be settable externally
 
 func setup_cursors() -> void:
 	for cursor in Cursors:
 		cursor.set_cursor_color(CursorColor)
-#		Cursors[cursor_index].set_name('VECursor_' + str(cursor_index))
-#		Cursors[cursor_index].mesh = CubeMesh.new()
-#		Cursors[cursor_index].scale = Vector3(Voxel.VoxelSize, Voxel.VoxelSize, Voxel.VoxelSize)
-#		Cursors[cursor_index].material_override = SpatialMaterial.new()
-#		Cursors[cursor_index].material_override.flags_transparent = true
-#		Cursors[cursor_index].material_override.vertex_color_use_as_albedo = true
-#		Cursors[cursor_index].material_override.albedo_color = CursorColor
 
 func set_cursors_parent(parent : Node) -> void:
 	unset_cursors_parent()
@@ -438,15 +423,6 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 				if event.button_mask == BUTTON_MASK_RIGHT: pass
 				elif event is InputEventMouseMotion and not event.is_pressed():
 					update_cursors(grid_pos)
-#					if CursorVisible:
-#						update_cursors(mirrors)
-#						for cursor_index in range(Cursors.size()):
-#							Cursors[cursor_index].visible = cursor_index < mirrors.size()
-#							if Cursors[cursor_index].visible:
-#								Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
-#								Cursors[cursor_index].set_cursor_position(mirrors[cursor_index])
-#								Cursors[cursor_index].translation = Voxel.pos_correct(Voxel.grid_to_pos(mirrors[cursor_index]))
-					
 					return true
 				elif event is InputEventMouseButton:
 					if event.button_index == BUTTON_LEFT:
