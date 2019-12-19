@@ -86,7 +86,7 @@ func get_primary() -> Dictionary:
 func get_rprimary():
 	return Voxel.colored(PrimaryColor) if typeof(Primary) == TYPE_NIL else Primary
 
-func set_primary(voxel, emit := true) -> void:
+func set_primary(voxel = null, emit := true) -> void:
 	Primary = voxel
 	if emit: emit_signal('set_primary', Primary)
 
@@ -108,7 +108,7 @@ func get_secondary() -> Dictionary:
 func get_rsecondary():
 	return Voxel.colored(SecondaryColor) if typeof(Secondary) == TYPE_NIL else Secondary
 
-func set_secondary(voxel, emit := true) -> void:
+func set_secondary(voxel = null, emit := true) -> void:
 	Secondary = voxel
 	if emit: emit_signal('set_secondary', Secondary)
 
