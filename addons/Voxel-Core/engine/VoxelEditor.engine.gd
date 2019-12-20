@@ -519,7 +519,6 @@ func use_tool(grids : Array) -> void:
 			undo_redo.add_undo_method(VoxelObject, 'update')
 		Tools.PICK:
 			var voxel = VoxelObject.get_rvoxel(Cursors[Vector3(0, 0, 0)].CursorPosition)
-			print(Cursors[Vector3(0, 0, 0)].CursorPosition)
 			if typeof(voxel) == TYPE_NIL: pass
 			elif typeof(voxel) == TYPE_DICTIONARY:
 				match ToolPalette:

@@ -14,41 +14,75 @@ onready var Voxels := get_node('HBoxContainer/VoxelSetView/Voxels')
 
 
 # Declarations
-var Selected := [] setget set_selected
-func set_selected(selected : Array) -> void: return   #   Selected shouldn't be settable externally
-
-signal selected(index)
-func add_selected(voxelview : VoxelViewClass, emit := true) -> void:
-	var index := Selected.find(null)
-	if index > -1:
-		Selected[index] = voxelview
-		voxelview.set_selected(true, false)
-		
-		if emit: emit_signal('selected', index)
-	else: voxelview.set_selected(false, false)
-
-signal unselected(index)
-func remove_selected(voxelview : VoxelViewClass, emit := true) -> void:
-	var index := Selected.find(voxelview)
-	if index > -1:
-		Selected[index] = null
-		voxelview.set_selected(false, false)
-		
-		if emit: emit_signal('unselected', index)
+var VoxelViews := {}
 
 
-signal set_select_limit(selectlimit)
-export(int) var SelectLimit := 0 setget set_select_limit
-func set_select_limit(selectlimit : int, emit := true) -> void:
-	SelectLimit = selectlimit
+signal set_primary(primary)
+export(String) var Primary setget set_primary
+func set_primary(primary, emit := true) -> void:
+	if not str(primary) == str(Primary):
+		set_primary_voxel_view(primary, false)
 	
-	for select_index in range(Selected.size()):
-		if select_index + 1 > SelectLimit:
-			Selected[select_index].set_selected(false, false)
-			Selected.remove(select_index)
-	Selected.resize(SelectLimit)
+	Primary = primary
 	
-	if emit: emit_signal('set_select_limit', SelectLimit)
+	if emit: emit_signal('set_primary', Primary)
+
+signal set_primary_color(color)
+export(Color) var PrimaryColor setget set_primary_color
+func set_primary_color(color : Color, emit := true) -> void:
+	PrimaryColor = color
+	
+	if emit: emit_signal('set_primary_color', PrimaryColor)
+
+func set_primary_voxel_view(id, emit := true) -> void:
+	var voxelview = VoxelViews.get(Primary)
+	if voxelview:
+		voxelview.set_selected_mode(VoxelViewClass.SelectedModes.NONE, false, false)
+		if is_connected('set_primary_color', voxelview, 'set_selected_color'):
+			disconnect('set_primary_color', voxelview, 'set_selected_color')
+	
+	voxelview = VoxelViews.get(id)
+	if voxelview:
+		voxelview.set_selected_color(PrimaryColor)
+		voxelview.set_selected_mode(VoxelViewClass.SelectedModes.PRIMARY, true, false)
+		if not is_connected('set_primary_color', voxelview, 'set_selected_color'):
+			connect('set_primary_color', voxelview, 'set_selected_color')
+	
+	if emit: set_primary(id)
+
+
+signal set_secondary(secondary)
+export(String) var Secondary setget set_secondary
+func set_secondary(secondary, emit := true) -> void:
+	if not str(secondary) == str(Secondary):
+		set_secondary_voxel_view(secondary, false)
+	
+	Secondary = secondary
+	
+	if emit: emit_signal('set_secondary', Secondary)
+
+signal set_secondary_color(color)
+export(Color) var SecondaryColor setget set_secondary_color
+func set_secondary_color(color : Color, emit := true) -> void:
+	SecondaryColor = color
+	
+	if emit: emit_signal('set_secondary_color', SecondaryColor)
+
+func set_secondary_voxel_view(id, emit := true) -> void:
+	var voxelview = VoxelViews.get(Secondary)
+	if voxelview:
+		voxelview.set_selected_mode(VoxelViewClass.SelectedModes.NONE, false, false)
+		if is_connected('set_secondary_color', voxelview, 'set_selected_color'):
+			disconnect('set_secondary_color', voxelview, 'set_selected_color')
+	
+	voxelview = VoxelViews.get(id)
+	if voxelview:
+		voxelview.set_selected_color(SecondaryColor)
+		voxelview.set_selected_mode(VoxelViewClass.SelectedModes.PRIMARY, true, false)
+		if not is_connected('set_secondary_color', voxelview, 'set_selected_color'):
+			connect('set_secondary_color', voxelview, 'set_selected_color')
+	
+	if emit: set_secondary(id)
 
 
 # VoxelSet being used, emits 'set_voxel_set'.
@@ -93,10 +127,6 @@ func set_voxel_set_path(voxelsetpath : NodePath, update := true, emit := true) -
 
 
 # Core
-#func _ready():
-#	set_voxel_set_path(VoxelSetPath, true, false)
-
-
 func _on_Search_text_changed(new_text : String) -> void:
 	if VoxelSet:
 		if new_text.empty():
@@ -120,7 +150,17 @@ func _update(voxels : Dictionary) -> void:
 		Voxels.remove_child(child)
 		child.queue_free()
 	
+	VoxelViews.clear()
 	for voxel_id in voxels:
-		var voxelview = VoxelView.instance()
-		voxelview.setup(voxel_id, voxels[voxel_id], self)
+		var voxelview := VoxelView.instance()
+		voxelview.set_name(str(voxel_id))
+		voxelview.setup(voxel_id, voxels[voxel_id])
+		
+		voxelview.connect('primary', self, 'set_primary_voxel_view')
+		voxelview.connect('secondary', self, 'set_secondary_voxel_view')
+		
 		Voxels.add_child(voxelview)
+		VoxelViews[voxel_id] = voxelview
+	
+	set_primary_voxel_view(Primary, false)
+	set_secondary_voxel_view(Secondary, false)

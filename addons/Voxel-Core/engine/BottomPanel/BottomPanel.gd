@@ -75,7 +75,6 @@ func setup(voxelcore) -> void:
 	voxelcore.VoxelEditor.connect('set_tool_mode', ToolMode, 'select')
 	ToolMode.connect('item_selected', voxelcore.VoxelEditor, 'set_tool_mode')
 	
-	
 	PrimaryColor.set_pick_color(voxelcore.VoxelEditor.PrimaryColor)
 	voxelcore.VoxelEditor.connect('set_primary_color', PrimaryColor, 'set_pick_color')
 	PrimaryColor.connect('color_changed', voxelcore.VoxelEditor, 'set_primary_color')
@@ -84,9 +83,23 @@ func setup(voxelcore) -> void:
 	voxelcore.VoxelEditor.connect('set_secondary_color', SecondaryColor, 'set_pick_color')
 	SecondaryColor.connect('color_changed', voxelcore.VoxelEditor, 'set_secondary_color')
 	
+	
+	VoxelSetView.set_primary(voxelcore.VoxelEditor.Primary)
+	VoxelSetView.connect('set_primary', voxelcore.VoxelEditor, 'set_primary', [false])
+	voxelcore.VoxelEditor.connect('set_primary', VoxelSetView, 'set_primary', [false])
+	VoxelSetView.set_primary_color(voxelcore.VoxelEditor.PrimaryColor)
+	voxelcore.VoxelEditor.connect('set_primary_color', VoxelSetView, 'set_primary_color')
+	
+	VoxelSetView.set_secondary(voxelcore.VoxelEditor.Secondary)
+	VoxelSetView.connect('set_secondary', voxelcore.VoxelEditor, 'set_secondary', [false])
+	voxelcore.VoxelEditor.connect('set_secondary', VoxelSetView, 'set_secondary', [false])
+	VoxelSetView.set_secondary_color(voxelcore.VoxelEditor.SecondaryColor)
+	voxelcore.VoxelEditor.connect('set_secondary_color', VoxelSetView, 'set_secondary_color')
+	
 	VoxelSetView.set_voxel_set(voxelcore.VoxelEditor.VoxelObject.VoxelSet)
 	voxelcore.VoxelEditor.VoxelObject.connect('set_voxel_set', VoxelSetView, 'set_voxel_set')
 	VoxelSetView.connect('set_voxel_set', voxelcore.VoxelEditor.VoxelObject, 'set_voxel_set')
+	
 	
 	MirrorX.set_pressed(voxelcore.VoxelEditor.MirrorX)
 	voxelcore.VoxelEditor.connect('set_mirror_x', MirrorX, 'set_pressed')
@@ -163,23 +176,6 @@ func _on_Commit_pressed():
 
 func _on_Cancel_pressed():
 	VoxelCore._cancel()
-
-
-func _on_VoxelSetView_selected(index):
-	match index:
-		0:
-			VoxelSetView.Selected[index].SelectedColor = VoxelCore.VoxelEditor.PrimaryColor
-			VoxelCore.VoxelEditor.set_primary(VoxelSetView.Selected[index].ID)
-		1:
-			VoxelSetView.Selected[index].SelectedColor = VoxelCore.VoxelEditor.SecondaryColor
-			VoxelCore.VoxelEditor.set_secondary(VoxelSetView.Selected[index].ID)
-
-func _on_VoxelSetView_unselected(index):
-	match index:
-		0:
-			VoxelCore.VoxelEditor.set_primary(null)
-		1:
-			VoxelCore.VoxelEditor.set_secondary(null)
 
 
 func _on_Godot_pressed():

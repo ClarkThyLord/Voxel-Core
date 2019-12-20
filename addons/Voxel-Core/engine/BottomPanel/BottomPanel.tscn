@@ -200,7 +200,7 @@ margin_bottom = 144.0
 [node name="VoxelSetView" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 10 )]
 margin_right = 338.0
 margin_bottom = 66.0
-SelectLimit = 2
+PrimaryColor = Color( 1, 1, 1, 0.1 )
 
 [node name="HSplitContainer" type="VSeparator" parent="PanelContainer/MarginContainer/HBoxContainer"]
 margin_left = 342.0
@@ -550,8 +550,8 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
 icon = ExtResource( 27 )
-[connection signal="selected" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView" to="." method="_on_VoxelSetView_selected"]
-[connection signal="unselected" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4/VoxelSetView" to="." method="_on_VoxelSetView_unselected"]
+[connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor" to="." method="_on_PrimaryColor_color_changed"]
+[connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor" to="." method="_on_SecondaryColor_color_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Cancel" to="." method="_on_Cancel_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/Reset" to="." method="_on_Reset_pressed"]

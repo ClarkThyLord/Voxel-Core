@@ -2,7 +2,7 @@
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelSetView.gd" type="Script" id=1]
 
-[node name="PanelContainer" type="PanelContainer"]
+[node name="VoxelSetView" type="PanelContainer"]
 margin_right = 108.0
 margin_bottom = 54.0
 size_flags_horizontal = 3
