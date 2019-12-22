@@ -325,7 +325,8 @@ margin_left = 26.0
 margin_right = 103.0
 margin_bottom = 24.0
 hint_tooltip = "Lock
-Toggle editing lock in editor."
+Toggle editing lock in editor.
+If active, VoxelObject selected won't be editable, else if inactive VoxelObject selected will be editable."
 pressed = true
 shortcut = SubResource( 12 )
 text = "Lock"
@@ -409,6 +410,7 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="General" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -431,6 +433,8 @@ size_flags_vertical = 3
 [node name="AutoSave" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer"]
 margin_right = 316.0
 margin_bottom = 24.0
+hint_tooltip = "AutoSave
+Saves scene whenever changes are committed to edited Voxel Object."
 pressed = true
 text = "  AutoSave"
 icon = ExtResource( 17 )
@@ -439,12 +443,13 @@ icon = ExtResource( 17 )
 margin_top = 28.0
 margin_right = 316.0
 margin_bottom = 50.0
+hint_tooltip = "Reset
+Reset VoxelEditor options to their default."
 text = "Reset"
 icon = ExtResource( 18 )
 align = 0
 
 [node name="Cursor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
-editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -466,22 +471,25 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CursorVisible" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer"]
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 24.0
+hint_tooltip = "Cursor Visible
+Set cursor visibility in editor."
 pressed = true
 text = "  Cursor Visible"
 icon = ExtResource( 20 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer"]
-editor/display_folded = true
 margin_top = 28.0
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 48.0
 
 [node name="CursorColor" type="ColorPickerButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer"]
 margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+hint_tooltip = "Cursor Color
+Choose cursor color for editor."
 size_flags_horizontal = 0
 color = Color( 1, 0, 0, 0.6 )
 
@@ -494,12 +502,16 @@ text = "   Cursor Color"
 
 [node name="CursorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer" instance=ExtResource( 21 )]
 margin_top = 52.0
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 74.0
+hint_tooltip = "Cursor Mode
+Change cursor mode in editor.
+
+Solid, cover of highlighted.
+Wired, outline of highlighted."
 Type = 0
 
 [node name="Floor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -520,29 +532,36 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FloorVisible" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 24.0
+hint_tooltip = "Floor Visible
+Set floor visibility in editor."
 pressed = true
 text = "  Floor Visible"
 icon = ExtResource( 20 )
 
 [node name="FloorConstant" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 28.0
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 52.0
+hint_tooltip = "Floor Constant
+Toggle whether floor is constant in editor.
+If active, floor will appear no matter what, else if inactive floor will appear only when selected VoxelObject is empty"
 pressed = true
 text = "  Floor Constant"
 icon = ExtResource( 20 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 56.0
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 76.0
 
 [node name="FloorColor" type="ColorPickerButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer"]
 margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+hint_tooltip = "Floor Color
+Choose floor color for editor."
 size_flags_horizontal = 0
 color = Color( 0.63, 0.13, 0.94, 1 )
 
@@ -555,12 +574,16 @@ text = "   Floor Color"
 
 [node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 23 )]
 margin_top = 80.0
-margin_right = 322.0
+margin_right = 316.0
 margin_bottom = 102.0
+hint_tooltip = "Floor Mode
+Change floor mode in editor.
+
+Solid, non see through floor.
+Wired, see through floor."
 size_flags_horizontal = 3
 
 [node name="About" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
-editor/display_folded = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -620,6 +643,7 @@ alignment = 1
 margin_top = 13.0
 margin_right = 86.0
 margin_bottom = 37.0
+hint_tooltip = "Go to asset page!"
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -637,6 +661,7 @@ alignment = 1
 margin_top = 13.0
 margin_right = 76.0
 margin_bottom = 37.0
+hint_tooltip = "Go to github  page!"
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
