@@ -242,6 +242,9 @@ margin_bottom = 74.0
 margin_right = 69.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+hint_tooltip = "(C)
+Primary Color
+Choose primary color for editor."
 size_flags_horizontal = 3
 color = Color( 1, 1, 1, 1 )
 
@@ -257,6 +260,9 @@ margin_left = 163.0
 margin_right = 232.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+hint_tooltip = "(C)
+Secondary Color
+Choose secondary color for editor."
 size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2"]

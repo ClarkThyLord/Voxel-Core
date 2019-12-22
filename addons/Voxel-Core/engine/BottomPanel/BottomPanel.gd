@@ -159,11 +159,11 @@ func setup(voxelcore) -> void:
 	FloorType.connect('item_selected', voxelcore.VoxelEditor, 'set_floor_type')
 
 
-func primary_color_popup_visible(visible := !PrimaryColor.get_popup().visible) -> void:
+func set_primary_color_popup_visible(visible := !PrimaryColor.get_popup().visible) -> void:
 	if visible: PrimaryColor.get_popup().popup_centered()
 	else: PrimaryColor.get_popup().hide()
 
-func secondary_color_popup_visible(visible := !SecondaryColor.get_popup().visible) -> void:
+func set_secondary_color_popup_visible(visible := !SecondaryColor.get_popup().visible) -> void:
 	if visible: SecondaryColor.get_popup().popup_centered()
 	else: SecondaryColor.get_popup().hide()
 
@@ -203,6 +203,12 @@ func _unhandled_key_input(event : InputEventKey):
 			else:
 				ToolPalette.set_palette((ToolPalette.Palette + 1) % VoxelEditorEngineClass.ToolPalettes.size())
 				get_tree().set_input_as_handled()
-		if event.scancode >= KEY_1 and event.scancode <= KEY_0 + VoxelEditorEngineClass.Tools.size():
+		elif event.scancode == KEY_C:
+			match ToolPalette.Palette:
+				VoxelEditorEngineClass.ToolPalettes.PRIMARY:
+					set_primary_color_popup_visible()
+				VoxelEditorEngineClass.ToolPalettes.SECONDARY:
+					set_secondary_color_popup_visible()
+		elif event.scancode >= KEY_1 and event.scancode <= KEY_0 + VoxelEditorEngineClass.Tools.size():
 			Tool.set_tool(event.scancode - 49)
 			get_tree().set_input_as_handled()
