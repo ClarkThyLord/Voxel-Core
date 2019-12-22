@@ -61,6 +61,8 @@ func setup(id, voxel : Dictionary) -> void:
 	ID = id
 	Represents = voxel
 	
+	hint_tooltip = 'ID: ' + str(id)
+	
 	get_node('CenterContainer/Color').color = Voxel.get_color(voxel)
 	get_node('CenterContainer/Texture').texture = Voxel.get_texture(voxel)
 
