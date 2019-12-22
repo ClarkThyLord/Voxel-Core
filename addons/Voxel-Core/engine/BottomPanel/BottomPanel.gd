@@ -188,3 +188,10 @@ func _on_GitHub_pressed():
 
 func _on_Reset_pressed():
 	VoxelCore.VoxelEditor.set_options()
+
+
+func _unhandled_key_input(event : InputEventKey):
+	if event.pressed and not event.echo:
+		if event.scancode >= KEY_1 and event.scancode <= KEY_0 + VoxelEditorEngineClass.Tools.size():
+			Tool.set_tool(event.scancode - 49)
+			get_tree().set_input_as_handled()

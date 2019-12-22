@@ -9,9 +9,12 @@ const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEdi
 
 
 # Declarations
-export(VoxelEditorEngineClass.ToolPalettes) var Palette := VoxelEditorEngineClass.ToolPalettes.PRIMARY setget set_mode, get_mode
-func get_mode() -> int: return selected
-func set_mode(mode : int, emit := true) -> void: _select_int(mode)
+export(VoxelEditorEngineClass.ToolPalettes) var Palette := VoxelEditorEngineClass.ToolPalettes.PRIMARY setget set_palette, get_palette
+func get_palette() -> int: return selected
+func set_palette(palette : int, emit := true) -> void:
+	Palette = palette
+	_select_int(palette)
+	if emit: emit_signal('item_selected', Palette)
 
 
 
@@ -21,9 +24,9 @@ func _ready() -> void:
 		clear()
 		var file := File.new()
 		var palettes := VoxelEditorEngineClass.ToolPalettes.keys()
-		for mode in range(len(palettes)):
-			add_item(palettes[mode].capitalize(), mode)
-			if file.file_exists('res://addons/Voxel-Core/assets/BottomPanel/' + palettes[mode].to_lower() + '.png'):
-				set_item_icon(mode, load('res://addons/Voxel-Core/assets/BottomPanel/' + palettes[mode].to_lower() + '.png'))
-	set_mode(Palette)
+		for palette in range(len(palettes)):
+			add_item(palettes[palette].capitalize(), palette)
+			if file.file_exists('res://addons/Voxel-Core/assets/BottomPanel/' + palettes[palette].to_lower() + '.png'):
+				set_item_icon(palette, load('res://addons/Voxel-Core/assets/BottomPanel/' + palettes[palette].to_lower() + '.png'))
+	set_palette(Palette)
 	set_button_icon(get_item_icon(Palette))

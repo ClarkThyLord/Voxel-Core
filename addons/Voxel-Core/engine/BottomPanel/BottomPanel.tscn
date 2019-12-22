@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
@@ -27,6 +27,68 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=25]
 [ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=26]
 [ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=27]
+
+[sub_resource type="InputEventKey" id=1]
+shift = true
+pressed = true
+scancode = 82
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[sub_resource type="InputEventKey" id=9]
+shift = true
+scancode = 48
+
+[sub_resource type="ShortCut" id=10]
+shortcut = SubResource( 9 )
+
+[sub_resource type="InputEventKey" id=3]
+shift = true
+pressed = true
+scancode = 88
+
+[sub_resource type="ShortCut" id=4]
+shortcut = SubResource( 3 )
+
+[sub_resource type="InputEventKey" id=5]
+shift = true
+pressed = true
+scancode = 89
+
+[sub_resource type="ShortCut" id=6]
+shortcut = SubResource( 5 )
+
+[sub_resource type="InputEventKey" id=7]
+shift = true
+pressed = true
+scancode = 90
+
+[sub_resource type="ShortCut" id=8]
+shortcut = SubResource( 7 )
+
+[sub_resource type="InputEventKey" id=11]
+pressed = true
+scancode = 32
+
+[sub_resource type="ShortCut" id=12]
+shortcut = SubResource( 11 )
+
+[sub_resource type="InputEventKey" id=13]
+shift = true
+pressed = true
+scancode = 16777221
+
+[sub_resource type="ShortCut" id=14]
+shortcut = SubResource( 13 )
+
+[sub_resource type="InputEventKey" id=15]
+shift = true
+pressed = true
+scancode = 16777220
+
+[sub_resource type="ShortCut" id=16]
+shortcut = SubResource( 15 )
 
 [node name="BottomPanel" type="ScrollContainer"]
 anchor_right = 1.0
@@ -85,6 +147,10 @@ alignment = 2
 margin_left = 196.0
 margin_right = 269.0
 margin_bottom = 24.0
+hint_tooltip = "Raw
+Toggle usage of raw data in editor.
+If active, will always handle dictionaries, else if inactive will handle VoxelSet IDs when possible."
+shortcut = SubResource( 2 )
 text = "Raw"
 icon = ExtResource( 3 )
 
@@ -114,22 +180,28 @@ margin_bottom = 22.0
 [node name="Tools" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 4 )]
 margin_right = 100.0
 margin_bottom = 22.0
+hint_tooltip = "(1-6)
+Tool
+Select tool being used in editor."
 size_flags_horizontal = 3
-Tool = 0
 
 [node name="ToolPalettesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 5 )]
 margin_left = 104.0
 margin_right = 212.0
 margin_bottom = 22.0
+hint_tooltip = "Palette
+Select palette being used in editor."
 size_flags_horizontal = 3
-Palette = 0
 
 [node name="ToolMode" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 6 )]
 margin_left = 216.0
 margin_right = 338.0
 margin_bottom = 22.0
+hint_tooltip = "(0)
+Mode
+Select mode being used in editor."
 size_flags_horizontal = 3
-Tool = 0
+shortcut = SubResource( 10 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
@@ -139,7 +211,10 @@ margin_bottom = 50.0
 [node name="MirrorX" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_right = 110.0
 margin_bottom = 24.0
+hint_tooltip = "Mirror X
+Toggle mirroring of actions over x-axis in editor."
 size_flags_horizontal = 3
+shortcut = SubResource( 4 )
 text = "Mirror X"
 icon = ExtResource( 7 )
 
@@ -147,7 +222,10 @@ icon = ExtResource( 7 )
 margin_left = 114.0
 margin_right = 224.0
 margin_bottom = 24.0
+hint_tooltip = "Mirror Y
+Toggle mirroring of actions over y-axis in editor."
 size_flags_horizontal = 3
+shortcut = SubResource( 6 )
 text = "Mirror Y"
 icon = ExtResource( 8 )
 
@@ -155,7 +233,10 @@ icon = ExtResource( 8 )
 margin_left = 228.0
 margin_right = 338.0
 margin_bottom = 24.0
+hint_tooltip = "Mirror Z
+Toggle mirroring of actions over z-axis in editor."
 size_flags_horizontal = 3
+shortcut = SubResource( 8 )
 text = "Mirror Z"
 icon = ExtResource( 9 )
 
@@ -200,7 +281,11 @@ margin_bottom = 144.0
 [node name="VoxelSetView" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 10 )]
 margin_right = 338.0
 margin_bottom = 66.0
+Primary = ""
 PrimaryColor = Color( 1, 1, 1, 0.1 )
+Secondary = ""
+SecondaryColor = Color( 0, 0, 0, 1 )
+VoxelSetPath = NodePath("")
 
 [node name="HSplitContainer" type="VSeparator" parent="PanelContainer/MarginContainer/HBoxContainer"]
 margin_left = 342.0
@@ -240,7 +325,10 @@ alignment = 2
 margin_left = 26.0
 margin_right = 103.0
 margin_bottom = 24.0
+hint_tooltip = "Lock
+Toggle editing lock in editor."
 pressed = true
+shortcut = SubResource( 12 )
 text = "Lock"
 icon = ExtResource( 12 )
 
@@ -248,7 +336,10 @@ icon = ExtResource( 12 )
 margin_left = 107.0
 margin_right = 188.0
 margin_bottom = 24.0
+hint_tooltip = "Commit
+Commit changes of editor."
 disabled = true
+shortcut = SubResource( 14 )
 text = "Commit"
 icon = ExtResource( 13 )
 
@@ -256,7 +347,10 @@ icon = ExtResource( 13 )
 margin_left = 192.0
 margin_right = 264.0
 margin_bottom = 24.0
+hint_tooltip = "Cancel
+Cancel changes of editor."
 disabled = true
+shortcut = SubResource( 16 )
 text = "Cancel"
 icon = ExtResource( 14 )
 
@@ -465,7 +559,6 @@ margin_top = 80.0
 margin_right = 322.0
 margin_bottom = 102.0
 size_flags_horizontal = 3
-Floor = 0
 
 [node name="About" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
 editor/display_folded = true

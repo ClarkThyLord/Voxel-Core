@@ -11,7 +11,10 @@ const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEdi
 # Declarations
 export(VoxelEditorEngineClass.Tools) var Tool := VoxelEditorEngineClass.Tools.PAN setget set_tool, get_tool
 func get_tool() -> int: return selected
-func set_tool(_tool : int, emit := true) -> void: _select_int(_tool)
+func set_tool(_tool : int, emit := true) -> void:
+	Tool = _tool
+	_select_int(_tool)
+	if emit: emit_signal('item_selected', Tool)
 
 
 
