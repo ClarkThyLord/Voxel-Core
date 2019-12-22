@@ -17,6 +17,7 @@ const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEdi
 var MainScene := ''
 var HandledObject : Object
 
+var awaiting_save := false
 signal set_auto_save(autosave)
 var AutoSave := true setget set_auto_save
 func set_auto_save(autosave := !AutoSave, emit := true) -> void:
@@ -75,9 +76,9 @@ func select_toggle() -> void:
 	select(not get_editor_interface().get_selection().get_selected_nodes().has(HandledObject), HandledObject)
 
 
-func _save(msg := 'SAVED VOXEL OBJECT CHANGES') -> void:
-	if VoxelEditor.Modified:
-		print(msg)
+func _save() -> void:
+	if AutoSave:
+		print('VoxelCore AUTOSAVE')
 		get_editor_interface().save_scene()
 
 
@@ -92,14 +93,16 @@ func _commit(hide := true) -> void:
 		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.commit()
 		if hide: set_bottom_panel_visible(false)
-		_save()
+		awaiting_save = true
+#		_save()
 
 func _cancel(hide := true) -> void:
 	if VoxelEditor.VoxelObject:
 		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.cancel()
 		if hide: set_bottom_panel_visible(false)
-		_save('CANCELED VOXEL OBJECT CHANGES')
+		awaiting_save = true
+#		_save('CANCELED VOXEL OBJECT CHANGES')
 
 
 func _enter_tree() -> void:
@@ -116,6 +119,8 @@ func _setup() -> void:
 	set_voxel_edit_undo_redo()
 	
 	
+#	if not VoxelEditor.is_connected('set_lock', self, 'handle_lock'):
+#		VoxelEditor.connect('set_lock', self, 'handle_lock')
 	if not VoxelEditor.is_connected('set_lock', self, 'select'):
 		VoxelEditor.connect('set_lock', self, 'select')
 	if not VoxelEditor.is_connected('script_changed', self, 'set_voxel_edit_undo_redo'):
@@ -148,12 +153,10 @@ func main_screen_changed(mainscene : String) -> void:
 	if mainscene == '3D' and voxel_type_of(HandledObject) >= VoxelTypes.VoxelObject:
 		_edit(HandledObject)
 	else:
+		var modified := VoxelEditor.Modified
 		if AutoSave: _commit()
 		else: _cancel()
-
-func handle_remove() -> void:
-	if AutoSave: _commit()
-	else: _cancel()
+		if modified and not VoxelEditor.Lock: _save()
 
 func handles(object : Object) -> bool:
 	HandledObject = object
@@ -174,14 +177,23 @@ func handles(object : Object) -> bool:
 		else: set_bottom_panel_visible(false)
 		return false
 
+func handle_lock(lock : bool) -> void:
+	if lock and VoxelEditor.Modified:
+		_save()
+
+func handle_remove() -> void:
+	if AutoSave: _commit()
+	else: _cancel()
+
 func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
 	return VoxelEditor.__input(event, camera)
 
 func _unhandled_key_input(event : InputEventKey) -> void:
-	if VoxelEditor.VoxelObject and event.pressed and not event.echo and not Input.is_key_pressed(KEY_SHIFT) and not Input.is_key_pressed(KEY_CONTROL) and not Input.is_key_pressed(KEY_ALT):
+	if VoxelEditor.VoxelObject and event.pressed and not event.echo and not Input.is_key_pressed(KEY_SHIFT) and not Input.is_key_pressed(KEY_CONTROL):
 		match event.scancode:
 			KEY_SPACE:
 				VoxelEditor.set_lock()
+				handle_lock(VoxelEditor.Lock)
 				get_tree().set_input_as_handled()
 			KEY_Z:
 				VoxelEditor.set_mirror_x()

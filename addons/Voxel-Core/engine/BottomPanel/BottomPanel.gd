@@ -117,10 +117,11 @@ func setup(voxelcore) -> void:
 	_on_VoxelObject_modified(voxelcore.VoxelEditor.Modified)
 	voxelcore.VoxelEditor.connect('modified', self, '_on_VoxelObject_modified')
 	
+	Lock.connect('toggled', voxelcore, 'select')
+	Lock.connect('toggled', voxelcore, 'handle_lock')
 	Lock.set_pressed(voxelcore.VoxelEditor.Lock)
 	voxelcore.VoxelEditor.connect('set_lock', Lock, 'set_pressed')
 	Lock.connect('toggled', voxelcore.VoxelEditor, 'set_lock')
-	Lock.connect('toggled', voxelcore, 'select')
 	
 	
 	AutoSave.set_pressed(voxelcore.AutoSave)
