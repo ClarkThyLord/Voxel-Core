@@ -173,10 +173,14 @@ func _on_VoxelObject_modified(modified : bool) -> void:
 	Cancel.disabled = !modified
 
 func _on_Commit_pressed():
-	VoxelCore._commit()
+	var modified = VoxelCore.VoxelEditor.Modified
+	VoxelCore._commit(true, true)
+	if modified: VoxelCore._save()
 
 func _on_Cancel_pressed():
-	VoxelCore._cancel()
+	var modified = VoxelCore.VoxelEditor.Modified
+	VoxelCore._cancel(true, true)
+	if modified: VoxelCore._save()
 
 
 func _on_Godot_pressed():
