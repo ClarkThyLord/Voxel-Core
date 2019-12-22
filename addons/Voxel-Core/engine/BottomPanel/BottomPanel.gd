@@ -192,6 +192,13 @@ func _on_Reset_pressed():
 
 func _unhandled_key_input(event : InputEventKey):
 	if event.pressed and not event.echo:
+		if event.scancode == KEY_QUOTELEFT and not Input.is_key_pressed(KEY_CONTROL) or not Input.is_key_pressed(KEY_ALT):
+			if Input.is_key_pressed(KEY_SHIFT):
+				ToolMode.set_mode((ToolMode.Mode + 1) % VoxelEditorEngineClass.ToolModes.size())
+				get_tree().set_input_as_handled()
+			else:
+				ToolPalette.set_palette((ToolPalette.Palette + 1) % VoxelEditorEngineClass.ToolPalettes.size())
+				get_tree().set_input_as_handled()
 		if event.scancode >= KEY_1 and event.scancode <= KEY_0 + VoxelEditorEngineClass.Tools.size():
 			Tool.set_tool(event.scancode - 49)
 			get_tree().set_input_as_handled()

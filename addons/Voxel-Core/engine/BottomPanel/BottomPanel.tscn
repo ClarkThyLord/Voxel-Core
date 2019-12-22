@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
@@ -35,13 +35,6 @@ scancode = 82
 
 [sub_resource type="ShortCut" id=2]
 shortcut = SubResource( 1 )
-
-[sub_resource type="InputEventKey" id=9]
-shift = true
-scancode = 48
-
-[sub_resource type="ShortCut" id=10]
-shortcut = SubResource( 9 )
 
 [sub_resource type="InputEventKey" id=3]
 shift = true
@@ -189,7 +182,8 @@ size_flags_horizontal = 3
 margin_left = 104.0
 margin_right = 212.0
 margin_bottom = 22.0
-hint_tooltip = "Palette
+hint_tooltip = "(`)
+Palette
 Select palette being used in editor."
 size_flags_horizontal = 3
 
@@ -197,11 +191,10 @@ size_flags_horizontal = 3
 margin_left = 216.0
 margin_right = 338.0
 margin_bottom = 22.0
-hint_tooltip = "(0)
+hint_tooltip = "(Shift+`)
 Mode
 Select mode being used in editor."
 size_flags_horizontal = 3
-shortcut = SubResource( 10 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
