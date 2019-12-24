@@ -15,7 +15,7 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/commit.png" type="Texture" id=13]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/cancel.png" type="Texture" id=14]
 [ext_resource path="res://addons/Voxel-Core/assets/VoxelSet.png" type="Texture" id=15]
-[ext_resource path="res://addons/Voxel-Core/assets/VoxelMesh.png" type="Texture" id=16]
+[ext_resource path="res://addons/Voxel-Core/assets/VoxelEditor.png" type="Texture" id=16]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/export.png" type="Texture" id=17]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/import.png" type="Texture" id=18]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/settings.png" type="Texture" id=19]
@@ -113,7 +113,6 @@ margin_right = 1010.0
 margin_bottom = 586.0
 
 [node name="Tools" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
-editor/display_folded = true
 margin_right = 338.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
@@ -375,8 +374,6 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="VoxelObject" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
-editor/display_folded = true
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -395,39 +392,34 @@ size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer"]
 margin_right = 316.0
-margin_bottom = 66.0
+margin_bottom = 74.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 309.0
-margin_bottom = 59.0
+margin_bottom = 67.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_right = 302.0
-margin_bottom = 16.0
-
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
-margin_right = 16.0
-margin_bottom = 16.0
-texture = ExtResource( 15 )
-
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 20.0
-margin_top = 1.0
-margin_right = 79.0
-margin_bottom = 15.0
-text = "VoxelSet:"
-
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_top = 20.0
+[node name="ToolButton" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
 margin_right = 302.0
 margin_bottom = 24.0
+focus_mode = 0
+shortcut_in_tooltip = false
+button_mask = 0
+enabled_focus_mode = 0
+text = "VoxelSet:"
+icon = ExtResource( 15 )
+align = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 302.0
-margin_bottom = 52.0
+margin_bottom = 32.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 36.0
+margin_right = 302.0
+margin_bottom = 60.0
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_top = 5.0
@@ -451,41 +443,36 @@ disabled = true
 text = "UV"
 
 [node name="PanelContainer2" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer"]
-margin_top = 70.0
+margin_top = 78.0
 margin_right = 316.0
-margin_bottom = 134.0
+margin_bottom = 150.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 309.0
-margin_bottom = 57.0
+margin_bottom = 65.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
-margin_right = 302.0
-margin_bottom = 16.0
-
-[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer2"]
-margin_right = 16.0
-margin_bottom = 16.0
-texture = ExtResource( 16 )
-
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer2"]
-margin_left = 20.0
-margin_top = 1.0
-margin_right = 66.0
-margin_bottom = 15.0
-text = "Voxels:"
-
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
-margin_top = 20.0
+[node name="ToolButton" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
 margin_right = 302.0
 margin_bottom = 24.0
+focus_mode = 0
+shortcut_in_tooltip = false
+button_mask = 0
+enabled_focus_mode = 0
+text = "Voxels:"
+icon = ExtResource( 16 )
+align = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
 margin_top = 28.0
 margin_right = 302.0
-margin_bottom = 50.0
+margin_bottom = 32.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
+margin_top = 36.0
+margin_right = 302.0
+margin_bottom = 58.0
 
 [node name="Export" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer"]
 margin_right = 149.0
@@ -650,6 +637,8 @@ margin_bottom = 20.0
 text = "Align"
 
 [node name="Import" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
+editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
