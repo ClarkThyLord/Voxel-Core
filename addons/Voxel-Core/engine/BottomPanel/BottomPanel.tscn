@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
@@ -14,19 +14,23 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/lock.png" type="Texture" id=12]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/commit.png" type="Texture" id=13]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/cancel.png" type="Texture" id=14]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/settings.png" type="Texture" id=15]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/general.png" type="Texture" id=16]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/autosave.png" type="Texture" id=17]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/reset.png" type="Texture" id=18]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/individual.png" type="Texture" id=19]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/visible.png" type="Texture" id=20]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/CursorTypesDropdown/CursorTypesDropdown.tscn" type="PackedScene" id=21]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/floor.png" type="Texture" id=22]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=23]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/about.png" type="Texture" id=24]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=25]
-[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=26]
-[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=27]
+[ext_resource path="res://addons/Voxel-Core/assets/VoxelSet.png" type="Texture" id=15]
+[ext_resource path="res://addons/Voxel-Core/assets/VoxelMesh.png" type="Texture" id=16]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/export.png" type="Texture" id=17]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/import.png" type="Texture" id=18]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/settings.png" type="Texture" id=19]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/general.png" type="Texture" id=20]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/autosave.png" type="Texture" id=21]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/reset.png" type="Texture" id=22]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/individual.png" type="Texture" id=23]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/visible.png" type="Texture" id=24]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/CursorTypesDropdown/CursorTypesDropdown.tscn" type="PackedScene" id=25]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/floor.png" type="Texture" id=26]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=27]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/about.png" type="Texture" id=28]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=29]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=30]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=31]
 
 [sub_resource type="InputEventKey" id=1]
 shift = true
@@ -109,6 +113,7 @@ margin_right = 1010.0
 margin_bottom = 586.0
 
 [node name="Tools" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
+editor/display_folded = true
 margin_right = 338.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
@@ -293,14 +298,14 @@ margin_bottom = 586.0
 
 [node name="Info" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
 margin_left = 350.0
-margin_right = 731.0
+margin_right = 674.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info"]
 editor/display_folded = true
-margin_right = 381.0
+margin_right = 324.0
 margin_bottom = 24.0
 
 [node name="ToolButton" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer"]
@@ -317,14 +322,14 @@ align = 0
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer"]
 editor/display_folded = true
 margin_left = 60.0
-margin_right = 381.0
+margin_right = 324.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 alignment = 2
 
 [node name="Lock" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer"]
-margin_left = 83.0
-margin_right = 160.0
+margin_left = 26.0
+margin_right = 103.0
 margin_bottom = 24.0
 hint_tooltip = "Lock
 Toggle editing lock in editor.
@@ -335,8 +340,8 @@ text = "Lock"
 icon = ExtResource( 12 )
 
 [node name="Commit" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer"]
-margin_left = 164.0
-margin_right = 245.0
+margin_left = 107.0
+margin_right = 188.0
 margin_bottom = 24.0
 hint_tooltip = "Commit
 Commit changes of editor."
@@ -346,8 +351,8 @@ text = "Commit"
 icon = ExtResource( 13 )
 
 [node name="Cancel" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer"]
-margin_left = 249.0
-margin_right = 321.0
+margin_left = 192.0
+margin_right = 264.0
 margin_bottom = 24.0
 hint_tooltip = "Cancel
 Cancel changes of editor."
@@ -358,12 +363,12 @@ icon = ExtResource( 14 )
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info"]
 margin_top = 28.0
-margin_right = 381.0
+margin_right = 324.0
 margin_bottom = 32.0
 
 [node name="TabContainer" type="TabContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info"]
 margin_top = 36.0
-margin_right = 381.0
+margin_right = 324.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -371,6 +376,7 @@ tab_align = 0
 
 [node name="VoxelObject" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
 editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -382,37 +388,46 @@ size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject"]
-margin_right = 373.0
+margin_right = 316.0
 margin_bottom = 514.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer"]
-editor/display_folded = true
-margin_right = 373.0
-margin_bottom = 64.0
+margin_right = 316.0
+margin_bottom = 66.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 366.0
-margin_bottom = 57.0
+margin_right = 309.0
+margin_bottom = 59.0
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_right = 359.0
-margin_bottom = 14.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
+margin_right = 302.0
+margin_bottom = 16.0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 15 )
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 20.0
+margin_top = 1.0
+margin_right = 79.0
+margin_bottom = 15.0
 text = "VoxelSet:"
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
-margin_top = 18.0
-margin_right = 359.0
-margin_bottom = 22.0
+margin_top = 20.0
+margin_right = 302.0
+margin_bottom = 24.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer"]
-editor/display_folded = true
-margin_top = 26.0
-margin_right = 359.0
-margin_bottom = 50.0
+margin_top = 28.0
+margin_right = 302.0
+margin_bottom = 52.0
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_top = 5.0
@@ -422,60 +437,76 @@ text = "Location:"
 
 [node name="LineEdit" type="LineEdit" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_left = 62.0
-margin_right = 309.0
+margin_right = 252.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 editable = false
 placeholder_text = "Unkown location..."
 
 [node name="CheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 313.0
-margin_right = 359.0
+margin_left = 256.0
+margin_right = 302.0
 margin_bottom = 24.0
 disabled = true
 text = "UV"
 
 [node name="PanelContainer2" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer"]
-editor/display_folded = true
-margin_top = 68.0
-margin_right = 373.0
-margin_bottom = 128.0
+margin_top = 70.0
+margin_right = 316.0
+margin_bottom = 134.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 366.0
-margin_bottom = 53.0
+margin_right = 309.0
+margin_bottom = 57.0
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
-margin_right = 359.0
-margin_bottom = 14.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
+margin_right = 302.0
+margin_bottom = 16.0
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer2"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 16 )
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer2"]
+margin_left = 20.0
+margin_top = 1.0
+margin_right = 66.0
+margin_bottom = 15.0
 text = "Voxels:"
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
-margin_top = 18.0
-margin_right = 359.0
-margin_bottom = 22.0
+margin_top = 20.0
+margin_right = 302.0
+margin_bottom = 24.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2"]
-margin_top = 26.0
-margin_right = 359.0
-margin_bottom = 46.0
+margin_top = 28.0
+margin_right = 302.0
+margin_bottom = 50.0
 
 [node name="Export" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer"]
-margin_right = 177.0
-margin_bottom = 20.0
+margin_right = 149.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Export"
+icon = ExtResource( 17 )
+align = 0
 
 [node name="Import" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer2/VBoxContainer2/HBoxContainer"]
-margin_left = 181.0
-margin_right = 359.0
-margin_bottom = 20.0
+margin_left = 153.0
+margin_right = 302.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Import"
+icon = ExtResource( 18 )
+align = 0
 
 [node name="Effects" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
+editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -485,28 +516,37 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
-editor/display_folded = true
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
+margin_right = 373.0
+margin_bottom = 28.0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer"]
 margin_right = 373.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/HBoxContainer3"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer/HBoxContainer3"]
 margin_left = 239.0
 margin_top = 3.0
 margin_right = 311.0
 margin_bottom = 17.0
 text = "Effect Area:"
 
-[node name="EffectArea" type="OptionButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/HBoxContainer3"]
+[node name="EffectArea" type="OptionButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer/HBoxContainer3"]
 margin_left = 315.0
 margin_right = 373.0
 margin_bottom = 20.0
 text = "All"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer"]
 margin_top = 24.0
+margin_right = 373.0
+margin_bottom = 28.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
+editor/display_folded = true
+margin_top = 32.0
 margin_right = 373.0
 margin_bottom = 514.0
 size_flags_horizontal = 3
@@ -515,7 +555,7 @@ scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer"]
 margin_right = 373.0
-margin_bottom = 490.0
+margin_bottom = 482.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -610,7 +650,6 @@ margin_bottom = 20.0
 text = "Align"
 
 [node name="Import" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -622,20 +661,20 @@ size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import"]
-margin_right = 373.0
+margin_right = 316.0
 margin_bottom = 514.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Texture" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer"]
 margin_right = 316.0
-margin_bottom = 60.0
+margin_bottom = 62.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 309.0
-margin_bottom = 53.0
+margin_bottom = 55.0
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture/VBoxContainer2"]
 margin_right = 302.0
@@ -650,26 +689,27 @@ margin_bottom = 22.0
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture/VBoxContainer2"]
 margin_top = 26.0
 margin_right = 302.0
-margin_bottom = 46.0
+margin_bottom = 48.0
 
 [node name="Texture" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture/VBoxContainer2/HBoxContainer"]
-margin_right = 218.0
-margin_bottom = 20.0
+margin_right = 200.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Choose texture.."
 align = 0
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture/VBoxContainer2/HBoxContainer"]
-margin_left = 222.0
-margin_right = 242.0
-margin_bottom = 20.0
+margin_left = 204.0
+margin_right = 224.0
+margin_bottom = 22.0
 rect_min_size = Vector2( 20, 20 )
 
 [node name="Import" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture/VBoxContainer2/HBoxContainer"]
-margin_left = 246.0
+margin_left = 228.0
 margin_right = 302.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 text = "Import"
+icon = ExtResource( 18 )
 
 [node name="Texture2" type="FileDialog" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Import/VBoxContainer/Texture/VBoxContainer2"]
 margin_top = 26.0
@@ -677,37 +717,37 @@ margin_right = 275.0
 margin_bottom = 156.0
 
 [node name="HSplitContainer2" type="VSeparator" parent="PanelContainer/MarginContainer/HBoxContainer"]
-margin_left = 735.0
-margin_right = 739.0
+margin_left = 678.0
+margin_right = 682.0
 margin_bottom = 586.0
 
 [node name="Settings" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
 editor/display_folded = true
-margin_left = 743.0
+margin_left = 686.0
 margin_right = 1010.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ToolButton" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings"]
-margin_right = 267.0
+margin_right = 324.0
 margin_bottom = 24.0
 focus_mode = 0
 shortcut_in_tooltip = false
 button_mask = 0
 enabled_focus_mode = 0
 text = "Settings"
-icon = ExtResource( 15 )
+icon = ExtResource( 19 )
 align = 0
 
 [node name="VSplitContainer" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Settings"]
 margin_top = 28.0
-margin_right = 267.0
+margin_right = 324.0
 margin_bottom = 32.0
 
 [node name="TabContainer" type="TabContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings"]
 margin_top = 36.0
-margin_right = 267.0
+margin_right = 324.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -724,32 +764,32 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 16 )
+"_tab_icon": ExtResource( 20 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General"]
-margin_right = 259.0
+margin_right = 316.0
 margin_bottom = 512.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="AutoSave" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer"]
-margin_right = 259.0
+margin_right = 316.0
 margin_bottom = 24.0
 hint_tooltip = "AutoSave
 Saves scene whenever changes are committed to edited Voxel Object."
 pressed = true
 text = "  AutoSave"
-icon = ExtResource( 17 )
+icon = ExtResource( 21 )
 
 [node name="Reset" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer"]
 margin_top = 28.0
-margin_right = 259.0
+margin_right = 316.0
 margin_bottom = 50.0
 hint_tooltip = "Reset
 Reset VoxelEditor options to their default."
 text = "Reset"
-icon = ExtResource( 18 )
+icon = ExtResource( 22 )
 align = 0
 
 [node name="Cursor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
@@ -764,11 +804,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 19 )
+"_tab_icon": ExtResource( 23 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor"]
-margin_right = 259.0
+margin_right = 316.0
 margin_bottom = 512.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -780,7 +820,7 @@ hint_tooltip = "Cursor Visible
 Set cursor visibility in editor."
 pressed = true
 text = "  Cursor Visible"
-icon = ExtResource( 20 )
+icon = ExtResource( 24 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer"]
 margin_top = 28.0
@@ -803,7 +843,7 @@ margin_right = 126.0
 margin_bottom = 17.0
 text = "   Cursor Color"
 
-[node name="CursorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer" instance=ExtResource( 21 )]
+[node name="CursorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer" instance=ExtResource( 25 )]
 margin_top = 52.0
 margin_right = 316.0
 margin_bottom = 74.0
@@ -826,11 +866,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 22 )
+"_tab_icon": ExtResource( 26 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
-margin_right = 259.0
+margin_right = 316.0
 margin_bottom = 512.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -842,7 +882,7 @@ hint_tooltip = "Floor Visible
 Set floor visibility in editor."
 pressed = true
 text = "  Floor Visible"
-icon = ExtResource( 20 )
+icon = ExtResource( 24 )
 
 [node name="FloorConstant" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 28.0
@@ -853,7 +893,7 @@ Toggle whether floor is constant in editor.
 If active, floor will appear no matter what, else if inactive floor will appear only when selected VoxelObject is empty"
 pressed = true
 text = "  Floor Constant"
-icon = ExtResource( 20 )
+icon = ExtResource( 24 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 56.0
@@ -876,7 +916,7 @@ margin_right = 117.0
 margin_bottom = 17.0
 text = "   Floor Color"
 
-[node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 23 )]
+[node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 27 )]
 margin_top = 80.0
 margin_right = 316.0
 margin_bottom = 102.0
@@ -899,7 +939,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 24 )
+"_tab_icon": ExtResource( 28 )
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About"]
@@ -918,7 +958,7 @@ margin_right = 50.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
-texture = ExtResource( 25 )
+texture = ExtResource( 29 )
 expand = true
 stretch_mode = 6
 
@@ -952,7 +992,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "AssetLib"
-icon = ExtResource( 26 )
+icon = ExtResource( 30 )
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer"]
 margin_left = 90.0
@@ -970,7 +1010,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
-icon = ExtResource( 27 )
+icon = ExtResource( 31 )
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor" to="." method="_on_PrimaryColor_color_changed"]
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor" to="." method="_on_SecondaryColor_color_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]

@@ -27,6 +27,8 @@ onready var Lock := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/
 onready var Commit := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit')
 onready var Cancel := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Cancel')
 
+onready var InfoTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer')
+
 
 onready var SettingsTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer')
 
@@ -50,6 +52,10 @@ var VoxelCore
 
 # Core
 func _ready():
+	InfoTabs.set_tab_icon(0, preload('res://addons/Voxel-Core/assets/VoxelEditor.png'))
+	InfoTabs.set_tab_icon(1, preload('res://addons/Voxel-Core/assets/BottomPanel/effects.png'))
+	InfoTabs.set_tab_icon(2, preload('res://addons/Voxel-Core/assets/BottomPanel/import.png'))
+	
 	SettingsTabs.set_tab_icon(0, preload('res://addons/Voxel-Core/assets/BottomPanel/general.png'))
 	SettingsTabs.set_tab_icon(1, preload('res://addons/Voxel-Core/assets/BottomPanel/individual.png'))
 	SettingsTabs.set_tab_icon(2, preload('res://addons/Voxel-Core/assets/BottomPanel/floor.png'))
