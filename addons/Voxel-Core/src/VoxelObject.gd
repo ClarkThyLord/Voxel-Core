@@ -15,7 +15,15 @@ const VoxelSetClass := preload('res://addons/Voxel-Core/src/VoxelSet.gd')
 
 
 # Declarations
+# If editing mode is active, then mesh will be generated naive and a temporary static body will be attached
 var editing := false setget set_editing
+# Set editing state, and update if necessary.
+# _editing   :   bool    -   value to set
+# update     :   bool    -   whether to call on 'update'
+#
+# Example:
+#   set_editing(false, true)
+#
 func set_editing(_editing := !editing, update := true) -> void:
 	editing = _editing
 	if update: update()
@@ -154,8 +162,8 @@ func _exit_tree():
 # Example:
 #   get_voxel(Vector(11, -34, 2))   ->   { ... }
 #
-func get_voxel(position : Vector3):
-	var voxel = get_rvoxel(position)
+func get_voxel(grid : Vector3):
+	var voxel = get_rvoxel(grid)
 	if not typeof(voxel) == TYPE_DICTIONARY: voxel = VoxelSet.get_voxel(voxel)
 	return voxel
 
@@ -167,7 +175,7 @@ func get_voxel(position : Vector3):
 #   get_rvoxel(Vector(11, -34, 2))   ->   3         #   NOTE: Returned ID representing Voxel data
 #   get_rvoxel(Vector(-7, 0, 96))    ->   { ... }   #   NOTE: Returned Voxel data
 #
-func get_rvoxel(position : Vector3): pass
+func get_rvoxel(grid : Vector3): pass
 
 # Returns a copy of all current Voxel data.
 # @returns    :   Dictionary<Vector3, int/String/Dictionary>   -   Dictionary containing grid positions, as keys, and Voxels, as values
@@ -187,7 +195,7 @@ func get_voxels() -> Dictionary: return {}
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxel's ID associated with it within VoxelSet
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
-func set_voxel(position : Vector3, voxel, update := true) -> void:
+func set_voxel(grid : Vector3, voxel, update := true) -> void:
 	if update: self.update()
 
 # Set raw Voxel's data at given grid position.
@@ -199,7 +207,7 @@ func set_voxel(position : Vector3, voxel, update := true) -> void:
 #   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present date(Dictionary) within the VoxelSet, not the ID associated with it within VoxelSet
 #   set_rvoxel(Vector(11, -34, 2), { ... })
 #
-func set_rvoxel(position : Vector3, voxel, update := true) -> void:
+func set_rvoxel(grid : Vector3, voxel, update := true) -> void:
 	if not typeof(voxel) == TYPE_DICTIONARY: voxel = VoxelSet.get_voxel(voxel)
 	if typeof(voxel) == TYPE_DICTIONARY: set_voxel(voxel, update)
 
@@ -212,8 +220,8 @@ func set_rvoxel(position : Vector3, voxel, update := true) -> void:
 #
 func set_voxels(voxels : Dictionary, update := true) -> void:
 	erase_voxels(false)
-	for voxel_position in voxels.keys():
-		set_voxel(voxel_position, voxels[voxel_position], false)
+	for voxel_grid in voxels.keys():
+		set_voxel(voxel_grid, voxels[voxel_grid], false)
 	if update: self.update()
 
 
@@ -224,7 +232,7 @@ func set_voxels(voxels : Dictionary, update := true) -> void:
 # Example:
 #   erase_voxel(Vector(11, -34, 2), false)
 #
-func erase_voxel(position : Vector3, update := true) -> void:
+func erase_voxel(grid : Vector3, update := true) -> void:
 	if update: self.update()
 
 # Erases all current Voxels.
@@ -234,12 +242,12 @@ func erase_voxel(position : Vector3, update := true) -> void:
 #   erase_voxels(false)
 #
 func erase_voxels(update := true) -> void:
-	for voxel_position in get_voxels().keys():
-		erase_voxel(voxel_position, false)
+	for voxel_grid in get_voxels().keys():
+		erase_voxel(voxel_grid, false)
 	if update: self.update()
 
 
-# Updates Mesh with current Voxel data, and StaticBody.
+# Updates Mesh with current Voxel data, and calls on 'update_static_body'.
 #
 # Example:
 #   update()
@@ -247,7 +255,7 @@ func erase_voxels(update := true) -> void:
 func update() -> void:
 	update_static_body()
 
-# Sets and updates trimesh StaticBody.
+# If editing or BuildStaticBody is active, then generates and attaches a trimesh StaticBody.
 #
 # Example:
 #   update_staticbody()
