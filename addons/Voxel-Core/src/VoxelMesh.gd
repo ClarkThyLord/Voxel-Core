@@ -11,7 +11,7 @@ class_name VoxelMesh, 'res://addons/Voxel-Core/assets/VoxelMesh.png'
 
 
 # Declarations
-var voxels setget set_voxels, get_voxels
+var voxels := {} setget set_voxels, get_voxels
 
 
 
@@ -27,18 +27,15 @@ func _save() -> void:
 	set_meta('voxels', voxels)
 
 
-func setup() -> void:
-	if typeof(voxels) == TYPE_NIL: voxels = {}
-
 func _init() -> void:
 	_load()
 func _ready() -> void:
 	set_voxel_set_path(VoxelSetPath, false, false)
 	_load()
-	setup()
 
 
-func get_rvoxel(grid : Vector3): return voxels.get(grid)
+func get_rvoxel(grid : Vector3):
+	return voxels.get(grid)
 
 func get_voxels() -> Dictionary:
 	return voxels.duplicate(true)
@@ -46,26 +43,22 @@ func get_voxels() -> Dictionary:
 
 func set_voxel(grid : Vector3, voxel, update := false) -> void:
 	voxels[grid] = voxel
-	
 	.set_voxel(grid, voxel, update)
 
 func set_voxels(_voxels : Dictionary, update := true) -> void:
 	erase_voxels(false)
 	
 	voxels = _voxels.duplicate(true)
-	
-	if update: update(false)
+	if update: update()
 
 
 func erase_voxel(grid : Vector3, update := false) -> void:
 	voxels.erase(grid)
-	
 	.erase_voxel(grid, update)
 
 func erase_voxels(update : bool = true) -> void:
 	voxels.clear()
-	
-	if update: update(false)
+	if update: update()
 
 
 # Helper function for quick face validation
@@ -191,8 +184,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 	return used
 
 
-func update(temp : bool = false, emit : bool = true) -> void:
-	if typeof(voxels) == TYPE_NIL: return;
+func update() -> void:
 	if voxels.size() > 0:
 		var ST = SurfaceTool.new()
 		ST.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -244,7 +236,7 @@ func update(temp : bool = false, emit : bool = true) -> void:
 				if is_valid_face(voxel_grid, Vector3.DOWN, downs): downs = greed(ST, voxel_grid, Vector3.DOWN, down_directions, downs)
 				if is_valid_face(voxel_grid, Vector3.BACK, backs): backs = greed(ST, voxel_grid, Vector3.BACK, back_directions, backs)
 				if is_valid_face(voxel_grid, Vector3.FORWARD, forwards): forwards = greed(ST, voxel_grid, Vector3.FORWARD, forward_directions, forwards)
-
+		
 		ST.index()
 		mesh = ST.commit()
 	else: mesh = null

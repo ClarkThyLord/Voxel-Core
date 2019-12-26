@@ -43,7 +43,7 @@ export(bool) var UVMapping := false setget set_uv_mapping
 func set_uv_mapping(uvmapping : bool, update := true, emit := true) -> void:
 	UVMapping = uvmapping
 	
-	if update: self.update()
+	if update and is_inside_tree(): self.update()
 	if emit: emit_signal('set_uv_mapping', uvmapping)
 
 
@@ -144,9 +144,6 @@ func _save() -> void:
 	set_meta('voxel_set_path', VoxelSetPath)
 
 
-# You'll need to call on the following before modifying an object without placing it within the scene tree
-func setup() -> void: pass
-
 # The following will initialize the object as needed
 # NOTE: Should be copied pasted to inheriting class
 #func _init() -> void: _load()
@@ -198,7 +195,7 @@ func get_voxels() -> Dictionary: return {}
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxel's ID associated with it within VoxelSet
 #   set_voxel(Vector(11, -34, 2), { ... })
 #
-func set_voxel(grid : Vector3, voxel, update := true) -> void:
+func set_voxel(grid : Vector3, voxel, update := false) -> void:
 	if update: self.update()
 
 # Set raw Voxel's data at given grid position.
@@ -235,7 +232,7 @@ func set_voxels(voxels : Dictionary, update := true) -> void:
 # Example:
 #   erase_voxel(Vector(11, -34, 2), false)
 #
-func erase_voxel(grid : Vector3, update := true) -> void:
+func erase_voxel(grid : Vector3, update := false) -> void:
 	if update: self.update()
 
 # Erases all current Voxels.
