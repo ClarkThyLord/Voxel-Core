@@ -206,7 +206,7 @@ static func set_color(voxel : Dictionary, color : Color) -> void:
 
 # Helper function for retrieving Color of given side from given Voxel
 # voxel      :   Dictionary   -   Voxel to get value from
-# side       :   Vector3      -   side to get value from
+# side       :   Vector3      -   normal of face to get from
 # @returns   :   Color        -   requested value, if found and valid; else, default value
 #
 # Example:
@@ -231,7 +231,7 @@ static func get_color_forward(voxel : Dictionary) -> Color: return get_color_sid
 
 # Helper function for setting Color for given side from given Voxel
 # voxel   :   Dictionary   -   Voxel to modify
-# side    :   Vector3      -   side to modify
+# side    :   Vector3      -   normal of face to set
 # color   :   Color        -   value to set to given Voxel side
 #
 # Example:
@@ -299,7 +299,7 @@ static func set_texture(voxel : Dictionary, texture_position : Vector2) -> void:
 
 # Helper function for retrieving 'texture', of given side, for given Voxel
 # voxel      :   Dictionary   -   Voxel to get value from
-# side       :   Vector3      -   side to retrieve value from
+# side       :   Vector3      -   normal of face to get from
 # @returns   :   Vector2      -   requested value, if found and is valid; else, default value
 #
 # Example:
@@ -324,7 +324,7 @@ static func get_texture_forward(voxel : Dictionary) -> Vector2: return get_textu
 
 # Helper function for setting 'texture position', to given side, for given Voxel
 # voxel              :   Dictionary   -   Voxel to modify
-# side               :   Vector3      -   side to set
+# side               :   Vector3      -   normal of face to set
 # texture_position   :   Vector2      -   value to set
 #
 # Example:
@@ -360,7 +360,6 @@ static func set_texture_forward(voxel : Dictionary, texture_position : Vector2) 
 # Example:
 #   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
 #   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
-#   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3), 0.13215)
 #
 static func generate_right(st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	st.add_normal(Vector3.RIGHT)
@@ -465,7 +464,7 @@ static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3,
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
 
 # The following is a helper functions used to generate Voxel
-# direction   :
+# direction   :   Vector3       -   Normal of face to generate
 # st          :   SurfaceTool   -   SurfaceTool to work with
 # voxel       :   Dictionary    -   Voxel data
 # g1          :   Vector3       -   Voxels starting vertex position, as a grid position
@@ -474,8 +473,8 @@ static func generate_forward(st : SurfaceTool, voxel : Dictionary, g1 : Vector3,
 # g4          :   Vector3       -   Voxels last vertex position, as a grid position; uses Voxels starting position if not given
 #
 # Example:
-#   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
-#   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
+#   generate_side(Vector3.LEFT, [SurfaceTool], [Voxel], Vector(1, 2))
+#   generate_side(Vector3.RIGHT, [SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
 #
 static func generate_side(direction : Vector3, st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null) -> void:
 	match direction:
@@ -487,7 +486,7 @@ static func generate_side(direction : Vector3, st : SurfaceTool, voxel : Diction
 		Vector3.FORWARD: generate_forward(st, voxel, g1, g2, g3, g4)
 
 
-# The following are helper functions used to generate Voxel faces
+# The following are helper functions used to generate a Voxel's face with UV mapping
 # st        :   SurfaceTool   -   SurfaceTool to work with
 # voxel     :   Dictionary    -   Voxel data
 # g1        :   Vector3       -   Voxels starting vertex position, as a grid position
@@ -651,8 +650,8 @@ static func generate_forward_with_uv(st : SurfaceTool, voxel : Dictionary, g1 : 
 	st.add_uv((uv_position + Vector2.RIGHT) * uvscale)
 	st.add_vertex(grid_to_pos((g3 if g3 != null else g1) + Vector3.UP))
 
-# The following is a helper functions used to generate Voxel
-# direction   :
+# The following is a helper functions used to generate a Voxel's face with UV mapping
+# direction   :   Vector3       -   Normal of face to generate
 # st          :   SurfaceTool   -   SurfaceTool to work with
 # voxel       :   Dictionary    -   Voxel data
 # g1          :   Vector3       -   Voxels starting vertex position, as a grid position
@@ -662,8 +661,9 @@ static func generate_forward_with_uv(st : SurfaceTool, voxel : Dictionary, g1 : 
 # uvscale     :   float         -   UV scale
 #
 # Example:
-#   generate_up([SurfaceTool], [Voxel], Vector(1, 2))
-#   generate_right([SurfaceTool], [Voxel], Vector(1,2), Vector(3,2), null, Vector(4, -3))
+#   generate_side_with_uv(Vector3.LEFT, [SurfaceTool], { ... }, Vector(1, 2))
+#   generate_side_with_uv(Vector3.UP, [SurfaceTool], { ... }, Vector(1,2), Vector(3,2), null, Vector(4, -3))
+#   generate_side_with_uv(Vector3.DOWN, [SurfaceTool], { ... }, Vector(1,2), Vector(3,2), null, Vector(4, -3), 0.23)
 #
 static func generate_side_with_uv(direction : Vector3, st : SurfaceTool, voxel : Dictionary, g1 : Vector3, g2 = null, g3 = null, g4 = null, uvscale : float = 1) -> void:
 	match direction:
@@ -675,6 +675,17 @@ static func generate_side_with_uv(direction : Vector3, st : SurfaceTool, voxel :
 		Vector3.FORWARD: generate_forward_with_uv(st, voxel, g1, g2, g3, g4, uvscale)
 
 
+# Returns an Array of all position matching target relative to starting position.
+# position   :   Vector3                                      -   Starting position
+# target     :   int/String/Color                             -   Target searching for
+# voxels     :   Dictionary<Vector3, int/String/Dictionary>   -   Voxels to search within NOTE: Voxels will be modified!
+# @returns   :   Array<Vector3>                               -   Array containing all grid positions of matching Voxels
+#
+# Example:
+#   flood_select(Vector3(-1, 2, 2), 33, { ... }) -> [ ... ]
+#   flood_select(Vector3(-1, 2, 2), "black", { ... }) -> [ ... ]
+#   flood_select(Vector3(-1, 2, 2), Color(1, 0, 0), { ... }) -> [ ... ]
+#
 static func flood_select(position : Vector3, target, voxels : Dictionary) -> Array:
 	var selected := []
 	var voxel = voxels.get(position)
