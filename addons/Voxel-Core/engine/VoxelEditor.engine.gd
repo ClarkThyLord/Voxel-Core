@@ -188,11 +188,11 @@ func update_cursors(mirrors : Dictionary) -> void:
 			if cursors_are_selecting_area:
 				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
 				continue
-			elif cursors_started_area:
-				cursors_are_selecting_area = true
 		
 		Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
 		Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
+	if cursors_started_area:
+		cursors_are_selecting_area = true
 
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible
