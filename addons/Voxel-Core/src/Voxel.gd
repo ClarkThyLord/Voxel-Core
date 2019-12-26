@@ -673,3 +673,19 @@ static func generate_side_with_uv(direction : Vector3, st : SurfaceTool, voxel :
 		Vector3.DOWN: generate_down_with_uv(st, voxel, g1, g2, g3, g4, uvscale)
 		Vector3.BACK: generate_back_with_uv(st, voxel, g1, g2, g3, g4, uvscale)
 		Vector3.FORWARD: generate_forward_with_uv(st, voxel, g1, g2, g3, g4, uvscale)
+
+
+static func flood_select(position : Vector3, target, voxels : Dictionary) -> Array:
+	var selected := []
+	var voxel = voxels.get(position)
+	if (typeof(voxel) == TYPE_DICTIONARY and get_color(voxel) == target) if (not typeof(voxel) == TYPE_NIL and typeof(target) == TYPE_COLOR) else (str(voxel) == str(target)):
+		selected.append(position)
+		voxels.erase(position)
+		
+		selected += flood_select(position + Vector3.RIGHT, target, voxels)
+		selected += flood_select(position + Vector3.LEFT, target, voxels)
+		selected += flood_select(position + Vector3.UP, target, voxels)
+		selected += flood_select(position + Vector3.DOWN, target, voxels)
+		selected += flood_select(position + Vector3.BACK, target, voxels)
+		selected += flood_select(position + Vector3.FORWARD, target, voxels)
+	return selected
