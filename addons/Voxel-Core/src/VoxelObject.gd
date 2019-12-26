@@ -93,7 +93,7 @@ func set_mesh_type(meshtype : int, update := true, emit := true) -> void:
 
 # VoxelSet being used, emits 'set_voxel_set'.
 # voxelset   :   bool   -   value to set
-# update     :   bool   -   call on update
+# update     :   bool   -   whether to whether to call on update
 # emit       :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
@@ -119,7 +119,7 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 
 # NodePath to VoxelSet being used, emits 'set_voxel_set'.
 # voxelsetpath   :   bool   -   value to set
-# update         :   bool   -   call on update
+# update         :   bool   -   whether to whether to call on update
 # emit           :   bool   -   true, emit signal; false, don't emit signal
 #
 # Example:
@@ -189,7 +189,7 @@ func get_voxels() -> Dictionary: return {}
 # Set Voxel at given grid position.
 # grid     :   Vector3                 -   grid position to set Voxel to 
 # voxel    :   int/String/Dictionary   -   Voxel to be set
-# update   :   bool                    -   call on update
+# update   :   bool                    -   whether to call call on update
 #
 # Example:
 #   set_voxel(Vector(11, -34, 2), 3)         #   NOTE: This would store the Voxel's ID associated with it within VoxelSet
@@ -201,7 +201,7 @@ func set_voxel(grid : Vector3, voxel, update := false) -> void:
 # Set raw Voxel's data at given grid position.
 # grid     :   Vector3                 -   grid position to set Voxel to 
 # voxel    :   int/String/Dictionary   -   Voxel to be set
-# update   :   bool                    -   call on update
+# update   :   bool                    -   whether to call on update
 #
 # Example:
 #   set_rvoxel(Vector(11, -34, 2), 3)         #   NOTE: This would store a copy of the Voxels present date(Dictionary) within the VoxelSet, not the ID associated with it within VoxelSet
@@ -213,7 +213,7 @@ func set_rvoxel(grid : Vector3, voxel, update := true) -> void:
 
 # Erases current Voxel data, then sets given Voxel data.
 # voxels   :   Dictionary<Vector3, Voxel>   -   Voxels to set
-# update   :   bool                         -   call on update
+# update   :   bool                         -   whether to call on update
 #
 # Example:
 #   set_voxels({ ... }, false)
@@ -227,7 +227,7 @@ func set_voxels(voxels : Dictionary, update := true) -> void:
 
 # Erase Voxel at given grid position.
 # grid     :   Vector3   -   grid position to erase Voxel from
-# update   :   bool      -   call on update
+# update   :   bool      -   whether to call on update
 #
 # Example:
 #   erase_voxel(Vector(11, -34, 2), false)
@@ -236,7 +236,7 @@ func erase_voxel(grid : Vector3, update := false) -> void:
 	if update: self.update()
 
 # Erases all current Voxels.
-# update   :   bool   -   call on update
+# update   :   bool   -   whether to call on update
 #
 # Example:
 #   erase_voxels(false)
