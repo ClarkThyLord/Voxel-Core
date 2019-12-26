@@ -108,7 +108,7 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 		else: return
 	
 	if VoxelSet and VoxelSet.is_connected('updated', self, 'update'):
-		VoxelSet.disconnect('update', self, 'update')
+		VoxelSet.disconnect('updated', self, 'update')
 	VoxelSet = voxelset
 	if not VoxelSet.is_connected('updated', self, 'update'):
 		VoxelSet.connect('updated', self, 'update')
@@ -143,6 +143,9 @@ func _load() -> void:
 func _save() -> void:
 	set_meta('voxel_set_path', VoxelSetPath)
 
+
+# You'll need to call on the following before modifying an object without placing it within the scene tree
+func setup() -> void: pass
 
 # The following will initialize the object as needed
 # NOTE: Should be copied pasted to inheriting class

@@ -1,8 +1,9 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/Voxel-Core/Tileset.tscn" type="PackedScene" id=1]
+[ext_resource path="res://examples/UV/Minecraft/Tileset/Tileset.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/examples/UV/Minecraft/Tileset/Tileset.png" type="Texture" id=2]
 [ext_resource path="res://addons/Voxel-Core/src/VoxelMesh.gd" type="Script" id=3]
+
 
 [sub_resource type="SpatialMaterial" id=1]
 vertex_color_use_as_albedo = true

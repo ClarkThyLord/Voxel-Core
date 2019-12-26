@@ -11,7 +11,7 @@ class_name VoxelMesh, 'res://addons/Voxel-Core/assets/VoxelMesh.png'
 
 
 # Declarations
-var voxels : Dictionary = {} setget set_voxels, get_voxels
+var voxels setget set_voxels, get_voxels
 
 
 
@@ -27,10 +27,15 @@ func _save() -> void:
 	set_meta('voxels', voxels)
 
 
-func _init() -> void: _load()
-func _ready() -> void:
-	set_voxel_set_path(VoxelSetPath, false)
+func setup() -> void:
+	if typeof(voxels) == TYPE_NIL: voxels = {}
+
+func _init() -> void:
 	_load()
+func _ready() -> void:
+	set_voxel_set_path(VoxelSetPath, false, false)
+	_load()
+	setup()
 
 
 func get_rvoxel(grid : Vector3): return voxels.get(grid)
@@ -187,7 +192,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 
 
 func update(temp : bool = false, emit : bool = true) -> void:
-	if voxels == null: return;
+	if typeof(voxels) == TYPE_NIL: return;
 	if voxels.size() > 0:
 		var ST = SurfaceTool.new()
 		ST.begin(Mesh.PRIMITIVE_TRIANGLES)
