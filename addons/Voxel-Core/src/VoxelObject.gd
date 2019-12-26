@@ -61,7 +61,7 @@ export(bool) var BuildStaticBody := false setget set_build_static_body
 func set_build_static_body(buildstaticbody : bool, update := true, emit := true) -> void:
 	BuildStaticBody = buildstaticbody
 	
-	if update: update_static_body()
+	if update and is_inside_tree(): update_static_body()
 	if emit: emit_signal('set_build_static_body', buildstaticbody)
 
 
@@ -87,7 +87,7 @@ export(MeshTypes) var MeshType := MeshTypes.NAIVE setget set_mesh_type
 func set_mesh_type(meshtype : int, update := true, emit := true) -> void:
 	MeshType = meshtype
 	
-	if update: self.update()
+	if update and is_inside_tree(): self.update()
 	if emit: emit_signal('set_mesh_type', meshtype)
 
 
@@ -113,7 +113,7 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 	if not VoxelSet.is_connected('updated', self, 'update'):
 		VoxelSet.connect('updated', self, 'update')
 	
-	if update: self.update()
+	if update and is_inside_tree(): self.update()
 	if emit: emit_signal('set_voxel_set', VoxelSet)
 
 

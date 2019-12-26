@@ -586,7 +586,7 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 		if event is InputEventMouse and Tool > Tools.PAN:
 			var hit = raycast_for_voxelobject(event, camera)
 			if hit:
-				if not Tool == Tools.ADD: hit.normal *= -1
+				if not Tool == Tools.ADD or Input.is_key_pressed(KEY_SHIFT): hit.normal *= -1
 				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
 				var grid_pos = Voxel.abs_to_grid(VoxelObject.to_local(hit.position))
 				var mirrors = grid_to_mirrors(grid_pos)
