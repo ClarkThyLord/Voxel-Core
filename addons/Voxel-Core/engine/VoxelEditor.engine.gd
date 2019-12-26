@@ -35,7 +35,14 @@ func set_rawdata(rawdata := !RawData, emit := true) -> void:
 
 
 signal set_tool(_tool)
-enum Tools { PAN, SELECT, ADD, SUB, PICK, FILL }
+enum Tools {
+	PAN,
+	# TODO SELECT,
+	ADD,
+	SUB,
+	PICK,
+	FILL
+}
 export(Tools) var Tool := Tools.PAN setget set_tool
 func set_tool(_tool : int, emit := true) -> void:
 	Tool = _tool
@@ -492,11 +499,20 @@ func use_tool(grids : Array) -> void:
 			if RawData:
 				for grid in grids:
 					undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_palette(), false)
-					undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+					var voxel = VoxelObject.get_rvoxel(grid)
+					if typeof(voxel) == TYPE_NIL:
+						undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+					else:
+						undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
 			else:
 				for grid in grids:
 					undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_rpalette(), false)
-					undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+#					undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+					var voxel = VoxelObject.get_rvoxel(grid)
+					if typeof(voxel) == TYPE_NIL:
+						undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+					else:
+						undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
 			
 			undo_redo.add_do_method(VoxelObject, 'update')
 			undo_redo.add_undo_method(VoxelObject, 'update')

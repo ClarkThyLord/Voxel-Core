@@ -113,6 +113,7 @@ margin_right = 1010.0
 margin_bottom = 586.0
 
 [node name="Tools" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
+editor/display_folded = true
 margin_right = 338.0
 margin_bottom = 586.0
 size_flags_horizontal = 3
@@ -433,7 +434,7 @@ margin_right = 252.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 editable = false
-placeholder_text = "Unkown location..."
+placeholder_text = "Unknown location..."
 
 [node name="CheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_left = 256.0
