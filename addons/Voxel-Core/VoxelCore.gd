@@ -227,7 +227,8 @@ func main_screen_changed(mainscene : String) -> void:
 		if modified and not VoxelEditor.Lock: _save()
 
 # Handles objects selected in-editor.
-# object   :   Object   -   Object selected in-editor.
+# object     :   Object   -   Object selected in-editor.
+# @returns   :   bool     -   whether selected object is being handled.
 #
 # Example:
 #   handle([Object])
