@@ -101,9 +101,9 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 		if has_node('/root/VoxelSet'): voxelset = get_node('/root/CoreVoxelSet')
 		else: return
 	
-	if VoxelSet is VoxelSetClass and VoxelSet.is_connected('updated', self, 'update'): VoxelSet.disconnect('update', self, 'update')
+	if VoxelSet is VoxelSetClass and VoxelSet.is_connected('updated', self, 'update'): VoxelSet.disconnect('update', self, '_update')
 	VoxelSet = voxelset
-	if not VoxelSet.is_connected('updated', self, 'update'): VoxelSet.connect('updated', self, 'update')
+	if not VoxelSet.is_connected('updated', self, 'update'): VoxelSet.connect('updated', self, '_update')
 	
 	if update: _update(VoxelSet.Voxels)
 	if emit: emit_signal('set_voxel_set', VoxelSet)
@@ -154,7 +154,7 @@ func _update(voxels : Dictionary) -> void:
 	for voxel_id in voxels:
 		var voxelview := VoxelView.instance()
 		voxelview.set_name(str(voxel_id))
-		voxelview.setup(voxel_id, voxels[voxel_id])
+		voxelview.setup(self, voxel_id, voxels[voxel_id])
 		
 		voxelview.connect('primary', self, 'set_primary_voxel_view')
 		voxelview.connect('secondary', self, 'set_secondary_voxel_view')

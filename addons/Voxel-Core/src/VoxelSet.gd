@@ -12,6 +12,7 @@ extends Node
 
 
 # Refrences
+# Sorts an array, strings are not sorted and placed at the begging
 class MyCustomSorter:
 	static func sort(a, b):
 		if typeof(a) == TYPE_STRING:

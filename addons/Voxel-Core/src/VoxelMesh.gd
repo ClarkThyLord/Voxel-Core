@@ -63,7 +63,6 @@ func erase_voxels(update : bool = true) -> void:
 	if update: update(false)
 
 
-
 # Helper function for quick face validation
 # grid        :    Vector3   -   face location
 # direction   :    Vector3   -   face direction
@@ -185,7 +184,6 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 	else: Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4)
 	
 	return used
-
 
 
 func update(temp : bool = false, emit : bool = true) -> void:

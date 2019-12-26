@@ -268,7 +268,7 @@ static func set_color_forward(voxel : Dictionary, color : Color) -> void: set_co
 #   textured([Vector2])                                                    ->   { 'color': Color(0, 0, 0), 'texture': [Vector2] }
 #   textured([Vector2], { Vector.UP : Vector2(0, 3) }, [Color], { ... })   ->   { 'data': { ... }, 'color': [Color], 'texture': [Vector2], 'textures': { Vector.UP : Vector2(0, 3) } }
 #
-static func textured(texture_position : Vector2, textures : Dictionary, color : Color = Color(), colors : Dictionary = {}, data : Dictionary = {}) -> Dictionary:
+static func textured(texture_position : Vector2, textures : Dictionary = {}, color : Color = Color.white, colors : Dictionary = {}, data : Dictionary = {}) -> Dictionary:
 	var textured = colored(color, colors, data)
 	
 	set_texture(textured, texture_position)

@@ -8,6 +8,7 @@ var ID setget set_id
 func set_id(id) -> void: return                           #   ID shouldn't be settable directly
 var Represents : Dictionary setget set_represents
 func set_represents(id : Dictionary) -> void: return      #   Represents shouldn't be settable directly
+var VoxelSetView
 
 
 export(Color) var NormalColor := Color(0, 0, 0, 0.1) setget set_normal_color
@@ -57,14 +58,29 @@ func set_selected_mode(selectedmode = SelectedModes.NONE, selected := !Selected,
 # Core
 func _init(): color = NormalColor
 
-func setup(id, voxel : Dictionary) -> void:
+func setup(voxelsetview, id, voxel : Dictionary) -> void:
 	ID = id
 	Represents = voxel
+	VoxelSetView = voxelsetview
 	
 	hint_tooltip = 'ID: ' + str(id)
 	
 	get_node('CenterContainer/Color').color = Voxel.get_color(voxel)
-	get_node('CenterContainer/Texture').texture = Voxel.get_texture(voxel)
+	
+	var texture_pos := Voxel.get_texture(voxel)
+	var voxelset_texture = voxelsetview.VoxelSet.AlbedoTexture
+	if voxelset_texture and not texture_pos == null:
+		voxelset_texture = voxelset_texture.get_data()
+		
+		var img_tex := ImageTexture.new()
+		var rec := Rect2(Vector2.ONE * texture_pos * voxelsetview.VoxelSet.TileSize, Vector2.ONE * voxelsetview.VoxelSet.TileSize)
+		var tile_tex = voxelset_texture.get_rect(rec)
+
+		tile_tex.resize(30, 30)
+
+		img_tex.create_from_image(tile_tex)
+
+		get_node('CenterContainer/Texture').texture = img_tex
 
 
 func _update():
