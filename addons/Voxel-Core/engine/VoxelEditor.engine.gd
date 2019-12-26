@@ -552,6 +552,34 @@ func use_tool(grids : Array) -> void:
 					ToolPalettes.SECONDARY:
 						undo_redo.add_do_method(self, 'set_secondary', voxel)
 						undo_redo.add_undo_method(self, 'set_secondary', Primary)
+		Tools.FILL:
+			var voxel = VoxelObject.get_rvoxel(Cursors[Vector3(0, 0, 0)].CursorPosition)
+			if typeof(voxel) == TYPE_NIL: pass
+			else:
+				set_modified(true)
+				for cursor_index in grid_to_mirrors(Cursors[Vector3(0, 0, 0)].CursorPosition):
+					voxel = VoxelObject.get_rvoxel(Cursors[cursor_index].CursorPosition)
+					grids = Voxel.flood_select(Cursors[cursor_index].CursorPosition, Voxel.get_color(voxel) if typeof(voxel) == TYPE_DICTIONARY else voxel, VoxelObject.get_voxels())
+					if RawData:
+						for grid in grids:
+							undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_palette(), false)
+							var _voxel = VoxelObject.get_rvoxel(grid)
+							if typeof(_voxel) == TYPE_NIL:
+								undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+							else:
+								undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, _voxel, false)
+					else:
+						for grid in grids:
+							undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, get_rpalette(), false)
+		#					undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+							var _voxel = VoxelObject.get_rvoxel(grid)
+							if typeof(_voxel) == TYPE_NIL:
+								undo_redo.add_undo_method(VoxelObject, 'erase_voxel', grid, false)
+							else:
+								undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, _voxel, false)
+			
+			undo_redo.add_do_method(VoxelObject, 'update')
+			undo_redo.add_undo_method(VoxelObject, 'update')
 	undo_redo.commit_action()
 
 #func tool_add(grids : Array) -> void:
