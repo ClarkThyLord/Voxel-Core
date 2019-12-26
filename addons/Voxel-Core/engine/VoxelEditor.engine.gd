@@ -80,7 +80,7 @@ func set_tool_mode(toolmode : int, emit := true) -> void:
 	ToolMode = toolmode
 	if emit: emit_signal('set_tool_mode', ToolMode)
 
-# TODO connect to VoxelSetView
+
 signal set_primary(voxel)
 var Primary = null setget set_primary
 func get_primary() -> Dictionary:

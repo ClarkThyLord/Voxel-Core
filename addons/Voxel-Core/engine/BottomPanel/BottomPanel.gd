@@ -29,6 +29,13 @@ onready var Cancel := get_node('PanelContainer/MarginContainer/HBoxContainer/Inf
 
 onready var InfoTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer')
 
+onready var VoxelSetPath := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer/HBoxContainer/VoxelSetPath')
+onready var VoxelSetUV := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer/HBoxContainer/VoxelSetUV')
+
+onready var VoxelsFile := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/FileDialog')
+onready var ExportVoxels := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export')
+onready var ImportVoxels := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import')
+
 
 onready var SettingsTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer')
 
@@ -187,6 +194,13 @@ func _on_Cancel_pressed():
 	var modified = VoxelCore.VoxelEditor.Modified
 	VoxelCore._cancel(true, true)
 	if modified: VoxelCore._save()
+
+
+func _on_VoxelsExport_pressed():
+	VoxelsFile.popup_centered()
+
+func _on_VoxelsImport_pressed():
+	VoxelsFile.popup_centered()
 
 
 func _on_Godot_pressed():
