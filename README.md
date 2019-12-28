@@ -22,7 +22,7 @@
 ---
 
 # About
-Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made with GDScript, it was created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly/projects), offering various VoxelObjects used to display voxels, as well as a in-engine editor.
+Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made with GDScript, it was created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly), offering various VoxelObjects used to display voxels, as well as a in-engine editor.
 
 # Getting Voxel-Core
 Since Voxel-Core is not yet in the Godot Asset Library, you must download / clone this repository.
