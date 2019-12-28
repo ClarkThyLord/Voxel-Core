@@ -164,7 +164,7 @@ func _exit_tree():
 #
 func get_voxel(grid : Vector3):
 	var voxel = get_rvoxel(grid)
-	if not typeof(voxel) == TYPE_DICTIONARY: voxel = VoxelSet.get_voxel(voxel)
+	if not typeof(voxel) == TYPE_NIL and not typeof(voxel) == TYPE_DICTIONARY: voxel = VoxelSet.get_voxel(voxel)
 	return voxel
 
 # Get raw Voxel data at given grid position.

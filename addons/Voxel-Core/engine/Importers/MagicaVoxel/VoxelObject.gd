@@ -45,7 +45,7 @@ func get_import_options(preset):
 			'usage': PROPERTY_USAGE_EDITOR
 		},
 		{
-			'name': 'Mesh Type',
+			'name': 'MeshType',
 			'default_value': 0,
 			'property_hint': PROPERTY_HINT_ENUM,
 			'hint_string': PoolStringArray(VoxelMesh.MeshTypes.keys()).join(','),
@@ -57,8 +57,8 @@ func get_import_options(preset):
 		Presets.DEFAULT:
 			preset_options += [
 			{
-				'name': 'Voxel Object',
-				'default_value': 0,
+				'name': 'VoxelObject',
+				'default_value': 1,
 				'property_hint': PROPERTY_HINT_ENUM,
 				'hint_string': 'DETECT,VOXELMESH',
 				'usage': PROPERTY_USAGE_EDITOR
@@ -77,7 +77,7 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 	var voxels = Voxel.vox_to_voxels(source_file)
 	if typeof(voxels) == TYPE_DICTIONARY and voxels.size() > 0:
 		var voxelobject : VoxelObject
-		var voxelobjecttype : int = options.get('Voxel Object', 0)
+		var voxelobjecttype : int = options.get('VoxelObject', 0)
 		
 		if voxelobjecttype == 0:
 			voxelobjecttype = 1
@@ -90,7 +90,7 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		voxelobject.set_name(options['Name'] if options['Name'] != '' else source_file.get_file().replace('.' + source_file.get_extension(), ''))
 		
 		voxelobject.set_voxels(voxels, false)
-		voxelobject.set_mesh_type(options.get('Mesh Type', 0), false, false)
+		voxelobject.set_mesh_type(options.get('MeshType', 1), false, false)
 		voxelobject.update()
 		
 		var scene = PackedScene.new()

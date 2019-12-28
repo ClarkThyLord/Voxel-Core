@@ -37,8 +37,8 @@ func get_import_options(preset):
 		Presets.DEFAULT:
 			return [
 				{
-					'name': 'Mesh Type',
-					'default_value': 0,
+					'name': 'MeshType',
+					'default_value': 1,
 					'property_hint': PROPERTY_HINT_ENUM,
 					'hint_string': PoolStringArray(VoxelMesh.MeshTypes.keys()).join(','),
 					'usage': PROPERTY_USAGE_EDITOR
@@ -58,12 +58,8 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		
 		var voxelmesh := VoxelMesh.new()
 		voxelmesh.set_voxels(voxels, false)
-		voxelmesh.set_mesh_type(options.get('Mesh Type', 0), false, false)
+		voxelmesh.set_mesh_type(options.get('MeshType', 1), false, false)
 		voxelmesh.update()
-		
-		print(voxelmesh.get_voxels().size())
-		print(voxelmesh.mesh)
-		print(voxelmesh.MeshType)
 		
 		var result = ResourceSaver.save('%s.%s' % [save_path, get_save_extension()], voxelmesh.mesh)
 		

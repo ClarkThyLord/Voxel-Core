@@ -12,5 +12,5 @@ dest_files=[ "res://.import/Knight.voxelobject.vox-f959a90fc4e6da47109e46a86e19b
 [params]
 
 Name="Knight"
-Mesh Type=0
-Voxel Object=0
+MeshType=0
+VoxelObject=0

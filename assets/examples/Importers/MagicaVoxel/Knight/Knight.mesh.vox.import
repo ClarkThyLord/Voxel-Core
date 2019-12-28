@@ -11,4 +11,4 @@ dest_files=[ "res://.import/Knight.mesh.vox-8abc4053173c1dc999c52e76a7f833e6.mes
 
 [params]
 
-Mesh Type=0
+MeshType=1

@@ -3,7 +3,6 @@
 [ext_resource path="res://assets/examples/Importers/MagicaVoxel/Knight/Knight.mesh.vox" type="ArrayMesh" id=1]
 [ext_resource path="res://assets/examples/Importers/MagicaVoxel/Knight/Knight.voxelobject.vox" type="PackedScene" id=2]
 
-
 [sub_resource type="SpatialMaterial" id=1]
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
@@ -25,10 +24,10 @@ surfaces/0 = {
 [node name="Spatial" type="Spatial"]
 
 [node name="Knightmesh" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, -1 )
 mesh = ExtResource( 1 )
 material/0 = null
 
 [node name="Knight" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1 )
 mesh = SubResource( 2 )
