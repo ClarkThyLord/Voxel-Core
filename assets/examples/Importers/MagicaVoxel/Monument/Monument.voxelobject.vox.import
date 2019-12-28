@@ -12,5 +12,5 @@ dest_files=[ "res://.import/Monument.voxelobject.vox-9e002273e1e4e9f11913edf68ba
 [params]
 
 Name="Monument"
-Mesh Type=0
-Voxel Object=0
+MeshType=0
+VoxelObject=0

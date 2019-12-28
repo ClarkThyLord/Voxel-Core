@@ -13,7 +13,7 @@ func get_visible_name():
 	return 'VoxelObject'
 
 func get_importer_name():
-	return 'VoxelCore.MagicaVoxel.VoxelObject'
+	return 'VoxelCore.Texture.VoxelObject'
 
 func get_recognized_extensions():
 	return ['png', 'jpg']
