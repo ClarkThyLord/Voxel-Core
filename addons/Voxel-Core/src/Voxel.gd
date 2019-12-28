@@ -735,11 +735,10 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 				file.get_buffer(chunkSize - 4 * 3)
 			elif chunkName == "XYZI":
 				for i in range(0, file.get_32()):
-					voxels[Vector3(
-						file.get_8(),
-						-file.get_8(),
-						file.get_8()
-					).floor()] = file.get_8()
+					var x := file.get_8()
+					var z := -file.get_8()
+					var y := file.get_8()
+					voxels[Vector3(x, y, z).floor()] = file.get_8()
 			elif chunkName == "RGBA":
 				magic_custom_colors = []
 				for i in range(0,256):
