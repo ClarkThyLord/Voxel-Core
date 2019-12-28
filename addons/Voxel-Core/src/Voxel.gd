@@ -776,7 +776,7 @@ static func texture_to_voxels(file_path : String) -> Dictionary:
 	for x in range(image.get_width()):
 		for y in range(image.get_height()):
 			if not image.get_pixel(x, y).a == 0:
-				voxels[Vector3(x, y, 0).round()] = colored(image.get_pixel(x, y))
+				voxels[Vector3(x, -y, 0).round()] = colored(image.get_pixel(x, y))
 	image.unlock()
 	
 	
