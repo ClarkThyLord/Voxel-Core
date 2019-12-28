@@ -11,24 +11,45 @@ const VoxelCursor := preload('res://addons/Voxel-Core/engine/VoxelCursor.gd')
 # Declarations
 var StartingVersion : int
 signal modified(Modified)
-var Modified : bool = false setget set_modified
+var Modified : bool = false setget set_modified   #   Whether the currently editing VoxelObject has been modified
+# Set modified, emits 'modified'.
+# modified   :   bool   -   value to set
+# emit       :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_modified(false, false)
+#
 func set_modified(modified := !Modified, emit := true) -> void:
 	Modified = modified
 	if emit: emit_signal('modified', modified)
 var undo_redo := UndoRedo.new()
-export(bool) var on_commit_clear_history := false
-export(bool) var on_cancel_clear_history := false
+export(bool) var on_commit_clear_history := false   #   Weather history should be cleared on 'commit'
+export(bool) var on_cancel_clear_history := false   #   Weather history should be cleared on 'cancel'
 
 
 signal set_lock(lock)
-export(bool) var Lock := true setget set_lock
+export(bool) var Lock := true setget set_lock   #   Whether the currently editing VoxelObject is modifiable
+# Set Lock, emits 'set_lock'.
+# lock   :   bool   -   value to set
+# emit   :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_lock(false, false)
+#
 func set_lock(lock := !Lock, emit := true) -> void:
 	Lock = lock
 	if emit: emit_signal('set_lock', Lock)
 
 
 signal set_rawdata(rawdata)
-export(bool) var RawData := false setget set_rawdata
+export(bool) var RawData := false setget set_rawdata   #   Active, raw data will be handled; inactive, VoxelSet IDs will be handled when possible
+# Set RawData, emits 'set_rawdata'.
+# rawdata   :   bool   -   value to set
+# emit      :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_rawdata(false, false)
+#
 func set_rawdata(rawdata := !RawData, emit := true) -> void:
 	RawData = rawdata
 	if emit: emit_signal('set_rawdata', RawData)
@@ -36,21 +57,29 @@ func set_rawdata(rawdata := !RawData, emit := true) -> void:
 
 signal set_tool(_tool)
 enum Tools {
-	PAN,
+	PAN,    #   Move around
 	# TODO SELECT,
-	ADD,
-	SUB,
-	PICK,
-	FILL
+	ADD,    #   Set Voxels with current Palette
+	SUB,    #   Erase Voxels
+	PICK,   #   Get Voxels and set them as current Palette
+	FILL    #   Replace all matching Voxels with current Palette
 }
-export(Tools) var Tool := Tools.PAN setget set_tool
+export(Tools) var Tool := Tools.PAN setget set_tool   #   Tool being used
+# Set Tool, emits 'set_tool'.
+# _tool   :   int(Tools)    -   value to set
+# emit    :   bool          -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_tool(Tools.ADD, false)
+#
 func set_tool(_tool : int, emit := true) -> void:
 	Tool = _tool
 	if emit: emit_signal('set_tool', Tool)
 
 signal set_tool_palette(tool_palette)
 enum ToolPalettes { PRIMARY, SECONDARY }
-export(ToolPalettes) var ToolPalette := ToolPalettes.PRIMARY setget set_tool_palette
+export(ToolPalettes) var ToolPalette := ToolPalettes.PRIMARY setget set_tool_palette   #   Palette being used
+# Get the currently used Palette.
 func get_palette():
 	var palette
 	match ToolPalette:
@@ -60,6 +89,7 @@ func get_palette():
 			palette = get_secondary()
 	return palette
 
+# Get the currently used raw Palette.
 func get_rpalette():
 	var palette
 	match ToolPalette:
@@ -69,20 +99,38 @@ func get_rpalette():
 			palette = get_rsecondary()
 	return palette
 
+# Set the current Palette, emits 'set_tool_palette'.
+# toolpalette   :   int(ToolPalettes)   -   value to set
+# emit          :   bool                -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_tool_palette(ToolPalettes.SECONDARY, false)
+#
 func set_tool_palette(toolpalette : int, emit := true) -> void:
 	ToolPalette = toolpalette
 	if emit: emit_signal('set_tool_palette', ToolPalette)
 
 signal set_tool_mode(tool_mode)
-enum ToolModes { INDIVIDUAL, AREA }
-export(ToolModes) var ToolMode := ToolModes.INDIVIDUAL setget set_tool_mode
+enum ToolModes {
+	INDIVIDUAL,   #   Individual operations
+	AREA          #   Wide area operations
+}
+export(ToolModes) var ToolMode := ToolModes.INDIVIDUAL setget set_tool_mode   #   How operations will be committed
+# Set ToolMode, emits 'set_tool_mode'.
+# toolmode   :   int    -   value to set
+# emit       :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_tool_mode(ToolModes.AREA, false)
+#
 func set_tool_mode(toolmode : int, emit := true) -> void:
 	ToolMode = toolmode
 	if emit: emit_signal('set_tool_mode', ToolMode)
 
 
 signal set_primary(voxel)
-var Primary = null setget set_primary
+var Primary = null setget set_primary   #   Primary palette Voxel
+# Get Primary palette Voxel.
 func get_primary() -> Dictionary:
 	var primary = get_rprimary()
 	if not typeof(primary) == TYPE_DICTIONARY:
@@ -90,56 +138,112 @@ func get_primary() -> Dictionary:
 		if typeof(primary) == TYPE_NIL: primary = Voxel.colored(PrimaryColor)
 	return primary
 
+# Get raw Primary palette Voxel.
 func get_rprimary():
 	return Voxel.colored(PrimaryColor) if typeof(Primary) == TYPE_NIL else Primary
 
+# Set Primary palette, emits 'set_primary'.
+# voxel   :   int/String/Dictionary(Voxel)   -   value to set
+# emit    :   bool                           -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_primary(2)
+#   set_primary('black', true)
+#   set_primary({ ... }, false)
+#
 func set_primary(voxel = null, emit := true) -> void:
 	Primary = voxel
 	if emit: emit_signal('set_primary', Primary)
 
 signal set_primary_color(color)
-export(Color) var PrimaryColor := Color.white setget set_primary_color
+export(Color) var PrimaryColor := Color.white setget set_primary_color   #   Primary palette Color
+# Set Primary palette color, emits 'set_primary_color'.
+# color   :   Color   -   value to set
+# emit    :   bool    -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_primary_color(Color.black, false)
+#
 func set_primary_color(color : Color, emit := true) -> void:
 	PrimaryColor = color
 	if emit: emit_signal('set_primary_color', PrimaryColor)
 
 signal set_secondary(voxel)
-var Secondary = null setget set_secondary
+var Secondary = null setget set_secondary   #   Secondary palette Voxel
+# Get Secondary palette Voxel.
 func get_secondary() -> Dictionary:
 	var secondary = get_rsecondary()
 	if not typeof(secondary) == TYPE_DICTIONARY:
 		secondary = VoxelObject.VoxelSet.get_voxel(secondary)
 		if typeof(secondary) == TYPE_NIL: secondary = Voxel.colored(SecondaryColor)
 	return secondary
-
+	
+# Get raw Secondary palette Voxel.
 func get_rsecondary():
 	return Voxel.colored(SecondaryColor) if typeof(Secondary) == TYPE_NIL else Secondary
 
+# Set Secondary palette, emits 'set_secondary'.
+# voxel   :   int/String/Dictionary(Voxel)   -   value to set
+# emit    :   bool                           -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_secondary(2)
+#   set_secondary('black', true)
+#   set_secondary({ ... }, false)
+#
 func set_secondary(voxel = null, emit := true) -> void:
 	Secondary = voxel
 	if emit: emit_signal('set_secondary', Secondary)
 
 signal set_secondary_color(color)
-export(Color) var SecondaryColor := Color.black setget set_secondary_color
+export(Color) var SecondaryColor := Color.black setget set_secondary_color   #   Secondary palette Color
+# Set Secondary palette color, emits 'set_secondary_color'.
+# color   :   Color   -   value to set
+# emit    :   bool    -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_secondary_color(Color.black, false)
+#
 func set_secondary_color(color : Color, emit := true) -> void:
 	SecondaryColor = color
 	if emit: emit_signal('set_secondary_color', SecondaryColor)
 
 
 signal set_mirror_x(mirror_x)
-export(bool) var MirrorX := false setget set_mirror_x
+export(bool) var MirrorX := false setget set_mirror_x   #   Whether to mirror operations over the X-axis
+# Set MirrorX, emit 'set_mirror_x'.
+# mirrorx   :   bool   -   value to set
+# emit      :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_mirrorx(false, false)
+#
 func set_mirror_x(mirrorx := !MirrorX, emit := true) -> void:
 	MirrorX = mirrorx
 	if emit: emit_signal('set_mirror_x', MirrorX)
 
 signal set_mirror_y(mirror_y)
-export(bool) var MirrorY := false setget set_mirror_y
+export(bool) var MirrorY := false setget set_mirror_y   #   Whether to mirror operations over the Y-axis
+# Set MirrorY, emit 'set_mirror_y'.
+# mirrory   :   bool   -   value to set
+# emit      :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_mirrory(false, false)
+#
 func set_mirror_y(mirrory := !MirrorY, emit := true) -> void:
 	MirrorY = mirrory
 	if emit: emit_signal('set_mirror_y', MirrorY)
 
 signal set_mirror_z(mirror_z)
-export(bool) var MirrorZ := false setget set_mirror_z
+export(bool) var MirrorZ := false setget set_mirror_z   #   Whether to mirror operations over the Z-axis
+# Set MirrorZ, emit 'set_mirror_z'.
+# mirrorz   :   bool   -   value to set
+# emit      :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_mirrorz(false, false)
+#
 func set_mirror_z(mirrorz := !MirrorZ, emit := true) -> void:
 	MirrorZ = mirrorz
 	if emit: emit_signal('set_mirror_z', MirrorZ)
@@ -158,27 +262,47 @@ var Cursors := {
 } setget set_cursors
 func set_cursors(cursor : Dictionary) -> void: return   #   Cursors shouldn't be settable externally
 
+# Set up each Cursor accordingly.
 func setup_cursors() -> void:
 	for cursor in Cursors.values():
 		cursor.set_cursor_color(CursorColor)
 
+# Parent all the Cursors to given parent.
+# parent   :   Node   -   Node to parent Cursors to
+#
+# Example:
+#   set_cursors_parent([Node])
+#
 func set_cursors_parent(parent : Node) -> void:
 	unset_cursors_parent()
 	for cursor in Cursors.values():
 		if cursor:
 			parent.add_child(cursor)
 
+# Unparents all the Cursors from their parent.
 func unset_cursors_parent() -> void:
 	for cursor in Cursors.values():
 		if cursor and cursor.get_parent():
 			cursor.get_parent().remove_child(cursor)
 
+# Sets the visibility for all Cursors
+# visible   :   bool   -   value to set
+#
+# Example:
+#   set_cursors_visible(false)
+#
 func set_cursors_visible(visible : bool) -> void:
 	for cursor in Cursors.values():
 		cursor.visible = visible
 
-var cursors_started_area := false
-var cursors_are_selecting_area := false
+var cursors_started_area := false         #   Whether selection has started
+var cursors_are_selecting_area := false   #   Whether selection is happening
+# Update cursors positino and selection area.
+# mirror   :   Dictionary<Vector3, Vector3>   -   grid positions of visible cursors
+#
+# Example:
+#   update_cursors({ Vector.RIGHT: Vector3(-1, 10, 3) })
+#
 func update_cursors(mirrors : Dictionary) -> void:
 	var all_mirrors = grid_to_mirrors(mirrors[Vector3(0, 0, 0)], true, true, true)
 	for cursor_key in Cursors:
