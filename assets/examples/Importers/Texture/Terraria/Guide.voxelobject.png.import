@@ -1,6 +1,6 @@
 [remap]
 
-importer="VoxelCore.MagicaVoxel.VoxelObject"
+importer="VoxelCore.Texture.VoxelObject"
 type="PackedScene"
 path="res://.import/Guide.voxelobject.png-eb947ff70399c9265da9705d982b7259.tscn"
 
@@ -12,5 +12,5 @@ dest_files=[ "res://.import/Guide.voxelobject.png-eb947ff70399c9265da9705d982b72
 [params]
 
 Name="Guide"
-MeshType=0
+MeshType=1
 VoxelObject=1

@@ -31,3 +31,6 @@ material/0 = null
 [node name="DiamondSword" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 8, -1.5 )
 mesh = SubResource( 2 )
+UVMapping = false
+BuildStaticBody = false
+VoxelSetPath = NodePath("/root/VoxelSet")

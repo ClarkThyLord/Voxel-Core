@@ -1,6 +1,6 @@
 [remap]
 
-importer="VoxelCore.MagicaVoxel.VoxelObject"
+importer="VoxelCore.Texture.VoxelObject"
 type="PackedScene"
 path="res://.import/DiamondSword.voxelobject.png-fc1908d9b0bc45e5a50a99c456aa3745.tscn"
 
@@ -12,5 +12,5 @@ dest_files=[ "res://.import/DiamondSword.voxelobject.png-fc1908d9b0bc45e5a50a99c
 [params]
 
 Name="DiamondSword"
-MeshType=0
+MeshType=1
 VoxelObject=1
