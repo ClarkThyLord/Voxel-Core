@@ -1,7 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://examples/Importers/MagicaVoxel/Knight/Knight.mesh.vox" type="ArrayMesh" id=1]
-[ext_resource path="res://examples/Importers/MagicaVoxel/Knight/Knight.voxelobject.vox" type="PackedScene" id=2]
+[ext_resource path="res://assets/examples/Importers/MagicaVoxel/Knight/Knight.mesh.vox" type="ArrayMesh" id=1]
+[ext_resource path="res://assets/examples/Importers/MagicaVoxel/Knight/Knight.voxelobject.vox" type="PackedScene" id=2]
+
 
 [sub_resource type="SpatialMaterial" id=1]
 vertex_color_use_as_albedo = true
