@@ -1,0 +1,16 @@
+[remap]
+
+importer="VoxelCore.MagicaVoxel.VoxelObject"
+type="PackedScene"
+path="res://.import/Monument.voxelobject.vox-d147bd185aac437d24b725a17ce40b78.tscn"
+
+[deps]
+
+source_file="res://examples/Importers/MagicaVoxel/Monument/Monument.voxelobject.vox"
+dest_files=[ "res://.import/Monument.voxelobject.vox-d147bd185aac437d24b725a17ce40b78.tscn" ]
+
+[params]
+
+Name="Monument"
+Mesh Type=0
+Voxel Object=0

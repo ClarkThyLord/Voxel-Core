@@ -701,7 +701,7 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 	var file := File.new()
 	var error = file.open(file_path, File.READ)
 	if error != OK:
-		print("VoxToVoxels: could not open `", file_path, "`")
+		printerr("VoxToVoxels: could not open `", file_path, "`")
 		if file.is_open(): file.close()
 		return error
 	
@@ -715,15 +715,15 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 	var magic_version := file.get_32()
 	
 	var magic_custom_colors := []
-	 
+	
 	if magic == "VOX ":
 		while file.get_position() < file.get_len():
 			var chunkId = PoolByteArray([
 				file.get_8(),
 				file.get_8(),
 				file.get_8(),
-				file.get_8()]
-			).get_string_from_ascii()
+				file.get_8()
+			]).get_string_from_ascii()
 			var chunkSize = file.get_32()
 			var childChunks = file.get_32()
 			var chunkName = chunkId
@@ -750,7 +750,7 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 						float(file.get_8() / 255.0)
 					))
 			else: file.get_buffer(chunkSize)
-	else: print("VoxToVoxels: file not valid .vox")
+	else: printerr("VoxToVoxels: file not valid .vox")
 	file.close()
 	
 	if magic_custom_colors.size() > 0:
@@ -761,7 +761,7 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 			voxels[voxel_grid] = colored(Color(MagicaVoxelColors[voxels[voxel_grid]] - 1))
 	
 	
-	return {}
+	return voxels
 
 static func texture_to_voxels(file_path : String) -> Dictionary:
 	var voxels : ={}
@@ -770,7 +770,7 @@ static func texture_to_voxels(file_path : String) -> Dictionary:
 	var image := Image.new()
 	var err = image.load(file_path)
 	if err != OK:
-		print("TextureToVoxels: could not load `", file_path, "`")
+		printerr("TextureToVoxels: could not load `", file_path, "`")
 		return err
 	
 	image.lock()

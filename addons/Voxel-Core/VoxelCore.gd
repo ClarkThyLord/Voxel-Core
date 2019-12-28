@@ -11,6 +11,9 @@ const VoxelObjectClass := preload('res://addons/Voxel-Core/src/VoxelObject.gd')
 const BottomPanelScene := preload('res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.tscn')
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
+var MagicaVoxelImporterMesh := preload('res://addons/Voxel-Core/engine/Importers/MagicaVoxel/Mesh.gd').new()
+var MagicaVoxelImporterVoxelObject := preload('res://addons/Voxel-Core/engine/Importers/MagicaVoxel/VoxelObject.gd').new()
+
 
 
 # Declarations
@@ -77,12 +80,6 @@ static func voxel_type_of(object : Object) -> int:
 		return VoxelTypes.VoxelObject
 	elif object is VoxelMesh:
 		return VoxelTypes.VoxelMesh
-	elif object is VoxelMultiMesh:
-		return VoxelTypes.VoxelMultiMesh
-	elif object is VoxelLayeredMesh:
-		return VoxelTypes.VoxelLayeredMesh
-	elif object is VoxelEmbeddedMultiMesh:
-		return VoxelTypes.VoxelEmbeddedMultiMesh
 	else: return VoxelTypes.NVT
 
 
@@ -164,6 +161,8 @@ func _cancel(hide := true, unselect := false) -> void:
 func _enter_tree() -> void:
 	add_autoload_singleton('VoxelSet', 'res://addons/Voxel-Core/defaults/VoxelSet.default.gd')
 	
+	add_import_plugin(MagicaVoxelImporterMesh)
+	add_import_plugin(MagicaVoxelImporterVoxelObject)
 	
 	connect('scene_closed', self, 'scene_closed')
 	connect('main_screen_changed',self, 'main_screen_changed')
@@ -194,6 +193,10 @@ func _exit_tree() -> void:
 	
 	
 	remove_autoload_singleton('VoxelSet')
+	
+	remove_import_plugin(MagicaVoxelImporterMesh)
+	remove_import_plugin(MagicaVoxelImporterVoxelObject)
+	
 	set_bottom_panel_visible(false)
 	
 	

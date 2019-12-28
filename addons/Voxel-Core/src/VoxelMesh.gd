@@ -199,7 +199,7 @@ func update() -> void:
 		ST.set_material(material)
 		
 		
-		if editing or MeshType ==  MeshTypes.NAIVE:
+		if editing or MeshType == MeshTypes.NAIVE:
 			for voxel_grid in voxels:
 				if UVMapping:
 					if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)

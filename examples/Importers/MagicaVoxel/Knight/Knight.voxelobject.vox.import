@@ -1,0 +1,16 @@
+[remap]
+
+importer="VoxelCore.MagicaVoxel.VoxelObject"
+type="PackedScene"
+path="res://.import/Knight.voxelobject.vox-3d91a41d066e20a76862ad1fb8e5984c.tscn"
+
+[deps]
+
+source_file="res://examples/Importers/MagicaVoxel/Knight/Knight.voxelobject.vox"
+dest_files=[ "res://.import/Knight.voxelobject.vox-3d91a41d066e20a76862ad1fb8e5984c.tscn" ]
+
+[params]
+
+Name="Knight"
+Mesh Type=0
+Voxel Object=0

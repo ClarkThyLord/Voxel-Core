@@ -1,0 +1,14 @@
+[remap]
+
+importer="VoxelCore.MagicaVoxel.Mesh"
+type="Mesh"
+path="res://.import/Monument.mesh.vox-3408a8d1965b9c61d7a790a57314cc21.mesh"
+
+[deps]
+
+source_file="res://examples/Importers/MagicaVoxel/Monument/Monument.mesh.vox"
+dest_files=[ "res://.import/Monument.mesh.vox-3408a8d1965b9c61d7a790a57314cc21.mesh" ]
+
+[params]
+
+Mesh Type=0
