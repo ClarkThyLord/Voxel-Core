@@ -11,6 +11,9 @@ const VoxelObjectClass := preload('res://addons/Voxel-Core/src/VoxelObject.gd')
 const BottomPanelScene := preload('res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.tscn')
 const VoxelEditorEngineClass := preload('res://addons/Voxel-Core/engine/VoxelEditor.engine.gd')
 
+var TextureImporterMesh := preload('res://addons/Voxel-Core/engine/Importers/Texture/Mesh.gd').new()
+var TextureImporterVoxelObject := preload('res://addons/Voxel-Core/engine/Importers/Texture/VoxelObject.gd').new()
+
 var MagicaVoxelImporterMesh := preload('res://addons/Voxel-Core/engine/Importers/MagicaVoxel/Mesh.gd').new()
 var MagicaVoxelImporterVoxelObject := preload('res://addons/Voxel-Core/engine/Importers/MagicaVoxel/VoxelObject.gd').new()
 
@@ -161,6 +164,8 @@ func _cancel(hide := true, unselect := false) -> void:
 func _enter_tree() -> void:
 	add_autoload_singleton('VoxelSet', 'res://addons/Voxel-Core/defaults/VoxelSet.default.gd')
 	
+	add_import_plugin(TextureImporterMesh)
+	add_import_plugin(TextureImporterVoxelObject)
 	add_import_plugin(MagicaVoxelImporterMesh)
 	add_import_plugin(MagicaVoxelImporterVoxelObject)
 	
@@ -194,6 +199,8 @@ func _exit_tree() -> void:
 	
 	remove_autoload_singleton('VoxelSet')
 	
+	remove_import_plugin(TextureImporterMesh)
+	remove_import_plugin(TextureImporterVoxelObject)
 	remove_import_plugin(MagicaVoxelImporterMesh)
 	remove_import_plugin(MagicaVoxelImporterVoxelObject)
 	
