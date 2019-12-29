@@ -694,16 +694,9 @@ const MagicaVoxelColors : = [
 	"ff880000", "ff770000", "ff550000", "ff440000", "ff220000", "ff110000", "ffeeeeee", "ffdddddd", "ffbbbbbb", "ffaaaaaa", "ff888888", "ff777777", "ff555555", "ff444444", "ff222222", "ff111111"
 ]
 
-static func vox_to_voxels(file_path : String) -> Dictionary:
+static func vox_to_voxels(file : File):
 	var voxels := {}
 	
-	
-	var file := File.new()
-	var error = file.open(file_path, File.READ)
-	if error != OK:
-		printerr("VoxToVoxels: could not open `", file_path, "`")
-		if file.is_open(): file.close()
-		return error
 	
 	var magic := PoolByteArray([
 		file.get_8(),
@@ -749,7 +742,9 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 						float(file.get_8() / 255.0)
 					))
 			else: file.get_buffer(chunkSize)
-	else: printerr("VoxToVoxels: file not valid .vox")
+	else:
+		printerr("VoxToVoxels: file not valid .vox")
+		return FAILED
 	file.close()
 	
 	if magic_custom_colors.size() > 0:
@@ -762,15 +757,9 @@ static func vox_to_voxels(file_path : String) -> Dictionary:
 	
 	return voxels
 
-static func texture_to_voxels(file_path : String) -> Dictionary:
-	var voxels : ={}
+static func image_to_voxels(image : Image) -> Dictionary:
+	var voxels : = {}
 	
-	
-	var image := Image.new()
-	var err = image.load(file_path)
-	if err != OK:
-		printerr("TextureToVoxels: could not load `", file_path, "`")
-		return err
 	
 	image.lock()
 	for x in range(image.get_width()):

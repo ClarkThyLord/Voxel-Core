@@ -377,7 +377,6 @@ margin_right = 324.0
 margin_bottom = 32.0
 
 [node name="TabContainer" type="TabContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info"]
-visible = false
 margin_top = 36.0
 margin_right = 324.0
 margin_bottom = 586.0

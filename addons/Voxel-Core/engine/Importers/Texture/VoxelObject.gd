@@ -74,7 +74,13 @@ func get_option_visibility(option, options):
 
 
 func import(source_file, save_path, options, r_platform_variants, r_gen_files):
-	var voxels = Voxel.texture_to_voxels(source_file)
+	var image := Image.new()
+	var err = image.load(source_file)
+	if err != OK:
+		printerr("Could not load `", source_file, "`")
+		return err
+	
+	var voxels = Voxel.image_to_voxels(image)
 	if typeof(voxels) == TYPE_DICTIONARY and voxels.size() > 0:
 		var voxelobject : VoxelObject
 		var voxelobjecttype : int = options.get('VoxelObject', 0)
@@ -103,5 +109,5 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 			voxelobject.queue_free()
 			printerr('Couldn\'t save resource!')
 			return FAILED
-	printerr('VOX FILE EMPTY')
+	printerr('TEXTURE EMPTY')
 	return FAILED

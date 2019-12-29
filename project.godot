@@ -15,13 +15,31 @@ _global_script_classes=[ {
 "path": "res://addons/Voxel-Core/src/Voxel.gd"
 }, {
 "base": "MeshInstance",
+"class": "VoxelEmbeddedMultiMesh",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/src/VoxelEmbeddedMultiMesh.gd"
+}, {
+"base": "MeshInstance",
+"class": "VoxelLayeredMesh",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/src/VoxelLayeredMesh.gd"
+}, {
+"base": "MeshInstance",
 "class": "VoxelMesh",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/src/VoxelMesh.gd"
+}, {
+"base": "MeshInstance",
+"class": "VoxelMultiMesh",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/src/VoxelMultiMesh.gd"
 } ]
 _global_script_class_icons={
 "Voxel": "res://addons/Voxel-Core/assets/Voxel.png",
-"VoxelMesh": "res://addons/Voxel-Core/assets/VoxelMesh.png"
+"VoxelEmbeddedMultiMesh": "res://addons/Voxel-Core/assets/VoxelEmbeddedMultiMesh.png",
+"VoxelLayeredMesh": "res://addons/Voxel-Core/assets/VoxelLayeredMesh.png",
+"VoxelMesh": "res://addons/Voxel-Core/assets/VoxelMesh.png",
+"VoxelMultiMesh": "res://addons/Voxel-Core/assets/VoxelMultiMesh.png"
 }
 
 [application]

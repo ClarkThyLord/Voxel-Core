@@ -52,7 +52,13 @@ func get_option_visibility(option, options):
 
 
 func import(source_file, save_path, options, r_platform_variants, r_gen_files):
-	var voxels = Voxel.texture_to_voxels(source_file)
+	var image := Image.new()
+	var err = image.load(source_file)
+	if err != OK:
+		printerr("Could not load `", source_file, "`")
+		return err
+	
+	var voxels = Voxel.image_to_voxels(image)
 	if typeof(voxels) == TYPE_DICTIONARY and voxels.size() > 0:
 		print('IMPORTED ', source_file.get_file(), ' AS Mesh')
 		
@@ -65,5 +71,5 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		
 		voxelmesh.queue_free()
 		return result
-	printerr('VOX FILE EMPTY')
+	printerr('TEXTURE EMPTY')
 	return FAILED

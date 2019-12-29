@@ -52,7 +52,14 @@ func get_option_visibility(option, options):
 
 
 func import(source_file, save_path, options, r_platform_variants, r_gen_files):
-	var voxels = Voxel.vox_to_voxels(source_file)
+	var file := File.new()
+	var error = file.open(source_file, File.READ)
+	if error != OK:
+		printerr("Could not open `", source_file, "`")
+		if file.is_open(): file.close()
+		return error
+	
+	var voxels = Voxel.vox_to_voxels(file)
 	if typeof(voxels) == TYPE_DICTIONARY and voxels.size() > 0:
 		print('IMPORTED ', source_file.get_file(), ' AS Mesh')
 		
