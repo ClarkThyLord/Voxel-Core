@@ -32,9 +32,10 @@ onready var InfoTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/I
 onready var VoxelSetPath := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer/HBoxContainer/VoxelSetPath')
 onready var VoxelSetUV := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer/HBoxContainer/VoxelSetUV')
 
-onready var VoxelsFile := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/FileDialog')
 onready var ExportVoxels := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export')
+onready var ExportFile := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export/FileDialog')
 onready var ImportVoxels := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import')
+onready var ImportFile := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog')
 
 
 onready var SettingsTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer')
@@ -136,6 +137,9 @@ func setup(voxelcore) -> void:
 	voxelcore.VoxelEditor.connect('set_lock', Lock, 'set_pressed')
 	Lock.connect('toggled', voxelcore.VoxelEditor, 'set_lock')
 	
+	VoxelSetPath.set_text(str(voxelcore.VoxelEditor.VoxelObject.VoxelSetPath))
+	VoxelSetUV.set_pressed(voxelcore.VoxelEditor.VoxelObject.VoxelSet.AlbedoTexture is Texture)
+	
 	
 	AutoSave.set_pressed(voxelcore.AutoSave)
 	voxelcore.connect('set_auto_save', AutoSave, 'set_pressed')
@@ -196,11 +200,31 @@ func _on_Cancel_pressed():
 	if modified: VoxelCore._save()
 
 
+
 func _on_VoxelsExport_pressed():
-	VoxelsFile.popup_centered()
+	ExportFile.popup_centered()
+
+func _on_VoxelsExport_file_selected(path):
+	var file = File.new()
+	if file.open(path, File.WRITE) != OK:
+		printerr("Error exporting voxels...")
+		return
+	
+	file.store_line(to_json(VoxelCore.VoxelEditor.VoxelObject.get_voxels()))
+	file.close()
 
 func _on_VoxelsImport_pressed():
-	VoxelsFile.popup_centered()
+	ImportFile.popup_centered()
+
+func _on_VoxelsImport_file_selected(path):
+	var file = File.new()
+	if not file.file_exists(path) or file.open(path, File.READ) != OK or true:
+		printerr("Error importing voxels...")
+		return
+	
+	# TODO parse json correctly
+#	VoxelCore.VoxelEditor.VoxelObject.set_voxels(parse_json(file.get_line()))
+	file.close()
 
 
 func _on_Godot_pressed():

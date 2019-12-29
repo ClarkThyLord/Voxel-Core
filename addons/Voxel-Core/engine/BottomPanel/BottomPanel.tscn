@@ -496,6 +496,12 @@ text = "Export"
 icon = ExtResource( 22 )
 align = 0
 
+[node name="FileDialog" type="FileDialog" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export"]
+margin_top = -36.0
+margin_right = 350.0
+margin_bottom = 264.0
+rect_min_size = Vector2( 350, 300 )
+
 [node name="Import" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer"]
 margin_left = 153.0
 margin_right = 302.0
@@ -505,11 +511,11 @@ text = "Import"
 icon = ExtResource( 23 )
 align = 0
 
-[node name="FileDialog" type="FileDialog" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 357.0
-margin_bottom = 307.0
+[node name="FileDialog" type="FileDialog" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import"]
+margin_left = -153.0
+margin_top = -36.0
+margin_right = 197.0
+margin_bottom = 264.0
 rect_min_size = Vector2( 350, 300 )
 
 [node name="Effects" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
@@ -1033,7 +1039,11 @@ icon = ExtResource( 37 )
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Cancel" to="." method="_on_Cancel_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export" to="." method="_on_VoxelsExport_pressed"]
+[connection signal="confirmed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export/FileDialog" to="." method="_on_VoxelsExport_confirmed"]
+[connection signal="file_selected" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export/FileDialog" to="." method="_on_VoxelsExport_file_selected"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import" to="." method="_on_VoxelsImport_pressed"]
+[connection signal="confirmed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog" to="." method="_on_VoxelsImport_confirmed"]
+[connection signal="file_selected" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog" to="." method="_on_VoxelsImport_file_selected"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
