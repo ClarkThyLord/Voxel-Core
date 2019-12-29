@@ -772,6 +772,36 @@ static func image_to_voxels(image : Image) -> Dictionary:
 	return voxels
 
 
+# Calculate the extremes of given voxels.
+# voxels     :   Dictionary       -   voxels from which to calculate extremes
+# @returns   :   Array<Vector3>   -   empty, no Voxels are present; size 2, index 0 is min extreme and index 1 is max extreme
+#
+# Example:
+#   get_extremes([VoxelObject]) -> [Vector3(-1, -3, 5), Vector3(0, -2, 9)]
+#
+static func get_extremes(voxels) -> Array:
+	var extremes = []
+	
+	voxels = voxels.keys()
+	
+	if voxels.size() > 0:
+		var _min : Vector3 = voxels[0]
+		var _max : Vector3 = voxels[0]
+		
+		for voxel_grid in voxels:
+			if voxel_grid.x < _min.x: _min.x = voxel_grid.x
+			if voxel_grid.y < _min.y: _min.y = voxel_grid.y
+			if voxel_grid.z < _min.z: _min.z = voxel_grid.z
+			
+			if voxel_grid.x > _max.x: _max.x = voxel_grid.x
+			if voxel_grid.y > _max.y: _max.y = voxel_grid.y
+			if voxel_grid.z > _max.z: _max.z = voxel_grid.z
+		
+		extremes.append(_min)
+		extremes.append(_max)
+	
+	return extremes
+
 # Returns an Array of all position matching target relative to starting position.
 # position   :   Vector3                                      -   Starting position
 # target     :   int/String/Color                             -   Target searching for
@@ -797,3 +827,26 @@ static func flood_select(position : Vector3, target, voxels : Dictionary) -> Arr
 		selected += flood_select(position + Vector3.BACK, target, voxels)
 		selected += flood_select(position + Vector3.FORWARD, target, voxels)
 	return selected
+
+# Centers given voxels to origin.
+# voxels       :   Dictionary   -   voxels to center
+# above_axis   :   bool         -   center Voxels above x and z axis
+# @returns     :   Dictionary   -   voxels centered
+#
+# Example:
+#   center({ ... }, false) -> { ... }
+#
+static func center(voxels : Dictionary, above_axis := false) -> Dictionary:
+	var centred_voxels := {}
+	
+	if voxels.size() > 0:
+		var extremes := get_extremes(voxels)
+		var dimensions = extremes[1] - extremes[0] + Vector3.ONE
+		var center_point = (extremes[0] + dimensions / 2).floor()
+		
+		if above_axis: center_point.y += dimensions.y / 2 * -1
+		
+		for voxel_grid in voxels:
+			centred_voxels[(voxel_grid + (center_point * -1)).floor()] = voxels[voxel_grid]
+	
+	return centred_voxels

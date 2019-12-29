@@ -42,6 +42,13 @@ func get_import_options(preset):
 					'property_hint': PROPERTY_HINT_ENUM,
 					'hint_string': PoolStringArray(VoxelMesh.MeshTypes.keys()).join(','),
 					'usage': PROPERTY_USAGE_EDITOR
+				},
+				{
+					'name': 'Center',
+					'default_value': 0,
+					'property_hint': PROPERTY_HINT_ENUM,
+					'hint_string': 'NONE,CENTER,CENTER_ABOVE_AXIS',
+					'usage': PROPERTY_USAGE_EDITOR
 				}
 			]
 		_:
@@ -64,6 +71,7 @@ func import(source_file, save_path, options, r_platform_variants, r_gen_files):
 		print('IMPORTED ', source_file.get_file(), ' AS Mesh')
 		
 		var voxelmesh := VoxelMesh.new()
+		if options.get('Center', 1) > 0: voxels = Voxel.center(voxels, options.get('Center', 1) == 2)
 		voxelmesh.set_voxels(voxels, false)
 		voxelmesh.set_mesh_type(options.get('MeshType', 1), false, false)
 		voxelmesh.update()
