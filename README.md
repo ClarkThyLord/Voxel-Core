@@ -44,6 +44,8 @@ Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made wi
 
 ## [Feature Video](https://youtu.be/CLgzs6Z6BhA)
 
+# [Usage / Docs](https://github.com/ClarkThyLord/Voxel-Core/wiki)
+
 
 # Getting Voxel-Core
 The following are two main ways you can get Voxel-Core:
