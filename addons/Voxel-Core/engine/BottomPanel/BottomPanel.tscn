@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=2]
+[gd_scene load_steps=53 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
@@ -37,6 +37,7 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=35]
 [ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=36]
 [ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=37]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/issues.png" type="Texture" id=38]
 
 [sub_resource type="InputEventKey" id=1]
 shift = true
@@ -744,7 +745,6 @@ margin_right = 682.0
 margin_bottom = 586.0
 
 [node name="Settings" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer"]
-editor/display_folded = true
 margin_left = 686.0
 margin_right = 1010.0
 margin_bottom = 586.0
@@ -967,13 +967,13 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About"]
 margin_right = 329.0
-margin_bottom = 50.0
+margin_bottom = 52.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
 margin_right = 50.0
-margin_bottom = 50.0
+margin_bottom = 52.0
 size_flags_vertical = 3
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer"]
@@ -987,29 +987,32 @@ stretch_mode = 6
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
 margin_left = 54.0
-margin_top = 9.0
+margin_top = 10.0
 margin_right = 159.0
-margin_bottom = 40.0
+margin_bottom = 41.0
 text = "Voxel-Core
 Voxels in Godot!"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer"]
 margin_left = 163.0
 margin_right = 329.0
-margin_bottom = 50.0
-size_flags_horizontal = 3
-alignment = 2
+margin_bottom = 52.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2"]
+margin_right = 166.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer"]
 margin_right = 86.0
-margin_bottom = 50.0
+margin_bottom = 24.0
 size_flags_vertical = 3
 alignment = 1
 
-[node name="Godot" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer"]
-margin_top = 13.0
+[node name="Godot" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer"]
 margin_right = 86.0
-margin_bottom = 37.0
+margin_bottom = 24.0
 hint_tooltip = "Go to asset page!"
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
@@ -1017,23 +1020,63 @@ size_flags_vertical = 0
 text = "AssetLib"
 icon = ExtResource( 36 )
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer"]
 margin_left = 90.0
 margin_right = 166.0
-margin_bottom = 50.0
+margin_bottom = 24.0
 size_flags_vertical = 3
 alignment = 1
 
-[node name="GitHub" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2"]
-margin_top = 13.0
+[node name="GitHub" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer2"]
 margin_right = 76.0
-margin_bottom = 37.0
-hint_tooltip = "Go to github  page!"
+margin_bottom = 24.0
+hint_tooltip = "Go to GitHub  page!"
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
 icon = ExtResource( 37 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2"]
+margin_top = 28.0
+margin_right = 166.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+margin_left = 17.0
+margin_right = 83.0
+margin_bottom = 24.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Issue" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2/VBoxContainer3"]
+margin_right = 66.0
+margin_bottom = 24.0
+hint_tooltip = "Go to GitHub issue page!"
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Issue"
+icon = ExtResource( 38 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+margin_left = 87.0
+margin_right = 148.0
+margin_bottom = 24.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Help" type="ToolButton" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2/VBoxContainer"]
+margin_right = 61.0
+margin_bottom = 24.0
+hint_tooltip = "Go to help page!"
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Help"
+icon = ExtResource( 34 )
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor" to="." method="_on_PrimaryColor_color_changed"]
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor" to="." method="_on_SecondaryColor_color_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]
@@ -1045,5 +1088,7 @@ icon = ExtResource( 37 )
 [connection signal="confirmed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog" to="." method="_on_VoxelsImport_confirmed"]
 [connection signal="file_selected" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog" to="." method="_on_VoxelsImport_file_selected"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/Reset" to="." method="_on_Reset_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
-[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2/VBoxContainer3/Issue" to="." method="_on_Issue_pressed"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2/VBoxContainer/Help" to="." method="_on_Help_pressed"]

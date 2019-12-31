@@ -233,6 +233,12 @@ func _on_Godot_pressed():
 func _on_GitHub_pressed():
 	OS.shell_open('https://github.com/ClarkThyLord/Voxel-Core')
 
+func _on_Help_pressed():
+	OS.shell_open('https://github.com/ClarkThyLord/Voxel-Core/wiki')
+
+func _on_Issue_pressed():
+	OS.shell_open('https://github.com/ClarkThyLord/Voxel-Core/issues')
+
 
 func _on_Reset_pressed():
 	VoxelCore.VoxelEditor.set_options()
