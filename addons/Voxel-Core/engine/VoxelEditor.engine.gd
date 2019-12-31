@@ -319,7 +319,14 @@ func update_cursors(mirrors : Dictionary) -> void:
 		cursors_are_selecting_area = true
 
 signal set_cursor_visible(visible)
-export(bool) var CursorVisible := true setget set_cursor_visible
+export(bool) var CursorVisible := true setget set_cursor_visible   #   Whether cursors are visible
+# Setter for CursorVisible, emits 'set_cursor_visible'.
+# visible   -   bool   -   value to set
+# emit      -   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_cursor_visible(false, false)
+#
 func set_cursor_visible(visible := !CursorVisible, emit := true) -> void:
 	CursorVisible = visible
 	
@@ -328,7 +335,14 @@ func set_cursor_visible(visible := !CursorVisible, emit := true) -> void:
 	if emit: emit_signal('set_cursor_visible', CursorVisible)
 
 signal set_cursor_color(color)
-export(Color) var CursorColor := Color(1, 0, 0, 0.3) setget set_cursor_color
+export(Color) var CursorColor := Color(1, 0, 0, 0.3) setget set_cursor_color   #   Cursor color
+# Setter for CursorColor, emits 'set_cursor_color'.
+# color   -   bool   -   value to set
+# emit    -   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_cursor_color(Color(0.33, 0.66, 0.33, 0.6), false)
+#
 func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
 	
@@ -338,7 +352,14 @@ func set_cursor_color(color : Color, emit := true) -> void:
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
 signal set_cursor_type(cursortype)
-export(VoxelCursor.CursorTypes) var CursorType := VoxelCursor.CursorTypes.SOLID setget set_cursor_type
+export(VoxelCursor.CursorTypes) var CursorType := VoxelCursor.CursorTypes.SOLID setget set_cursor_type   #   Cursor type
+# Setter for CursorType, emits 'set_cursor_type'.
+# cursortype   :   int(VoxelCursor.CursorType)    -   value to set
+# emit         :   bool                           -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_cursor_type(VoxelCursor.CursorTypes.WIRED, false)
+#
 func set_cursor_type(cursortype : int, emit := true) -> void:
 	CursorType = cursortype
 	
@@ -348,11 +369,12 @@ func set_cursor_type(cursortype : int, emit := true) -> void:
 	if emit: emit_signal('set_cursor_type', CursorType)
 
 
-var Floor : MeshInstance = MeshInstance.new() setget set_floor
-func set_floor(_floor : MeshInstance) -> void: return   #   Floor shouldn't be settable externally
+var Floor : MeshInstance = MeshInstance.new() setget set_floor   #   Refrence to Floor
+func set_floor(_floor : MeshInstance) -> void: return            #   Floor shouldn't be settable externally
 
-func setup_floor() -> void: update_floor()
+func setup_floor() -> void: update_floor()   #   Setup floor accordingly
 
+# Update cursor visuals
 func update_floor() -> void:
 	pass
 	if Floor:
@@ -410,17 +432,31 @@ func update_floor() -> void:
 		if Floor.has_node('VEFloor_col'):
 			Floor.get_node('VEFloor_col').get_children()[0].disabled = !FloorVisible
 
+# Parent Floor to given parent.
+# parent   :   Node   -   Node to parent Floor to
+#
+# Example:
+#   set_floor_parent([Node])
+#
 func set_floor_parent(parent : Node) -> void:
 	unset_floor_parent()
 	if Floor:
 		parent.add_child(Floor)
 
+# Unparents the Floor from its parent.
 func unset_floor_parent() -> void:
 	if Floor and Floor.get_parent():
 		Floor.get_parent().remove_child(Floor)
 
 signal set_floor_visible(visible)
 export(bool) var FloorVisible := true setget set_floor_visible
+
+# Sets the visibility for the Floor
+# visible   :   bool   -   value to set
+#
+# Example:
+#   set_floor_visible(false)
+#
 func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
 	FloorVisible = FloorConstant or visible
 	if Floor:
@@ -430,7 +466,14 @@ func set_floor_visible(visible := !FloorVisible, emit := true) -> void:
 	if emit: emit_signal('set_floor_visible', FloorVisible)
 
 signal set_floor_constant(constant)
-export(bool) var FloorConstant := false setget set_floor_constant
+export(bool) var FloorConstant := false setget set_floor_constant   #   Whether Floor shall be visible when voxels are present
+# Setter FloorConstant, emits 'set_floor_constant'.
+# constant   :   bool   -   value to set
+# emit       :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_floor_constant(true, false)
+#
 func set_floor_constant(constant := !FloorConstant, emit := true) -> void:
 	FloorConstant = constant
 	
@@ -439,7 +482,14 @@ func set_floor_constant(constant := !FloorConstant, emit := true) -> void:
 	if emit: emit_signal('set_floor_constant', FloorConstant)
 
 signal set_floor_color(color)
-export(Color) var FloorColor := Color.purple setget set_floor_color
+export(Color) var FloorColor := Color.purple setget set_floor_color   #   Floor Color
+# Setter for FloorColor, emits 'set_floor_color'.
+# color   :   Color   -   value to set
+# emit    :   bool    -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_floor_color(Color(1, 0, 0), false)
+#
 func set_floor_color(color : Color, emit := true) -> void:
 	FloorColor = color
 	if Floor and Floor.material_override and Floor.material_override.albedo_color: 
@@ -448,7 +498,14 @@ func set_floor_color(color : Color, emit := true) -> void:
 
 signal set_floor_type(floortype)
 enum FloorTypes { SOLID, WIRED }
-export(FloorTypes) var FloorType := FloorTypes.WIRED setget set_floor_type
+export(FloorTypes) var FloorType := FloorTypes.WIRED setget set_floor_type   #   Set floor type
+# Setter for FloorType, emits 'set_floor_type'.
+# floortype   :   int(FloorTypes)    -   value to set
+# emit        :   bool               -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_floor_type(FloorTypes.SOLID, false)
+#
 func set_floor_type(floortype : int, emit := true) -> void:
 	FloorType = floortype
 	update_floor()
@@ -492,10 +549,12 @@ func _ready() -> void:
 	set_options()
 	_load()
 
+# Attaches editor components to current VoxelObject
 func attach_editor_components() -> void:
 	set_cursors_parent(VoxelObject)
 	set_floor_parent(VoxelObject)
 
+# Dettaches editor components to current VoxelObject
 func detach_editor_components() -> void:
 	unset_cursors_parent()
 	unset_floor_parent()
@@ -529,6 +588,13 @@ func commit(update := true, emit := true) -> void:
 		if emit: emit_signal('committed')
 
 signal canceled
+# Cancels changes done to VoxelObject currently being edited, emits 'canceled'
+# update   :   bool   -   whether to update VoxelObject
+# emit     :   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   cancel(false, false)
+#
 func cancel(update := true, emit := true) -> void:
 	if VoxelObject and VoxelObject is VoxelObjectClass:
 		VoxelObject.set_voxels(VoxelObjectData['voxels'], false)
@@ -615,6 +681,12 @@ func grid_to_mirrors(grid : Vector3, mirrorx := MirrorX, mirrory := MirrorY, mir
 	return mirrors
 
 
+# Helper function that does the current tool operations, and registers it to undo redo.
+# grids   :   Array<Vector3>   -   Grid position to which do operations
+#
+# Example:
+#   use_tool([ Vector(2, -1, 0) ])
+#
 func use_tool(grids : Array) -> void:
 	undo_redo.create_action('VoxelEditor ' + str(Tools.keys()[Tool]))
 	match Tool:
