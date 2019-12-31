@@ -27,6 +27,24 @@
 # About
 Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made with GDScript, it was created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly), offering various VoxelObjects used to display voxels, as well as a in-engine editor.
 
+## Features
+- VoxelSet, inherits [Node](https://docs.godotengine.org/en/latest/classes/class_node.html), functions as a sort of TileSet in which you predefine voxels
+- VoxelObject, inherits [MeshInstance](https://docs.godotengine.org/en/latest/classes/class_meshinstance.html), used to visualize voxels
+	- UV Mapping, optional
+	- Meshing, capable of naive(culled) and greedy meshing
+	- StaticBody, optional, generates and maintains their own trimesh [StaticBody](https://docs.godotengine.org/en/latest/classes/class_staticbody.html)
+- VoxelEditor, inherits [Spatial](https://docs.godotengine.org/en/latest/classes/class_spatial.html), can be used to edit VoxelObjects in a interactive way
+- A fully featured VoxelEditor in-engine
+	- Undo & Redo operations
+	- Miror x, y and z operations
+	- Individual or Area operations
+	- Tools: add, sub, pick and more
+	- Much more...
+- Import Textures and Vox(MagicaVoxel) files as Meshes or VoxelObjects
+
+## [Feature Video](https://youtu.be/CLgzs6Z6BhA)
+
+
 # Getting Voxel-Core
 The following are two main ways you can get Voxel-Core:
 
