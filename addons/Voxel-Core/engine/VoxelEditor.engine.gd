@@ -62,10 +62,10 @@ signal set_tool(_tool)
 enum Tools {
 	PAN,    #   Move around
 	# TODO SELECT,
-	ADD,    #   Set Voxels with current Palette
-	SUB,    #   Erase Voxels
-	PICK,   #   Get Voxels and set them as current Palette
-	FILL    #   Replace all matching Voxels with current Palette
+	ADD,    #   Set voxels with current Palette
+	SUB,    #   Erase voxels
+	PICK,   #   Get voxels and set them as current Palette
+	FILL    #   Replace all matching voxels with current Palette
 }
 export(Tools) var Tool := Tools.PAN setget set_tool   #   Tool being used
 # Set Tool, emits 'set_tool'.
@@ -796,11 +796,14 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 			update_cursors()
 		else:
 			pointer_visible = false
+			set_cursors_visible(false)
 	
 	if pointer_visible and VoxelObject and event is InputEventMouse:
 		var mirrors = grid_to_mirrors(get_pointer())
-		if event.button_mask == BUTTON_MASK_RIGHT: pass
-		elif event is InputEventMouseMotion and not event.is_pressed(): return true
+		if event.button_mask == BUTTON_MASK_MIDDLE or event.button_mask == BUTTON_MASK_RIGHT: pass
+		elif event is InputEventMouseMotion and not event.is_pressed():
+			set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+			return true
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT:
 				if event.is_pressed():
@@ -808,7 +811,9 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						use_tool(mirrors.values())
 					elif ToolMode == ToolModes.AREA:
 						cursors_started_area = true
-					else: return false
+					else:
+						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+						return false
 				else:
 					if ToolMode == ToolModes.AREA:
 						cursors_started_area = false
@@ -818,46 +823,11 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						for mirror_index in mirrors:
 							grids += Cursors[mirror_index].selected_grids()
 						use_tool(grids)
-					else: return false
-				
+					else:
+						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+						return false
 				set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 				return true
 	
+	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 	return false
-	
-	
-#	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
-#		if event is InputEventMouse and Tool > Tools.PAN:
-#			var hit = raycast_for_voxelobject(event, camera)
-#			if hit:
-#				if not Tool == Tools.ADD or Input.is_key_pressed(KEY_SHIFT): hit.normal *= -1
-#				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
-#				var grid_pos = Voxel.abs_to_grid(VoxelObject.to_local(hit.position))
-#				var mirrors = grid_to_mirrors(grid_pos)
-#				update_cursors(grid_pos)
-#				if event.button_mask == BUTTON_MASK_RIGHT: pass
-#				elif event is InputEventMouseMotion and not event.is_pressed(): return true
-#				elif event is InputEventMouseButton:
-#					if event.button_index == BUTTON_LEFT:
-#						if event.is_pressed():
-#							if ToolMode == ToolModes.INDIVIDUAL:
-#								use_tool(mirrors.values())
-#							elif ToolMode == ToolModes.AREA:
-#								cursors_started_area = true
-#							else: return false
-#						else:
-#							if ToolMode == ToolModes.AREA:
-#								cursors_started_area = false
-#								cursors_are_selecting_area = false
-#
-#								var grids := []
-#								for mirror_index in mirrors:
-#									grids += Cursors[mirror_index].selected_grids()
-#								use_tool(grids)
-#							else: return false
-#
-#						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
-#						return true
-#	if not event is InputEventKey: update_cursors(null)
-#	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
-#	return false
