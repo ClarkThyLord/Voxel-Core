@@ -387,6 +387,7 @@ tab_align = 0
 
 [node name="VoxelObject" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
 editor/display_folded = true
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -401,13 +402,13 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject"]
-editor/display_folded = true
 margin_right = 316.0
 margin_bottom = 512.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VoxelSet" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer"]
+editor/display_folded = true
 margin_right = 316.0
 margin_bottom = 74.0
 
@@ -535,8 +536,6 @@ current_dir = "C:/Users/Christian Moises/Desktop/GitHub/Voxel-Core"
 current_path = "C:/Users/Christian Moises/Desktop/GitHub/Voxel-Core/"
 
 [node name="Effects" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer"]
-editor/display_folded = true
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -550,93 +549,97 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
-margin_right = 373.0
+margin_right = 316.0
 margin_bottom = 28.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer"]
-margin_right = 373.0
+margin_right = 316.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 alignment = 2
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer/HBoxContainer3"]
-margin_left = 239.0
+margin_left = 182.0
 margin_top = 3.0
-margin_right = 311.0
+margin_right = 254.0
 margin_bottom = 17.0
 text = "Effect Area:"
 
 [node name="EffectArea" type="OptionButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer/HBoxContainer3"]
-margin_left = 315.0
-margin_right = 373.0
+margin_left = 258.0
+margin_right = 316.0
 margin_bottom = 20.0
 text = "All"
+items = [ "All", null, false, 0, null, "Selected", null, true, 1, null ]
+selected = 0
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/VBoxContainer"]
 margin_top = 24.0
-margin_right = 373.0
+margin_right = 316.0
 margin_bottom = 28.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
 margin_top = 32.0
-margin_right = 373.0
-margin_bottom = 520.0
+margin_right = 316.0
+margin_bottom = 512.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer"]
-margin_right = 373.0
-margin_bottom = 488.0
+margin_right = 316.0
+margin_bottom = 480.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Mirror" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer"]
+editor/display_folded = true
+visible = false
 margin_right = 373.0
 margin_bottom = 64.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 366.0
 margin_bottom = 57.0
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer"]
 margin_right = 359.0
 margin_bottom = 14.0
 text = "Mirror:"
 
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer"]
 margin_top = 18.0
 margin_right = 359.0
 margin_bottom = 22.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer"]
 margin_top = 26.0
 margin_right = 359.0
 margin_bottom = 50.0
 
-[node name="MirrorX" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2/HBoxContainer"]
+[node name="MirrorX" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_right = 99.0
 margin_bottom = 24.0
 text = "Mirror X"
 icon = ExtResource( 12 )
 
-[node name="MirrorY" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2/HBoxContainer"]
+[node name="MirrorY" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_left = 103.0
 margin_right = 201.0
 margin_bottom = 24.0
 text = "Mirror Y"
 icon = ExtResource( 13 )
 
-[node name="MirrorZ" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2/HBoxContainer"]
+[node name="MirrorZ" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_left = 205.0
 margin_right = 304.0
 margin_bottom = 24.0
 text = "Mirror Z"
 icon = ExtResource( 14 )
 
-[node name="Mirror" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer2/HBoxContainer"]
+[node name="Mirror" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_left = 308.0
 margin_right = 359.0
 margin_bottom = 24.0
@@ -644,40 +647,42 @@ size_flags_horizontal = 3
 text = "Mirror"
 
 [node name="Align" type="PanelContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer"]
-margin_top = 68.0
-margin_right = 373.0
-margin_bottom = 128.0
+editor/display_folded = true
+margin_right = 316.0
+margin_bottom = 60.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 366.0
+margin_right = 309.0
 margin_bottom = 53.0
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer2"]
-margin_right = 359.0
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer"]
+margin_right = 302.0
 margin_bottom = 14.0
 text = "Align:"
 
-[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer2"]
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer"]
 margin_top = 18.0
-margin_right = 359.0
+margin_right = 302.0
 margin_bottom = 22.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer"]
 margin_top = 26.0
-margin_right = 359.0
+margin_right = 302.0
 margin_bottom = 46.0
 
-[node name="OptionButton" type="OptionButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer2/HBoxContainer"]
-margin_right = 311.0
+[node name="AlignSetting" type="OptionButton" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer/HBoxContainer"]
+margin_right = 254.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Center"
+items = [ "Center", null, false, 0, null, "Center Above Axis", null, false, 1, null ]
+selected = 0
 
-[node name="Align" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer2/HBoxContainer"]
-margin_left = 315.0
-margin_right = 359.0
+[node name="Align" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer/HBoxContainer"]
+margin_left = 258.0
+margin_right = 302.0
 margin_bottom = 20.0
 text = "Align"
 
@@ -1027,6 +1032,7 @@ icon = ExtResource( 34 )
 [connection signal="file_selected" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export/FileDialog" to="." method="_on_VoxelsExport_file_selected"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import" to="." method="_on_VoxelsImport_pressed"]
 [connection signal="file_selected" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog" to="." method="_on_VoxelsImport_file_selected"]
+[connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer/HBoxContainer/Align" to="." method="_on_Align_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]

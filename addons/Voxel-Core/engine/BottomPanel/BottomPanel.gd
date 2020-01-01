@@ -37,6 +37,8 @@ onready var ExportFile := get_node('PanelContainer/MarginContainer/HBoxContainer
 onready var ImportVoxels := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import')
 onready var ImportFile := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog')
 
+onready var AlignSetting := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer/HBoxContainer/AlignSetting')
+
 
 onready var SettingsTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer')
 
@@ -242,6 +244,14 @@ func _on_VoxelsImport_file_selected(path : String):
 	
 	if voxels.size() == 0: printerr('No voxel data found...')
 	else: VoxelCore.VoxelEditor.VoxelObject.set_voxels(voxels)
+
+
+func _on_Align_pressed():
+	var voxels : Dictionary = VoxelCore.VoxelEditor.VoxelObject.get_voxels()
+	
+	voxels = Voxel.center(voxels, AlignSetting.selected == 1)
+	
+	VoxelCore.VoxelEditor.VoxelObject.set_voxels(voxels)
 
 
 func _on_Godot_pressed():
