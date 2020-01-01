@@ -62,7 +62,6 @@ var VoxelCore
 func _ready():
 	InfoTabs.set_tab_icon(0, preload('res://addons/Voxel-Core/assets/VoxelEditor.png'))
 	InfoTabs.set_tab_icon(1, preload('res://addons/Voxel-Core/assets/BottomPanel/effects.png'))
-	InfoTabs.set_tab_icon(2, preload('res://addons/Voxel-Core/assets/BottomPanel/import.png'))
 	
 	SettingsTabs.set_tab_icon(0, preload('res://addons/Voxel-Core/assets/BottomPanel/general.png'))
 	SettingsTabs.set_tab_icon(1, preload('res://addons/Voxel-Core/assets/BottomPanel/individual.png'))
@@ -204,7 +203,7 @@ func _on_Cancel_pressed():
 func _on_VoxelsExport_pressed():
 	ExportFile.popup_centered()
 
-func _on_VoxelsExport_file_selected(path):
+func _on_VoxelsExport_file_selected(path : String):
 	var file = File.new()
 	if file.open(path, File.WRITE) != OK:
 		printerr("Error exporting voxels...")
@@ -216,15 +215,33 @@ func _on_VoxelsExport_file_selected(path):
 func _on_VoxelsImport_pressed():
 	ImportFile.popup_centered()
 
-func _on_VoxelsImport_file_selected(path):
-	var file = File.new()
-	if not file.file_exists(path) or file.open(path, File.READ) != OK or true:
-		printerr("Error importing voxels...")
-		return
+func _on_VoxelsImport_file_selected(path : String):
+	var voxels := {}
 	
-	# TODO parse json correctly
-#	VoxelCore.VoxelEditor.VoxelObject.set_voxels(parse_json(file.get_line()))
-	file.close()
+	match path.get_extension().to_lower():
+		'vox':
+			var file := File.new()
+			var error = file.open(path, File.READ)
+			if error != OK:
+				printerr("Could not open `", path, "`")
+				if file.is_open(): file.close()
+				return error
+			
+			voxels = Voxel.vox_to_voxels(file)
+			file.close()
+		'png', 'jpg':
+			var image := Image.new()
+			var err = image.load(path)
+			if err != OK:
+				printerr("Could not load `", path, "`")
+				return err
+			
+			voxels = Voxel.image_to_voxels(image)
+		_:
+			printerr('Trying to import invalid file...')
+	
+	if voxels.size() == 0: printerr('No voxel data found...')
+	else: VoxelCore.VoxelEditor.VoxelObject.set_voxels(voxels)
 
 
 func _on_Godot_pressed():
