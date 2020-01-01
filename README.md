@@ -10,7 +10,7 @@
 
 <p align="center">
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/releases">
-		<img src="https://img.shields.io/badge/Version-2.0.0-green.svg" alt="Version">
+		<img src="https://img.shields.io/badge/Version-2.0.1-green.svg" alt="Version">
 	</a>
 	<a href="https://godotengine.org/asset-library/asset/465">
 		<img src="https://img.shields.io/badge/Godot-AssetLibrary-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAACZSURBVDhPzYzBDYMwEAQt0VjCJxWkq1TBkybyIU3kw58iAJ1vF1bmUBLEIyONbN/tOp3O7fGcTDwz0WwXhiMR2cJlWYjU/EIZ+sZ721aoH/sAVYfD7j1MhgapMcoOVYfD66XOGizx5I5ZVB0OGdQ37/qxiarD4S+i6uSvAQPNq1/kTEHV0QDvkbpHdUWDn0RlSxQuRfRvSGkGI8iOwHqmdCcAAAAASUVORK5CYII=" alt="AssetLibrary">
@@ -38,7 +38,7 @@ Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made wi
 	- Undo & Redo operations
 	- Miror x, y and z operations
 	- Individual or Area operations
-	- Tools: add, sub, pick and more
+	- Tools: add, sub, swap, pick and more
 	- Much more...
 - Import Textures and Vox(MagicaVoxel) files as Meshes or VoxelObjects
 
@@ -62,7 +62,7 @@ You can move the Voxel-Core plugin folder to your own project’s `addons` folde
 ---
 
 <p align="center">
-	<a href="https://godotengine.org/asset-library/asset/465" style="vertical-align: middle; margin-right: 10px;">
+	<a href="https://godotengine.org/asset-library/asset/465" style="vertical-align: middle;">
 		Asset Library
 	</a>
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/blob/master/LICENSE" style="vertical-align: middle;">
