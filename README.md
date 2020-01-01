@@ -10,7 +10,7 @@
 
 <p align="center">
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/releases">
-		<img src="https://img.shields.io/badge/Version-2.0.1-green.svg" alt="Version">
+		<img src="https://img.shields.io/badge/Version-2.0.2-green.svg" alt="Version">
 	</a>
 	<a href="https://godotengine.org/asset-library/asset/465">
 		<img src="https://img.shields.io/badge/Godot-AssetLibrary-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAACZSURBVDhPzYzBDYMwEAQt0VjCJxWkq1TBkybyIU3kw58iAJ1vF1bmUBLEIyONbN/tOp3O7fGcTDwz0WwXhiMR2cJlWYjU/EIZ+sZ721aoH/sAVYfD7j1MhgapMcoOVYfD66XOGizx5I5ZVB0OGdQ37/qxiarD4S+i6uSvAQPNq1/kTEHV0QDvkbpHdUWDn0RlSxQuRfRvSGkGI8iOwHqmdCcAAAAASUVORK5CYII=" alt="AssetLibrary">
