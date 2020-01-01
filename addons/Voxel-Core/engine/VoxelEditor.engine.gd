@@ -38,6 +38,9 @@ export(bool) var Lock := true setget set_lock   #   Whether the currently editin
 #
 func set_lock(lock := !Lock, emit := true) -> void:
 	Lock = lock
+	
+	if Lock: update_cursors(null)
+	
 	if emit: emit_signal('set_lock', Lock)
 
 
@@ -74,6 +77,9 @@ export(Tools) var Tool := Tools.PAN setget set_tool   #   Tool being used
 #
 func set_tool(_tool : int, emit := true) -> void:
 	Tool = _tool
+	
+	update_cursors()
+	
 	if emit: emit_signal('set_tool', Tool)
 
 signal set_tool_palette(tool_palette)
@@ -220,6 +226,9 @@ export(bool) var MirrorX := false setget set_mirror_x   #   Whether to mirror op
 #
 func set_mirror_x(mirrorx := !MirrorX, emit := true) -> void:
 	MirrorX = mirrorx
+	
+	update_cursors()
+	
 	if emit: emit_signal('set_mirror_x', MirrorX)
 
 signal set_mirror_y(mirror_y)
@@ -233,6 +242,9 @@ export(bool) var MirrorY := false setget set_mirror_y   #   Whether to mirror op
 #
 func set_mirror_y(mirrory := !MirrorY, emit := true) -> void:
 	MirrorY = mirrory
+	
+	update_cursors()
+	
 	if emit: emit_signal('set_mirror_y', MirrorY)
 
 signal set_mirror_z(mirror_z)
@@ -246,6 +258,9 @@ export(bool) var MirrorZ := false setget set_mirror_z   #   Whether to mirror op
 #
 func set_mirror_z(mirrorz := !MirrorZ, emit := true) -> void:
 	MirrorZ = mirrorz
+	
+	update_cursors()
+	
 	if emit: emit_signal('set_mirror_z', MirrorZ)
 
 
@@ -295,28 +310,35 @@ func set_cursors_visible(visible : bool) -> void:
 	for cursor in Cursors.values():
 		cursor.visible = visible
 
+var cursors_last_position                 #   Last cursor position
 var cursors_started_area := false         #   Whether selection has started
 var cursors_are_selecting_area := false   #   Whether selection is happening
 # Update cursors positino and selection area.
-# mirror   :   Dictionary<Vector3, Vector3>   -   grid positions of visible cursors
+# position   :   null/Vector3   -   grid position to update to
 #
 # Example:
-#   update_cursors({ Vector.RIGHT: Vector3(-1, 10, 3) })
+#   update_cursors(Vector3(-1, 3, 0))
 #
-func update_cursors(mirrors : Dictionary) -> void:
-	var all_mirrors = grid_to_mirrors(mirrors[Vector3(0, 0, 0)], true, true, true)
-	for cursor_key in Cursors:
-		Cursors[cursor_key].visible = CursorVisible and mirrors.has(cursor_key)
-		
-		if ToolMode == ToolModes.AREA:
-			if cursors_are_selecting_area:
-				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
-				continue
-		
-		Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
-		Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
-	if cursors_started_area:
-		cursors_are_selecting_area = true
+func update_cursors(position = cursors_last_position) -> void:
+	if typeof(position) == TYPE_NIL:
+		cursors_last_position = position
+		set_cursors_visible(false)
+	elif typeof(position) == TYPE_VECTOR3:
+		cursors_last_position = position
+		var visible_cursors = grid_to_mirrors(position)
+		var all_mirrors = grid_to_mirrors(position, true, true, true)
+		for cursor_key in Cursors:
+			Cursors[cursor_key].visible = CursorVisible and visible_cursors.has(cursor_key)
+			
+			if ToolMode == ToolModes.AREA:
+				if cursors_are_selecting_area:
+					Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
+					continue
+			
+			Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
+			Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
+		if cursors_started_area:
+			cursors_are_selecting_area = true
 
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible   #   Whether cursors are visible
@@ -786,10 +808,9 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
 				var grid_pos = Voxel.abs_to_grid(VoxelObject.to_local(hit.position))
 				var mirrors = grid_to_mirrors(grid_pos)
+				update_cursors(grid_pos)
 				if event.button_mask == BUTTON_MASK_RIGHT: pass
-				elif event is InputEventMouseMotion and not event.is_pressed():
-					update_cursors(mirrors)
-					return true
+				elif event is InputEventMouseMotion and not event.is_pressed(): return true
 				elif event is InputEventMouseButton:
 					if event.button_index == BUTTON_LEFT:
 						if event.is_pressed():
@@ -809,9 +830,8 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 								use_tool(grids)
 							else: return false
 						
-						update_cursors(mirrors)
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return true
-	if not event is InputEventKey: set_cursors_visible(false)
+	if not event is InputEventKey: update_cursors(null)
 	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 	return false
