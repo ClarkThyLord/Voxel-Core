@@ -179,7 +179,10 @@ func _enter_tree() -> void:
 func _setup() -> void:
 	set_voxel_edit_undo_redo()
 	
-	
+	for child in get_children():
+		remove_child(child)
+		child.queue_free()
+	add_child(VoxelEditor)
 	if not VoxelEditor.is_connected('set_lock', self, 'select'):
 		VoxelEditor.connect('set_lock', self, 'select')
 	if not VoxelEditor.is_connected('script_changed', self, 'set_voxel_edit_undo_redo'):

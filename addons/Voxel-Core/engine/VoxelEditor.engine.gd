@@ -39,7 +39,7 @@ export(bool) var Lock := true setget set_lock   #   Whether the currently editin
 func set_lock(lock := !Lock, emit := true) -> void:
 	Lock = lock
 	
-	if Lock: update_cursors(null)
+	if Lock: set_cursors_visible(false)
 	
 	if emit: emit_signal('set_lock', Lock)
 
@@ -310,25 +310,19 @@ func set_cursors_visible(visible : bool) -> void:
 	for cursor in Cursors.values():
 		cursor.visible = visible
 
-var cursors_last_position                 #   Last cursor position
 var cursors_started_area := false         #   Whether selection has started
 var cursors_are_selecting_area := false   #   Whether selection is happening
-# Update cursors positino and selection area.
-# position   :   null/Vector3   -   grid position to update to
-#
-# Example:
-#   update_cursors(Vector3(-1, 3, 0))
-#
-func update_cursors(position = cursors_last_position) -> void:
-	if typeof(position) == TYPE_NIL:
-		cursors_last_position = position
-		set_cursors_visible(false)
-	elif typeof(position) == TYPE_VECTOR3:
-		cursors_last_position = position
+# Update cursors visiblity, position and selection area.
+func update_cursors() -> void:
+	if pointer_visible:
+		var position = get_pointer()
 		var visible_cursors = grid_to_mirrors(position)
 		var all_mirrors = grid_to_mirrors(position, true, true, true)
 		for cursor_key in Cursors:
-			Cursors[cursor_key].visible = CursorVisible and visible_cursors.has(cursor_key)
+			if not pointer_visible or Lock or Tool == Tools.PAN:
+				Cursors[cursor_key].visible = false
+			else:
+				Cursors[cursor_key].visible = CursorVisible and visible_cursors.has(cursor_key)
 			
 			if ToolMode == ToolModes.AREA:
 				if cursors_are_selecting_area:
@@ -396,9 +390,8 @@ func set_floor(_floor : MeshInstance) -> void: return            #   Floor shoul
 
 func setup_floor() -> void: update_floor()   #   Setup floor accordingly
 
-# Update cursor visuals
+# Update floor visuals
 func update_floor() -> void:
-	pass
 	if Floor:
 		for child in Floor.get_children():
 			Floor.remove_child(child)
@@ -570,6 +563,13 @@ func _ready() -> void:
 	set_default_options()
 	set_options()
 	_load()
+
+func _exit_tree():
+	detach_editor_components()
+	for cursor in Cursors.values():
+		cursor.queue_free()
+	Floor.queue_free()
+
 
 # Attaches editor components to current VoxelObject
 func attach_editor_components() -> void:
@@ -775,39 +775,65 @@ func tool_sub(grid) -> void:
 		undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
 
 
+var pointer_normal
+var pointer_position
+var pointer_visible := false
+func get_pointer():
+	var _pointer_normal = pointer_normal
+	var _pointer_position = pointer_position
+	
+	if not Tool == Tools.ADD: _pointer_normal *= -1
+	return Voxel.abs_to_grid(VoxelObject.to_local(_pointer_position + (_pointer_normal  * (Voxel.VoxelSize / 2))))
+
+
 func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
-	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
-		if event is InputEventMouse and Tool > Tools.PAN:
-			var hit = raycast_for_voxelobject(event, camera)
-			if hit:
-				if not Tool == Tools.ADD or Input.is_key_pressed(KEY_SHIFT): hit.normal *= -1
-				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
-				var grid_pos = Voxel.abs_to_grid(VoxelObject.to_local(hit.position))
-				var mirrors = grid_to_mirrors(grid_pos)
-				update_cursors(grid_pos)
-				if event.button_mask == BUTTON_MASK_RIGHT: pass
-				elif event is InputEventMouseMotion and not event.is_pressed(): return true
-				elif event is InputEventMouseButton:
-					if event.button_index == BUTTON_LEFT:
-						if event.is_pressed():
-							if ToolMode == ToolModes.INDIVIDUAL:
-								use_tool(mirrors.values())
-							elif ToolMode == ToolModes.AREA:
-								cursors_started_area = true
-							else: return false
-						else:
-							if ToolMode == ToolModes.AREA:
-								cursors_started_area = false
-								cursors_are_selecting_area = false
-								
-								var grids := []
-								for mirror_index in mirrors:
-									grids += Cursors[mirror_index].selected_grids()
-								use_tool(grids)
-							else: return false
-						
-						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
-						return true
-	if not event is InputEventKey: update_cursors(null)
-	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+	if event is InputEventMouse:
+		var hit = raycast_for_voxelobject(event, camera)
+		if hit:
+			pointer_visible = true
+			pointer_normal = hit.normal
+			pointer_position = hit.position
+			update_cursors()
+		else:
+			pointer_visible = false
+	
+	
+	
 	return false
+	
+	
+#	if not Lock and VoxelObject and VoxelObject is VoxelObjectClass:
+#		if event is InputEventMouse and Tool > Tools.PAN:
+#			var hit = raycast_for_voxelobject(event, camera)
+#			if hit:
+#				if not Tool == Tools.ADD or Input.is_key_pressed(KEY_SHIFT): hit.normal *= -1
+#				hit.position += hit.normal  * (Voxel.VoxelSize / 2)
+#				var grid_pos = Voxel.abs_to_grid(VoxelObject.to_local(hit.position))
+#				var mirrors = grid_to_mirrors(grid_pos)
+#				update_cursors(grid_pos)
+#				if event.button_mask == BUTTON_MASK_RIGHT: pass
+#				elif event is InputEventMouseMotion and not event.is_pressed(): return true
+#				elif event is InputEventMouseButton:
+#					if event.button_index == BUTTON_LEFT:
+#						if event.is_pressed():
+#							if ToolMode == ToolModes.INDIVIDUAL:
+#								use_tool(mirrors.values())
+#							elif ToolMode == ToolModes.AREA:
+#								cursors_started_area = true
+#							else: return false
+#						else:
+#							if ToolMode == ToolModes.AREA:
+#								cursors_started_area = false
+#								cursors_are_selecting_area = false
+#
+#								var grids := []
+#								for mirror_index in mirrors:
+#									grids += Cursors[mirror_index].selected_grids()
+#								use_tool(grids)
+#							else: return false
+#
+#						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+#						return true
+#	if not event is InputEventKey: update_cursors(null)
+#	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+#	return false
