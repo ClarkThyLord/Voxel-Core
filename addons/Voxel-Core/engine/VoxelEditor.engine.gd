@@ -64,6 +64,7 @@ enum Tools {
 	# TODO SELECT,
 	ADD,    #   Set voxels with current Palette
 	SUB,    #   Erase voxels
+	SWAP,   #   Replace voxels
 	PICK,   #   Get voxels and set them as current Palette
 	FILL    #   Replace all matching voxels with current Palette
 }
@@ -724,6 +725,12 @@ func use_tool(grids : Array) -> void:
 			
 			undo_redo.add_do_method(VoxelObject, 'update')
 			undo_redo.add_undo_method(VoxelObject, 'update')
+		Tools.SWAP:
+			for grid in grids:
+				tool_swap(grid, get_palette() if RawData else get_rpalette())
+			
+			undo_redo.add_do_method(VoxelObject, 'update')
+			undo_redo.add_undo_method(VoxelObject, 'update')
 		Tools.PICK:
 			var voxel = VoxelObject.get_rvoxel(Cursors[Vector3(0, 0, 0)].CursorPosition)
 			if typeof(voxel) == TYPE_NIL: pass
@@ -767,12 +774,19 @@ func tool_add(grid : Vector3, voxel) -> void:
 	else:
 		undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
 
-func tool_sub(grid) -> void:
+func tool_sub(grid : Vector3) -> void:
 	var voxel = VoxelObject.get_voxel(grid)
 	if not typeof(voxel) == TYPE_NIL:
 		set_modified(true)
 		undo_redo.add_do_method(VoxelObject, 'erase_voxel', grid, false)
 		undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, voxel, false)
+
+func tool_swap(grid : Vector3, voxel) -> void:
+	var _voxel = VoxelObject.get_rvoxel(grid)
+	if not typeof(_voxel) == TYPE_NIL:
+		set_modified(true)
+		undo_redo.add_do_method(VoxelObject, 'set_voxel', grid, voxel, false)
+		undo_redo.add_undo_method(VoxelObject, 'set_voxel', grid, _voxel, false)
 
 
 var pointer_normal
