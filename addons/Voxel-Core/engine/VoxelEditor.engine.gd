@@ -797,7 +797,31 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 		else:
 			pointer_visible = false
 	
-	
+	if pointer_visible and VoxelObject and event is InputEventMouse:
+		var mirrors = grid_to_mirrors(get_pointer())
+		if event.button_mask == BUTTON_MASK_RIGHT: pass
+		elif event is InputEventMouseMotion and not event.is_pressed(): return true
+		elif event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT:
+				if event.is_pressed():
+					if ToolMode == ToolModes.INDIVIDUAL:
+						use_tool(mirrors.values())
+					elif ToolMode == ToolModes.AREA:
+						cursors_started_area = true
+					else: return false
+				else:
+					if ToolMode == ToolModes.AREA:
+						cursors_started_area = false
+						cursors_are_selecting_area = false
+						
+						var grids := []
+						for mirror_index in mirrors:
+							grids += Cursors[mirror_index].selected_grids()
+						use_tool(grids)
+					else: return false
+				
+				set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
+				return true
 	
 	return false
 	
