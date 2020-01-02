@@ -812,7 +812,7 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 			pointer_visible = false
 			set_cursors_visible(false)
 	
-	if pointer_visible and VoxelObject and event is InputEventMouse:
+	if pointer_visible and not Lock and VoxelObject and event is InputEventMouse:
 		var mirrors = grid_to_mirrors(get_pointer())
 		if event.button_mask == BUTTON_MASK_MIDDLE or event.button_mask == BUTTON_MASK_RIGHT: pass
 		elif event is InputEventMouseMotion and not event.is_pressed():
