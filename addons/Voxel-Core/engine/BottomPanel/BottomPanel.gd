@@ -139,7 +139,7 @@ func setup(voxelcore) -> void:
 	Lock.connect('toggled', voxelcore.VoxelEditor, 'set_lock')
 	
 	VoxelSetPath.set_text(str(voxelcore.VoxelEditor.VoxelObject.VoxelSetPath))
-	VoxelSetUV.set_pressed(voxelcore.VoxelEditor.VoxelObject.VoxelSet.AlbedoTexture is Texture)
+	VoxelSetUV.set_pressed(voxelcore.VoxelEditor.VoxelObject.VoxelSet and voxelcore.VoxelEditor.VoxelObject.VoxelSet.AlbedoTexture is Texture)
 	
 	
 	AutoSave.set_pressed(voxelcore.AutoSave)
