@@ -205,42 +205,16 @@ func erase_voxels(update : bool = true) -> void:
 
 func update() -> void:
 	mutex.lock()
-#	print('BEFORE ->\nqueue : ', queue_chunks, '\nupdate : ', update_chunks)
 	if queue_chunks.size() > 0:
 		for queue_chunk in queue_chunks:
 			if not update_chunks.has(queue_chunk):
 				update_chunks.append(queue_chunk)
 		queue_chunks.clear()
 	else: update_chunks = chunks_data.keys()
-#	print('AFTER ->\nqueue : ', queue_chunks, '\nupdate : ', update_chunks)
 	mutex.unlock()
 	
 	_save()
 func update_static_body() -> void: pass
-
-
-#func set_chunk(chunk : Vector3, chunk, queue := true) -> void:
-#	erase_chunk(chunk)
-#	chunks[chunk] = chunk
-#	if queue: queue_chunk(chunk)
-#
-#func erase_chunk(chunk : Vector3) -> void:
-#	var _chunk = chunks.get(chunk, false)
-#	if _chunk:
-#		if _chunk.get_parent(): _chunk.get_parent().remove_child(_chunk)
-#		queue_chunks.erase(chunk)
-#		chunks.erase(chunk)
-#		_chunk.queue_free()
-#
-#func setup_chunk(chunk_data : Dictionary):
-#	var chunk := load('res://addons/Voxel-Core/src/VoxelChunk.gd')
-#	chunk.set_editing(editing, false)
-#	chunk.set_uv_mapping(UVMapping, false, false)
-#	chunk.set_build_static_body(BuildStaticBody, false, false)
-#	chunk.set_mesh_type(MeshType, false, false)
-#	chunk.set_voxel_set(VoxelSet, false, false)
-#	chunk.set_voxels(chunk_data, false)
-#	return chunk
 
 
 func update_thread(userdata) -> void:
@@ -248,9 +222,7 @@ func update_thread(userdata) -> void:
 		mutex.lock()
 		var should_exit = exit_thread
 		mutex.unlock()
-		if should_exit:
-#			print('break')
-			break
+		if should_exit: break
 		
 		mutex.lock()
 		if update_chunks.size() > 0:
@@ -258,9 +230,7 @@ func update_thread(userdata) -> void:
 			
 			var chunk = chunks.get(chunk_position)
 			var chunk_data = chunks_data.get(chunk_position)
-#			print('chunks data : ', chunks_data)
 			if chunk_data:
-#				print('update')
 				if not (chunk and is_instance_valid(chunk)):
 					chunk = load('res://addons/Voxel-Core/src/VoxelChunk.gd').new()
 					call_deferred('add_child', chunk)
@@ -274,23 +244,8 @@ func update_thread(userdata) -> void:
 				chunk.set_voxels(chunk_data, false)
 				chunk.call_deferred('update')
 			elif not chunk_data:
-#				print('remove')
-#				if chunk.get_parent(): chunk.get_parent().remove_child(chunk)
 				queue_chunks.erase(chunk_position)
 				chunks.erase(chunk_position)
 				if chunk and chunk is MeshInstance:
 					chunk.call_deferred('queue_free')
-#				chunk.queue_free()
-			
-#			if not chunk:
-#				chunk = load('res://addons/Voxel-Core/src/VoxelChunk.gd').new()
-#				chunk.set_editing(editing, false)
-#				chunk.set_uv_mapping(UVMapping, false, false)
-#				chunk.set_build_static_body(BuildStaticBody, false, false)
-#				chunk.set_mesh_type(MeshType, false, false)
-#				chunk.set_voxel_set(VoxelSet, false, false)
-#				chunk.set_voxels(chunks_data[chunk_position], false)
-#				chunks[chunk_position] = chunk
-#				add_child(chunk)
-#			print('chunk count : ', chunks.size(), ' | deque : ', chunk_position)
 		mutex.unlock()
