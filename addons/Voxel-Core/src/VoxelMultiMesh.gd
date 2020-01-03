@@ -115,6 +115,7 @@ func _ready() -> void:
 	
 	
 	exit_thread = false
+	update_chunks = chunks_data.keys()
 	thread.start(self, 'update_thread')
 
 func _exit_tree():
