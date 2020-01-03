@@ -13,4 +13,5 @@ dest_files=[ "res://.import/Guide.voxelobject.png-eb947ff70399c9265da9705d982b72
 
 Name="Guide"
 MeshType=1
+Center=0
 VoxelObject=1

@@ -13,34 +13,26 @@ func set_chunk_size(chunksize : int, emit := true) -> void:
 
 
 func set_editing(_editing := !editing, update := true) -> void:
-	mutex.lock()
 	for chunk in chunks.values():
 		chunk.set_editing(editing, false)
-	mutex.unlock()
 	
 	.set_editing(_editing, update)
 
 func set_uv_mapping(uvmapping : bool, update := true, emit := true) -> void:
-	mutex.lock()
 	for chunk in chunks.values():
 		chunk.set_uv_mapping(uvmapping, false, false)
-	mutex.unlock()
 	
 	.set_uv_mapping(uvmapping, update, emit)
 
 func set_build_static_body(buildstaticbody : bool, update := true, emit := true) -> void:
-	mutex.lock()
 	for chunk in chunks.values():
 		chunk.set_build_static_body(buildstaticbody, false, false)
-	mutex.unlock()
 	
 	.set_build_static_body(buildstaticbody, update, emit)
 
 func set_mesh_type(meshtype : int, update := true, emit := true) -> void:
-	mutex.lock()
 	for chunk in chunks.values():
 		chunk.set_mesh_type(meshtype, false, false)
-	mutex.unlock()
 	
 	.set_mesh_type(meshtype, update, emit)
 
@@ -54,10 +46,8 @@ func set_voxel_set(voxelset : VoxelSetClass, update := true, emit := true) -> vo
 		VoxelSet.disconnect('updated', self, 'update')
 	
 	VoxelSet = voxelset
-	mutex.lock()
 	for chunk in chunks.values():
 		chunk.set_voxel_set(voxelset, false, false)
-	mutex.unlock()
 	
 	if not VoxelSet.is_connected('updated', self, 'update'):
 		VoxelSet.connect('updated', self, 'update')
@@ -113,11 +103,9 @@ func _load() -> void:
 	mutex.unlock()
 
 func _save() -> void:
-	mutex.lock()
 	._save()
 	
 	set_meta('chunks_data', chunks_data)
-	mutex.unlock()
 
 
 func _init() -> void: _load()
@@ -142,63 +130,51 @@ func grid_to_chunk(grid : Vector3) -> Vector3:
 
 
 func get_rvoxel(grid : Vector3):
-	mutex.lock()
 	var voxel = null
 	var chunk = chunks_data.get(grid_to_chunk(grid))
 	if typeof(chunk) == TYPE_DICTIONARY:
 		voxel = chunk.get(grid)
-	mutex.unlock()
 	return voxel
 
 func get_voxels() -> Dictionary:
-	mutex.lock()
 	var voxels := {}
 	for chunk in chunks_data.values():
 		for voxel in chunk:
 			voxels[voxel] = chunk[voxel]
-	mutex.unlock()
 	return voxels
 
 
 func set_voxel(grid : Vector3, voxel, update := false) -> void:
-	mutex.lock()
 	var chunk := grid_to_chunk(grid)
 	if not chunks_data.has(chunk):
 		chunks_data[chunk] = {}
 	chunks_data[chunk][grid] = voxel
-	mutex.unlock()
 	
 	queue_chunk(chunk)
 	.set_voxel(grid, voxel, update)
 
 func set_voxels(voxels : Dictionary, update := true) -> void:
-	mutex.lock()
 	for voxel in voxels:
 		var chunk = grid_to_chunk(voxel)
 		if not chunks_data.has(chunk):
 			chunks_data[chunk] = {}
 		chunks_data[chunk][voxel] = voxels[voxel]
 	queue_chunks = chunks_data.keys()
-	mutex.unlock()
 	
 	if update: update()
 
 
 func erase_voxel(grid : Vector3, update := false) -> void:
-	mutex.lock()
 	var chunk := grid_to_chunk(grid)
 	if chunks_data.has(chunk):
 		chunks_data[chunk].erase(grid)
-	mutex.unlock()
 	
 	queue_chunk(chunk)
 	.erase_voxel(grid, update)
 
 func erase_voxels(update : bool = true) -> void:
-	mutex.lock()
 	queue_chunks = chunks_data.keys()
 	chunks_data.clear()
-	mutex.unlock()
 	
 	if update: update()
 

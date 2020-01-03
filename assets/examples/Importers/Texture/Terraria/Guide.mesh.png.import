@@ -12,3 +12,4 @@ dest_files=[ "res://.import/Guide.mesh.png-f2222a51ae34c221350ba6dfd127cb75.mesh
 [params]
 
 MeshType=1
+Center=0

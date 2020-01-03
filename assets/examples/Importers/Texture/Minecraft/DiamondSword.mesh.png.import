@@ -12,3 +12,4 @@ dest_files=[ "res://.import/DiamondSword.mesh.png-ae2e85db4d573cf6d382996f675478
 [params]
 
 MeshType=1
+Center=0

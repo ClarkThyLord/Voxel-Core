@@ -13,4 +13,5 @@ dest_files=[ "res://.import/DiamondSword.voxelobject.png-fc1908d9b0bc45e5a50a99c
 
 Name="DiamondSword"
 MeshType=1
+Center=0
 VoxelObject=1

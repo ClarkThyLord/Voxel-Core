@@ -12,3 +12,4 @@ dest_files=[ "res://.import/Monument.mesh.vox-1f3a14e2098c3da340dfbd41959c36da.m
 [params]
 
 MeshType=0
+Center=0
