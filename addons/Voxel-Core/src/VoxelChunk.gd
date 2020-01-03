@@ -32,10 +32,7 @@ func set_voxel(grid : Vector3, voxel, update := false) -> void:
 	.set_voxel(grid, voxel, update)
 
 func set_voxels(_voxels : Dictionary, update := true) -> void:
-	erase_voxels(false)
-	
 	voxels = _voxels
-	if update: update()
 
 
 func erase_voxel(grid : Vector3, update := false) -> void:
