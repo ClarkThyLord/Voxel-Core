@@ -559,6 +559,7 @@ func set_default_options(defaultoptions := {
 		'FloorVisible': true,
 		'FloorConstant': false,
 		'FloorColor': Color.purple,
+		'FloorDimensions': Vector3(16, 16, 16),
 		'FloorType': FloorTypes.WIRED
 	}, reset := false) -> void:
 	.set_default_options(defaultoptions, reset)
