@@ -411,8 +411,6 @@ func update_floor() -> void:
 				Floor.material_override.albedo_color = FloorColor
 			FloorTypes.WIRED:
 				Floor.scale = Vector3.ONE
-				var dimensions = Vector3.ONE * 16
-				
 				var ST = SurfaceTool.new()
 				ST.begin(Mesh.PRIMITIVE_LINES)
 				ST.add_color(FloorColor)
@@ -424,19 +422,19 @@ func update_floor() -> void:
 				material.set_cull_mode(2)
 				ST.set_material(material)
 				
-				var x : int = -dimensions.x
-				while x <= dimensions.x:
+				var x : int = -FloorDimensions.x
+				while x <= FloorDimensions.x:
 					ST.add_normal(Vector3.UP)
-					ST.add_vertex(Voxel.grid_to_pos(Vector3(x, 0, -abs(dimensions.z))))
-					ST.add_vertex(Voxel.grid_to_pos(Vector3(x, 0, abs(dimensions.z))))
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(x, 0, -abs(FloorDimensions.z))))
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(x, 0, abs(FloorDimensions.z))))
 					
 					x += 1
 				
-				var z : int = -dimensions.z
-				while z <= dimensions.z:
+				var z : int = -FloorDimensions.z
+				while z <= FloorDimensions.z:
 					ST.add_normal(Vector3.UP)
-					ST.add_vertex(Voxel.grid_to_pos(Vector3(-abs(dimensions.x), 0, z)))
-					ST.add_vertex(Voxel.grid_to_pos(Vector3(abs(dimensions.x), 0, z)))
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(-abs(FloorDimensions.x), 0, z)))
+					ST.add_vertex(Voxel.grid_to_pos(Vector3(abs(FloorDimensions.x), 0, z)))
 					
 					z += 1
 				
@@ -511,6 +509,20 @@ func set_floor_color(color : Color, emit := true) -> void:
 	if Floor and Floor.material_override and Floor.material_override.albedo_color: 
 		Floor.material_override.albedo_color = FloorColor
 	if emit: emit_signal('set_floor_color', FloorColor)
+
+signal set_floor_dimensions(dimensions)
+# Setter for FloorDimensions, emits 'set_floor_dimensions'.
+# floordimensions   :   Vector3   -   value to set
+# emit              :   bool      -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_floor_dimensions(Vector3(23, 12, 16), false)
+#
+export(Vector3) var FloorDimensions := Vector3(16, 16, 16) setget set_floor_dimensions
+func set_floor_dimensions(floordimensions : Vector3, emit := true) -> void:
+	FloorDimensions = floordimensions.abs()
+	update_floor()
+	if emit: emit_signal('set_floor_dimensions', FloorDimensions)
 
 signal set_floor_type(floortype)
 enum FloorTypes { SOLID, WIRED }

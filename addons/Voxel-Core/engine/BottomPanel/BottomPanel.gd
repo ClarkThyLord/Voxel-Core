@@ -51,6 +51,9 @@ onready var CursorType := get_node('PanelContainer/MarginContainer/HBoxContainer
 onready var FloorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorVisible')
 onready var FloorConstant := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorConstant')
 onready var FloorColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/HBoxContainer/FloorColor')
+onready var FloorDimensionsX := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size/X')
+onready var FloorDimensionsY := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size/Y')
+onready var FloorDimensionsZ := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size/Z')
 onready var FloorType := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorTypesDropdown')
 
 
@@ -172,6 +175,10 @@ func setup(voxelcore) -> void:
 	voxelcore.VoxelEditor.connect('set_floor_color', FloorColor, 'set_pick_color')
 	FloorColor.connect('color_changed', voxelcore.VoxelEditor, 'set_floor_color')
 	
+	set_floor_dimensions(voxelcore.VoxelEditor.FloorDimensions)
+	voxelcore.VoxelEditor.connect('set_floor_dimensions', self, 'set_floor_dimensions')
+	connect('set_floor_dimensions', voxelcore.VoxelEditor, 'set_floor_dimensions')
+	
 	FloorType.select(voxelcore.VoxelEditor.FloorType)
 	voxelcore.VoxelEditor.connect('set_floor_type', FloorType, 'select')
 	FloorType.connect('item_selected', voxelcore.VoxelEditor, 'set_floor_type')
@@ -184,6 +191,16 @@ func set_primary_color_popup_visible(visible := !PrimaryColor.get_popup().visibl
 func set_secondary_color_popup_visible(visible := !SecondaryColor.get_popup().visible) -> void:
 	if visible: SecondaryColor.get_popup().popup_centered()
 	else: SecondaryColor.get_popup().hide()
+
+
+func set_floor_dimensions(dimensions : Vector3) -> void:
+	FloorDimensionsX.value = dimensions.x
+	FloorDimensionsY.value = dimensions.y
+	FloorDimensionsZ.value = dimensions.z
+
+signal set_floor_dimensions(floordimensions)
+func updated_floor_dimensions(value : float) -> void:
+	emit_signal('set_floor_dimensions', Vector3(FloorDimensionsX.value, FloorDimensionsY.value, FloorDimensionsZ.value))
 
 
 func _on_VoxelObject_modified(modified : bool) -> void:

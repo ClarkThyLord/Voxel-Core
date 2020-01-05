@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=2]
+[gd_scene load_steps=54 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
@@ -7,37 +7,38 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/pan.png" type="Texture" id=5]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/add.png" type="Texture" id=6]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/sub.png" type="Texture" id=7]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/pick.png" type="Texture" id=8]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/fill.png" type="Texture" id=9]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolPalettesDropdown/ToolPalettesDropdown.tscn" type="PackedScene" id=10]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolModesDropdown/ToolModesDropdown.tscn" type="PackedScene" id=11]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorx.png" type="Texture" id=12]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrory.png" type="Texture" id=13]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorz.png" type="Texture" id=14]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelSetView.tscn" type="PackedScene" id=15]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/info.png" type="Texture" id=16]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/lock.png" type="Texture" id=17]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/commit.png" type="Texture" id=18]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/cancel.png" type="Texture" id=19]
-[ext_resource path="res://addons/Voxel-Core/assets/VoxelEditor.png" type="Texture" id=20]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/export.png" type="Texture" id=21]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/import.png" type="Texture" id=22]
-[ext_resource path="res://addons/Voxel-Core/assets/VoxelSet.png" type="Texture" id=23]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/effects.png" type="Texture" id=24]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/settings.png" type="Texture" id=25]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/general.png" type="Texture" id=26]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/autosave.png" type="Texture" id=27]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/reset.png" type="Texture" id=28]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/individual.png" type="Texture" id=29]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/visible.png" type="Texture" id=30]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/CursorTypesDropdown/CursorTypesDropdown.tscn" type="PackedScene" id=31]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/floor.png" type="Texture" id=32]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=33]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/about.png" type="Texture" id=34]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=35]
-[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=36]
-[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=37]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/issues.png" type="Texture" id=38]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/swap.png" type="Texture" id=8]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/pick.png" type="Texture" id=9]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/fill.png" type="Texture" id=10]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolPalettesDropdown/ToolPalettesDropdown.tscn" type="PackedScene" id=11]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/ToolModesDropdown/ToolModesDropdown.tscn" type="PackedScene" id=12]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorx.png" type="Texture" id=13]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrory.png" type="Texture" id=14]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/mirrorz.png" type="Texture" id=15]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/VoxelSetView/VoxelSetView.tscn" type="PackedScene" id=16]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/info.png" type="Texture" id=17]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/lock.png" type="Texture" id=18]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/commit.png" type="Texture" id=19]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/cancel.png" type="Texture" id=20]
+[ext_resource path="res://addons/Voxel-Core/assets/VoxelEditor.png" type="Texture" id=21]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/export.png" type="Texture" id=22]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/import.png" type="Texture" id=23]
+[ext_resource path="res://addons/Voxel-Core/assets/VoxelSet.png" type="Texture" id=24]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/effects.png" type="Texture" id=25]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/settings.png" type="Texture" id=26]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/general.png" type="Texture" id=27]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/autosave.png" type="Texture" id=28]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/reset.png" type="Texture" id=29]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/individual.png" type="Texture" id=30]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/visible.png" type="Texture" id=31]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/CursorTypesDropdown/CursorTypesDropdown.tscn" type="PackedScene" id=32]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/floor.png" type="Texture" id=33]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=34]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/about.png" type="Texture" id=35]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=36]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=37]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=38]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/issues.png" type="Texture" id=39]
 
 [sub_resource type="InputEventKey" id=1]
 shift = true
@@ -189,10 +190,10 @@ hint_tooltip = "(1-6)
 Tool
 Select tool being used in editor."
 size_flags_horizontal = 3
-items = [ "Pan", ExtResource( 5 ), false, 0, null, "Add", ExtResource( 6 ), false, 1, null, "Sub", ExtResource( 7 ), false, 2, null, "Pick", ExtResource( 8 ), false, 3, null, "Fill", ExtResource( 9 ), false, 4, null ]
+items = [ "Pan", ExtResource( 5 ), false, 0, null, "Add", ExtResource( 6 ), false, 1, null, "Sub", ExtResource( 7 ), false, 2, null, "Swap", ExtResource( 8 ), false, 3, null, "Pick", ExtResource( 9 ), false, 4, null, "Fill", ExtResource( 10 ), false, 5, null ]
 Tool = 0
 
-[node name="ToolPalettesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 10 )]
+[node name="ToolPalettesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 11 )]
 margin_left = 104.0
 margin_right = 212.0
 margin_bottom = 22.0
@@ -202,7 +203,7 @@ Select palette being used in editor."
 size_flags_horizontal = 3
 Palette = 0
 
-[node name="ToolMode" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 11 )]
+[node name="ToolMode" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 12 )]
 margin_left = 216.0
 margin_right = 338.0
 margin_bottom = 22.0
@@ -225,7 +226,7 @@ Toggle mirroring of actions over x-axis in editor."
 size_flags_horizontal = 3
 shortcut = SubResource( 4 )
 text = "Mirror X"
-icon = ExtResource( 12 )
+icon = ExtResource( 13 )
 
 [node name="MirrorY" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_left = 114.0
@@ -236,7 +237,7 @@ Toggle mirroring of actions over y-axis in editor."
 size_flags_horizontal = 3
 shortcut = SubResource( 6 )
 text = "Mirror Y"
-icon = ExtResource( 13 )
+icon = ExtResource( 14 )
 
 [node name="MirrorZ" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_left = 228.0
@@ -247,7 +248,7 @@ Toggle mirroring of actions over z-axis in editor."
 size_flags_horizontal = 3
 shortcut = SubResource( 8 )
 text = "Mirror Z"
-icon = ExtResource( 14 )
+icon = ExtResource( 15 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer"]
 margin_top = 54.0
@@ -293,7 +294,7 @@ margin_top = 78.0
 margin_right = 338.0
 margin_bottom = 144.0
 
-[node name="VoxelSetView" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 15 )]
+[node name="VoxelSetView" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 16 )]
 margin_right = 338.0
 margin_bottom = 66.0
 Primary = ""
@@ -327,7 +328,7 @@ shortcut_in_tooltip = false
 button_mask = 0
 enabled_focus_mode = 0
 text = "Info"
-icon = ExtResource( 16 )
+icon = ExtResource( 17 )
 align = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer"]
@@ -348,7 +349,7 @@ If active, VoxelObject selected won't be editable, else if inactive VoxelObject 
 pressed = true
 shortcut = SubResource( 10 )
 text = "Lock"
-icon = ExtResource( 17 )
+icon = ExtResource( 18 )
 
 [node name="Commit" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer"]
 margin_left = 107.0
@@ -359,7 +360,7 @@ Commit changes of editor."
 disabled = true
 shortcut = SubResource( 12 )
 text = "Commit"
-icon = ExtResource( 18 )
+icon = ExtResource( 19 )
 
 [node name="Cancel" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer"]
 margin_left = 192.0
@@ -370,7 +371,7 @@ Cancel changes of editor."
 disabled = true
 shortcut = SubResource( 14 )
 text = "Cancel"
-icon = ExtResource( 19 )
+icon = ExtResource( 20 )
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info"]
 margin_top = 28.0
@@ -396,7 +397,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 20 )
+"_tab_icon": ExtResource( 21 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject"]
@@ -424,7 +425,7 @@ shortcut_in_tooltip = false
 button_mask = 0
 enabled_focus_mode = 0
 text = "Voxels:"
-icon = ExtResource( 20 )
+icon = ExtResource( 21 )
 align = 0
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer"]
@@ -442,7 +443,7 @@ margin_right = 149.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Export"
-icon = ExtResource( 21 )
+icon = ExtResource( 22 )
 align = 0
 
 [node name="FileDialog" type="FileDialog" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Export"]
@@ -463,7 +464,7 @@ margin_right = 302.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Import"
-icon = ExtResource( 22 )
+icon = ExtResource( 23 )
 align = 0
 
 [node name="FileDialog" type="FileDialog" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import"]
@@ -500,7 +501,7 @@ shortcut_in_tooltip = false
 button_mask = 0
 enabled_focus_mode = 0
 text = "VoxelSet:"
-icon = ExtResource( 23 )
+icon = ExtResource( 24 )
 align = 0
 
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer"]
@@ -545,7 +546,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
-"_tab_icon": ExtResource( 24 )
+"_tab_icon": ExtResource( 25 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects"]
@@ -625,21 +626,21 @@ margin_bottom = 50.0
 margin_right = 99.0
 margin_bottom = 24.0
 text = "Mirror X"
-icon = ExtResource( 12 )
+icon = ExtResource( 13 )
 
 [node name="MirrorY" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_left = 103.0
 margin_right = 201.0
 margin_bottom = 24.0
 text = "Mirror Y"
-icon = ExtResource( 13 )
+icon = ExtResource( 14 )
 
 [node name="MirrorZ" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_left = 205.0
 margin_right = 304.0
 margin_bottom = 24.0
 text = "Mirror Z"
-icon = ExtResource( 14 )
+icon = ExtResource( 15 )
 
 [node name="Mirror" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Mirror/VBoxContainer/HBoxContainer"]
 margin_left = 308.0
@@ -708,7 +709,7 @@ shortcut_in_tooltip = false
 button_mask = 0
 enabled_focus_mode = 0
 text = "Settings"
-icon = ExtResource( 25 )
+icon = ExtResource( 26 )
 align = 0
 
 [node name="VSplitContainer" type="HSeparator" parent="PanelContainer/MarginContainer/HBoxContainer/Settings"]
@@ -725,6 +726,7 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="General" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -735,7 +737,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 26 )
+"_tab_icon": ExtResource( 27 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General"]
@@ -751,7 +753,7 @@ hint_tooltip = "AutoSave
 Saves scene whenever changes are committed to edited Voxel Object."
 pressed = true
 text = "  AutoSave"
-icon = ExtResource( 27 )
+icon = ExtResource( 28 )
 
 [node name="Reset" type="Button" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer"]
 margin_top = 28.0
@@ -760,7 +762,7 @@ margin_bottom = 50.0
 hint_tooltip = "Reset
 Reset VoxelEditor options to their default."
 text = "Reset"
-icon = ExtResource( 28 )
+icon = ExtResource( 29 )
 align = 0
 
 [node name="Cursor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
@@ -775,7 +777,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 29 )
+"_tab_icon": ExtResource( 30 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor"]
@@ -791,7 +793,7 @@ hint_tooltip = "Cursor Visible
 Set cursor visibility in editor."
 pressed = true
 text = "  Cursor Visible"
-icon = ExtResource( 30 )
+icon = ExtResource( 31 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer"]
 margin_top = 28.0
@@ -814,7 +816,7 @@ margin_right = 126.0
 margin_bottom = 17.0
 text = "   Cursor Color"
 
-[node name="CursorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer" instance=ExtResource( 31 )]
+[node name="CursorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer" instance=ExtResource( 32 )]
 margin_top = 52.0
 margin_right = 316.0
 margin_bottom = 74.0
@@ -826,7 +828,6 @@ Wired, outline of highlighted."
 Type = 0
 
 [node name="Floor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -837,7 +838,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 32 )
+"_tab_icon": ExtResource( 33 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
@@ -853,7 +854,7 @@ hint_tooltip = "Floor Visible
 Set floor visibility in editor."
 pressed = true
 text = "  Floor Visible"
-icon = ExtResource( 30 )
+icon = ExtResource( 31 )
 
 [node name="FloorConstant" type="CheckBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 28.0
@@ -864,7 +865,7 @@ Toggle whether floor is constant in editor.
 If active, floor will appear no matter what, else if inactive floor will appear only when selected VoxelObject is empty"
 pressed = true
 text = "  Floor Constant"
-icon = ExtResource( 30 )
+icon = ExtResource( 31 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 56.0
@@ -887,10 +888,64 @@ margin_right = 117.0
 margin_bottom = 17.0
 text = "   Floor Color"
 
-[node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 33 )]
+[node name="Size" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer"]
 margin_top = 80.0
 margin_right = 316.0
-margin_bottom = 102.0
+margin_bottom = 104.0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size"]
+margin_top = 5.0
+margin_right = 12.0
+margin_bottom = 19.0
+text = "X:"
+
+[node name="X" type="SpinBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size"]
+margin_left = 16.0
+margin_right = 156.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+min_value = 1.0
+value = 1.0
+rounded = true
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size"]
+visible = false
+margin_left = 107.0
+margin_top = 5.0
+margin_right = 118.0
+margin_bottom = 19.0
+text = "Y:"
+
+[node name="Y" type="SpinBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size"]
+visible = false
+margin_left = 112.0
+margin_right = 204.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+min_value = 1.0
+value = 1.0
+rounded = true
+
+[node name="Label3" type="Label" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size"]
+margin_left = 160.0
+margin_top = 5.0
+margin_right = 172.0
+margin_bottom = 19.0
+text = "Z:"
+
+[node name="Z" type="SpinBox" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size"]
+margin_left = 176.0
+margin_right = 316.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+min_value = 1.0
+value = 1.0
+rounded = true
+
+[node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 34 )]
+margin_top = 108.0
+margin_right = 316.0
+margin_bottom = 130.0
 hint_tooltip = "Floor Mode
 Change floor mode in editor.
 
@@ -911,7 +966,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 34 )
+"_tab_icon": ExtResource( 35 )
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About"]
@@ -930,7 +985,7 @@ margin_right = 50.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
-texture = ExtResource( 35 )
+texture = ExtResource( 36 )
 expand = true
 stretch_mode = 6
 
@@ -967,7 +1022,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "AssetLib"
-icon = ExtResource( 36 )
+icon = ExtResource( 37 )
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer"]
 margin_left = 90.0
@@ -984,7 +1039,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
-icon = ExtResource( 37 )
+icon = ExtResource( 38 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2"]
 margin_top = 28.0
@@ -1008,7 +1063,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Issue"
-icon = ExtResource( 38 )
+icon = ExtResource( 39 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2"]
 margin_left = 87.0
@@ -1025,7 +1080,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Help"
-icon = ExtResource( 34 )
+icon = ExtResource( 35 )
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor" to="." method="_on_PrimaryColor_color_changed"]
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor" to="." method="_on_SecondaryColor_color_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]
@@ -1036,6 +1091,9 @@ icon = ExtResource( 34 )
 [connection signal="file_selected" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/Voxels/VBoxContainer/HBoxContainer/Import/FileDialog" to="." method="_on_VoxelsImport_file_selected"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/Effects/ScrollContainer/VBoxContainer/Align/VBoxContainer/HBoxContainer/Align" to="." method="_on_Align_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/Reset" to="." method="_on_Reset_pressed"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size/X" to="." method="updated_floor_dimensions"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size/Y" to="." method="updated_floor_dimensions"]
+[connection signal="value_changed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/Size/Z" to="." method="updated_floor_dimensions"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/Godot" to="." method="_on_Godot_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2/VBoxContainer3/Issue" to="." method="_on_Issue_pressed"]
