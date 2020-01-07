@@ -828,6 +828,38 @@ static func flood_select(position : Vector3, target, voxels : Dictionary) -> Arr
 		selected += flood_select(position + Vector3.FORWARD, target, voxels)
 	return selected
 
+# Returns an Array of all positions relative to the target position which are unobstructed.
+# position   :   Vector3                                      -   Starting position
+# side       :   Vector3                                      -   Side to check for obstruction
+# voxels     :   Dictionary<Vector3, int/String/Dictionary>   -   Voxels to search within NOTE: Voxels will be modified!
+# @returns   :   Array<Vector3>                               -   Array containing all grid positions of matching Voxels
+#
+# Example:
+#   face_select(Vector3(-1, 2, 2), Vector3.RIGHT, { ... }) -> [ ... ]
+#
+static func side_select(position : Vector3, side : Vector3, voxels : Dictionary) -> Array:
+	var selected := []
+	var voxel = voxels.get(position)
+	if not typeof(voxel) == TYPE_NIL and typeof(voxels.get(position + side)) == TYPE_NIL:
+		selected.append(position)
+		voxels.erase(position)
+		if side == Vector3.RIGHT or side == Vector3.LEFT:
+			selected += side_select(position + Vector3.UP, side, voxels)
+			selected += side_select(position + Vector3.DOWN, side, voxels)
+			selected += side_select(position + Vector3.BACK, side, voxels)
+			selected += side_select(position + Vector3.FORWARD, side, voxels)
+		elif side == Vector3.UP or side == Vector3.DOWN:
+			selected += side_select(position + Vector3.RIGHT, side, voxels)
+			selected += side_select(position + Vector3.LEFT, side, voxels)
+			selected += side_select(position + Vector3.BACK, side, voxels)
+			selected += side_select(position + Vector3.FORWARD, side, voxels)
+		elif side == Vector3.BACK or side == Vector3.FORWARD:
+			selected += side_select(position + Vector3.UP, side, voxels)
+			selected += side_select(position + Vector3.DOWN, side, voxels)
+			selected += side_select(position + Vector3.RIGHT, side, voxels)
+			selected += side_select(position + Vector3.LEFT, side, voxels)
+	return selected
+
 # Centers given voxels to origin.
 # voxels       :   Dictionary   -   voxels to center
 # above_axis   :   bool         -   center Voxels above x and z axis

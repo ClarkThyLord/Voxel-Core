@@ -120,7 +120,8 @@ func set_tool_palette(toolpalette : int, emit := true) -> void:
 signal set_tool_mode(tool_mode)
 enum ToolModes {
 	INDIVIDUAL,   #   Individual operations
-	AREA          #   Wide area operations
+	AREA,         #   Wide area operations
+	EXTRUDE       #   Operations over a fixed zone
 }
 export(ToolModes) var ToolMode := ToolModes.INDIVIDUAL setget set_tool_mode   #   How operations will be committed
 # Set ToolMode, emits 'set_tool_mode'.
@@ -838,6 +839,8 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						use_tool(mirrors.values())
 					elif ToolMode == ToolModes.AREA:
 						cursors_started_area = true
+					elif ToolMode == ToolModes.EXTRUDE:
+						print(Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels()))
 					else:
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return false
