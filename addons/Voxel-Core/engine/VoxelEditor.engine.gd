@@ -314,7 +314,9 @@ func set_cursors_visible(visible : bool) -> void:
 
 var cursors_started_area := false         #   Whether selection has started
 var cursors_are_selecting_area := false   #   Whether selection is happening
-# Update cursors visiblity, position and selection area.
+var cursors_started_extrude := false         #   Whether extrude has started
+var cursors_are_selecting_extrude := false   #   Whether extrude is happening
+# Updates cursors visuals appropriately
 func update_cursors() -> void:
 	if pointer_visible:
 		var position = get_pointer()
@@ -326,15 +328,19 @@ func update_cursors() -> void:
 			else:
 				Cursors[cursor_key].visible = CursorVisible and visible_cursors.has(cursor_key)
 			
-			if ToolMode == ToolModes.AREA:
-				if cursors_are_selecting_area:
-					Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
-					continue
+			if ToolMode == ToolModes.AREA and cursors_are_selecting_area:
+				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
+				continue
+			elif ToolMode == ToolModes.EXTRUDE and cursors_are_selecting_extrude:
+				continue
 			
-			Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
-			Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
-		if cursors_started_area:
-			cursors_are_selecting_area = true
+			if not ToolMode == ToolModes.EXTRUDE:
+				Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
+				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
+			elif cursors_started_extrude and not cursors_are_selecting_extrude:
+				pass
+		if cursors_started_area: cursors_are_selecting_area = true
+		if cursors_started_extrude: cursors_are_selecting_extrude = true
 
 signal set_cursor_visible(visible)
 export(bool) var CursorVisible := true setget set_cursor_visible   #   Whether cursors are visible
@@ -810,7 +816,8 @@ func get_pointer():
 	var _pointer_normal = pointer_normal
 	var _pointer_position = pointer_position
 	
-	if not Tool == Tools.ADD: _pointer_normal *= -1
+	if not Tool == Tools.ADD or (ToolMode == ToolModes.EXTRUDE and not cursors_started_extrude):
+		_pointer_normal *= -1
 	return Voxel.abs_to_grid(VoxelObject.to_local(_pointer_position + (_pointer_normal  * (Voxel.VoxelSize / 2))))
 
 
@@ -840,7 +847,16 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 					elif ToolMode == ToolModes.AREA:
 						cursors_started_area = true
 					elif ToolMode == ToolModes.EXTRUDE:
-						print(Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels()))
+						cursors_started_extrude = true
+						for cursor in Cursors:
+							pass
+#							Cursors[cursor].CursorMode = VoxelCursor.CursorModes.CUSTOM
+#							print(Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels())
+#							Cursors[cursor].CursorPosition = Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels())
+						var voxels = Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels())
+						print(voxels)
+						Cursors[Vector3.ZERO].CursorMode = VoxelCursor.CursorModes.CUSTOM
+						Cursors[Vector3.ZERO].CursorPositions = voxels
 					else:
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return false
@@ -853,6 +869,9 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						for mirror_index in mirrors:
 							grids += Cursors[mirror_index].selected_grids()
 						use_tool(grids)
+					elif ToolMode == ToolModes.EXTRUDE:
+						cursors_started_extrude = false
+						cursors_are_selecting_extrude = false
 					else:
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return false

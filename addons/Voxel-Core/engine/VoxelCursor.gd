@@ -14,6 +14,11 @@ export(CursorTypes) var CursorType := CursorTypes.SOLID setget set_cursor_type
 func set_cursor_type(cursortype : int) -> void:
 	 CursorType = cursortype
 
+enum CursorModes { CUSTOM, CUBE }
+export(CursorModes) var CursorMode := CursorModes.CUBE setget set_cursor_mode
+func set_cursor_mode(cursormode : int) -> void:
+	 CursorMode = cursormode
+
 
 export(Vector3) var CursorPosition := Vector3() setget set_cursor_position
 func set_cursor_position(cursorposition : Vector3) -> void:
@@ -22,6 +27,9 @@ func set_cursor_position(cursorposition : Vector3) -> void:
 export(Vector3) var TargetPosition := Vector3() setget set_target_position
 func set_target_position(targetposition : Vector3) -> void:
 	TargetPosition = targetposition
+
+
+var CursorPositions := []
 
 
 
@@ -66,106 +74,160 @@ func selected_grids() -> Array:
 func _process(delta):
 	if visible:
 		clear()
-		var dimensions := get_dimensions()
-		match CursorType:
-			CursorTypes.SOLID:
+		match CursorMode:
+			CursorModes.CUSTOM:
+				translation = Vector3.ZERO
 				begin(Mesh.PRIMITIVE_TRIANGLES)
-				
-				# Right face
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				# Left face
-				add_vertex(Vector3.ZERO)
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				add_vertex(Vector3.ZERO)
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				# Up face
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.BACK * dimensions.z))
-				
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.BACK * dimensions.z))
-				
-				# Down face
-				add_vertex(Vector3.ZERO)
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				
-				# Back face
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				# Forard face
-				add_vertex(Vector3.ZERO)
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				
-			CursorTypes.WIRED:
-				begin(Mesh.PRIMITIVE_LINES)
-				
-				# Right lines
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-				
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				
-				# Left lines
-				add_vertex(Vector3.ZERO)
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				add_vertex(Vector3.ZERO)
-				
-				# Top lines
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x))
-				
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
-				
-				# Bottom lines
-				add_vertex(Vector3.ZERO)
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
-				
-				add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
-				add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+				for position in CursorPositions:
+					if not CursorPositions.has(position + Vector3.RIGHT):
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.UP))
+						
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.ONE))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.UP))
+					if not CursorPositions.has(position + Vector3.LEFT):
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP))
+						
+						add_vertex(Voxel.grid_to_pos(position + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP))
+					if not CursorPositions.has(position + Vector3.UP):
+						add_vertex(Voxel.grid_to_pos(position + Vector3.ONE))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.UP))
+						
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.UP))
+					if not CursorPositions.has(position + Vector3.DOWN):
+						add_vertex(Voxel.grid_to_pos(position))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT))
+						
+						add_vertex(Voxel.grid_to_pos(position + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT))
+					if not CursorPositions.has(position + Vector3.BACK):
+						add_vertex(Voxel.grid_to_pos(position + Vector3.ONE))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP + Vector3.BACK))
+						
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.BACK))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP + Vector3.BACK))
+					if not CursorPositions.has(position + Vector3.FORWARD):
+						add_vertex(Voxel.grid_to_pos(position))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP))
+						
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.RIGHT + Vector3.UP))
+						add_vertex(Voxel.grid_to_pos(position + Vector3.UP))
+			CursorModes.CUBE:
+				translation = abs_position()
+				var dimensions := get_dimensions()
+				match CursorType:
+					CursorTypes.SOLID:
+						begin(Mesh.PRIMITIVE_TRIANGLES)
+						
+						# Right face
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						# Left face
+						add_vertex(Vector3.ZERO)
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						add_vertex(Vector3.ZERO)
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						# Up face
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.BACK * dimensions.z))
+						
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.BACK * dimensions.z))
+						
+						# Down face
+						add_vertex(Vector3.ZERO)
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						
+						# Back face
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						# Forward face
+						add_vertex(Vector3.ZERO)
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						
+					CursorTypes.WIRED:
+						begin(Mesh.PRIMITIVE_LINES)
+						
+						# Right lines
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+						
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						
+						# Left lines
+						add_vertex(Vector3.ZERO)
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z + Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						add_vertex(Vector3.ZERO)
+						
+						# Top lines
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x))
+						
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.UP * dimensions.y + Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
+						
+						# Bottom lines
+						add_vertex(Vector3.ZERO)
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x))
+						
+						add_vertex(Voxel.GridStep * (Vector3.BACK * dimensions.z))
+						add_vertex(Voxel.GridStep * (Vector3.RIGHT * dimensions.x + Vector3.BACK * dimensions.z))
 		end()
-		translation = abs_position()
