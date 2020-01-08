@@ -140,10 +140,10 @@ func _edit(VoxelObject : VoxelObjectClass, show := true) -> void:
 #
 func _commit(hide := true, unselect := false) -> void:
 	if VoxelEditor.VoxelObject:
+		if unselect: select(false, VoxelEditor.VoxelObject)
 		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.commit()
 		if hide: set_bottom_panel_visible(false)
-		if unselect: select(false, HandledObject)
 
 # Cancels the changes to the current VoxelObject being edited by VoxelEditor.
 # hide       :   bool   -   whether to hide bottom panel
@@ -154,10 +154,10 @@ func _commit(hide := true, unselect := false) -> void:
 #
 func _cancel(hide := true, unselect := false) -> void:
 	if VoxelEditor.VoxelObject:
+		if unselect: select(false, VoxelEditor.VoxelObject)
 		VoxelEditor.VoxelObject.disconnect('tree_exiting', self, 'handle_remove')
 		VoxelEditor.cancel()
 		if hide: set_bottom_panel_visible(false)
-		if unselect: select(false, HandledObject)
 
 
 # Load plugin.
@@ -260,7 +260,6 @@ func handles(object : Object) -> bool:
 		return true
 	else:
 		if VoxelEditor.VoxelObject:
-			select(false, VoxelEditor.VoxelObject)
 			if AutoSave: _commit()
 			else: _cancel()
 		else: set_bottom_panel_visible(false)
