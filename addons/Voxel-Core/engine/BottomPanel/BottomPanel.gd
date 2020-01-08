@@ -260,15 +260,33 @@ func _on_VoxelsImport_file_selected(path : String):
 			printerr('Trying to import invalid file...')
 	
 	if voxels.size() == 0: printerr('No voxel data found...')
-	else: VoxelCore.VoxelEditor.VoxelObject.set_voxels(voxels)
+	else:
+		var undo_redo : UndoRedo = VoxelCore.get_undo_redo()
+		undo_redo.create_action('VoxelEditor IMPORT')
+		
+		undo_redo.add_do_method(VoxelCore.VoxelEditor.VoxelObject, 'set_voxels', voxels)
+		undo_redo.add_undo_method(VoxelCore.VoxelEditor.VoxelObject, 'set_voxels', VoxelCore.VoxelEditor.VoxelObject.get_voxels())
+		
+		undo_redo.add_do_method(VoxelCore.VoxelEditor.VoxelObject, 'update')
+		undo_redo.add_undo_method(VoxelCore.VoxelEditor.VoxelObject, 'update')
+		undo_redo.commit_action()
 
 
 func _on_Align_pressed():
 	var voxels : Dictionary = VoxelCore.VoxelEditor.VoxelObject.get_voxels()
-	
-	voxels = Voxel.center(voxels, AlignSetting.selected == 1)
-	
-	VoxelCore.VoxelEditor.VoxelObject.set_voxels(voxels)
+	if voxels.size() > 0:
+		var aligned_voxels = Voxel.center(voxels, AlignSetting.selected == 1)
+		
+		VoxelCore.VoxelEditor.VoxelObject.set_voxels(voxels)
+		var undo_redo : UndoRedo = VoxelCore.get_undo_redo()
+		undo_redo.create_action('VoxelEditor ALIGN')
+		
+		undo_redo.add_do_method(VoxelCore.VoxelEditor.VoxelObject, 'set_voxels', aligned_voxels)
+		undo_redo.add_undo_method(VoxelCore.VoxelEditor.VoxelObject, 'set_voxels', voxels)
+		
+		undo_redo.add_do_method(VoxelCore.VoxelEditor.VoxelObject, 'update')
+		undo_redo.add_undo_method(VoxelCore.VoxelEditor.VoxelObject, 'update')
+		undo_redo.commit_action()
 
 
 func _on_Godot_pressed():
