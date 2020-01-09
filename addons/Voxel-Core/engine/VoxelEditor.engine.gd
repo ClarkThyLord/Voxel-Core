@@ -174,6 +174,11 @@ export(Color) var PrimaryColor := Color.white setget set_primary_color   #   Pri
 #
 func set_primary_color(color : Color, emit := true) -> void:
 	PrimaryColor = color
+	
+	if CursorDynamic and ToolPalette == ToolPalettes.PRIMARY:
+		for cursor in Cursors.values():
+			cursor.set_cursor_color(color)
+	
 	if emit: emit_signal('set_primary_color', PrimaryColor)
 
 signal set_secondary(voxel)
@@ -214,6 +219,11 @@ export(Color) var SecondaryColor := Color.black setget set_secondary_color   #  
 #
 func set_secondary_color(color : Color, emit := true) -> void:
 	SecondaryColor = color
+	
+	if CursorDynamic and ToolPalette == ToolPalettes.SECONDARY:
+		for cursor in Cursors.values():
+			cursor.set_cursor_color(color)
+	
 	if emit: emit_signal('set_secondary_color', SecondaryColor)
 
 
@@ -282,7 +292,7 @@ func set_cursors(cursor : Dictionary) -> void: return   #   Cursors shouldn't be
 # Set up each Cursor accordingly.
 func setup_cursors() -> void:
 	for cursor in Cursors.values():
-		cursor.set_cursor_color(CursorColor)
+		cursor.set_cursor_color(Voxel.get_color(get_palette()) if CursorDynamic else CursorColor)
 
 # Parent all the Cursors to given parent.
 # parent   :   Node   -   Node to parent Cursors to
@@ -370,8 +380,9 @@ export(Color) var CursorColor := Color(1, 0, 0, 0.3) setget set_cursor_color   #
 func set_cursor_color(color : Color, emit := true) -> void:
 	CursorColor = color
 	
-	for cursor in Cursors.values():
-		cursor.set_cursor_color(CursorColor)
+	if not CursorDynamic:
+		for cursor in Cursors.values():
+			cursor.set_cursor_color(CursorColor)
 	
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
@@ -391,6 +402,27 @@ func set_cursor_type(cursortype : int, emit := true) -> void:
 		cursor.set_cursor_type(CursorType)
 	
 	if emit: emit_signal('set_cursor_type', CursorType)
+
+signal set_cursor_dynamic(dynamic)
+export(bool) var CursorDynamic := true setget set_cursor_dynamic   #   Whether cursors are dynamic
+# Setter for CursorDynamic, emits 'set_cursor_dynamic'.
+# dynamic   -   bool   -   value to set
+# emit      -   bool   -   true, emit signal; false, don't emit signal
+#
+# Example:
+#   set_cursor_dynamic(false, false)
+#
+func set_cursor_dynamic(dynamic := !CursorDynamic, emit := true) -> void:
+	CursorDynamic = dynamic
+	
+	if CursorDynamic:
+		for cursor in Cursors.values():
+			cursor.set_cursor_color(Voxel.get_color(get_palette()))
+	else:
+		for cursor in Cursors.values():
+			cursor.set_cursor_color(CursorColor)
+	
+	if emit: emit_signal('set_cursor_dynamic', CursorDynamic)
 
 
 var Floor : MeshInstance = MeshInstance.new() setget set_floor   #   Refrence to Floor

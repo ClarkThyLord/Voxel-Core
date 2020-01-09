@@ -45,6 +45,7 @@ onready var SettingsTabs := get_node('PanelContainer/MarginContainer/HBoxContain
 onready var AutoSave := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/General/VBoxContainer/AutoSave')
 
 onready var CursorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorVisible')
+onready var CursorDynamic := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorDynamic')
 onready var CursorColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer/CursorColor')
 onready var CursorType := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorTypesDropdown')
 
@@ -153,6 +154,12 @@ func setup(voxelcore) -> void:
 	voxelcore.VoxelEditor.connect('set_cursor_visible', CursorVisible, 'set_pressed')
 	CursorVisible.connect('pressed', voxelcore.VoxelEditor, 'set_cursor_visible')
 	
+	CursorDynamic.set_pressed(voxelcore.VoxelEditor.CursorDynamic)
+	voxelcore.VoxelEditor.connect('set_cursor_dynamic', CursorColor, 'set_disabled')
+	voxelcore.VoxelEditor.connect('set_cursor_dynamic', CursorDynamic, 'set_pressed')
+	CursorDynamic.connect('pressed', voxelcore.VoxelEditor, 'set_cursor_dynamic')
+	
+	CursorColor.set_disabled(voxelcore.VoxelEditor.CursorDynamic)
 	CursorColor.set_pick_color(voxelcore.VoxelEditor.CursorColor)
 	voxelcore.VoxelEditor.connect('set_cursor_color', CursorColor, 'set_pick_color')
 	CursorColor.connect('color_changed', voxelcore.VoxelEditor, 'set_cursor_color')
