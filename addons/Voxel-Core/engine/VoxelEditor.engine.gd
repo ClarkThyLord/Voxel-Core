@@ -329,7 +329,7 @@ func set_cursors_visible(visible : bool) -> void:
 
 var cursors_started_area := false         #   Whether selection has started
 var cursors_are_selecting_area := false   #   Whether selection is happening
-var cursors_extrude_normal : Vector3         #   Extrude normal
+var cursors_extrude_normal : Vector3      #   Extrude normal
 var cursors_extude_positions := {
 	Vector3(0, 0, 0): [],
 	Vector3(1, 0, 0): [],
@@ -339,9 +339,10 @@ var cursors_extude_positions := {
 	Vector3(0, 1, 0): [],
 	Vector3(0, 0, 1): [],
 	Vector3(1, 0, 1): []
-}                                            #   Extrude positions
-var cursors_started_extrude := false         #   Whether extrude has started
-var cursors_are_selecting_extrude := false   #   Whether extrude is happening
+}                                                 #   Extrude positions
+var cursors_started_extrude := false              #   Whether extrude has started
+var cursors_extrude_starting_position : Vector3   #   Where extrude has started
+var cursors_are_selecting_extrude := false        #   Whether extrude is happening
 # Updates cursors visuals appropriately
 func update_cursors() -> void:
 	if pointer_visible:
@@ -358,6 +359,13 @@ func update_cursors() -> void:
 				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
 				continue
 			elif ToolMode == ToolModes.EXTRUDE and cursors_are_selecting_extrude:
+				if pointer_visible:
+					if cursors_extrude_normal.x != 0:
+						print(get_pointer().x - cursors_extrude_starting_position.x)
+					elif cursors_extrude_normal.y != 0:
+						print(get_pointer().y - cursors_extrude_starting_position.y)
+					elif cursors_extrude_normal.z != 0:
+						print(get_pointer().z - cursors_extrude_starting_position.z)
 				continue
 			
 			match ToolMode:
@@ -366,10 +374,14 @@ func update_cursors() -> void:
 					Cursors[cursor_key].set_cursor_position(all_mirrors[cursor_key])
 					Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
 				ToolModes.EXTRUDE:
-					Cursors[cursor_key].CursorShape = VoxelCursor.CursorShapes.CUSTOM
-					Cursors[cursor_key].CursorPositions = Voxel.side_select(all_mirrors[cursor_key], pointer_normal, VoxelObject.get_voxels())
 					cursors_extrude_normal = pointer_normal
-					cursors_extude_positions[cursor_key] = Cursors[cursor_key].CursorPositions
+					cursors_extrude_starting_position = get_pointer()
+					Cursors[cursor_key].CursorShape = VoxelCursor.CursorShapes.CUSTOM
+					cursors_extude_positions[cursor_key] = Voxel.side_select(all_mirrors[cursor_key], pointer_normal, VoxelObject.get_voxels())
+					var grids = {}
+					for grid in cursors_extude_positions[cursor_key]:
+						grids[grid + cursors_extrude_normal] = true
+					Cursors[cursor_key].CursorPositions = grids
 		if cursors_started_area: cursors_are_selecting_area = true
 		if cursors_started_extrude: cursors_are_selecting_extrude = true
 

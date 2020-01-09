@@ -34,11 +34,14 @@ func set_target_position(targetposition : Vector3, update := true) -> void:
 	if update: self.update()
 
 
-var CursorPositions := [] setget set_cursor_positions, get_cursor_positions
+var CursorPositions = [] setget set_cursor_positions, get_cursor_positions
 func get_cursor_positions() -> Array:
 	match CursorShape:
 		CursorShapes.CUSTOM:
-			return CursorPositions
+			if typeof(CursorPositions) == TYPE_ARRAY:
+				return CursorPositions
+			elif typeof(CursorPositions) == TYPE_DICTIONARY:
+				return CursorPositions.keys()
 		CursorShapes.CUBE:
 			var positions = []
 			var position = grid_position()
@@ -50,9 +53,11 @@ func get_cursor_positions() -> Array:
 			return positions
 	return []
 
-func set_cursor_positions(cursorpositions : Array, update := true) -> void:
-	CursorPositions = cursorpositions
-	if update: self.update()
+func set_cursor_positions(cursorpositions, update := true) -> void:
+	match typeof(cursorpositions):
+		TYPE_ARRAY, TYPE_DICTIONARY:
+			CursorPositions = cursorpositions
+			if update: self.update()
 
 
 
