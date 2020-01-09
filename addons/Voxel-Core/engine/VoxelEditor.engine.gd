@@ -350,11 +350,7 @@ func update_cursors() -> void:
 		var visible_cursors = grid_to_mirrors(position)
 		var all_mirrors = grid_to_mirrors(position, true, true, true)
 		for cursor_key in Cursors:
-			Cursors[cursor_key].visible = not Lock and not Tool == Tools.PAN and CursorVisible and visible_cursors.has(cursor_key) and (pointer_visible or cursors_are_selecting_extrude) 
-#			if not pointer_visible or Lock or Tool == Tools.PAN:
-#				Cursors[cursor_key].visible = false
-#			else:
-#				Cursors[cursor_key].visible = (CursorVisible and visible_cursors.has(cursor_key)) or cursors_are_selecting_extrude
+			Cursors[cursor_key].visible = not Lock and not Tool == Tools.PAN and CursorVisible and visible_cursors.has(cursor_key) and (pointer_visible or cursors_are_selecting_extrude)
 			
 			if ToolMode == ToolModes.AREA and cursors_are_selecting_area:
 				Cursors[cursor_key].set_target_position(all_mirrors[cursor_key])
@@ -365,7 +361,6 @@ func update_cursors() -> void:
 					for amount in range(1 if Tool == Tools.ADD else 0, cursors_extrude_amount + (1 if Tool == Tools.ADD else 0)):
 						grids[grid + cursors_extrude_normal * amount * (1 if Tool == Tools.ADD else -1)] = true
 				Cursors[cursor_key].CursorPositions = grids
-#				print('update :\n', cursors_extude_positions[cursor_key], '\n', grids)
 				continue
 			
 			match ToolMode:
@@ -913,15 +908,6 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						cursors_started_area = true
 					elif ToolMode == ToolModes.EXTRUDE:
 						cursors_started_extrude = true
-#						for cursor in Cursors:
-#							pass
-##							Cursors[cursor].CursorShape = VoxelCursor.CursorShapes.CUSTOM
-##							print(Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels())
-##							Cursors[cursor].CursorPosition = Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels())
-#						var voxels = Voxel.side_select(get_pointer(), pointer_normal, VoxelObject.get_voxels())
-#						print(voxels)
-#						Cursors[Vector3.ZERO].CursorShape = VoxelCursor.CursorShapes.CUSTOM
-#						Cursors[Vector3.ZERO].CursorPositions = voxels
 					else:
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return false
@@ -950,10 +936,8 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 			elif cursors_are_selecting_extrude:
 				if event.button_index == BUTTON_WHEEL_UP:
 					cursors_extrude_amount += 1
-					print(cursors_extrude_amount)
 				elif event.button_index == BUTTON_WHEEL_DOWN and cursors_extrude_amount > 1:
 					cursors_extrude_amount -= 1
-					print(cursors_extrude_amount)
 				return true
 	set_cursors_visible(cursors_are_selecting_extrude)
 	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
