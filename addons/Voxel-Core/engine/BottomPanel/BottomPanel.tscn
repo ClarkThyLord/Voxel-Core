@@ -729,7 +729,6 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="General" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -769,6 +768,7 @@ icon = ExtResource( 32 )
 align = 0
 
 [node name="Cursor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -801,8 +801,8 @@ icon = ExtResource( 33 )
 margin_top = 28.0
 margin_right = 316.0
 margin_bottom = 52.0
-hint_tooltip = "Cursor Visible
-Set cursor visibility in editor."
+hint_tooltip = "Cursor Dynamic
+Color of cursor will be the current palettes color."
 pressed = true
 text = "  Dynamic Colors"
 icon = ExtResource( 32 )
