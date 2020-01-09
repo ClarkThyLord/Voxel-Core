@@ -362,8 +362,8 @@ func update_cursors() -> void:
 			elif ToolMode == ToolModes.EXTRUDE and cursors_are_selecting_extrude:
 				var grids = {}
 				for grid in cursors_extude_positions[cursor_key]:
-					for amount in range(1, cursors_extrude_amount + 1):
-						grids[grid + cursors_extrude_normal * amount] = true
+					for amount in range(1 if Tool == Tools.ADD else 0, cursors_extrude_amount + (1 if Tool == Tools.ADD else 0)):
+						grids[grid + cursors_extrude_normal * amount * (1 if Tool == Tools.ADD else -1)] = true
 				Cursors[cursor_key].CursorPositions = grids
 #				print('update :\n', cursors_extude_positions[cursor_key], '\n', grids)
 				continue
@@ -380,7 +380,7 @@ func update_cursors() -> void:
 					cursors_extude_positions[cursor_key] = Voxel.side_select(all_mirrors[cursor_key], pointer_normal, VoxelObject.get_voxels())
 					var grids = {}
 					for grid in cursors_extude_positions[cursor_key]:
-						grids[grid + cursors_extrude_normal] = true
+						grids[grid + (cursors_extrude_normal if Tool == Tools.ADD else Vector3.ZERO)] = true
 					Cursors[cursor_key].CursorPositions = grids
 		cursors_are_selecting_area = cursors_started_area
 		cursors_are_selecting_extrude = cursors_started_extrude
@@ -937,6 +937,11 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 					elif ToolMode == ToolModes.EXTRUDE:
 						cursors_started_extrude = false
 						cursors_are_selecting_extrude = false
+						
+						var grids := []
+						for mirror_index in mirrors:
+							grids += Cursors[mirror_index].get_cursor_positions()
+						use_tool(grids)
 					else:
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return false
