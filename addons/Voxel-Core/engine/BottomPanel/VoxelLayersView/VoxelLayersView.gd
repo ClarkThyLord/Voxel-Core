@@ -39,15 +39,15 @@ func _update() -> void:
 		child.queue_free()
 	
 	layerviews.clear()
-	if VoxelObject or true:
+	if VoxelObject:
 		var search : String = Search.text.to_lower()
-		for layer_name in PoolStringArray(range(10)):
+		for layer_name in VoxelObject.get_layers():
 			if search.length() == 0 or layer_name.find(search) != -1:
 				var layerview := VoxelLayerView.instance()
 				layerview.set_name(layer_name)
 				
 				layerview.set_layer_name(layer_name)
-				layerview.set_layer_visible(true or VoxelObject.is_layer_visible(layer_name))
+				layerview.set_layer_visible(VoxelObject.is_layer_visible(layer_name))
 				
 				layerviews[layer_name] = layerview
 				Layers.add_child(layerview)

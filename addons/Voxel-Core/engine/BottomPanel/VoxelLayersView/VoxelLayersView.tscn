@@ -49,7 +49,6 @@ hint_tooltip = "Add layer"
 icon = ExtResource( 3 )
 
 [node name="AddDialog" type="WindowDialog" parent="VBoxContainer/PanelContainer/HBoxContainer/Add"]
-visible = true
 margin_right = 200.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 200, 75 )
@@ -99,6 +98,13 @@ margin_right = 180.0
 margin_bottom = 86.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/ScrollContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 173.0
+margin_bottom = 79.0
+color = Color( 0, 0, 0, 0.0980392 )
 
 [node name="Layers" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/PanelContainer"]
 margin_left = 7.0
