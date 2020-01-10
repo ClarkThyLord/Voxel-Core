@@ -186,6 +186,8 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 
 func update() -> void:
 	if voxels.size() > 0:
+		var _material := get_surface_material(0) if get_surface_material_count() > 0 else null
+		
 		var ST = SurfaceTool.new()
 		ST.begin(Mesh.PRIMITIVE_TRIANGLES)
 		var material = SpatialMaterial.new()
@@ -239,6 +241,8 @@ func update() -> void:
 		
 		ST.index()
 		mesh = ST.commit()
+		mesh.surface_set_name(0, 'voxels')
+		set_surface_material(0, _material)
 	else: mesh = null
 	
 	.update()
