@@ -25,6 +25,9 @@ var voxel_layers_data := [
 func get_voxel_layers_data() -> Array: return []                    #   Shouldn't be gettable externally
 func set_voxel_layers_data(voxellayersdata : Array) -> void: pass   #   Shouldn't be settable externally
 
+func has_layer(layer_index : int) -> bool:
+	return layer_index < voxel_layers_data.size()
+
 func find_layer(layer_name : String) -> int:
 	layer_name = layer_name.to_lower()
 	for layer_index in range(voxel_layers_data.size()):
@@ -49,14 +52,14 @@ func add_layer(layer_name : String, voxels := {}, update := true) -> void:
 	else: printerr('layer `', layer_name.to_lower(), '` already exist')
 
 func get_layer_name(layer_index : int) -> String:
-	if layer_index < voxel_layers_data.size():
+	if has_layer(layer_index):
 		return voxel_layers_data[layer_index].name
 	else:
 		printerr('layer index out of scope')
 		return ''
 
 func set_layer_name(layer_index : int, layer_name : String) -> void:
-	if layer_index < voxel_layers_data.size():
+	if has_layer(layer_index):
 		var found = find_layer(layer_name)
 		if not found == -1:
 			printerr('layer `', layer_name.to_lower(), '` already exist')
@@ -66,27 +69,27 @@ func set_layer_name(layer_index : int, layer_name : String) -> void:
 			voxel_layers_data[layer_index].name = layer_name.to_lower()
 	else: printerr('layer index out of scope')
 
-func is_layer_visible(layer_index : int) -> bool:
-	if layer_index < voxel_layers_data.size():
+func get_layer_visible(layer_index : int) -> bool:
+	if has_layer(layer_index):
 		return voxel_layers_data[layer_index].visible
 	else:
 		printerr('layer index out of scope')
 		return false
 
 func set_layer_visible(layer_index : int, visible : bool, update := true) -> void:
-	if layer_index < voxel_layers_data.size():
+	if has_layer(layer_index):
 		voxel_layers_data[layer_index].visible = visible
 		if update: self.update()
 	else: printerr('layer index out of scope')
 
 func move_layer(target_index : int, layer_index : int, update := true) -> void:
-	if target_index < voxel_layers_data.size() and layer_index < voxel_layers_data.size():
+	if has_layer(target_index) and has_layer(layer_index):
 		voxel_layers_data.insert(target_index, voxel_layers_data[layer_index])
 		voxel_layers_data.remove(layer_index + (1 if layer_index >= target_index else 0))
 		if update: self.update()
 
 func erase_layer(layer_index : int, update := true) -> void:
-	if layer_index < voxel_layers_data.size():
+	if has_layer(layer_index):
 		var layer_name = voxel_layers_data[layer_index]
 		voxel_layers_data.remove(layer_index)
 		if voxel_layers_data.size() == 0:
