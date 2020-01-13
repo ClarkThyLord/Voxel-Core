@@ -4,56 +4,56 @@ class_name VoxelLayeredMesh, 'res://addons/Voxel-Core/assets/VoxelLayeredMesh.pn
 
 
 
-# Refrences
-class Layer:
-	export(String) var name := ''
-	export(bool) var visible := true
-	
-	var data := {}
-	
-	func _init(name : String, visible := true, data : Dictionary = {}):
-		self.name = name
-		self.visible = visible
-		self.data = data
-
-
-
 # Declarations
-var voxel_layers_data := [
-	Layer.new('voxels')
-] setget set_voxel_layers_data, get_voxel_layers_data
-func get_voxel_layers_data() -> Array: return []                    #   Shouldn't be gettable externally
-func set_voxel_layers_data(voxellayersdata : Array) -> void: pass   #   Shouldn't be settable externally
+func Layer(name : String, voxels := {}, visible := true) -> Dictionary:
+	return {
+		'name': name,
+		'data': voxels,
+		'visible': visible
+	}
+
+var Layers := [
+	Layer('voxels')
+] setget set_layers, get_layers
+func get_layers() -> Array:
+	var layers := []
+	for layer in Layers:
+		layers.append(layer['name'])
+	return layers
+
+func get_layers_count() -> int:
+	return Layers.size()
+
+func set_layers(layers : Array) -> void: pass   #   Shouldn't be settable externally
 
 func has_layer(layer_index : int) -> bool:
-	return layer_index < voxel_layers_data.size()
+	return layer_index < get_layers_count()
 
 func find_layer(layer_name : String) -> int:
 	layer_name = layer_name.to_lower()
-	for layer_index in range(voxel_layers_data.size()):
-		if voxel_layers_data[layer_index].name.find(layer_name):
+	for layer_index in range(get_layers_count()):
+		if Layers[layer_index]['name'].find(layer_name):
 			return layer_index
 	return -1
 
-func get_layers() -> Array:
-	var layers := []
-	for layer in voxel_layers_data:
-		layers.append(layer.name)
-	return layers
-
-func get_layers_size() -> int:
-	return voxel_layers_data.size()
-
-func add_layer(layer_name : String, voxels := {}, update := true) -> void:
+func add_layer(layer_name : String, voxels := {}, visible := true, position := get_layers_count(), update := true) -> void:
 	var layer_index = find_layer(layer_name)
 	if layer_index == -1:
-		voxel_layers_data.append(Layer.new(layer_name.to_lower(), true, voxels))
+		Layers.append(Layer(layer_name, voxels))
+		if not position == get_layers_count() - 1: move_layer(get_layers_count(), position, false)
 		if update: self.update()
 	else: printerr('layer `', layer_name.to_lower(), '` already exist')
 
+func get_layer(layer_index : int) -> Dictionary:
+	if has_layer(layer_index):
+		return Layers[layer_index].duplicate(true)
+	else:
+		printerr('layer index out of scope')	
+		return {}
+
 func get_layer_name(layer_index : int) -> String:
 	if has_layer(layer_index):
-		return voxel_layers_data[layer_index].name
+		return Layers[layer_index]['name']
 	else:
 		printerr('layer index out of scope')
 		return ''
@@ -66,52 +66,57 @@ func set_layer_name(layer_index : int, layer_name : String) -> void:
 		elif layer_name.length() == 0:
 			printerr('invalid layer name')
 		else:
-			voxel_layers_data[layer_index].name = layer_name.to_lower()
+			Layers[layer_index]['name'] = layer_name.to_lower()
 	else: printerr('layer index out of scope')
 
 func get_layer_visible(layer_index : int) -> bool:
 	if has_layer(layer_index):
-		return voxel_layers_data[layer_index].visible
+		return Layers[layer_index].visible
 	else:
 		printerr('layer index out of scope')
 		return false
 
 func set_layer_visible(layer_index : int, visible : bool, update := true) -> void:
 	if has_layer(layer_index):
-		voxel_layers_data[layer_index].visible = visible
+		Layers[layer_index].visible = visible
 		if update: self.update()
 	else: printerr('layer index out of scope')
 
-func move_layer(target_index : int, layer_index : int, update := true) -> void:
-	if has_layer(target_index) and has_layer(layer_index):
-		voxel_layers_data.insert(target_index, voxel_layers_data[layer_index])
-		voxel_layers_data.remove(layer_index + (1 if layer_index >= target_index else 0))
+func move_layer(from : int, to : int, update := true) -> void:
+	if has_layer(to) and has_layer(to):
+		Layers.insert(to, Layers[from])
+		Layers.remove(from + (1 if from >= to else 0))
 		if update: self.update()
 
 func erase_layer(layer_index : int, update := true) -> void:
 	if has_layer(layer_index):
-		var layer_name = voxel_layers_data[layer_index]
-		voxel_layers_data.remove(layer_index)
-		if voxel_layers_data.size() == 0:
+		var layer_name = Layers[layer_index]
+		Layers.remove(layer_index)
+		if Layers.size() == 0:
 			add_layer('voxels', {}, false)
 		if layer_name == CurrentLayer:
-			voxel_layers_data[0].name
+			Layers[0]['name']
 		if update: self.update()
 	else: printerr('layer index out of scope')
 
 func erase_layers(update := true) -> void:
-	voxel_layers_data.clear()
+	Layers.clear()
 	add_layer('voxels', {}, false)
 	CurrentLayer = 'voxels'
 	if update: self.update()
 
 
 signal set_current_layer(layer)
-export(String) var CurrentLayer : String = voxel_layers_data[0].name setget set_current_layer, get_current_layer
+var CurrentLayerIndex : int
+export(String) var CurrentLayer : String = Layers[0]['name'] setget set_current_layer, get_current_layer
 func get_current_layer() -> String: return CurrentLayer
 func set_current_layer(currentlayer : String, emit := true) -> void:
-	CurrentLayer = currentlayer.to_lower()
-	if emit: emit_signal('set_current_layer', CurrentLayer)
+	var currentlayerindex = find_layer(currentlayer)
+	if not currentlayerindex == -1:
+		CurrentLayer = currentlayer.to_lower()
+		CurrentLayerIndex = currentlayerindex
+		if emit: emit_signal('set_current_layer', CurrentLayer)
+	else: printerr('invalid layer `', currentlayer,'`')
 
 
 
@@ -119,12 +124,12 @@ func set_current_layer(currentlayer : String, emit := true) -> void:
 func _load() -> void:
 	._load()
 	
-	if has_meta('voxel_layers_data'): voxel_layers_data = get_meta('voxel_layers_data')
+	if has_meta('Layers'): Layers = get_meta('Layers')
 
 func _save() -> void:
 	._save()
 	
-	set_meta('voxel_layers_data', voxel_layers_data)
+	set_meta('Layers', Layers)
 
 
 func _init() -> void:
@@ -135,21 +140,29 @@ func _ready() -> void:
 
 
 func get_rvoxel(grid : Vector3):
-	pass
+	return Layers[CurrentLayerIndex]['data'].get(grid)
 
 func get_voxels() -> Dictionary:
-	return {}
+	var voxels := {}
+	for layer in get_layers().invert():
+		for voxel_grid in layer.data:
+			voxels[voxel_grid] = layer.data[voxel_grid]
+	return voxels
 
 
 func set_voxel(grid : Vector3, voxel, update := false) -> void:
-	pass
+	Layers[CurrentLayerIndex]['data'][grid] = voxel
+	.set_voxel(grid, voxel, update)
 
-func set_voxels(_voxels : Dictionary, update := true) -> void:
-	pass
+func set_voxels(voxels : Dictionary, update := true) -> void:
+	Layers[CurrentLayerIndex]['data'] = voxels
+	if update: self.update()
 
 
 func erase_voxel(grid : Vector3, update := false) -> void:
-	pass
+	Layers[CurrentLayerIndex]['data'].erase(grid)
+	.erase_voxel(grid)
 
 func erase_voxels(update : bool = true) -> void:
-	pass
+	Layers[CurrentLayerIndex]['data'].clear()
+	if update: self.update()
