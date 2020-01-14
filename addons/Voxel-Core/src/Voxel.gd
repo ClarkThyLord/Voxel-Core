@@ -126,6 +126,20 @@ static func vec3_clamp(vec3 : Vector3, _min : Vector3 = Vector3(), _max : Vector
 	return Vector3(clamp(vec3.x, -_min.x, _max.x - 1), clamp(vec3.y, -_min.y, _max.y - 1), clamp(vec3.z, -_min.z, _max.z - 1))
 
 
+# Check within given voxels if voxel is obstructed in the given direction.
+# position    :   Vector3                                       -   voxel's grid position
+# direction   :   Vector3                                       -   direction to check for obstruction
+# voxels      :   Dictinary<Vector3, Variant>                   -   voxels used to check for obstruction
+# include     :   Array<Vector3>/Dictionary<Vector3, Variant>   -   check if given grid position is contained in collection
+#
+# Example:
+#   is_voxel_obstructed([Vector3], [Vector3], Dictionary<Vector3, Variant>) -> false
+#   is_voxel_obstructed([Vector3], [Vector3], Dictionary<Vector3, Variant>, Array<Vector3>) -> true
+#
+static func is_voxel_obstructed(position : Vector3, direction : Vector3, voxels : Dictionary, include = []) -> bool:
+	return include.has(position) or voxels.has(position + direction)
+
+
 # Helper function for quick 'basic Voxel' creation
 # data       :   Dictionary   -   user defined data
 # @returns   :   Dictionary   -   basic Voxel; NOTE: contains only necessary information
