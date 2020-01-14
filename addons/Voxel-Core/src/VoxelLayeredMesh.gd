@@ -158,6 +158,7 @@ func erase_voxels(update : bool = true) -> void:
 
 
 # Main function used when Greedy Meshing on update
+# voxels        :   Dictionary       -   voxels from which to generate greedy mesh
 # st            :   SurfaceTool      -   SurfaceTool to append Greedy Mesh to
 # origin        :   Vector3          -   grid position from which to start Greedy Meshing
 # direction     :   Vector3          -   orientation of face
@@ -168,7 +169,7 @@ func erase_voxels(update : bool = true) -> void:
 # Example:
 #   greed([SurfaceTool], [Vector3], [Vector3], Array<Vector3>, Array<Vector3>) -> Array<Vector3>
 #
-func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions : Array, used : Array, layer_index : int = CurrentLayerIndex) -> Array:
+func greed(voxels : Dictionary, st : SurfaceTool, origin : Vector3, direction : Vector3, directions : Array, used : Array, layer_index : int = CurrentLayerIndex) -> Array:
 	used.append(origin)
 	
 	var origin_voxel = get_voxel(origin)
@@ -189,7 +190,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 			var temp_grid = g4 + (directions[0] * offset)
 			var temp_voxel = get_voxel(temp_grid)
 		
-			if Layers[layer_index]['data'].has(temp_grid) and is_valid_face(temp_grid, direction, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+			if Layers[layer_index]['data'].has(temp_grid) and not Voxel.is_voxel_obstructed(temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 				offset += 1
 				temp.append(temp_grid)
 			else: break
@@ -206,7 +207,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 			var temp_grid = g4 + (directions[1] * offset)
 			var temp_voxel = get_voxel(temp_grid)
 			
-			if Layers[layer_index]['data'].has(temp_grid) and is_valid_face(temp_grid, direction, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+			if Layers[layer_index]['data'].has(temp_grid) and not Voxel.is_voxel_obstructed(temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 				offset += 1
 				temp.append(temp_grid)
 			else: break
@@ -227,7 +228,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 				var _temp_grid = temp_grid + directions[0] * temp_offset
 				var temp_voxel = get_voxel(_temp_grid)
 			
-				if Layers[layer_index]['data'].has(_temp_grid) and is_valid_face(_temp_grid, direction, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+				if Layers[layer_index]['data'].has(_temp_grid) and not Voxel.is_voxel_obstructed(_temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 					temp.append(_temp_grid)
 				else:
 					valid = false
@@ -251,7 +252,7 @@ func greed(st : SurfaceTool, origin : Vector3, direction : Vector3, directions :
 				var _temp_grid = temp_grid + directions[0] * temp_offset
 				var temp_voxel = get_voxel(_temp_grid)
 			
-				if Layers[layer_index]['data'].has(_temp_grid) and is_valid_face(_temp_grid, direction, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+				if Layers[layer_index]['data'].has(_temp_grid) and not Voxel.is_voxel_obstructed(_temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 					temp.append(_temp_grid)
 				else:
 					valid = false
@@ -326,12 +327,12 @@ func update() -> void:
 				var forward_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
 				
 				for voxel_grid in voxels:
-					if is_valid_face(voxel_grid, Vector3.RIGHT, rights): rights = greed(ST, voxel_grid, Vector3.RIGHT, right_directions, rights)
-					if is_valid_face(voxel_grid, Vector3.LEFT, lefts): lefts = greed(ST, voxel_grid, Vector3.LEFT, left_directions, lefts)
-					if is_valid_face(voxel_grid, Vector3.UP, ups): ups = greed(ST, voxel_grid, Vector3.UP, up_directions, ups)
-					if is_valid_face(voxel_grid, Vector3.DOWN, downs): downs = greed(ST, voxel_grid, Vector3.DOWN, down_directions, downs)
-					if is_valid_face(voxel_grid, Vector3.BACK, backs): backs = greed(ST, voxel_grid, Vector3.BACK, back_directions, backs)
-					if is_valid_face(voxel_grid, Vector3.FORWARD, forwards): forwards = greed(ST, voxel_grid, Vector3.FORWARD, forward_directions, forwards)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.RIGHT, voxels, rights): rights = greed(voxels, ST, voxel_grid, Vector3.RIGHT, right_directions, rights)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.LEFT, voxels, lefts): lefts = greed(voxels, ST, voxel_grid, Vector3.LEFT, left_directions, lefts)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.UP, voxels, ups): ups = greed(voxels, ST, voxel_grid, Vector3.UP, up_directions, ups)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.DOWN, voxels, downs): downs = greed(voxels, ST, voxel_grid, Vector3.DOWN, down_directions, downs)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.BACK, voxels, backs): backs = greed(voxels, ST, voxel_grid, Vector3.BACK, back_directions, backs)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.FORWARD, voxels, forwards): forwards = greed(voxels, ST, voxel_grid, Vector3.FORWARD, forward_directions, forwards)
 			
 			ST.index()
 			ST.commit(arraymesh)
