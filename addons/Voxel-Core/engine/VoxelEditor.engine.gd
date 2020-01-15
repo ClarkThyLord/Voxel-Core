@@ -893,6 +893,20 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 			pointer_visible = cursors_are_selecting_extrude
 			set_cursors_visible(cursors_are_selecting_extrude)
 	
+	if event is InputEventMouse and cursors_are_selecting_extrude:
+		if event is InputEventMouseMotion:
+			if event.relative.x > 10:
+				cursors_extrude_amount += 1
+			elif event.relative.x < -10 and cursors_extrude_amount > 1:
+				cursors_extrude_amount -= 1
+			update_cursors()
+		elif event is InputEventMouseButton:
+			if event.button_index == BUTTON_WHEEL_UP:
+				cursors_extrude_amount += 1
+			elif event.button_index == BUTTON_WHEEL_DOWN and cursors_extrude_amount > 1:
+				cursors_extrude_amount -= 1
+			update_cursors()
+	
 	if pointer_visible and not Lock and VoxelObject and event is InputEventMouse:
 		var mirrors = grid_to_mirrors(get_pointer())
 		if event.button_mask == BUTTON_MASK_MIDDLE or event.button_mask == BUTTON_MASK_RIGHT: pass
@@ -932,12 +946,6 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 						return false
 				set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
-				return true
-			elif cursors_are_selecting_extrude:
-				if event.button_index == BUTTON_WHEEL_UP:
-					cursors_extrude_amount += 1
-				elif event.button_index == BUTTON_WHEEL_DOWN and cursors_extrude_amount > 1:
-					cursors_extrude_amount -= 1
 				return true
 	set_cursors_visible(cursors_are_selecting_extrude)
 	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
