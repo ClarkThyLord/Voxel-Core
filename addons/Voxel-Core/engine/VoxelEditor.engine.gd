@@ -166,6 +166,8 @@ func get_rprimary():
 #
 func set_primary(voxel = null, emit := true) -> void:
 	Primary = voxel
+	
+	update_cursors()
 	if emit: emit_signal('set_primary', Primary)
 
 signal set_primary_color(color)
@@ -180,10 +182,7 @@ export(Color) var PrimaryColor := Color.white setget set_primary_color   #   Pri
 func set_primary_color(color : Color, emit := true) -> void:
 	PrimaryColor = color
 	
-	if CursorDynamic and ToolPalette == ToolPalettes.PRIMARY:
-		for cursor in Cursors.values():
-			cursor.set_cursor_color(color)
-	
+	update_cursors()
 	if emit: emit_signal('set_primary_color', PrimaryColor)
 
 signal set_secondary(voxel)
@@ -211,6 +210,8 @@ func get_rsecondary():
 #
 func set_secondary(voxel = null, emit := true) -> void:
 	Secondary = voxel
+	
+	update_cursors()
 	if emit: emit_signal('set_secondary', Secondary)
 
 signal set_secondary_color(color)
@@ -225,10 +226,7 @@ export(Color) var SecondaryColor := Color.black setget set_secondary_color   #  
 func set_secondary_color(color : Color, emit := true) -> void:
 	SecondaryColor = color
 	
-	if CursorDynamic and ToolPalette == ToolPalettes.SECONDARY:
-		for cursor in Cursors.values():
-			cursor.set_cursor_color(color)
-	
+	update_cursors()
 	if emit: emit_signal('set_secondary_color', SecondaryColor)
 
 
@@ -350,6 +348,7 @@ func update_cursors() -> void:
 		var visible_cursors = grid_to_mirrors(position)
 		var all_mirrors = grid_to_mirrors(position, true, true, true)
 		for cursor_key in Cursors:
+			Cursors[cursor_key].set_cursor_color(Voxel.get_color(get_palette()) if CursorDynamic else CursorColor)
 			Cursors[cursor_key].visible = not Lock and not Tool == Tools.PAN and CursorVisible and visible_cursors.has(cursor_key) and (pointer_visible or cursors_are_selecting_extrude)
 			
 			if ToolMode == ToolModes.AREA and cursors_are_selecting_area:
