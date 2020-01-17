@@ -280,12 +280,23 @@ func update() -> void:
 	var ST = SurfaceTool.new()
 	ST.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
-	var used_voxels := {}
+	
+	var voxels := {}
+	for layer in Layers:
+		for voxel_grid in layer['data']:
+			voxels[voxel_grid] = layer['data'][voxel_grid]
+	
+	var rights = {}
+	var lefts = {}
+	var ups = {}
+	var downs = {}
+	var backs = {}
+	var forwards = {}
+	
 	var layers := get_layers()
 	var arraymesh := ArrayMesh.new()
 	for layer_index in range(len(layers)):
-		var voxels = Layers[layer_index]['data']
-		if voxels.size() > 0:
+		if Layers[layer_index]['data'].size() > 0:
 			var material = SpatialMaterial.new()
 			material.roughness = 1
 			material.vertex_color_is_srgb = true
@@ -297,42 +308,38 @@ func update() -> void:
 			ST.set_material(material)
 			
 			if editing or MeshType == MeshTypes.NAIVE:
-				for voxel_grid in voxels:
-					if UVMapping:
-						if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward_with_uv(ST, get_voxel(voxel_grid), voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-					else:
-						if not voxels.has(voxel_grid + Vector3.RIGHT): Voxel.generate_right(ST, get_voxel(voxel_grid), voxel_grid)
-						if not voxels.has(voxel_grid + Vector3.LEFT): Voxel.generate_left(ST, get_voxel(voxel_grid), voxel_grid)
-						if not voxels.has(voxel_grid + Vector3.UP): Voxel.generate_up(ST, get_voxel(voxel_grid), voxel_grid)
-						if not voxels.has(voxel_grid + Vector3.DOWN): Voxel.generate_down(ST, get_voxel(voxel_grid), voxel_grid)
-						if not voxels.has(voxel_grid + Vector3.BACK): Voxel.generate_back(ST, get_voxel(voxel_grid), voxel_grid)
-						if not voxels.has(voxel_grid + Vector3.FORWARD): Voxel.generate_forward(ST, get_voxel(voxel_grid), voxel_grid)
+				for voxel_grid in Layers[layer_index]['data']:
+					var voxel = Layers[layer_index]['data'][voxel_grid]
+					if not typeof(voxel) == TYPE_DICTIONARY:
+						voxel = VoxelSet.get_voxel(voxel)
+					
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.RIGHT, voxels, rights):
+						rights[voxel_grid] = true
+						if UVMapping: Voxel.generate_right_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+						else: Voxel.generate_right(ST, voxel, voxel_grid)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.LEFT, voxels, lefts):
+						lefts[voxel_grid] = true
+						if UVMapping: Voxel.generate_left_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+						else: Voxel.generate_left(ST, voxel, voxel_grid)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.UP, voxels, ups):
+						ups[voxel_grid] = true
+						if UVMapping: Voxel.generate_up_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+						else: Voxel.generate_up(ST, voxel, voxel_grid)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.DOWN, voxels, downs):
+						downs[voxel_grid] = true
+						if UVMapping: Voxel.generate_down_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+						else: Voxel.generate_down(ST, voxel, voxel_grid)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.BACK, voxels, backs):
+						backs[voxel_grid] = true
+						if UVMapping: Voxel.generate_back_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+						else: Voxel.generate_back(ST, voxel, voxel_grid)
+					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.FORWARD, voxels, forwards):
+						forwards[voxel_grid] = true
+						if UVMapping: Voxel.generate_forward_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+						else: Voxel.generate_forward(ST, voxel, voxel_grid)
 			elif MeshType == MeshTypes.GREEDY:
-				var rights = []
-				var right_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
-				var lefts = []
-				var left_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
-				var ups = []
-				var up_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ]
-				var downs = []
-				var down_directions = [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ]
-				var backs = []
-				var back_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
-				var forwards = []
-				var forward_directions = [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
-				
-				for voxel_grid in voxels:
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.RIGHT, voxels, rights): rights = greed(voxels, ST, voxel_grid, Vector3.RIGHT, right_directions, rights)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.LEFT, voxels, lefts): lefts = greed(voxels, ST, voxel_grid, Vector3.LEFT, left_directions, lefts)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.UP, voxels, ups): ups = greed(voxels, ST, voxel_grid, Vector3.UP, up_directions, ups)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.DOWN, voxels, downs): downs = greed(voxels, ST, voxel_grid, Vector3.DOWN, down_directions, downs)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.BACK, voxels, backs): backs = greed(voxels, ST, voxel_grid, Vector3.BACK, back_directions, backs)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.FORWARD, voxels, forwards): forwards = greed(voxels, ST, voxel_grid, Vector3.FORWARD, forward_directions, forwards)
+				pass
+				# TODO
 			
 			ST.index()
 			ST.commit(arraymesh)
