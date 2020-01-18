@@ -286,12 +286,32 @@ func update() -> void:
 		for voxel_grid in layer['data']:
 			voxels[voxel_grid] = layer['data'][voxel_grid]
 	
-	var rights = {}
-	var lefts = {}
-	var ups = {}
-	var downs = {}
-	var backs = {}
-	var forwards = {}
+	var faces = {
+		Vector3.RIGHT: {
+			'used': {},
+			'directions': [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
+		},
+		Vector3.LEFT: {
+			'used': {},
+			'directions': [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ]
+		},
+		Vector3.UP: {
+			'used': {},
+			'directions': [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ]
+		},
+		Vector3.DOWN: {
+			'used': {},
+			'directions': [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ]
+		},
+		Vector3.BACK: {
+			'used': {},
+			'directions': [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
+		},
+		Vector3.FORWARD: {
+			'used': {},
+			'directions': [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
+		}
+	}
 	
 	var layers := get_layers()
 	var arraymesh := ArrayMesh.new()
@@ -312,48 +332,14 @@ func update() -> void:
 				if not typeof(voxel) == TYPE_DICTIONARY:
 					voxel = VoxelSet.get_voxel(voxel)
 				
-				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.RIGHT, voxels, rights):
-					rights[voxel_grid] = true
-					if editing or MeshType == MeshTypes.NAIVE:
-						if UVMapping: Voxel.generate_right_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						else: Voxel.generate_right(ST, voxel, voxel_grid)
-					elif MeshType == MeshTypes.GREEDY:
-						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.RIGHT, [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ])
-				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.LEFT, voxels, lefts):
-					lefts[voxel_grid] = true
-					if editing or MeshType == MeshTypes.NAIVE:
-						if UVMapping: Voxel.generate_left_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						else: Voxel.generate_left(ST, voxel, voxel_grid)
-					elif MeshType == MeshTypes.GREEDY:
-						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.LEFT, [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ])
-				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.UP, voxels, ups):
-					ups[voxel_grid] = true
-					if editing or MeshType == MeshTypes.NAIVE:
-						if UVMapping: Voxel.generate_up_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						else: Voxel.generate_up(ST, voxel, voxel_grid)
-					elif MeshType == MeshTypes.GREEDY:
-						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.UP, [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ])
-				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.DOWN, voxels, downs):
-					downs[voxel_grid] = true
-					if editing or MeshType == MeshTypes.NAIVE:
-						if UVMapping: Voxel.generate_down_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						else: Voxel.generate_down(ST, voxel, voxel_grid)
-					elif MeshType == MeshTypes.GREEDY:
-						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.DOWN, [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ])
-				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.BACK, voxels, backs):
-					backs[voxel_grid] = true
-					if editing or MeshType == MeshTypes.NAIVE:
-						if UVMapping: Voxel.generate_back_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						else: Voxel.generate_back(ST, voxel, voxel_grid)
-					elif MeshType == MeshTypes.GREEDY:
-						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.BACK, [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ])
-				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.FORWARD, voxels, forwards):
-					forwards[voxel_grid] = true
-					if editing or MeshType == MeshTypes.NAIVE:
-						if UVMapping: Voxel.generate_forward_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
-						else: Voxel.generate_forward(ST, voxel, voxel_grid)
-					elif MeshType == MeshTypes.GREEDY:
-						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.FORWARD, [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ])
+				for face in faces:
+					faces[face]['used'][voxel_grid] = true
+					if not Voxel.is_voxel_obstructed(voxel_grid, face, voxels, faces[face]['used']):
+						if editing or MeshType == MeshTypes.NAIVE:
+							if UVMapping: Voxel.generate_right_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
+							else: Voxel.generate_right(ST, voxel, voxel_grid)
+						elif MeshType == MeshTypes.GREEDY:
+							greed(voxels, Layers[layer_index], faces[face]['used'], ST, voxel_grid, face, faces[face]['directions'])
 			
 			ST.index()
 			ST.commit(arraymesh)
