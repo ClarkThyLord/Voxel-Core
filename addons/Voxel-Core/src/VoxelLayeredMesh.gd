@@ -158,19 +158,19 @@ func erase_voxels(update : bool = true) -> void:
 
 
 # Main function used when Greedy Meshing on update
-# voxels        :   Dictionary       -   voxels from which to generate greedy mesh
-# st            :   SurfaceTool      -   SurfaceTool to append Greedy Mesh to
-# origin        :   Vector3          -   grid position from which to start Greedy Meshing
-# direction     :   Vector3          -   orientation of face
-# directions    :   Array<Vector3>   -   directions for Greedy Meshing
-# used          :   Array<Vector3>   -   positions already used
-# layer_index   :   int              -   position of layer from which to use data
+# voxels         :   Dictionary                  -   voxels from which to check for obstruction
+# layer_voxels   :   Dictinary                   -   voxels from which to generate greedy mesh
+# used           :   Dictionary<Vector3, bool>   -   positions already used
+# st             :   SurfaceTool                 -   SurfaceTool to append Greedy Mesh to
+# origin         :   Vector3                     -   grid position from which to start Greedy Meshing
+# direction      :   Vector3                     -   orientation of face
+# directions     :   Array<Vector3>              -   directions for Greedy Meshing
 #
 # Example:
-#   greed([SurfaceTool], [Vector3], [Vector3], Array<Vector3>, Array<Vector3>) -> Array<Vector3>
+#   greed([SurfaceTool], [Vector3], [Vector3], Array<Vector3>, Array<Vector3>)
 #
-func greed(voxels : Dictionary, st : SurfaceTool, origin : Vector3, direction : Vector3, directions : Array, used : Array, layer_index : int = CurrentLayerIndex) -> Array:
-	used.append(origin)
+func greed(voxels : Dictionary, layer_voxels : Dictionary, used : Dictionary, st : SurfaceTool, origin : Vector3, direction : Vector3, directions : Array) -> void:
+	used[origin] = true
 	
 	var origin_voxel = get_voxel(origin)
 	var origin_color = Voxel.get_color_side(origin_voxel, direction)
@@ -182,44 +182,42 @@ func greed(voxels : Dictionary, st : SurfaceTool, origin : Vector3, direction : 
 	var g4 = origin
 	
 	if origin_texture == null:
-		var temp = []
+#		var temp = []
 		var offset = 1
 		var length = 1
-		
 		while true:
 			var temp_grid = g4 + (directions[0] * offset)
 			var temp_voxel = get_voxel(temp_grid)
 		
-			if Layers[layer_index]['data'].has(temp_grid) and not Voxel.is_voxel_obstructed(temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+			if layer_voxels.has(temp_grid) and not Voxel.is_voxel_obstructed(temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 				offset += 1
-				temp.append(temp_grid)
+#				temp.append(temp_grid)
+				used[temp_grid] = true
 			else: break
 		
-		used += temp
-		length += temp.size()
-		g1 += directions[0] * temp.size()
-		g3 += directions[0] * temp.size()
+#		used += temp
+		length += offset
+		g1 += directions[0] * offset
+		g3 += directions[0] * offset
 		
-		temp = []
 		offset = 1
-		
 		while true:
 			var temp_grid = g4 + (directions[1] * offset)
 			var temp_voxel = get_voxel(temp_grid)
 			
-			if Layers[layer_index]['data'].has(temp_grid) and not Voxel.is_voxel_obstructed(temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+			if layer_voxels.has(temp_grid) and not Voxel.is_voxel_obstructed(temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 				offset += 1
-				temp.append(temp_grid)
+#				temp.append(temp_grid)
+				used[temp_grid] = true
 			else: break
 		
-		used += temp
-		length += temp.size()
-		g2 += directions[1] * temp.size()
-		g4 += directions[1] * temp.size()
+#		used += temp
+		length += offset
+		g2 += directions[1] * offset
+		g4 += directions[1] * offset
 		
-		temp = []
+		var temp = []
 		offset = 1
-		
 		while true:
 			var temp_grid = g4 + (directions[2] * offset)
 			
@@ -228,14 +226,16 @@ func greed(voxels : Dictionary, st : SurfaceTool, origin : Vector3, direction : 
 				var _temp_grid = temp_grid + directions[0] * temp_offset
 				var temp_voxel = get_voxel(_temp_grid)
 			
-				if Layers[layer_index]['data'].has(_temp_grid) and not Voxel.is_voxel_obstructed(_temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+				if layer_voxels.has(_temp_grid) and not Voxel.is_voxel_obstructed(_temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 					temp.append(_temp_grid)
 				else:
 					valid = false
 					break
 			
 			if valid:
-				used += temp
+#				used += temp
+				for t in temp:
+					used[t] = true
 				offset += 1
 			else: break
 		
@@ -252,14 +252,16 @@ func greed(voxels : Dictionary, st : SurfaceTool, origin : Vector3, direction : 
 				var _temp_grid = temp_grid + directions[0] * temp_offset
 				var temp_voxel = get_voxel(_temp_grid)
 			
-				if Layers[layer_index]['data'].has(_temp_grid) and not Voxel.is_voxel_obstructed(_temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
+				if layer_voxels.has(_temp_grid) and not Voxel.is_voxel_obstructed(_temp_grid, direction, voxels, used) and Voxel.get_color_side(temp_voxel, direction) == origin_color:
 					temp.append(_temp_grid)
 				else:
 					valid = false
 					break
 			
 			if valid:
-				used += temp
+#				used += temp
+				for t in temp:
+					used[t] = true
 				offset += 1
 			else: break
 		
@@ -268,8 +270,6 @@ func greed(voxels : Dictionary, st : SurfaceTool, origin : Vector3, direction : 
 	
 	if UVMapping: Voxel.generate_side_with_uv(direction, st, get_voxel(origin), g1, g2, g3, g4, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 	else: Voxel.generate_side(direction, st, get_voxel(origin), g1, g2, g3, g4)
-	
-	return used
 
 
 func update() -> void:
@@ -307,39 +307,53 @@ func update() -> void:
 			
 			ST.set_material(material)
 			
-			if editing or MeshType == MeshTypes.NAIVE:
-				for voxel_grid in Layers[layer_index]['data']:
-					var voxel = Layers[layer_index]['data'][voxel_grid]
-					if not typeof(voxel) == TYPE_DICTIONARY:
-						voxel = VoxelSet.get_voxel(voxel)
-					
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.RIGHT, voxels, rights):
-						rights[voxel_grid] = true
+			for voxel_grid in Layers[layer_index]['data']:
+				var voxel = Layers[layer_index]['data'][voxel_grid]
+				if not typeof(voxel) == TYPE_DICTIONARY:
+					voxel = VoxelSet.get_voxel(voxel)
+				
+				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.RIGHT, voxels, rights):
+					rights[voxel_grid] = true
+					if editing or MeshType == MeshTypes.NAIVE:
 						if UVMapping: Voxel.generate_right_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 						else: Voxel.generate_right(ST, voxel, voxel_grid)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.LEFT, voxels, lefts):
-						lefts[voxel_grid] = true
+					elif MeshType == MeshTypes.GREEDY:
+						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.RIGHT, [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ])
+				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.LEFT, voxels, lefts):
+					lefts[voxel_grid] = true
+					if editing or MeshType == MeshTypes.NAIVE:
 						if UVMapping: Voxel.generate_left_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 						else: Voxel.generate_left(ST, voxel, voxel_grid)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.UP, voxels, ups):
-						ups[voxel_grid] = true
+					elif MeshType == MeshTypes.GREEDY:
+						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.LEFT, [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ])
+				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.UP, voxels, ups):
+					ups[voxel_grid] = true
+					if editing or MeshType == MeshTypes.NAIVE:
 						if UVMapping: Voxel.generate_up_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 						else: Voxel.generate_up(ST, voxel, voxel_grid)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.DOWN, voxels, downs):
-						downs[voxel_grid] = true
+					elif MeshType == MeshTypes.GREEDY:
+						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.UP, [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ])
+				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.DOWN, voxels, downs):
+					downs[voxel_grid] = true
+					if editing or MeshType == MeshTypes.NAIVE:
 						if UVMapping: Voxel.generate_down_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 						else: Voxel.generate_down(ST, voxel, voxel_grid)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.BACK, voxels, backs):
-						backs[voxel_grid] = true
+					elif MeshType == MeshTypes.GREEDY:
+						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.DOWN, [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ])
+				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.BACK, voxels, backs):
+					backs[voxel_grid] = true
+					if editing or MeshType == MeshTypes.NAIVE:
 						if UVMapping: Voxel.generate_back_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 						else: Voxel.generate_back(ST, voxel, voxel_grid)
-					if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.FORWARD, voxels, forwards):
-						forwards[voxel_grid] = true
+					elif MeshType == MeshTypes.GREEDY:
+						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.BACK, [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ])
+				if not Voxel.is_voxel_obstructed(voxel_grid, Vector3.FORWARD, voxels, forwards):
+					forwards[voxel_grid] = true
+					if editing or MeshType == MeshTypes.NAIVE:
 						if UVMapping: Voxel.generate_forward_with_uv(ST, voxel, voxel_grid, null, null, null, VoxelSet.UV_SCALE if VoxelSet else 1.0)
 						else: Voxel.generate_forward(ST, voxel, voxel_grid)
-			elif MeshType == MeshTypes.GREEDY:
-				pass
-				# TODO
+					elif MeshType == MeshTypes.GREEDY:
+						greed(voxels, Layers[layer_index], rights, ST, voxel_grid, Vector3.FORWARD, [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ])
 			
 			ST.index()
 			ST.commit(arraymesh)
