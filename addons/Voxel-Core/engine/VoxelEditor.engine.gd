@@ -39,6 +39,10 @@ export(bool) var Lock := true setget set_lock   #   Whether the currently editin
 func set_lock(lock := !Lock, emit := true) -> void:
 	Lock = lock
 	
+	cursors_started_area = false
+	cursors_are_selecting_area = false
+	cursors_started_extrude = false
+	cursors_are_selecting_extrude = false
 	if Lock: set_cursors_visible(false)
 	
 	if emit: emit_signal('set_lock', Lock)
@@ -138,6 +142,12 @@ export(ToolModes) var ToolMode := ToolModes.INDIVIDUAL setget set_tool_mode   # 
 #
 func set_tool_mode(toolmode : int, emit := true) -> void:
 	ToolMode = toolmode
+	
+	cursors_started_area = false
+	cursors_are_selecting_area = false
+	cursors_started_extrude = false
+	cursors_are_selecting_extrude = false
+	
 	if emit: emit_signal('set_tool_mode', ToolMode)
 
 
