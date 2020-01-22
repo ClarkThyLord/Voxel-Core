@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=2]
+[gd_scene load_steps=56 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/BottomPanel.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/tools.png" type="Texture" id=2]
@@ -34,14 +34,13 @@
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/autosave.png" type="Texture" id=32]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/reset.png" type="Texture" id=33]
 [ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/visible.png" type="Texture" id=34]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/CursorTypesDropdown/CursorTypesDropdown.tscn" type="PackedScene" id=35]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/floor.png" type="Texture" id=36]
-[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=37]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/about.png" type="Texture" id=38]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=39]
-[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=40]
-[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=41]
-[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/issues.png" type="Texture" id=42]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/floor.png" type="Texture" id=35]
+[ext_resource path="res://addons/Voxel-Core/engine/BottomPanel/FloorTypesDropdown/FloorTypesDropdown.tscn" type="PackedScene" id=36]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/about.png" type="Texture" id=37]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/VoxelCore.svg" type="Texture" id=38]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/Godot.png" type="Texture" id=39]
+[ext_resource path="res://addons/Voxel-Core/assets/icons/GitHub.png" type="Texture" id=40]
+[ext_resource path="res://addons/Voxel-Core/assets/BottomPanel/issues.png" type="Texture" id=41]
 
 [sub_resource type="InputEventKey" id=1]
 shift = true
@@ -301,7 +300,11 @@ margin_bottom = 144.0
 [node name="VoxelSetView" parent="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 19 )]
 margin_right = 338.0
 margin_bottom = 66.0
+Primary = ""
 PrimaryColor = Color( 1, 1, 1, 0.1 )
+Secondary = ""
+SecondaryColor = Color( 0, 0, 0, 1 )
+VoxelSetPath = NodePath("")
 
 [node name="HSplitContainer" type="VSeparator" parent="PanelContainer/MarginContainer/HBoxContainer"]
 margin_left = 342.0
@@ -833,17 +836,6 @@ margin_right = 126.0
 margin_bottom = 17.0
 text = "   Cursor Color"
 
-[node name="CursorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer" instance=ExtResource( 35 )]
-margin_top = 80.0
-margin_right = 316.0
-margin_bottom = 102.0
-hint_tooltip = "Cursor Mode
-Change cursor mode in editor.
-
-Solid, cover of highlighted.
-Wired, outline of highlighted."
-Type = 0
-
 [node name="Floor" type="ScrollContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer"]
 visible = false
 anchor_right = 1.0
@@ -856,7 +848,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 36 )
+"_tab_icon": ExtResource( 35 )
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor"]
@@ -960,7 +952,7 @@ min_value = 1.0
 value = 1.0
 rounded = true
 
-[node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 37 )]
+[node name="FloorTypesDropdown" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer" instance=ExtResource( 36 )]
 margin_top = 108.0
 margin_right = 316.0
 margin_bottom = 130.0
@@ -984,7 +976,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 __meta__ = {
-"_tab_icon": ExtResource( 38 )
+"_tab_icon": ExtResource( 37 )
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About"]
@@ -1003,7 +995,7 @@ margin_right = 50.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
-texture = ExtResource( 39 )
+texture = ExtResource( 38 )
 expand = true
 stretch_mode = 6
 
@@ -1040,7 +1032,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "AssetLib"
-icon = ExtResource( 40 )
+icon = ExtResource( 39 )
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer"]
 margin_left = 90.0
@@ -1057,7 +1049,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "GitHub"
-icon = ExtResource( 41 )
+icon = ExtResource( 40 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2"]
 margin_top = 28.0
@@ -1081,7 +1073,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Issue"
-icon = ExtResource( 42 )
+icon = ExtResource( 41 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/About/HBoxContainer/VBoxContainer2/HBoxContainer2"]
 margin_left = 87.0
@@ -1098,7 +1090,7 @@ mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Help"
-icon = ExtResource( 38 )
+icon = ExtResource( 37 )
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/PrimaryColor" to="." method="_on_PrimaryColor_color_changed"]
 [connection signal="color_changed" from="PanelContainer/MarginContainer/HBoxContainer/Tools/ScrollContainer/VBoxContainer/HBoxContainer2/SecondaryColor" to="." method="_on_SecondaryColor_color_changed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/HBoxContainer/Info/HBoxContainer/HBoxContainer/Commit" to="." method="_on_Commit_pressed"]

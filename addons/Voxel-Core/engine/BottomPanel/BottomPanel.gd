@@ -49,7 +49,6 @@ onready var AutoSave := get_node('PanelContainer/MarginContainer/HBoxContainer/S
 onready var CursorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorVisible')
 onready var CursorDynamic := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorDynamic')
 onready var CursorColor := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/HBoxContainer/CursorColor')
-onready var CursorType := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Cursor/VBoxContainer/CursorTypesDropdown')
 
 onready var FloorVisible := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorVisible')
 onready var FloorConstant := get_node('PanelContainer/MarginContainer/HBoxContainer/Settings/TabContainer/Floor/VBoxContainer/FloorConstant')
@@ -167,10 +166,6 @@ func setup(voxelcore) -> void:
 	CursorColor.set_pick_color(voxelcore.VoxelEditor.CursorColor)
 	voxelcore.VoxelEditor.connect('set_cursor_color', CursorColor, 'set_pick_color')
 	CursorColor.connect('color_changed', voxelcore.VoxelEditor, 'set_cursor_color')
-	
-	CursorType.select(voxelcore.VoxelEditor.CursorType)
-	voxelcore.VoxelEditor.connect('set_cursor_type', CursorType, 'select')
-	CursorType.connect('item_selected', voxelcore.VoxelEditor, 'set_cursor_type')
 	
 	FloorVisible.set_pressed(voxelcore.VoxelEditor.FloorVisible)
 	voxelcore.VoxelEditor.connect('set_floor_visible', FloorVisible, 'set_pressed')

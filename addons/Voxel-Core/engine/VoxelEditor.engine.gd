@@ -423,23 +423,6 @@ func set_cursor_color(color : Color, emit := true) -> void:
 	
 	if emit: emit_signal('set_cursor_color', CursorColor)
 
-signal set_cursor_type(cursortype)
-export(VoxelCursor.CursorTypes) var CursorType := VoxelCursor.CursorTypes.SOLID setget set_cursor_type   #   Cursor type
-# Setter for CursorType, emits 'set_cursor_type'.
-# cursortype   :   int(VoxelCursor.CursorType)    -   value to set
-# emit         :   bool                           -   true, emit signal; false, don't emit signal
-#
-# Example:
-#   set_cursor_type(VoxelCursor.CursorTypes.WIRED, false)
-#
-func set_cursor_type(cursortype : int, emit := true) -> void:
-	CursorType = cursortype
-	
-	for cursor in Cursors.values():
-		cursor.set_cursor_type(CursorType)
-	
-	if emit: emit_signal('set_cursor_type', CursorType)
-
 signal set_cursor_dynamic(dynamic)
 export(bool) var CursorDynamic := true setget set_cursor_dynamic   #   Whether cursors are dynamic
 # Setter for CursorDynamic, emits 'set_cursor_dynamic'.
@@ -631,7 +614,6 @@ func set_default_options(defaultoptions := {
 		'MirrorZ': false,
 		'CursorVisible': true,
 		'CursorColor': Color(1, 0, 0, 0.3),
-		'CursorType': VoxelCursor.CursorTypes.SOLID,
 		'FloorVisible': true,
 		'FloorConstant': false,
 		'FloorColor': Color.purple,
