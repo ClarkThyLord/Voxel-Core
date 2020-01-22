@@ -938,6 +938,6 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 						return false
 				set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 				return true
-	set_cursors_visible(cursors_are_selecting_extrude or event is InputEventKey)
+	if not event is InputEventKey: set_cursors_visible(cursors_are_selecting_extrude)
 	set_floor_visible(FloorConstant or (VoxelObject and not VoxelObject.mesh))
 	return false
