@@ -12,12 +12,12 @@ extends "res://addons/Voxel-Core/src/VoxelSet.gd"
 
 # The following will initialize the object as needed
 func _load():
-	set_voxel(Voxel.colored(Color.black, {}, {'name': 'black'}), 'black')
-	set_voxel(Voxel.colored(Color.white, {}, {'name': 'white'}))
-	set_voxel(Voxel.colored(Color.red, {}, {'name': 'red'}))
-	set_voxel(Voxel.colored(Color.green, {}, {'name': 'green'}))
-	set_voxel(Voxel.colored(Color.blue, {}, {'name': 'blue'}))
-	set_voxel(Voxel.colored(Color.yellow, {}, {'name': 'yellow'}))
-	set_voxel(Voxel.colored(Color.cyan, {}, {'name': 'cyan'}))
-	set_voxel(Voxel.colored(Color.purple, {}, {'name': 'purple'}))
-	set_voxel(Voxel.colored(Color.magenta, {}, {'name': 'magenta'}))
+	set_voxel(Voxel.colored(Color.black), 'black')
+	set_voxel(Voxel.colored(Color.white), 'white')
+	set_voxel(Voxel.colored(Color.red), 'red')
+	set_voxel(Voxel.colored(Color.green), 'green')
+	set_voxel(Voxel.colored(Color.blue), 'blue')
+	set_voxel(Voxel.colored(Color.yellow), 'yellow')
+	set_voxel(Voxel.colored(Color.cyan), 'cyan')
+	set_voxel(Voxel.colored(Color.purple), 'purple')
+	set_voxel(Voxel.colored(Color.magenta), 'magenta')

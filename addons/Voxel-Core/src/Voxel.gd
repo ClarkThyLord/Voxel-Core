@@ -165,7 +165,10 @@ static func basic(data : Dictionary = {}) -> Dictionary:
 #   get_data({ ... })   ->   { ... }
 #
 static func get_data(voxel : Dictionary) -> Dictionary:
-	return voxel['data'] if typeof(voxel.get('data')) == TYPE_DICTIONARY else {}
+	if typeof(voxel.get('data')) == TYPE_NIL:
+		voxel['data'] = {}
+	return voxel['data']
+#	return voxel['data'] if typeof(voxel.get('data')) == TYPE_DICTIONARY else {}
 
 # Helper function for setting 'data' of given Voxel
 # voxel   :   Dictionary   -   Voxel to modify

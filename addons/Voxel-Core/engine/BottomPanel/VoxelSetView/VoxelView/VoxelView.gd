@@ -63,7 +63,7 @@ func setup(voxelsetview, id, voxel : Dictionary) -> void:
 	Represents = voxel
 	VoxelSetView = voxelsetview
 	
-	hint_tooltip = 'ID: ' + str(id)
+	hint_tooltip = 'ID: ' + str(id) + str((' | Name: ' + voxel['data']['vsn']) if voxel.has('data') and voxel['data'].has('vsn') else '')
 	
 	get_node('CenterContainer/Color').color = Voxel.get_color(voxel)
 	
