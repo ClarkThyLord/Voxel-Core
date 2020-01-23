@@ -31,7 +31,16 @@ signal updated
 
 
 var _ID := 0 setget set_id              #   Auto-increments on Voxel append
-func set_id(id : int) -> void: return   #   _ID shouldn't be settable externally
+func set_id(id : int) -> void: return   #   shouldn't be settable externally
+func get_id(id) -> int:
+	if typeof(id) == TYPE_STRING:
+		if id.is_valid_integer():
+			id = id.to_int()
+		else: id = _NAMES.get(id)
+	return id
+
+var _NAMES := {} setget set_names
+func set_names(names : Dictionary) -> void: return   #   shouldn't be settable externally
 
 
 # Sets Voxels of set, emits 'update'.
@@ -107,11 +116,13 @@ func set_albedo_texture(albedotexture : Texture = AlbedoTexture, update := true,
 # Load necessary data
 func _load() -> void:
 	_ID = get_meta('_ID') if has_meta('_ID') else 0
+	_NAMES = get_meta('_NAMES') if has_meta('_NAMES') else {}
 	Voxels = get_meta('Voxels') if has_meta('Voxels') else {}
 
 # Save necessary data
 func _save() -> void:
 	set_meta('_ID', _ID)
+	set_meta('_NAMES', _NAMES)
 	set_meta('Voxels', Voxels)
 
 
@@ -126,7 +137,8 @@ func _init(): _load()
 # Example:
 #   get_voxel(3) -> { ... }
 #
-func get_voxel(id): return Voxels.get(id)
+func get_voxel(id):
+	return Voxels.get(get_id(id))
 
 # Append a Voxel, or set Voxel by providing a ID to VoxelSet.
 # voxel      :   Dictionary   -   Voxel data to store
@@ -138,10 +150,17 @@ func get_voxel(id): return Voxels.get(id)
 #   set_voxel({ ... })       ->   3
 #   set_voxel({ ... }, 45)   ->   45
 #
-func set_voxel(voxel : Dictionary, id = null, update := true):
-	if typeof(id) == TYPE_NIL:
+func set_voxel(voxel : Dictionary, id = _ID, update := true):
+	if typeof(id) == TYPE_STRING:
+		_NAMES[id] = _ID
+		Voxel.get_data(voxel)['vsn'] = id
 		id = _ID
-		_ID += 1
+	if typeof(id) == TYPE_INT:
+		if id >= _ID: _ID = id + 1
+	else: printerr('`' + str(id) + ' `invalid id for voxelset')
+#	if typeof(id) == TYPE_NIL:
+#		id = _ID
+#		_ID += 1
 	
 	Voxels[id] = voxel
 	
@@ -157,7 +176,13 @@ func set_voxel(voxel : Dictionary, id = null, update := true):
 #   erase_voxel(33)   ->   { ... }
 #
 func erase_voxel(id, update := true) -> void:
-	if Voxels.erase(id) and update: self.update()
+	var _id = _NAMES.get(id)
+	if typeof(_id) == TYPE_NIL:
+		Voxels.erase(id)
+	else:
+		_NAMES.erase(id)
+		Voxels.erase(_id)
+	if update: self.update()
 
 
 # Saves VoxelSet data, and emits 'update'.
