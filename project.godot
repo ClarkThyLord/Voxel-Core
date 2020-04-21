@@ -8,32 +8,9 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "Reference",
-"class": "Voxel",
-"language": "GDScript",
-"path": "res://addons/Voxel-Core/src/Voxel.gd"
-}, {
-"base": "MeshInstance",
-"class": "VoxelLayeredMesh",
-"language": "GDScript",
-"path": "res://addons/Voxel-Core/src/VoxelLayeredMesh.gd"
-}, {
-"base": "MeshInstance",
-"class": "VoxelMesh",
-"language": "GDScript",
-"path": "res://addons/Voxel-Core/src/VoxelMesh.gd"
-}, {
-"base": "MeshInstance",
-"class": "VoxelMultiMesh",
-"language": "GDScript",
-"path": "res://addons/Voxel-Core/src/VoxelMultiMesh.gd"
-} ]
+_global_script_classes=[  ]
 _global_script_class_icons={
-"Voxel": "res://addons/Voxel-Core/assets/Voxel.png",
-"VoxelLayeredMesh": "res://addons/Voxel-Core/assets/VoxelLayeredMesh.png",
-"VoxelMesh": "res://addons/Voxel-Core/assets/VoxelMesh.png",
-"VoxelMultiMesh": "res://addons/Voxel-Core/assets/VoxelMultiMesh.png"
+
 }
 
 [application]
@@ -42,14 +19,6 @@ config/name="Voxel-Core"
 boot_splash/image="res://assets/VoxelCore.splash.png"
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://icon.png"
-
-[autoload]
-
-VoxelSet="*res://addons/Voxel-Core/defaults/VoxelSet.default.gd"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "Voxel-Core" )
 
 [rendering]
 
