@@ -8,9 +8,32 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Object",
+"class": "Voxel",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Voxel.gd"
+}, {
+"base": "MeshInstance",
+"class": "VoxelMesh",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/VoxelMesh.gd"
+}, {
+"base": "Resource",
+"class": "VoxelSet",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/VoxelSet.gd"
+}, {
+"base": "SurfaceTool",
+"class": "VoxelTool",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/VoxelTool.gd"
+} ]
 _global_script_class_icons={
-
+"Voxel": "res://addons/Voxel-Core/assets/classes/Voxel.png",
+"VoxelMesh": "res://addons/Voxel-Core/assets/classes/VoxelMesh.png",
+"VoxelSet": "res://addons/Voxel-Core/assets/classes/VoxelSet.png",
+"VoxelTool": "res://addons/Voxel-Core/assets/classes/VoxelTool.png"
 }
 
 [application]
@@ -19,6 +42,10 @@ config/name="Voxel-Core"
 boot_splash/image="res://assets/VoxelCore.splash.png"
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "Voxel-Core" )
 
 [rendering]
 
