@@ -18,6 +18,7 @@ surfaces/0 = {
 "format": 97563,
 "index_count": 3408,
 "material": SubResource( 1 ),
+"name": "voxels",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 2206

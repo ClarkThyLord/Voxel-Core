@@ -29,8 +29,6 @@ onready var Cancel := get_node('PanelContainer/MarginContainer/HBoxContainer/Inf
 
 onready var InfoTabs := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer')
 
-onready var VoxelLayersView := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelLayersView')
-
 onready var VoxelSetPath := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer/HBoxContainer/VoxelSetPath')
 onready var VoxelSetUV := get_node('PanelContainer/MarginContainer/HBoxContainer/Info/TabContainer/VoxelObject/VBoxContainer/VoxelSet/VBoxContainer/HBoxContainer/VoxelSetUV')
 
@@ -142,8 +140,6 @@ func setup(voxelcore) -> void:
 	Lock.set_pressed(voxelcore.VoxelEditor.Lock)
 	voxelcore.VoxelEditor.connect('set_lock', Lock, 'set_pressed')
 	Lock.connect('toggled', voxelcore.VoxelEditor, 'set_lock')
-	
-	VoxelLayersView.visible = VoxelCore.VoxelEditor.VoxelObject is VoxelLayeredMesh
 	
 	VoxelSetPath.set_text(str(voxelcore.VoxelEditor.VoxelObject.VoxelSetPath))
 	VoxelSetUV.set_pressed(voxelcore.VoxelEditor.VoxelObject.VoxelSet and voxelcore.VoxelEditor.VoxelObject.VoxelSet.AlbedoTexture is Texture)

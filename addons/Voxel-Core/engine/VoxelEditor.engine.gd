@@ -888,14 +888,18 @@ func __input(event : InputEvent, camera := get_viewport().get_camera()) -> bool:
 		if event is InputEventMouseMotion:
 			if event.relative.x > 10:
 				cursors_extrude_amount += 1
+				return true
 			elif event.relative.x < -10 and cursors_extrude_amount > 1:
 				cursors_extrude_amount -= 1
+				return true
 			update_cursors()
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_WHEEL_UP:
 				cursors_extrude_amount += 1
+				return true
 			elif event.button_index == BUTTON_WHEEL_DOWN and cursors_extrude_amount > 1:
 				cursors_extrude_amount -= 1
+				return true
 			update_cursors()
 	
 	if pointer_visible and not Lock and VoxelObject and event is InputEventMouse:
