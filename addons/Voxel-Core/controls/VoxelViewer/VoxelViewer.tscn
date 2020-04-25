@@ -1,15 +1,25 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="CubeMesh" id=1]
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+vertex_color_use_as_albedo = true
+albedo_color = Color( 0, 1, 1, 0.392157 )
+
+[sub_resource type="PlaneMesh" id=3]
+
+[sub_resource type="CubeMesh" id=4]
+
+[sub_resource type="BoxShape" id=5]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -26,6 +36,7 @@ __meta__ = {
 [node name="3DView" type="ViewportContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
@@ -38,16 +49,32 @@ size = Vector2( 1024, 600 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
+physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 2 )
+environment = SubResource( 1 )
 
-[node name="MeshInstance" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 1 )
+[node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+visible = false
+
+[node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
+material_override = SubResource( 2 )
+mesh = SubResource( 3 )
 material/0 = null
+
+[node name="VoxelMesh" type="MeshInstance" parent="3DView/Viewport"]
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
+
+[node name="CollisionShape" type="CollisionShape" parent="3DView/Viewport/VoxelStaticBody"]
+shape = SubResource( 5 )
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
@@ -73,11 +100,11 @@ margin_bottom = 20.0
 rect_min_size = Vector2( 64, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-text = "FRONT"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
+[connection signal="input_event" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_input_event"]
+[connection signal="mouse_exited" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_mouse_exited"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
