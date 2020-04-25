@@ -1,0 +1,83 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
+
+[sub_resource type="Environment" id=2]
+ambient_light_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="CubeMesh" id=1]
+
+[node name="VoxelViewer" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="2DView" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="3DView" type="ViewportContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="3DView"]
+size = Vector2( 1024, 600 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
+
+[node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
+environment = SubResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="3DView/Viewport"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="ToolBar" type="HBoxContainer" parent="."]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 47.0
+margin_bottom = 20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ViewMode" type="OptionButton" parent="ToolBar"]
+margin_right = 47.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "3D"
+items = [ "2D", null, false, 0, null, "3D", null, false, 1, null ]
+selected = 1
+
+[node name="Hint" type="Label" parent="ToolBar"]
+margin_left = 51.0
+margin_right = 115.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 64, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "FRONT"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
+[connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
