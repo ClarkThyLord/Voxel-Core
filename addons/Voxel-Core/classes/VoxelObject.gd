@@ -10,9 +10,6 @@ extends MeshInstance
 
 
 # Declarations
-var Voxels := {} setget set_voxels, get_voxels
-
-
 enum VoxelMeshes {
 	NAIVE,
 	GREEDY
@@ -69,17 +66,34 @@ func _notification(what : int) -> void:
 		pass
 
 
-func set_voxel(grid : Vector3, voxel : int) -> void:
-	pass
+func set_voxel(grid : Vector3, voxel) -> void:
+	match typeof(voxel):
+		TYPE_INT, TYPE_DICTIONARY:
+			pass
+		_:
+			printerr("invalid voxel set")
+
+func set_rvoxel(grid : Vector3, voxel) -> void:
+	match typeof(voxel):
+		TYPE_INT, TYPE_STRING:
+			voxel = Voxel_Set.get_voxel(voxel)
+	set_voxel(grid, voxel)
 
 func set_voxels(voxels : Dictionary) -> void:
 	pass
 
-func get_voxel(grid : Vector3) -> int:
+func get_voxel(grid : Vector3):
 	return -1
 
-func get_voxels() -> Dictionary:
-	return {}
+func get_rvoxel(grid : Vector3) -> Dictionary:
+	var voxel = get_voxel(grid)
+	match typeof(voxel):
+		TYPE_INT, TYPE_STRING:
+			voxel = Voxel_Set.get_voxel(voxel)
+	return voxel
+
+func get_voxels() -> Array:
+	return []
 
 func erase_voxel(grid : Vector3) -> void:
 	pass
