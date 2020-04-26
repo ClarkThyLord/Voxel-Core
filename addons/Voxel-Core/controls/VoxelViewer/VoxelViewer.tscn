@@ -27,7 +27,6 @@ __meta__ = {
 }
 
 [node name="2DView" type="Control" parent="."]
-visible = false
 anchor_left = 0.25
 anchor_top = 0.18
 anchor_right = 0.75
@@ -41,37 +40,44 @@ __meta__ = {
 anchor_top = 0.333333
 anchor_right = 0.25
 anchor_bottom = 0.666667
+DisabledColor = Color( 0, 1, 1, 0.392157 )
 
 [node name="Front" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.251055
 anchor_top = 0.333333
 anchor_right = 0.501055
 anchor_bottom = 0.666667
+DisabledColor = Color( 0, 1, 1, 0.392157 )
 
 [node name="Right" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.5
 anchor_top = 0.333333
 anchor_right = 0.75
 anchor_bottom = 0.666667
+DisabledColor = Color( 0, 1, 1, 0.392157 )
 
 [node name="Back" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.75
 anchor_top = 0.333333
 anchor_right = 1.0
 anchor_bottom = 0.666667
+DisabledColor = Color( 0, 1, 1, 0.392157 )
 
 [node name="Top" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.25
 anchor_right = 0.5
 anchor_bottom = 0.333333
+DisabledColor = Color( 0, 1, 1, 0.392157 )
 
 [node name="Bottom" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.25
 anchor_top = 0.666667
 anchor_right = 0.5
 anchor_bottom = 1.0
+DisabledColor = Color( 0, 1, 1, 0.392157 )
 
 [node name="3DView" type="ViewportContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -86,11 +92,10 @@ __meta__ = {
 size = Vector2( 1024, 600 )
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 3
+render_target_update_mode = 0
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
-transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
@@ -118,8 +123,8 @@ shape = SubResource( 5 )
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 47.0
-margin_bottom = 20.0
+margin_right = 208.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -146,6 +151,24 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="mouse_entered" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="selected" from="2DView/Left" to="." method="set_selected_face" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="mouse_entered" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="mouse_exited" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="selected" from="2DView/Front" to="." method="set_selected_face" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="mouse_entered" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="selected" from="2DView/Right" to="." method="set_selected_face" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="mouse_entered" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="mouse_exited" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="selected" from="2DView/Back" to="." method="set_selected_face" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="mouse_entered" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="selected" from="2DView/Top" to="." method="set_selected_face" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_entered" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="selected" from="2DView/Bottom" to="." method="set_selected_face" binds= [ Vector3( 0, -1, 0 ) ]]
 [connection signal="input_event" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_input_event"]
 [connection signal="mouse_exited" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_mouse_exited"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]

@@ -11,6 +11,7 @@ onready var VoxelTextureRef := get_node("VoxelColor/VoxelTexture")
 
 # Declarations
 signal selected
+signal unselected
 
 var Represents
 
@@ -109,4 +110,6 @@ func _on_focus_exited():
 func _on_gui_input(event : InputEvent):
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
 		selected = !selected
+		if selected: emit_signal("selected")
+		else: emit_signal("unselected")
 		_update()

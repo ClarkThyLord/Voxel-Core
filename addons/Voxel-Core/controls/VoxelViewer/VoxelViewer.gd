@@ -26,6 +26,7 @@ var dragging := false
 enum ViewModes { _2D, _3D }
 export(ViewModes) var ViewMode := ViewModes._3D setget set_view_mode
 func set_view_mode(view_mode : int) -> void:
+	set_hovered_face(Vector3.ZERO)
 	ViewMode = int(clamp(view_mode, 0, 1))
 	if _2DView:
 		_2DView.visible = ViewMode == ViewModes._2D
@@ -37,28 +38,49 @@ export(Color) var SelectColor := Color("6400ffff") setget set_select_color
 func set_select_color(select_color : Color) -> void:
 	SelectColor = select_color
 	
+	
+	if _2DView:
+		for side in _2DView.get_children():
+			side.DisabledColor = SelectColor
+	
 	if Select:
 		Select.material_override.albedo_color = SelectColor
 
-var HoveredFace := Vector3.ZERO
+
+var HoveredFace := Vector3.ZERO setget set_hovered_face
+func set_hovered_face(hovered_face : Vector3) -> void:
+	HoveredFace = hovered_face
+
 export(Vector3) var SelectedFace := Vector3.ZERO setget set_selected_face
 func set_selected_face(selected_face : Vector3) -> void:
 	SelectedFace = selected_face
 	
+	var select_name := ""
 	var select_rot := Vector3.INF
 	match SelectedFace:
 		Vector3.RIGHT:
+			select_name = "Right"
 			select_rot = Vector3(0, 0, -90)
 		Vector3.LEFT:
+			select_name = "Left"
 			select_rot = Vector3(0, 0, 90)
 		Vector3.UP:
+			select_name = "Top"
 			select_rot = Vector3.ZERO
 		Vector3.DOWN:
+			select_name = "Bottom"
 			select_rot = Vector3(180, 0, 0)
 		Vector3.FORWARD:
+			select_name = "Front"
 			select_rot = Vector3(-90, 0, 0)
 		Vector3.BACK:
+			select_name = "Back"
 			select_rot = Vector3(90, 0, 0)
+	
+	if _2DView:
+		for side in _2DView.get_children():
+			side.selected = false
+			side.Disabled = side.name == select_name
 	
 	if SelectPivot:
 		SelectPivot.visible = not select_rot == Vector3.INF
@@ -143,5 +165,6 @@ func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal
 		Input.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
 		set_selected_face(click_normal.round())
-	else:
+	elif not click_normal.round() == SelectedFace:
 		HoveredFace = click_normal.round()
+	else: HoveredFace = Vector3.ZERO
