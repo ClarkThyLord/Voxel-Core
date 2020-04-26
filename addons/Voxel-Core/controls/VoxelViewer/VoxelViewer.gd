@@ -39,10 +39,6 @@ func set_select_color(select_color : Color) -> void:
 	SelectColor = select_color
 	
 	
-	if _2DView:
-		for side in _2DView.get_children():
-			side.DisabledColor = SelectColor
-	
 	if Select:
 		Select.material_override.albedo_color = SelectColor
 
@@ -77,10 +73,6 @@ func set_selected_face(selected_face : Vector3) -> void:
 			select_name = "Back"
 			select_rot = Vector3(90, 0, 0)
 	
-	if _2DView:
-		for side in _2DView.get_children():
-			side.selected = false
-			side.Disabled = side.name == select_name
 	
 	if SelectPivot:
 		SelectPivot.visible = not select_rot == Vector3.INF
