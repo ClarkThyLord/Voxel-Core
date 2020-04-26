@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
+[ext_resource path="res://addons/Voxel-Core/controls/VoxelRect/VoxelRect.tscn" type="PackedScene" id=2]
 
 [sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -27,11 +28,48 @@ __meta__ = {
 
 [node name="2DView" type="Control" parent="."]
 visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.25
+anchor_top = 0.18
+anchor_right = 0.75
+anchor_bottom = 0.82
+rect_clip_content = true
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
+
+[node name="Left" parent="2DView" instance=ExtResource( 2 )]
+anchor_top = 0.333333
+anchor_right = 0.25
+anchor_bottom = 0.666667
+
+[node name="Front" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.251055
+anchor_top = 0.333333
+anchor_right = 0.501055
+anchor_bottom = 0.666667
+
+[node name="Right" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.5
+anchor_top = 0.333333
+anchor_right = 0.75
+anchor_bottom = 0.666667
+
+[node name="Back" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.75
+anchor_top = 0.333333
+anchor_right = 1.0
+anchor_bottom = 0.666667
+
+[node name="Top" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.25
+anchor_right = 0.5
+anchor_bottom = 0.333333
+
+[node name="Bottom" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.25
+anchor_top = 0.666667
+anchor_right = 0.5
+anchor_bottom = 1.0
 
 [node name="3DView" type="ViewportContainer" parent="."]
 anchor_right = 1.0
@@ -52,6 +90,7 @@ render_target_update_mode = 3
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0 )
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
@@ -86,18 +125,20 @@ __meta__ = {
 }
 
 [node name="ViewMode" type="OptionButton" parent="ToolBar"]
-margin_right = 47.0
+margin_right = 64.0
 margin_bottom = 20.0
+rect_min_size = Vector2( 64, 20 )
 size_flags_horizontal = 3
 text = "3D"
+align = 1
 items = [ "2D", null, false, 0, null, "3D", null, false, 1, null ]
 selected = 1
 
 [node name="Hint" type="Label" parent="ToolBar"]
-margin_left = 51.0
-margin_right = 115.0
+margin_left = 68.0
+margin_right = 196.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 64, 0 )
+rect_min_size = Vector2( 128, 20 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 align = 1

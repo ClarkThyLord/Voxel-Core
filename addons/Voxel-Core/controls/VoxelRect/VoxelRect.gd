@@ -12,7 +12,7 @@ onready var VoxelTextureRef := get_node("VoxelColor/VoxelTexture")
 # Declarations
 signal selected
 
-var represents
+var Represents
 
 export(Color) var VoxelColor : Color setget set_voxel_color
 func set_voxel_color(voxel_color : Color) -> void:

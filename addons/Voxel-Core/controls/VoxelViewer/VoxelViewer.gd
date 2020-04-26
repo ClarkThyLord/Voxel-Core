@@ -40,38 +40,30 @@ func set_select_color(select_color : Color) -> void:
 	if Select:
 		Select.material_override.albedo_color = SelectColor
 
+var HoveredFace := Vector3.ZERO
 export(Vector3) var SelectedFace := Vector3.ZERO setget set_selected_face
 func set_selected_face(selected_face : Vector3) -> void:
 	SelectedFace = selected_face
 	
-	var hint := ""
 	var select_rot := Vector3.INF
 	match SelectedFace:
 		Vector3.RIGHT:
-			hint = "RIGHT"
 			select_rot = Vector3(0, 0, -90)
 		Vector3.LEFT:
-			hint = "LEFT"
 			select_rot = Vector3(0, 0, 90)
 		Vector3.UP:
-			hint = "UP"
 			select_rot = Vector3.ZERO
 		Vector3.DOWN:
-			hint = "DOWN"
 			select_rot = Vector3(180, 0, 0)
 		Vector3.FORWARD:
-			hint = "FRONT"
 			select_rot = Vector3(-90, 0, 0)
 		Vector3.BACK:
-			hint = "BACK"
 			select_rot = Vector3(90, 0, 0)
 	
 	if SelectPivot:
 		SelectPivot.visible = not select_rot == Vector3.INF
 		if not select_rot == Vector3.INF:
 			SelectPivot.rotation_degrees = select_rot
-	if ViewerHint:
-		ViewerHint.text = hint
 
 
 export(int, 0, 100) var MouseSensitivity := 6
@@ -79,6 +71,50 @@ export(int, 0, 100) var MouseSensitivity := 6
 
 
 # Core
+func _ready():
+	set_view_mode(ViewMode)
+	set_select_color(SelectColor)
+	set_selected_face(SelectedFace)
+
+
+func _process(delta):
+	
+	var selected := ""
+	match SelectedFace:
+		Vector3.RIGHT:
+			selected = "RIGHT"
+		Vector3.LEFT:
+			selected = "LEFT"
+		Vector3.UP:
+			selected = "TOP"
+		Vector3.DOWN:
+			selected = "BOTTOM"
+		Vector3.FORWARD:
+			selected = "FRONT"
+		Vector3.BACK:
+			selected = "BACK"
+	
+	var hovered := ""
+	match HoveredFace:
+		Vector3.RIGHT:
+			hovered = "RIGHT"
+		Vector3.LEFT:
+			hovered = "LEFT"
+		Vector3.UP:
+			hovered = "TOP"
+		Vector3.DOWN:
+			hovered = "BOTTOM"
+		Vector3.FORWARD:
+			hovered = "FRONT"
+		Vector3.BACK:
+			hovered = "BACK"
+	
+	if ViewerHint:
+		ViewerHint.text = selected
+		if selected.length() > 0 and hovered.length() > 0:
+			ViewerHint.text += " | "
+		ViewerHint.text += hovered
+
 func _unhandled_input(event):
 	match ViewMode:
 		ViewModes._2D:
@@ -99,6 +135,7 @@ func _unhandled_input(event):
 
 
 func _on_VoxelStaticBody_mouse_exited():
+	HoveredFace = Vector3.ZERO
 	Input.set_default_cursor_shape(Control.CURSOR_ARROW)
 
 func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal, shape_idx):
@@ -106,3 +143,5 @@ func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal
 		Input.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
 		set_selected_face(click_normal.round())
+	else:
+		HoveredFace = click_normal.round()
