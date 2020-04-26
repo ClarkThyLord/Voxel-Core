@@ -3,21 +3,21 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelRect/VoxelRect.tscn" type="PackedScene" id=2]
 
-[sub_resource type="ButtonGroup" id=6]
+[sub_resource type="ButtonGroup" id=1]
 
-[sub_resource type="Environment" id=1]
+[sub_resource type="Environment" id=2]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0, 1, 1, 0.392157 )
 
-[sub_resource type="PlaneMesh" id=3]
+[sub_resource type="PlaneMesh" id=4]
 
-[sub_resource type="CubeMesh" id=4]
+[sub_resource type="CubeMesh" id=5]
 
-[sub_resource type="BoxShape" id=5]
+[sub_resource type="BoxShape" id=6]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
@@ -45,7 +45,7 @@ anchor_right = 0.34112
 anchor_bottom = 0.640361
 mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -67,7 +67,7 @@ anchor_right = 0.505183
 anchor_bottom = 0.640361
 mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -89,7 +89,7 @@ anchor_right = 0.669245
 anchor_bottom = 0.640361
 mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -112,7 +112,7 @@ anchor_bottom = 0.640261
 margin_bottom = -3.05176e-05
 mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -134,7 +134,7 @@ anchor_right = 0.505183
 anchor_bottom = 0.360261
 mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -156,7 +156,7 @@ anchor_right = 0.505183
 anchor_bottom = 0.920361
 mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -194,7 +194,7 @@ physics_object_picking = true
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 1 )
+environment = SubResource( 2 )
 
 [node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
@@ -202,18 +202,18 @@ visible = false
 
 [node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
-material_override = SubResource( 2 )
-mesh = SubResource( 3 )
+material_override = SubResource( 3 )
+mesh = SubResource( 4 )
 material/0 = null
 
 [node name="VoxelMesh" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 4 )
+mesh = SubResource( 5 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
 
 [node name="CollisionShape" type="CollisionShape" parent="3DView/Viewport/VoxelStaticBody"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
@@ -236,16 +236,33 @@ selected = 1
 
 [node name="Hint" type="Label" parent="ToolBar"]
 margin_left = 68.0
-margin_right = 196.0
+margin_right = 232.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 128, 20 )
+rect_min_size = Vector2( 164, 20 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="mouse_entered" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="pressed" from="2DView/Left" to="." method="set_selected_face" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="mouse_entered" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="mouse_exited" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="pressed" from="2DView/Front" to="." method="set_selected_face" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="mouse_entered" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="pressed" from="2DView/Right" to="." method="set_selected_face" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="mouse_entered" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="mouse_exited" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="pressed" from="2DView/Back" to="." method="set_selected_face" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="mouse_entered" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="pressed" from="2DView/Top" to="." method="set_selected_face" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_entered" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="pressed" from="2DView/Bottom" to="." method="set_selected_face" binds= [ Vector3( 0, -1, 0 ) ]]
 [connection signal="input_event" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_input_event"]
 [connection signal="mouse_exited" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_mouse_exited"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]

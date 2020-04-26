@@ -20,6 +20,9 @@ onready var Select := get_node("3DView/Viewport/SelectPivot/Select")
 
 
 # Declarations
+signal selected_face(normal)
+
+
 var dragging := false
 
 
@@ -34,50 +37,42 @@ func set_view_mode(view_mode : int) -> void:
 		_3DView.visible = ViewMode == ViewModes._3D
 
 
-export(Color) var SelectColor := Color("6400ffff") setget set_select_color
-func set_select_color(select_color : Color) -> void:
-	SelectColor = select_color
-	
-	
-	if Select:
-		Select.material_override.albedo_color = SelectColor
-
-
 var HoveredFace := Vector3.ZERO setget set_hovered_face
 func set_hovered_face(hovered_face : Vector3) -> void:
 	HoveredFace = hovered_face
+	update_hint()
 
 export(Vector3) var SelectedFace := Vector3.ZERO setget set_selected_face
 func set_selected_face(selected_face : Vector3) -> void:
 	SelectedFace = selected_face
 	
-	var select_name := ""
 	var select_rot := Vector3.INF
 	match SelectedFace:
-		Vector3.RIGHT:
-			select_name = "Right"
-			select_rot = Vector3(0, 0, -90)
-		Vector3.LEFT:
-			select_name = "Left"
-			select_rot = Vector3(0, 0, 90)
-		Vector3.UP:
-			select_name = "Top"
-			select_rot = Vector3.ZERO
-		Vector3.DOWN:
-			select_name = "Bottom"
-			select_rot = Vector3(180, 0, 0)
-		Vector3.FORWARD:
-			select_name = "Front"
-			select_rot = Vector3(-90, 0, 0)
-		Vector3.BACK:
-			select_name = "Back"
-			select_rot = Vector3(90, 0, 0)
+		Vector3.RIGHT:select_rot = Vector3(0, 0, -90)
+		Vector3.LEFT:select_rot = Vector3(0, 0, 90)
+		Vector3.UP:select_rot = Vector3.ZERO
+		Vector3.DOWN:select_rot = Vector3(180, 0, 0)
+		Vector3.FORWARD:select_rot = Vector3(-90, 0, 0)
+		Vector3.BACK:select_rot = Vector3(90, 0, 0)
 	
+	if _2DView:
+		for side in _2DView.get_children():
+			if side.name == normal_to_string(SelectedFace).capitalize():
+				side.disabled = true
+				side.modulate = Color(1, 1, 1, 0.6)
+			else:
+				side.disabled = false
+				side.modulate = Color.white
 	
 	if SelectPivot:
 		SelectPivot.visible = not select_rot == Vector3.INF
 		if not select_rot == Vector3.INF:
 			SelectPivot.rotation_degrees = select_rot
+		if Select:
+			Select.material_override.albedo_color = Color.white.contrasted()
+	
+	update_hint()
+	emit_signal("selected_face", SelectedFace)
 
 
 export(int, 0, 100) var MouseSensitivity := 6
@@ -87,47 +82,34 @@ export(int, 0, 100) var MouseSensitivity := 6
 # Core
 func _ready():
 	set_view_mode(ViewMode)
-	set_select_color(SelectColor)
 	set_selected_face(SelectedFace)
 
 
-func _process(delta):
-	
-	var selected := ""
-	match SelectedFace:
+func normal_to_string(normal : Vector3) -> String:
+	var string := ""
+	match normal:
 		Vector3.RIGHT:
-			selected = "RIGHT"
+			string = "RIGHT"
 		Vector3.LEFT:
-			selected = "LEFT"
+			string = "LEFT"
 		Vector3.UP:
-			selected = "TOP"
+			string = "TOP"
 		Vector3.DOWN:
-			selected = "BOTTOM"
+			string = "BOTTOM"
 		Vector3.FORWARD:
-			selected = "FRONT"
+			string = "FRONT"
 		Vector3.BACK:
-			selected = "BACK"
-	
-	var hovered := ""
-	match HoveredFace:
-		Vector3.RIGHT:
-			hovered = "RIGHT"
-		Vector3.LEFT:
-			hovered = "LEFT"
-		Vector3.UP:
-			hovered = "TOP"
-		Vector3.DOWN:
-			hovered = "BOTTOM"
-		Vector3.FORWARD:
-			hovered = "FRONT"
-		Vector3.BACK:
-			hovered = "BACK"
-	
+			string = "BACK"
+	return string
+
+
+func update_hint() -> void:
 	if ViewerHint:
-		ViewerHint.text = selected
-		if selected.length() > 0 and hovered.length() > 0:
-			ViewerHint.text += " | "
-		ViewerHint.text += hovered
+		ViewerHint.text = normal_to_string(SelectedFace).to_upper()
+		if SelectedFace != HoveredFace and HoveredFace != Vector3.ZERO:
+			if not ViewerHint.text.empty(): ViewerHint.text += " | "
+			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
+
 
 func _unhandled_input(event):
 	match ViewMode:
@@ -151,12 +133,11 @@ func _unhandled_input(event):
 func _on_VoxelStaticBody_mouse_exited():
 	HoveredFace = Vector3.ZERO
 	Input.set_default_cursor_shape(Control.CURSOR_ARROW)
+	update_hint()
 
 func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal, shape_idx):
 	if not dragging:
 		Input.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
 		set_selected_face(click_normal.round())
-	elif not click_normal.round() == SelectedFace:
-		HoveredFace = click_normal.round()
-	else: HoveredFace = Vector3.ZERO
+	else: set_hovered_face(click_normal.round())
