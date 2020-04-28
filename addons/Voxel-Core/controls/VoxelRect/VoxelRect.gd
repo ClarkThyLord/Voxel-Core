@@ -13,6 +13,27 @@ var Represents := [null, null] setget set_represents
 func set_represents(represents : Array) -> void: pass
 
 
+enum Faces {
+	MAIN,
+	RIGHT,
+	LEFT,
+	TOP,
+	BOTTOM,
+	FRONT,
+	BACK
+}
+func face_to_normal(face : int) -> Vector3:
+	var normal : Vector3
+	match face:
+		Faces.RIGHT: normal = Vector3.RIGHT
+		Faces.LEFT: normal = Vector3.LEFT
+		Faces.TOP: normal = Vector3.UP
+		Faces.BOTTOM: normal = Vector3.DOWN
+		Faces.FRONT: normal = Vector3.FORWARD
+		Faces.BACK: normal = Vector3.BACK
+	return normal
+
+
 export(Color) var VoxelColor := Color.white setget set_voxel_color
 func set_voxel_color(voxel_color : Color) -> void:
 	VoxelColor = voxel_color
@@ -34,18 +55,28 @@ func _ready():
 	set_voxel_texture(VoxelTexture)
 
 
-func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
+func setup_voxel(voxel : int, voxelset : VoxelSet, face := Faces.MAIN) -> void:
 	setup_rvoxel(
 		voxelset.get_voxel(voxel),
-		voxelset
+		voxelset,
+		face
 	)
 	Represents[0] = voxel
 
-func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
+func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null, face := Faces.MAIN) -> void:
 	Represents[0] = voxel
 	Represents[1] = voxelset
-	set_voxel_color(Voxel.get_color(voxel))
-	var uv := Voxel.get_texture(voxel)
+	
+	var color : Color
+	if face == Faces.MAIN:
+		color = Voxel.get_color(voxel)
+	else: color = Voxel.get_color_side(voxel, face_to_normal(face))
+	set_voxel_color(color)
+	
+	var uv := -Vector2.ONE
+	if face == Faces.MAIN:
+		uv = Voxel.get_texture(voxel)
+	else: uv = Voxel.get_texture_side(voxel, face_to_normal(face))
 	if not uv == -Vector2.ONE and voxelset and voxelset.Tiles:
 		var img_texture := ImageTexture.new()
 		img_texture.create_from_image(voxelset.Tiles.get_data().get_rect(Rect2(
