@@ -4,6 +4,9 @@ extends Control
 
 
 # Refrences
+onready var ContextMenu := get_node("ContextMenu")
+
+
 onready var ViewerHint := get_node("ToolBar/Hint")
 
 
@@ -23,7 +26,22 @@ onready var Select := get_node("3DView/Viewport/SelectPivot/Select")
 signal selected_face(normal)
 
 
+var Represents := [null, null] setget set_represents
+func set_represents(represents : Array) -> void: pass
+
+
 var dragging := false
+
+
+export(bool) var EditMode := false setget set_edit_mode
+func set_edit_mode(edit_mode : bool) -> void:
+	EditMode = edit_mode
+
+export(bool) var SelectMode := false setget set_select_mode
+func set_select_mode(select_mode : bool) -> void:
+	SelectMode = select_mode
+	
+	if not SelectMode: set_selected_face(Vector3.ZERO)
 
 
 enum ViewModes { _2D, _3D }
@@ -59,7 +77,7 @@ func set_selected_face(selected_face : Vector3) -> void:
 		for side in _2DView.get_children():
 			if side.name == normal_to_string(SelectedFace).capitalize():
 				side.disabled = true
-				side.modulate = Color(1, 1, 1, 0.6)
+				side.modulate = Color.white.contrasted()
 			else:
 				side.disabled = false
 				side.modulate = Color.white
@@ -79,28 +97,36 @@ export(int, 0, 100) var MouseSensitivity := 6
 
 
 
+# Helpers
+func normal_to_string(normal : Vector3) -> String:
+	var string := ""
+	match normal:
+		Vector3.RIGHT:string = "RIGHT"
+		Vector3.LEFT: string = "LEFT"
+		Vector3.UP: string = "TOP"
+		Vector3.DOWN: string = "BOTTOM"
+		Vector3.FORWARD: string = "FRONT"
+		Vector3.BACK: string = "BACK"
+	return string
+
+
+
 # Core
 func _ready():
 	set_view_mode(ViewMode)
 	set_selected_face(SelectedFace)
 
 
-func normal_to_string(normal : Vector3) -> String:
-	var string := ""
-	match normal:
-		Vector3.RIGHT:
-			string = "RIGHT"
-		Vector3.LEFT:
-			string = "LEFT"
-		Vector3.UP:
-			string = "TOP"
-		Vector3.DOWN:
-			string = "BOTTOM"
-		Vector3.FORWARD:
-			string = "FRONT"
-		Vector3.BACK:
-			string = "BACK"
-	return string
+func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
+	setup_rvoxel(
+		voxelset.get_voxel(voxel),
+		voxelset
+	)
+	Represents[0] = voxel
+
+func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
+	Represents[0] = voxel
+	Represents[1] = voxelset
 
 
 func update_hint() -> void:
@@ -138,6 +164,12 @@ func _on_VoxelStaticBody_mouse_exited():
 func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal, shape_idx):
 	if not dragging:
 		Input.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
-		set_selected_face(click_normal.round())
-	else: set_hovered_face(click_normal.round())
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
+			if SelectMode: set_selected_face(click_normal.round())
+		elif event.button_index == BUTTON_RIGHT :
+			if EditMode: ContextMenu.popup(Rect2(
+				event.position,
+				Vector2(90, 124)
+			))
+	set_hovered_face(click_normal.round())

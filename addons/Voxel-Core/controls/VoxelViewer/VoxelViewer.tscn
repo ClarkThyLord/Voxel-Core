@@ -11,7 +11,7 @@ ambient_light_color = Color( 1, 1, 1, 1 )
 [sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 vertex_color_use_as_albedo = true
-albedo_color = Color( 0, 1, 1, 0.392157 )
+albedo_color = Color( 0.5, 0.5, 0.5, 1 )
 
 [sub_resource type="PlaneMesh" id=4]
 
@@ -25,16 +25,15 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="2DView" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
 __meta__ = {
-"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -172,7 +171,6 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 
 [node name="3DView" type="ViewportContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -187,7 +185,7 @@ __meta__ = {
 size = Vector2( 1024, 600 )
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
@@ -244,6 +242,14 @@ size_flags_vertical = 3
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
+}
+
+[node name="ContextMenu" type="PopupMenu" parent="."]
+anchor_right = 0.0878906
+anchor_bottom = 0.206667
+items = [ "Face", null, 0, false, false, 0, 0, null, "", true, "Set color", null, 0, false, false, 1, 0, null, "", false, "Set texture", null, 0, false, false, 2, 0, null, "", false, "Remove texture", null, 0, false, false, 3, 0, null, "", false, "Main", null, 0, false, false, 4, 0, null, "", true, "Set color", null, 0, false, false, 5, 0, null, "", false, "Set texture", null, 0, false, false, 6, 0, null, "", false, "Remove texture", null, 0, false, false, 7, 0, null, "", false ]
+__meta__ = {
+"_edit_use_anchors_": true
 }
 [connection signal="mouse_entered" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
