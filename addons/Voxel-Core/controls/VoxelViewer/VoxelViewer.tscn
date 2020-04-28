@@ -27,6 +27,8 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+EditMode = true
+SelectMode = true
 
 [node name="2DView" type="Control" parent="."]
 visible = false
@@ -251,24 +253,18 @@ items = [ "Face", null, 0, false, false, 0, 0, null, "", true, "Set color", null
 __meta__ = {
 "_edit_use_anchors_": true
 }
-[connection signal="mouse_entered" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/Left" to="." method="_on_Side_input_event" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="pressed" from="2DView/Left" to="." method="set_selected_face" binds= [ Vector3( -1, 0, 0 ) ]]
-[connection signal="mouse_entered" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="gui_input" from="2DView/Front" to="." method="_on_Side_input_event" binds= [ Vector3( 0, 0, -1 ) ]]
 [connection signal="mouse_exited" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="pressed" from="2DView/Front" to="." method="set_selected_face" binds= [ Vector3( 0, 0, -1 ) ]]
-[connection signal="mouse_entered" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/Right" to="." method="_on_Side_input_event" binds= [ Vector3( 1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="pressed" from="2DView/Right" to="." method="set_selected_face" binds= [ Vector3( 1, 0, 0 ) ]]
-[connection signal="mouse_entered" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="gui_input" from="2DView/Back" to="." method="_on_Side_input_event" binds= [ Vector3( 0, 0, 1 ) ]]
 [connection signal="mouse_exited" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="pressed" from="2DView/Back" to="." method="set_selected_face" binds= [ Vector3( 0, 0, 1 ) ]]
-[connection signal="mouse_entered" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="gui_input" from="2DView/Top" to="." method="_on_Side_input_event" binds= [ Vector3( 0, 1, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="pressed" from="2DView/Top" to="." method="set_selected_face" binds= [ Vector3( 0, 1, 0 ) ]]
-[connection signal="mouse_entered" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Side_input_event" binds= [ Vector3( 0, -1, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="pressed" from="2DView/Bottom" to="." method="set_selected_face" binds= [ Vector3( 0, -1, 0 ) ]]
 [connection signal="input_event" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_input_event"]
 [connection signal="mouse_exited" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_mouse_exited"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]

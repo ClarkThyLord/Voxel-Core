@@ -137,23 +137,16 @@ func update_hint() -> void:
 			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
 
 
-func _unhandled_input(event):
-	match ViewMode:
-		ViewModes._2D:
-			pass
-		ViewModes._3D:
-			if event is InputEventMouseButton:
-				if event.button_index == BUTTON_LEFT:
-					if event.is_pressed():
-						dragging = true
-						Input.set_default_cursor_shape(Control.CURSOR_MOVE)
-					else:
-						dragging = false
-						Input.set_default_cursor_shape(Control.CURSOR_ARROW)
-			elif dragging and event is InputEventMouseMotion:
-				var motion = event.relative.normalized()
-				CameraPivot.rotation_degrees.x += -motion.y * MouseSensitivity
-				CameraPivot.rotation_degrees.y += -motion.x * MouseSensitivity
+func _on_Side_input_event(event : InputEvent, normal : Vector3) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
+			if SelectMode: set_selected_face(normal)
+		elif event.button_index == BUTTON_RIGHT :
+			if EditMode: ContextMenu.popup(Rect2(
+				event.global_position,
+				Vector2(90, 124)
+			))
+	set_hovered_face(normal)
 
 
 func _on_VoxelStaticBody_mouse_exited():
@@ -173,3 +166,22 @@ func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal
 				Vector2(90, 124)
 			))
 	set_hovered_face(click_normal.round())
+
+
+func _unhandled_input(event):
+	match ViewMode:
+		ViewModes._2D:
+			pass
+		ViewModes._3D:
+			if event is InputEventMouseButton:
+				if event.button_index == BUTTON_LEFT:
+					if event.is_pressed():
+						dragging = true
+						Input.set_default_cursor_shape(Control.CURSOR_MOVE)
+					else:
+						dragging = false
+						Input.set_default_cursor_shape(Control.CURSOR_ARROW)
+			elif dragging and event is InputEventMouseMotion:
+				var motion = event.relative.normalized()
+				CameraPivot.rotation_degrees.x += -motion.y * MouseSensitivity
+				CameraPivot.rotation_degrees.y += -motion.x * MouseSensitivity
