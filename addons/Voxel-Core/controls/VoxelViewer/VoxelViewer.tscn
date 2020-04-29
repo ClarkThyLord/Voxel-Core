@@ -253,18 +253,69 @@ items = [ "Face", null, 0, false, false, 0, 0, null, "", true, "Set color", null
 __meta__ = {
 "_edit_use_anchors_": true
 }
-[connection signal="gui_input" from="2DView/Left" to="." method="_on_Side_input_event" binds= [ Vector3( -1, 0, 0 ) ]]
+
+[node name="ColorMenu" type="PopupDialog" parent="."]
+anchor_right = 0.316406
+anchor_bottom = 0.836667
+margin_right = -15.0
+margin_bottom = -11.0
+rect_min_size = Vector2( 324, 502 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.00003
+margin_bottom = -8.00003
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
+margin_right = 308.0
+margin_bottom = 462.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
+margin_top = 466.0
+margin_right = 308.0
+margin_bottom = 486.0
+
+[node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
+margin_right = 152.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
+margin_left = 156.0
+margin_right = 308.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
+[connection signal="gui_input" from="2DView/Left" to="." method="_on_Face_input_event" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Front" to="." method="_on_Side_input_event" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="gui_input" from="2DView/Front" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 0, -1 ) ]]
 [connection signal="mouse_exited" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Right" to="." method="_on_Side_input_event" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/Right" to="." method="_on_Face_input_event" binds= [ Vector3( 1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Back" to="." method="_on_Side_input_event" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="gui_input" from="2DView/Back" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 0, 1 ) ]]
 [connection signal="mouse_exited" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Top" to="." method="_on_Side_input_event" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="gui_input" from="2DView/Top" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 1, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Side_input_event" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Face_input_event" binds= [ Vector3( 0, -1, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="input_event" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_input_event"]
 [connection signal="mouse_exited" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_mouse_exited"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
+[connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]

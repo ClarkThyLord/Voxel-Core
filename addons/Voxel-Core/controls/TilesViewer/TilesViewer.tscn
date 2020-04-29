@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.gd" type="Script" id=1]
+[ext_resource path="res://assets/examples/textured/Tileset.png" type="Texture" id=2]
+
+[node name="TilesViewer" type="TextureRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+hint_tooltip = "(0, 0)"
+texture = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+SelectMode = true
+SelectionMax = 3
+TileSize = 16.0

@@ -5,6 +5,7 @@ extends Control
 
 # Refrences
 onready var ContextMenu := get_node("ContextMenu")
+onready var ColorMenu := get_node("ColorMenu")
 
 
 onready var ViewerHint := get_node("ToolBar/Hint")
@@ -137,7 +138,7 @@ func update_hint() -> void:
 			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
 
 
-func _on_Side_input_event(event : InputEvent, normal : Vector3) -> void:
+func _on_Face_input_event(event : InputEvent, normal : Vector3) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
 			if SelectMode: set_selected_face(normal)
@@ -185,3 +186,13 @@ func _unhandled_input(event):
 				var motion = event.relative.normalized()
 				CameraPivot.rotation_degrees.x += -motion.y * MouseSensitivity
 				CameraPivot.rotation_degrees.y += -motion.x * MouseSensitivity
+
+
+func _on_ContextMenu_id_pressed(id):
+	match id:
+		1, 5:
+			ColorMenu.popup_centered()
+
+
+func _on_ColorMenu_Confirm_pressed():
+	ColorMenu.hide()

@@ -34,14 +34,14 @@ export(bool) var Expandable := true
 var UVScale := 0.0 setget set_uv_scale
 func set_uv_scale(uv_scale : float) -> void: pass
 
-export(float, 1, 1000000000, 1) var TileSize := 32.0 setget set_texture_tile
-func set_texture_tile(tile_size : float, update := true) -> void:
+export(float, 1, 1000000000, 1) var TileSize := 32.0 setget set_tile_size
+func set_tile_size(tile_size : float, update := true) -> void:
 	TileSize = floor(clamp(tile_size, 1, 1000000000))
 	
 	if update: update_uv()
 
-export(Texture) var Tiles : Texture = null setget set_texture
-func set_texture(tiles : Texture, update := true) -> void:
+export(Texture) var Tiles : Texture = null setget set_tiles
+func set_tiles(tiles : Texture, update := true) -> void:
 	Tiles = tiles
 	
 	if update: update_uv()
