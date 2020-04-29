@@ -6,6 +6,7 @@ extends Control
 # Refrences
 onready var ContextMenu := get_node("ContextMenu")
 onready var ColorMenu := get_node("ColorMenu")
+onready var TextureMenu := get_node("TextureMenu")
 
 
 onready var ViewerHint := get_node("ToolBar/Hint")
@@ -192,7 +193,13 @@ func _on_ContextMenu_id_pressed(id):
 	match id:
 		1, 5:
 			ColorMenu.popup_centered()
-
+		2, 6:
+			TextureMenu.popup_centered()
+		3, 7:
+			print("erase")
 
 func _on_ColorMenu_Confirm_pressed():
 	ColorMenu.hide()
+
+func _on_TextureMenu_Confirm_pressed():
+	TextureMenu.hide()

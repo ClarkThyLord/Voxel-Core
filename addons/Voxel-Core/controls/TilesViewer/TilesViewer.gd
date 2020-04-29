@@ -4,6 +4,9 @@ extends TextureRect
 
 
 # Declarations
+signal select(index)
+
+
 var Voxel_Set : VoxelSet setget setup_voxel_set
 
 var hovered : Vector2 setget set_hovered
@@ -14,7 +17,8 @@ func set_selections(selections : Array) -> void:
 	Selections.clear()
 	for selection in selections:
 		if typeof(selection) == TYPE_VECTOR2:
-			Selections.append(selection)
+			select(selection)
+		if Selections.size() == SelectionMax: break
 
 export(bool) var SelectMode := false setget set_select_mode
 func set_select_mode(select_mode : bool) -> void:
@@ -50,6 +54,14 @@ func setup_voxel_set(voxelset : VoxelSet) -> void:
 	TileSize = voxelset.TileSize
 	Voxel_Set.connect("updated_uv", self, "update")
 	update()
+
+
+func select(position : Vector2, index := Selections.size() - 1) -> void:
+	if index < SelectionMax:
+		printerr("invalid index given")
+		return
+	Selections[index] = position
+	emit_signal(index)
 
 
 func _gui_input(event : InputEvent):

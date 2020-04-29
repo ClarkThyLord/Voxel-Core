@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelRect/VoxelRect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -276,8 +277,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 308.0
-margin_bottom = 462.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 4.0
+margin_bottom = 4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -301,6 +304,59 @@ margin_right = 308.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
+
+[node name="TextureMenu" type="PopupDialog" parent="."]
+anchor_right = 0.319336
+anchor_bottom = 0.45
+margin_right = -15.0
+margin_bottom = -11.0
+rect_min_size = Vector2( 324, 260 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.00003
+margin_bottom = -8.00003
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TextureMenu/VBoxContainer"]
+margin_right = 308.0
+margin_bottom = 219.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TilesViewer" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 308.0
+margin_bottom = 219.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
+margin_top = 223.0
+margin_right = 308.0
+margin_bottom = 243.0
+
+[node name="Cancel" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
+margin_right = 152.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
+margin_left = 156.0
+margin_right = 308.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
 [connection signal="gui_input" from="2DView/Left" to="." method="_on_Face_input_event" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="2DView/Front" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 0, -1 ) ]]
@@ -319,3 +375,5 @@ text = "Confirm"
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
+[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="TextureMenu" method="hide"]
+[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
