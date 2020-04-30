@@ -48,6 +48,6 @@ func _update() -> void:
 		
 		for voxel in Voxel_Set.Voxels:
 			var voxel_ref := VoxelImport.instance()
-			voxel_ref.setup_voxel(voxel, Voxel_Set)
+#			voxel_ref.setup_voxel(voxel, Voxel_Set)
 			voxel_ref.connect("pressed", self, "selected", [voxel, voxel_ref])
 			Voxels.add_child(voxel_ref)

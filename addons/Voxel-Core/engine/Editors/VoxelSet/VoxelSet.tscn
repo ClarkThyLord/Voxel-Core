@@ -49,7 +49,7 @@ margin_right = 75.0
 margin_bottom = 15.0
 text = "VoxelSet"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
+[node name="VoxelSetInfo" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
 margin_top = 20.0
 margin_right = 300.0
 margin_bottom = 200.0
@@ -130,3 +130,7 @@ rect_min_size = Vector2( 332, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
 EditMode = true
+[connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Add" to="." method="_on_Add_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Duplicate" to="." method="_on_Duplicate_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Remove" to="." method="_on_Remove_pressed"]
+[connection signal="selection" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selection"]
