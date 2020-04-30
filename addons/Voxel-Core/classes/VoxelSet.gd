@@ -12,7 +12,7 @@ class_name VoxelSet, "res://addons/Voxel-Core/assets/classes/VoxelSet.png"
 
 # Declarations
 signal updated_voxels
-signal updated_uv
+signal updated_texture
 
 
 func get_id() -> int:
@@ -102,4 +102,4 @@ func update_uv() -> void:
 		UVScale = 1.0 / (Tiles.get_width() / TileSize)
 	else: UVScale = 0.0
 	
-	emit_signal("updated_uv")
+	emit_signal("updated_texture")

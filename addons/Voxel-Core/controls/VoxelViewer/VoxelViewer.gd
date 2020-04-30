@@ -162,6 +162,7 @@ func _on_3DView_gui_input(event : InputEvent) -> void:
 		if hit:
 			hit["normal"] = hit["normal"].round()
 			set_hovered_face(hit["normal"])
+		else: set_hovered_face(Vector3.ZERO)
 		
 		if event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT:

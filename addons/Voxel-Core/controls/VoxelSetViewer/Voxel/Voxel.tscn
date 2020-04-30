@@ -9,6 +9,7 @@
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
+mouse_default_cursor_shape = 2
 group = SubResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
