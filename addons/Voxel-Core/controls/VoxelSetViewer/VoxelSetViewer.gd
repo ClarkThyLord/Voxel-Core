@@ -47,7 +47,7 @@ func _update() -> void:
 			child.queue_free()
 		
 		for voxel in Voxel_Set.Voxels:
-			var voxel_ref := VoxelImport.instance()
-#			voxel_ref.setup_voxel(voxel, Voxel_Set)
+			var voxel_ref = VoxelImport.instance()
 			voxel_ref.connect("pressed", self, "selected", [voxel, voxel_ref])
 			Voxels.add_child(voxel_ref)
+			voxel_ref.setup(voxel, Voxel_Set)

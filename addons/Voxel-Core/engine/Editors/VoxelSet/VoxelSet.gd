@@ -5,6 +5,7 @@ extends ScrollContainer
 
 # Refrences
 onready var VoxelSetInfo := get_node("HBoxContainer/VBoxContainer/VoxelSetInfo")
+onready var VoxelInfo := get_node("HBoxContainer/VBoxContainer/VoxelInfo")
 
 onready var Duplicate := get_node("HBoxContainer/VBoxContainer2/ToolBar/Duplicate")
 onready var Remove := get_node("HBoxContainer/VBoxContainer2/ToolBar/Remove")
@@ -20,6 +21,11 @@ var SelectedVoxel := -1 setget set_selected_voxel
 func set_selected_voxel(selected_voxel : int) -> void:
 	SelectedVoxel = selected_voxel
 	
+	if VoxelInfo:
+		VoxelInfo.visible = SelectedVoxel > -1
+		VoxelInfo.text = "ID: " + str(SelectedVoxel)
+		if Voxel_Set:
+			VoxelInfo.text += "\nRaw Data:\n"+ var2str(Voxel_Set.get_voxel(SelectedVoxel))
 	if Duplicate: Duplicate.visible = SelectedVoxel > -1
 	if Remove: Remove.visible = SelectedVoxel > -1
 	if VoxelInspector: VoxelInspector.visible = SelectedVoxel > -1
@@ -35,11 +41,16 @@ func edit_voxel_set(voxelset : VoxelSet) -> void:
 	Voxel_Set = voxelset
 	set_selected_voxel(-1)
 	
-	VoxelSetInfo.text = "Voxels: " + str(voxelset.Voxels.size())
-	VoxelSetInfo.text += "\n\nTextured: " + str(is_instance_valid(voxelset.Tiles))
-	VoxelSetInfo.text += "\n\nTile Size: " + str(Vector2.ONE * voxelset.TileSize)
+	if VoxelSetInfo:
+		VoxelSetInfo.text = "Voxels: " + str(voxelset.Voxels.size())
+		VoxelSetInfo.text += "\nTiled: " + str(is_instance_valid(voxelset.Tiles))
+		VoxelSetInfo.text += "\nTile Size: " + str(Vector2.ONE * voxelset.TileSize)
 	
 	VoxelSetViewer.Voxel_Set = voxelset
+
+
+func _on_Save_pressed():
+	pass # Replace with function body.
 
 
 func _on_VoxelSetViewer_selection(voxel, voxel_ref):

@@ -23,3 +23,5 @@ margin_top = 4.0
 margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
