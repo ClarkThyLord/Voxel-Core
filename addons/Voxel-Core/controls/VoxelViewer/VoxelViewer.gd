@@ -18,6 +18,7 @@ onready var _2DView := get_node("2DView")
 onready var _3DView := get_node("3DView")
 
 onready var CameraPivot := get_node("3DView/Viewport/CameraPivot")
+onready var CameraRef := get_node("3DView/Viewport/CameraPivot/Camera")
 
 onready var SelectPivot := get_node("3DView/Viewport/SelectPivot")
 onready var Select := get_node("3DView/Viewport/SelectPivot/Select")
@@ -51,6 +52,7 @@ export(ViewModes) var ViewMode := ViewModes._3D setget set_view_mode
 func set_view_mode(view_mode : int) -> void:
 	set_hovered_face(Vector3.ZERO)
 	ViewMode = int(clamp(view_mode, 0, 1))
+	$ToolBar/ViewMode.selected = ViewMode
 	if _2DView:
 		_2DView.visible = ViewMode == ViewModes._2D
 	if _3DView:
@@ -151,42 +153,36 @@ func _on_Face_input_event(event : InputEvent, normal : Vector3) -> void:
 	set_hovered_face(normal)
 
 
-func _on_VoxelStaticBody_mouse_exited():
-	HoveredFace = Vector3.ZERO
-	Input.set_default_cursor_shape(Control.CURSOR_ARROW)
-	update_hint()
-
-func _on_VoxelStaticBody_input_event(camera, event, click_position, click_normal, shape_idx):
-	if not dragging:
-		Input.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
-			if SelectMode: set_selected_face(click_normal.round())
-		elif event.button_index == BUTTON_RIGHT :
-			if EditMode: ContextMenu.popup(Rect2(
-				event.position,
-				Vector2(90, 124)
-			))
-	set_hovered_face(click_normal.round())
-
-
-func _unhandled_input(event):
-	match ViewMode:
-		ViewModes._2D:
-			pass
-		ViewModes._3D:
-			if event is InputEventMouseButton:
-				if event.button_index == BUTTON_LEFT:
-					if event.is_pressed():
-						dragging = true
-						Input.set_default_cursor_shape(Control.CURSOR_MOVE)
-					else:
-						dragging = false
-						Input.set_default_cursor_shape(Control.CURSOR_ARROW)
-			elif dragging and event is InputEventMouseMotion:
+func _on_3DView_gui_input(event : InputEvent) -> void:
+	if event is InputEventMouse:
+		var from = CameraRef.project_ray_origin(event.position)
+		var to = from + CameraRef.project_ray_normal(event.position) * 1000
+		var hit = CameraRef.get_world().direct_space_state.intersect_ray(from, to)
+		
+		if hit:
+			hit["normal"] = hit["normal"].round()
+			set_hovered_face(hit["normal"])
+		
+		if event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT:
+				if event.doubleclick:
+					if hit and SelectMode: set_selected_face(hit["normal"])
+				elif event.is_pressed(): dragging = true
+				else: dragging = false
+			elif event.button_index == BUTTON_RIGHT:
+				if EditMode: ContextMenu.popup(Rect2(
+					event.global_position,
+					Vector2(90, 124)
+				))
+		elif event is InputEventMouseMotion:
+			if dragging:
 				var motion = event.relative.normalized()
 				CameraPivot.rotation_degrees.x += -motion.y * MouseSensitivity
 				CameraPivot.rotation_degrees.y += -motion.x * MouseSensitivity
+		
+		if dragging: _3DView.set_default_cursor_shape(Control.CURSOR_MOVE)
+		elif hit: _3DView.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
+		else: _3DView.set_default_cursor_shape(Control.CURSOR_ARROW)
 
 
 func _on_ContextMenu_id_pressed(id):

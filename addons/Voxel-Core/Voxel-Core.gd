@@ -44,13 +44,15 @@ func _exit_tree():
 func show_voxel_set_editor(voxelset : VoxelSet) -> void:
 	if not VoxelSetEditorRef:
 		VoxelSetEditorRef = VoxelSetEditor.instance()
+	VoxelSetEditorRef.edit_voxel_set(voxelset)
 	add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
 
 func close_voxel_set_editor() -> void:
 	if VoxelSetEditorRef:
 		remove_control_from_bottom_panel(VoxelSetEditorRef)
-		hide_bottom_panel()
+		VoxelSetEditorRef.queue_free()
+		VoxelSetEditorRef = null
 
 
 func handles(object : Object) -> bool:

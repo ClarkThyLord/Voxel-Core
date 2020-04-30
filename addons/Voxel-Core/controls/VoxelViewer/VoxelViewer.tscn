@@ -23,14 +23,12 @@ albedo_color = Color( 0.5, 0.5, 0.5, 1 )
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="2DView" type="Control" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -115,7 +113,6 @@ anchor_left = 0.669245
 anchor_top = 0.360261
 anchor_right = 0.833308
 anchor_bottom = 0.640261
-margin_bottom = -3.05176e-05
 mouse_default_cursor_shape = 2
 toggle_mode = true
 group = SubResource( 1 )
@@ -184,9 +181,9 @@ VoxelColor = Color( 1, 1, 1, 1 )
 VoxelTexture = null
 
 [node name="3DView" type="ViewportContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 stretch = true
@@ -199,7 +196,7 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 3
+render_target_update_mode = 0
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
@@ -382,8 +379,7 @@ text = "Confirm"
 [connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Face_input_event" binds= [ Vector3( 0, -1, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="input_event" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_input_event"]
-[connection signal="mouse_exited" from="3DView/Viewport/VoxelStaticBody" to="." method="_on_VoxelStaticBody_mouse_exited"]
+[connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
