@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource( 1 )
 Expandable = true
-TileSize = 32
+TileSize = 32.0

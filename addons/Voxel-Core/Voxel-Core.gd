@@ -3,7 +3,7 @@ extends EditorPlugin
 
 
 
-# Refrences
+# Imports
 const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/Editors/VoxelSet/VoxelSet.tscn")
@@ -44,8 +44,8 @@ func _exit_tree():
 func show_voxel_set_editor(voxelset : VoxelSet) -> void:
 	if not VoxelSetEditorRef:
 		VoxelSetEditorRef = VoxelSetEditor.instance()
+		add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
 	VoxelSetEditorRef.edit_voxel_set(voxelset)
-	add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
 
 func close_voxel_set_editor() -> void:

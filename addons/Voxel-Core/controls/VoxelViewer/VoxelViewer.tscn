@@ -29,6 +29,7 @@ __meta__ = {
 }
 
 [node name="2DView" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -181,7 +182,6 @@ VoxelColor = Color( 1, 1, 1, 1 )
 VoxelTexture = null
 
 [node name="3DView" type="ViewportContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -196,7 +196,7 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]

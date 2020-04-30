@@ -75,8 +75,8 @@ func set_voxels(voxels : Dictionary, emit := true) -> void:
 func get_voxel(id) -> Dictionary:
 	return Voxels.get(name_to_id(id) if typeof(id) == TYPE_STRING else id, {}).duplicate(true)
 
-func get_voxels() -> Dictionary:
-	return Voxels.duplicate(true)
+func get_voxels():
+	return Voxels.keys()
 
 func erase_voxel(id, emit := true) -> void:
 	if typeof(id) == TYPE_STRING:
