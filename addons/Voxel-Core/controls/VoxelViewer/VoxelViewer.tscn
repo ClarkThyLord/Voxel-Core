@@ -28,8 +28,6 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-EditMode = true
-SelectMode = true
 
 [node name="2DView" type="Control" parent="."]
 visible = false
@@ -61,6 +59,8 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
 
 [node name="Front" type="Button" parent="2DView"]
 anchor_left = 0.34112
@@ -83,6 +83,8 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
 
 [node name="Right" type="Button" parent="2DView"]
 anchor_left = 0.505183
@@ -105,6 +107,8 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
 
 [node name="Back" type="Button" parent="2DView"]
 anchor_left = 0.669245
@@ -128,6 +132,8 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
 
 [node name="Top" type="Button" parent="2DView"]
 anchor_left = 0.34112
@@ -150,6 +156,8 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
 
 [node name="Bottom" type="Button" parent="2DView"]
 anchor_left = 0.34112
@@ -172,6 +180,8 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
+VoxelColor = Color( 1, 1, 1, 1 )
+VoxelTexture = null
 
 [node name="3DView" type="ViewportContainer" parent="."]
 anchor_right = 1.0
@@ -186,6 +196,7 @@ __meta__ = {
 
 [node name="Viewport" type="Viewport" parent="3DView"]
 size = Vector2( 1024, 600 )
+own_world = true
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
@@ -255,14 +266,14 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="ColorMenu" type="PopupDialog" parent="."]
+[node name="ColorMenu" type="WindowDialog" parent="."]
 anchor_right = 0.316406
 anchor_bottom = 0.836667
 margin_right = -15.0
 margin_bottom = -11.0
 rect_min_size = Vector2( 324, 502 )
 __meta__ = {
-"_edit_use_anchors_": true
+"_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
@@ -305,15 +316,12 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
 
-[node name="TextureMenu" type="PopupDialog" parent="."]
+[node name="TextureMenu" type="WindowDialog" parent="."]
 anchor_right = 0.319336
 anchor_bottom = 0.45
 margin_right = -15.0
 margin_bottom = -11.0
 rect_min_size = Vector2( 324, 260 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
 anchor_right = 1.0
@@ -327,7 +335,7 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TextureMenu/VBoxContainer"]
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -335,25 +343,30 @@ size_flags_vertical = 3
 [node name="TilesViewer" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+SelectMode = true
+SelectionMax = 1
+TileSize = 32.0
+HoveredColor = Color( 1, 1, 1, 0.6 )
+SelectionColor = Color( 1, 1, 1, 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 243.0
 
 [node name="Cancel" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
-margin_right = 152.0
+margin_right = 151.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 
 [node name="Confirm" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
-margin_left = 156.0
-margin_right = 308.0
+margin_left = 155.0
+margin_right = 307.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
