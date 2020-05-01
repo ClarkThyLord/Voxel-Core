@@ -33,6 +33,6 @@ margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/hseparation = 4
-columns = 32
+columns = 28
 [connection signal="resized" from="." to="." method="correct"]
 [connection signal="text_changed" from="Search" to="." method="_on_Search_text_changed"]

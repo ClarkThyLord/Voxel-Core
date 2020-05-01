@@ -45,12 +45,12 @@ func edit_voxel_set(voxelset : VoxelSet) -> void:
 		VoxelSetInfo.text = "Voxels: " + str(voxelset.Voxels.size())
 		VoxelSetInfo.text += "\nTiled: " + str(is_instance_valid(voxelset.Tiles))
 		VoxelSetInfo.text += "\nTile Size: " + str(Vector2.ONE * voxelset.TileSize)
-	
-	VoxelSetViewer.Voxel_Set = voxelset
+	if VoxelSetViewer:
+		VoxelSetViewer.Voxel_Set = voxelset
 
 
 func _on_Save_pressed():
-	pass # Replace with function body.
+	ResourceSaver.save(Voxel_Set.resource_path, Voxel_Set.duplicate())
 
 
 func _on_VoxelSetViewer_selection(voxel, voxel_ref):

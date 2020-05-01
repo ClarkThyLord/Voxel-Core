@@ -4,7 +4,7 @@ extends VBoxContainer
 
 
 # Imports
-const VoxelImport := preload("res://addons/Voxel-Core/controls/VoxelSetViewer/Voxel/Voxel.tscn")
+const VoxelImport := preload("res://addons/Voxel-Core/controls/VoxelSetViewer/VoxelButton/VoxelButton.tscn")
 
 
 

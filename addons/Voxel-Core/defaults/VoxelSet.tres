@@ -4,5 +4,9 @@
 
 [resource]
 script = ExtResource( 1 )
-Expandable = true
-TileSize = 32.0
+__meta__ = {
+"NOW": "YES",
+"this": true
+}
+Expandable = false
+TileSize = 30.0

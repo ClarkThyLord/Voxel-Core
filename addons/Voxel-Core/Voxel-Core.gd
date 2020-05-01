@@ -6,7 +6,7 @@ extends EditorPlugin
 # Imports
 const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
-const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/Editors/VoxelSet/VoxelSet.tscn")
+const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/VoxelSetEditor.tscn")
 
 
 
