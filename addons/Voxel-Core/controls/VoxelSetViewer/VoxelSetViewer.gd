@@ -44,10 +44,7 @@ func set_selection_max(selection_max : int) -> void:
 	if selection_max > 0 and selection_max < SelectionMax:
 		var size = Selections.size()
 		while size > selection_max:
-			emit_signal("unselected", size - 1)
-			Selections.remove(size - 1)
-			selections_ref[size - 1].pressed = false
-			selections_ref.remove(size - 1)
+			unselect(size - 1)
 			size = Selections.size()
 	
 	SelectionMax = selection_max
@@ -88,6 +85,26 @@ func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
 
 
+func select(voxel_id, voxel_ref) -> int:
+	if SelectionMax == 0 or Selections.size() < SelectionMax:
+		Selections.append(voxel_id)
+		selections_ref.append(voxel_ref)
+	else:
+		unselect(Selections.size() - 1)
+		return select(voxel_id, voxel_ref)
+	emit_signal("selected", Selections.size() - 1)
+	return Selections.size() - 1
+
+func unselect(index : int) -> void:
+	if index > Selections.size():
+		printerr("out of range index given to unselect: ", index)
+		return
+	emit_signal("unselected", index)
+	Selections.remove(index)
+	selections_ref[index].pressed = false
+	selections_ref.remove(index)
+
+
 func _update() -> void:
 	if Voxels and is_instance_valid(Voxel_Set):
 		var voxels := []
@@ -122,33 +139,14 @@ func _update() -> void:
 	call_deferred("correct")
 
 
-func _on_Search_text_changed(new_text):
-	Search = new_text
-	_update()
-
-
-func _on_VoxelButton_toggled(toggled : bool, id : int, voxel_ref) -> void:
-	if toggled:
-		if SelectionMax == 0 or Selections.size() < SelectionMax:
-			Selections.append(id)
-			selections_ref.append(voxel_ref)
-		else:
-			emit_signal("unselected", SelectionMax - 1)
-			Selections[SelectionMax - 1] = id
-			selections_ref[SelectionMax - 1].pressed = false
-			selections_ref[SelectionMax - 1] = voxel_ref
-		emit_signal("selected", Selections.size() - 1)
-	else:
-		var index = Selections.find(id)
-		if index > -1:
-			emit_signal("unselected", index)
-			Selections.remove(index)
-			selections_ref.remove(index)
-
-
 func _on_VoxelSet_updated() -> void:
 	selections_ref.clear()
 	Selections.clear()
+	_update()
+
+
+func _on_Search_text_changed(new_text):
+	Search = new_text
 	_update()
 
 
@@ -190,6 +188,13 @@ func _on_Voxels_gui_input(event):
 		))
 
 
+func _on_VoxelButton_toggled(toggled : bool, voxel_id, voxel_ref) -> void:
+	if toggled: select(voxel_id, voxel_ref)
+	else:
+		var index = Selections.find(voxel_id)
+		if index > -1: unselect(index)
+
+
 func _on_ContextMenu_id_pressed(id : int):
 	match id:
 		0:
@@ -198,7 +203,9 @@ func _on_ContextMenu_id_pressed(id : int):
 			Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]))
 		2:
 			Voxel_Set.erase_voxel(Selections[0])
-		3: print("deselect")
+		3:
+			while not Selections.empty():
+				unselect(Selections.size() - 1)
 		4:
 			for selection in Selections:
 				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection), Voxel_Set.get_id(), false)
