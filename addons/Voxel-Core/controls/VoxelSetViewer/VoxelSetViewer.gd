@@ -61,28 +61,27 @@ func set_search(search : String, update := true) -> void:
 	if update: _update()
 
 
-export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
+export(Resource) var Voxel_Set = load("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	if voxel_set is VoxelSet:
 		if is_instance_valid(Voxel_Set):
-			if Voxel_Set.is_connected("updated_voxels", self, "_update"):
-				Voxel_Set.disconnect("updated_voxels", self, "_update")
-			if Voxel_Set.is_connected("updated_texture", self, "_update"):
-				Voxel_Set.disconnect("updated_texture", self, "_update")
+			if Voxel_Set.is_connected("updated_voxels", self, "_on_VoxelSet_updated"):
+				Voxel_Set.disconnect("updated_voxels", self, "_on_VoxelSet_updated")
+			if Voxel_Set.is_connected("updated_texture", self, "_on_VoxelSet_updated"):
+				Voxel_Set.disconnect("updated_texture", self, "_on_VoxelSet_updated")
 		Voxel_Set = voxel_set
-		Voxel_Set.connect("updated_voxels", self, "_update")
-		Voxel_Set.connect("updated_texture", self, "_update")
+		Voxel_Set.connect("updated_voxels", self, "_on_VoxelSet_updated")
+		Voxel_Set.connect("updated_texture", self, "_on_VoxelSet_updated")
 		
 		if update: _update()
 	elif typeof(voxel_set) == TYPE_NIL:
-		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
+		set_voxel_set(load("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
 
 
 
 # Core
 func _ready():
-	correct()
-	_update()
+	set_voxel_set(VoxelSet)
 
 
 func correct() -> void:
@@ -147,6 +146,12 @@ func _on_VoxelButton_toggled(toggled : bool, id : int, voxel_ref) -> void:
 			selections_ref.remove(index)
 
 
+func _on_VoxelSet_updated() -> void:
+	selections_ref.clear()
+	Selections.clear()
+	_update()
+
+
 func _on_Voxels_gui_input(event):
 	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
 		ContextMenu.clear()
@@ -187,9 +192,18 @@ func _on_Voxels_gui_input(event):
 
 func _on_ContextMenu_id_pressed(id : int):
 	match id:
-		0: print("add")
-		1: print("duplicate")
-		2: print("remove")
+		0:
+			Voxel_Set.set_voxel(Voxel.colored(Color.white))
+		1:
+			Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]))
+		2:
+			Voxel_Set.erase_voxel(Selections[0])
 		3: print("deselect")
-		4: print("duplicates")
-		5: print("removes")
+		4:
+			for selection in Selections:
+				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection), Voxel_Set.get_id(), false)
+			Voxel_Set.updated_voxels()
+		5: 
+			for selection in Selections:
+				Voxel_Set.erase_voxel(selection, false)
+			Voxel_Set.updated_voxels()
