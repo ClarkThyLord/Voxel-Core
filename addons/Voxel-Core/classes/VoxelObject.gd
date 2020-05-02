@@ -46,7 +46,7 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 		
 		if update: self.update()
 	elif typeof(voxel_set) == TYPE_NIL:
-		Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres")
+		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
 
 
 

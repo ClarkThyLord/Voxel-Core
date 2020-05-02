@@ -170,7 +170,7 @@ func _on_3DView_gui_input(event : InputEvent) -> void:
 					if hit and SelectMode: set_selected_face(hit["normal"])
 				elif event.is_pressed(): dragging = true
 				else: dragging = false
-			elif event.button_index == BUTTON_RIGHT:
+			elif event.button_index == BUTTON_RIGHT and not HoveredFace == Vector3.ZERO:
 				if EditMode: ContextMenu.popup(Rect2(
 					event.global_position,
 					Vector2(90, 124)
