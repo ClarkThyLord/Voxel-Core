@@ -153,7 +153,7 @@ func _on_Search_text_changed(new_text):
 
 
 func _on_Voxels_gui_input(event):
-	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
+	if EditMode and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
 		ContextMenu.clear()
 		ContextMenu.add_icon_item(
 			preload("res://addons/Voxel-Core/assets/controls/add.png"),
@@ -191,10 +191,13 @@ func _on_Voxels_gui_input(event):
 
 
 func _on_VoxelButton_toggled(toggled : bool, voxel_id, voxel_ref) -> void:
-	if toggled: select(voxel_id, voxel_ref)
-	else:
-		var index = Selections.find(voxel_id)
-		if index > -1: unselect(index)
+	if SelectMode:
+		if toggled: select(voxel_id, voxel_ref)
+		else:
+			var index = Selections.find(voxel_id)
+			if index > -1: unselect(index)
+	else: voxel_ref.pressed = false
+	
 
 
 func _on_ContextMenu_id_pressed(id : int):
