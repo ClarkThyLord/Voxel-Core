@@ -1,5 +1,5 @@
 tool
-extends VBoxContainer
+extends Control
 
 
 
@@ -9,9 +9,11 @@ const VoxelButton := preload("res://addons/Voxel-Core/controls/VoxelButton/Voxel
 
 
 # Refrences
-onready var SearchRef := get_node("Search")
+onready var SearchRef := get_node("VBoxContainer/Search")
 
-onready var Voxels := get_node("ScrollContainer/Voxels")
+onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
+
+onready var ContextMenu := get_node("ContextMenu")
 
 
 
@@ -36,10 +38,10 @@ export(bool) var SelectMode := false setget set_select_mode
 func set_select_mode(select_mode : bool) -> void:
 	SelectMode = select_mode
 
-export(int, 1, 1000000000) var SelectionMax := 1 setget set_selection_max
+export(int, 0, 1000000000) var SelectionMax := 0 setget set_selection_max
 func set_selection_max(selection_max : int) -> void:
 	selection_max = abs(selection_max)
-	if selection_max < SelectionMax:
+	if selection_max > 0 and selection_max < SelectionMax:
 		var size = Selections.size()
 		while size > selection_max:
 			emit_signal("unselected", size - 1)
@@ -102,6 +104,7 @@ func _update() -> void:
 		for voxel in voxels:
 			var voxel_ref = VoxelButton.instance()
 			voxel_ref.toggle_mode = true
+			voxel_ref.mouse_filter = Control.MOUSE_FILTER_PASS
 			voxel_ref.connect("toggled", self, "_on_VoxelButton_toggled", [voxel, voxel_ref])
 			voxel_ref.setup_voxel(voxel, Voxel_Set)
 			Voxels.add_child(voxel_ref)
@@ -114,7 +117,7 @@ func _on_Search_text_changed(new_text):
 
 func _on_VoxelButton_toggled(toggled : bool, id : int, voxel_ref) -> void:
 	if toggled:
-		if Selections.size() < SelectionMax:
+		if SelectionMax == 0 or Selections.size() < SelectionMax:
 			Selections.append(id)
 			selections_ref.append(voxel_ref)
 		else:
@@ -129,3 +132,51 @@ func _on_VoxelButton_toggled(toggled : bool, id : int, voxel_ref) -> void:
 			emit_signal("unselected", index)
 			Selections.remove(index)
 			selections_ref.remove(index)
+
+
+func _on_Voxels_gui_input(event):
+	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
+		ContextMenu.clear()
+		ContextMenu.add_icon_item(
+			preload("res://addons/Voxel-Core/assets/controls/add.png"),
+			"Add voxel", 0
+		)
+		if Selections.size() == 1:
+			ContextMenu.add_icon_item(
+				preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
+				"Duplicate voxel", 1
+			)
+			ContextMenu.add_icon_item(
+				preload("res://addons/Voxel-Core/assets/controls/sub.png"),
+				"Remove voxel", 2
+			)
+		elif Selections.size() > 1:
+			ContextMenu.add_separator()
+			ContextMenu.add_icon_item(
+				preload("res://addons/Voxel-Core/assets/controls/cancel.png"),
+				"Deselect voxels", 3
+			)
+			ContextMenu.add_icon_item(
+				preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
+				"Duplicate voxels", 4
+			)
+			ContextMenu.add_icon_item(
+				preload("res://addons/Voxel-Core/assets/controls/sub.png"),
+				"Remove voxels", 5
+			)
+		ContextMenu.set_as_minsize()
+		
+		ContextMenu.popup(Rect2(
+			event.global_position,
+			ContextMenu.rect_size
+		))
+
+
+func _on_ContextMenu_id_pressed(id : int):
+	match id:
+		0: print("add")
+		1: print("duplicate")
+		2: print("remove")
+		3: print("deselect")
+		4: print("duplicates")
+		5: print("removes")

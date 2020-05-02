@@ -9,7 +9,21 @@ __meta__ = {
 
 },
 "Voxels": {
-
+0: {
+"color": Color( 1, 1, 1, 1 )
+},
+1: {
+"color": Color( 1, 1, 1, 1 )
+},
+2: {
+"color": Color( 1, 1, 1, 1 )
+},
+3: {
+"color": Color( 1, 1, 1, 1 )
+},
+4: {
+"color": Color( 1, 1, 1, 1 )
+}
 }
 }
 Locked = false

@@ -66,6 +66,7 @@ func _load() -> void:
 		Names = get_meta("Names")
 	if has_meta("Voxels"):
 		Voxels = get_meta("Voxels")
+	updated_voxels()
 
 
 func _init(): call_deferred("_load")
