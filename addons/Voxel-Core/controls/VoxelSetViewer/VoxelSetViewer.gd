@@ -61,7 +61,7 @@ func set_search(search : String, update := true) -> void:
 	if update: _update()
 
 
-export(Resource) var Voxel_Set = load("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
+export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	if voxel_set is VoxelSet:
 		if is_instance_valid(Voxel_Set):
@@ -75,7 +75,7 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 		
 		if update: _update()
 	elif typeof(voxel_set) == TYPE_NIL:
-		set_voxel_set(load("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
+		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
 
 
 
@@ -91,12 +91,24 @@ func correct() -> void:
 
 func _update() -> void:
 	if Voxels and is_instance_valid(Voxel_Set):
-		var voxels : Dictionary
-		if Search.length() > 0:
-			var keys = Search.split(",")
-			# TODO search
-			voxels = Voxel_Set.Voxels
-		else: voxels = Voxel_Set.Voxels
+		var voxels := []
+		if Search.length() == 0:
+			voxels = Voxel_Set.Voxels.keys()
+			for name in Voxel_Set.Names:
+				voxels[voxels.find(Voxel_Set.name_to_id(name))] = name
+		else:
+			for key in Search.to_lower().split(","):
+				if key.is_valid_integer():
+					key = key.to_int()
+					if not voxels.has(key) and Voxel_Set.Voxels.has(key):
+						voxels.append(key)
+				else:
+					for name in Voxel_Set.Names:
+						if name.find(key) > -1:
+							var index := voxels.find(Voxel_Set.name_to_id(name))
+							if index > -1:
+								voxels[index] = name
+							else: voxels.append(name)
 		
 		for child in Voxels.get_children():
 			child.queue_free()
@@ -112,6 +124,7 @@ func _update() -> void:
 
 
 func _on_Search_text_changed(new_text):
+	Search = new_text
 	_update()
 
 

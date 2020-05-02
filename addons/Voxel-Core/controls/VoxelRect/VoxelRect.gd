@@ -55,15 +55,17 @@ func _ready():
 	set_voxel_texture(VoxelTexture)
 
 
-func setup_voxel(voxel : int, voxelset : VoxelSet, face := Faces.MAIN) -> void:
+func setup_voxel(voxel, voxelset : VoxelSet, face := Faces.MAIN) -> void:
 	setup_rvoxel(
 		voxelset.get_voxel(voxel),
 		voxelset,
 		face
 	)
+	hint_tooltip = str(voxel)
 	Represents[0] = voxel
 
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null, face := Faces.MAIN) -> void:
+	hint_tooltip = str(voxel)
 	Represents[0] = voxel
 	Represents[1] = voxelset
 	

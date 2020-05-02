@@ -22,7 +22,7 @@ func get_id() -> int:
 
 var Names := {}
 func name_to_id(name : String) -> int:
-	return Names.get(name, -1)
+	return Names.get(name.to_lower(), -1)
 
 
 var Voxels := {} setget set_voxels
@@ -78,6 +78,7 @@ func set_voxel(voxel : Dictionary, id = get_id(), update := true) -> int:
 		return -1
 	
 	if typeof(id) == TYPE_STRING:
+		id = id.to_lower()
 		if not Names.has(id):
 			Names[id] = get_id()
 		id = Names[id]
