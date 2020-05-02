@@ -16,7 +16,8 @@ onready var Voxels := get_node("ScrollContainer/Voxels")
 
 
 # Declarations
-signal selection(voxel, voxel_ref)
+signal selected(index)
+signal unselected(index)
 
 
 export(bool) var EditMode := false setget set_edit_mode
@@ -24,6 +25,30 @@ func set_edit_mode(edit_mode : bool, update := true) -> void:
 	EditMode = edit_mode
 	
 	if update: _update()
+
+
+
+var Selections := [] setget set_selections
+var selections_ref := [] setget set_selections
+func set_selections(selections : Array) -> void: pass
+
+export(bool) var SelectMode := false setget set_select_mode
+func set_select_mode(select_mode : bool) -> void:
+	SelectMode = select_mode
+
+export(int, 1, 1000000000) var SelectionMax := 1 setget set_selection_max
+func set_selection_max(selection_max : int) -> void:
+	selection_max = abs(selection_max)
+	if selection_max < SelectionMax:
+		var size = Selections.size()
+		while size > selection_max:
+			emit_signal("unselected", size - 1)
+			Selections.remove(size - 1)
+			selections_ref[size - 1].pressed = false
+			selections_ref.remove(size - 1)
+			size = Selections.size()
+	
+	SelectionMax = selection_max
 
 
 export(String) var Search := "" setget set_search
@@ -53,7 +78,9 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 
 
 # Core
-func _ready(): correct()
+func _ready():
+	correct()
+	_update()
 
 
 func correct() -> void:
@@ -75,7 +102,7 @@ func _update() -> void:
 		for voxel in voxels:
 			var voxel_ref = VoxelButton.instance()
 			voxel_ref.toggle_mode = true
-			voxel_ref.connect("pressed", self, "emit_signal", ["selection", voxel, voxel_ref])
+			voxel_ref.connect("toggled", self, "_on_VoxelButton_toggled", [voxel, voxel_ref])
 			voxel_ref.setup_voxel(voxel, Voxel_Set)
 			Voxels.add_child(voxel_ref)
 	call_deferred("correct")
@@ -83,3 +110,22 @@ func _update() -> void:
 
 func _on_Search_text_changed(new_text):
 	_update()
+
+
+func _on_VoxelButton_toggled(toggled : bool, id : int, voxel_ref) -> void:
+	if toggled:
+		if Selections.size() < SelectionMax:
+			Selections.append(id)
+			selections_ref.append(voxel_ref)
+		else:
+			emit_signal("unselected", SelectionMax - 1)
+			Selections[SelectionMax - 1] = id
+			selections_ref[SelectionMax - 1].pressed = false
+			selections_ref[SelectionMax - 1] = voxel_ref
+		emit_signal("selected", Selections.size() - 1)
+	else:
+		var index = Selections.find(id)
+		if index > -1:
+			emit_signal("unselected", index)
+			Selections.remove(index)
+			selections_ref.remove(index)

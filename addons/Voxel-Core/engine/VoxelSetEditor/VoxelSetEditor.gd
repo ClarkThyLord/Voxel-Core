@@ -16,6 +16,7 @@ onready var VoxelInspector := get_node("HBoxContainer/VoxelInspector")
 onready var VoxelView := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
 
 
+
 # Declarations
 var SelectedVoxel := -1 setget set_selected_voxel
 func set_selected_voxel(selected_voxel : int) -> void:
@@ -53,8 +54,8 @@ func _on_Save_pressed():
 	ResourceSaver.save(Voxel_Set.resource_path, Voxel_Set.duplicate())
 
 
-func _on_VoxelSetViewer_selection(voxel, voxel_ref):
-	set_selected_voxel(voxel)
+func _on_VoxelSetViewer_selected(index):
+	set_selected_voxel(VoxelSetViewer.Selections[index])
 
 
 func _on_Add_pressed():
