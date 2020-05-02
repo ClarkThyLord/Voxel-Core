@@ -19,6 +19,7 @@ onready var ContextMenu := get_node("ContextMenu")
 
 # Declarations
 signal selected(index)
+signal unselecting(index)
 signal unselected(index)
 
 
@@ -99,10 +100,11 @@ func unselect(index : int) -> void:
 	if index > Selections.size():
 		printerr("out of range index given to unselect: ", index)
 		return
-	emit_signal("unselected", index)
+	emit_signal("unselecting", index)
 	Selections.remove(index)
 	selections_ref[index].pressed = false
 	selections_ref.remove(index)
+	emit_signal("unselected", index)
 
 
 func _update() -> void:

@@ -157,3 +157,4 @@ MouseSensitivity = 6
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Duplicate" to="." method="_on_Duplicate_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Remove" to="." method="_on_Remove_pressed"]
 [connection signal="selected" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
+[connection signal="unselected" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]

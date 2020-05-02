@@ -18,8 +18,8 @@ onready var VoxelView := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
 
 
 # Declarations
-var SelectedVoxel := -1 setget set_selected_voxel
-func set_selected_voxel(selected_voxel : int) -> void:
+var SelectedVoxel = -1 setget set_selected_voxel
+func set_selected_voxel(selected_voxel) -> void:
 	SelectedVoxel = selected_voxel
 	
 	if VoxelInfo:
@@ -55,7 +55,14 @@ func _on_Save_pressed():
 
 
 func _on_VoxelSetViewer_selected(index):
-	set_selected_voxel(VoxelSetViewer.Selections[index])
+	if VoxelSetViewer.Selections.size() == 1:
+		set_selected_voxel(VoxelSetViewer.Selections[0])
+	else: set_selected_voxel(-1)
+
+func _on_VoxelSetViewer_unselected(index):
+	if VoxelSetViewer.Selections.size() == 1:
+		set_selected_voxel(VoxelSetViewer.Selections[0])
+	else: set_selected_voxel(-1)
 
 
 func _on_Add_pressed():
