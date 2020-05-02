@@ -5,8 +5,14 @@
 [resource]
 script = ExtResource( 1 )
 __meta__ = {
-"NOW": "YES",
-"this": true
+"Names": {
+
+},
+"Voxels": {
+1: {
+"color": Color( 1, 1, 1, 1 )
 }
-Expandable = false
-TileSize = 30.0
+}
+}
+Locked = false
+TileSize = 32.0
