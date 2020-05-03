@@ -58,8 +58,6 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-VoxelColor = Color( 1, 1, 1, 1 )
-VoxelTexture = null
 
 [node name="Front" type="Button" parent="2DView"]
 anchor_left = 0.34112
@@ -82,8 +80,6 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-VoxelColor = Color( 1, 1, 1, 1 )
-VoxelTexture = null
 
 [node name="Right" type="Button" parent="2DView"]
 anchor_left = 0.505183
@@ -106,8 +102,6 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-VoxelColor = Color( 1, 1, 1, 1 )
-VoxelTexture = null
 
 [node name="Back" type="Button" parent="2DView"]
 anchor_left = 0.669245
@@ -130,8 +124,6 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-VoxelColor = Color( 1, 1, 1, 1 )
-VoxelTexture = null
 
 [node name="Top" type="Button" parent="2DView"]
 anchor_left = 0.34112
@@ -154,8 +146,6 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-VoxelColor = Color( 1, 1, 1, 1 )
-VoxelTexture = null
 
 [node name="Bottom" type="Button" parent="2DView"]
 anchor_left = 0.34112
@@ -178,8 +168,6 @@ margin_right = -4.0
 margin_bottom = -4.0
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-VoxelColor = Color( 1, 1, 1, 1 )
-VoxelTexture = null
 
 [node name="3DView" type="ViewportContainer" parent="."]
 anchor_right = 1.0
@@ -215,7 +203,7 @@ material_override = SubResource( 3 )
 mesh = SubResource( 4 )
 material/0 = null
 
-[node name="VoxelMesh" type="MeshInstance" parent="3DView/Viewport"]
+[node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
 mesh = SubResource( 5 )
 material/0 = null
 
@@ -283,8 +271,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 308.0
-margin_bottom = 462.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 4.0
+margin_bottom = 4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -339,10 +329,6 @@ margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 SelectMode = true
-SelectionMax = 1
-TileSize = 32.0
-HoveredColor = Color( 1, 1, 1, 0.6 )
-SelectionColor = Color( 1, 1, 1, 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
@@ -376,7 +362,9 @@ text = "Confirm"
 [connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
+[connection signal="color_changed" from="ColorMenu/VBoxContainer/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
+[connection signal="select" from="TextureMenu/VBoxContainer/ScrollContainer/TilesViewer" to="." method="_on_TilesViewer_select"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="TextureMenu" method="hide"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]

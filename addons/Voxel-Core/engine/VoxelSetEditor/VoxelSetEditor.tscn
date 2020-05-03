@@ -150,10 +150,6 @@ rect_min_size = Vector2( 332, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
 EditMode = true
-SelectMode = false
-ViewMode = 1
-SelectedFace = Vector3( 0, 0, 0 )
-MouseSensitivity = 6
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Duplicate" to="." method="_on_Duplicate_pressed"]

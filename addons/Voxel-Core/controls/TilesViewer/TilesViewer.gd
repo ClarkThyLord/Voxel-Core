@@ -61,7 +61,7 @@ func select(position : Vector2, index := Selections.size() - 1) -> void:
 		printerr("invalid index given")
 		return
 	Selections[index] = position
-	emit_signal(index)
+	emit_signal("select", index)
 
 
 func _gui_input(event : InputEvent):

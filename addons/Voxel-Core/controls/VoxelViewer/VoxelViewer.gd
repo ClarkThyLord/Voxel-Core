@@ -23,12 +23,19 @@ onready var CameraRef := get_node("3DView/Viewport/CameraPivot/Camera")
 onready var SelectPivot := get_node("3DView/Viewport/SelectPivot")
 onready var Select := get_node("3DView/Viewport/SelectPivot/Select")
 
+onready var VoxelPreview := get_node("3DView/Viewport/VoxelPreview")
+
+onready var TilesViewer := get_node("TextureMenu/VBoxContainer/ScrollContainer/TilesViewer")
+
 
 
 # Declarations
 signal selected_face(normal)
 
+var VT := VoxelTool.new()
 
+
+var Preview : Dictionary
 var Represents := [null, null] setget set_represents
 func set_represents(represents : Array) -> void: pass
 
@@ -129,8 +136,10 @@ func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
 	Represents[0] = voxel
 
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
+	Preview = voxel
 	Represents[0] = voxel
 	Represents[1] = voxelset
+	update_voxel_preview()
 
 
 func update_hint() -> void:
@@ -139,6 +148,24 @@ func update_hint() -> void:
 		if SelectedFace != HoveredFace and HoveredFace != Vector3.ZERO:
 			if not ViewerHint.text.empty(): ViewerHint.text += " | "
 			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
+
+func update_voxel_preview() -> void:
+	if VoxelPreview:
+		VT.start(true, 2)
+		for direction in [
+			Vector3.RIGHT,
+			Vector3.LEFT,
+			Vector3.UP,
+			Vector3.DOWN,
+			Vector3.FORWARD,
+			Vector3.BACK
+		]:
+			VT.add_face(
+				Preview,
+				direction,
+				-Vector3.ONE / 2
+			)
+		VoxelPreview.mesh = VT.end()
 
 
 func _on_Face_input_event(event : InputEvent, normal : Vector3) -> void:
@@ -200,3 +227,12 @@ func _on_ColorMenu_Confirm_pressed():
 
 func _on_TextureMenu_Confirm_pressed():
 	TextureMenu.hide()
+
+
+func _on_ColorPicker_color_changed(color):
+	Voxel.set_color(Preview, color)
+	update_voxel_preview()
+
+func _on_TilesViewer_select(index):
+	Voxel.set_texture(Preview, TilesViewer.Selections[index])
+	update_voxel_preview()
