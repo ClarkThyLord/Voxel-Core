@@ -45,7 +45,7 @@ func show_voxel_set_editor(voxelset : VoxelSet) -> void:
 	if not VoxelSetEditorRef:
 		VoxelSetEditorRef = VoxelSetEditor.instance()
 		add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
-	VoxelSetEditorRef.edit_voxel_set(voxelset)
+	VoxelSetEditorRef.Voxel_Set = voxelset
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
 
 func close_voxel_set_editor() -> void:

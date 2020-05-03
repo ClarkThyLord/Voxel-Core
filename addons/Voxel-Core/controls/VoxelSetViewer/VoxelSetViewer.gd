@@ -13,6 +13,9 @@ onready var SearchRef := get_node("VBoxContainer/Search")
 
 onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
 
+onready var Hints := get_node("VBoxContainer/Hints")
+onready var HintRef := get_node("VBoxContainer/Hints/Hint")
+
 onready var ContextMenu := get_node("ContextMenu")
 
 
@@ -32,12 +35,12 @@ func set_edit_mode(edit_mode : bool, update := true) -> void:
 
 
 var Selections := [] setget set_selections
-var selections_ref := [] setget set_selections
 func set_selections(selections : Array) -> void: pass
 
 export(bool) var SelectMode := false setget set_select_mode
 func set_select_mode(select_mode : bool) -> void:
 	SelectMode = select_mode
+	if not SelectMode: unselect_all()
 
 export(int, 0, 1000000000) var SelectionMax := 0 setget set_selection_max
 func set_selection_max(selection_max : int) -> void:
@@ -63,13 +66,13 @@ export(Resource) var Voxel_Set = load("res://addons/Voxel-Core/defaults/VoxelSet
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	if voxel_set is VoxelSet:
 		if is_instance_valid(Voxel_Set):
-			if Voxel_Set.is_connected("updated_voxels", self, "_on_VoxelSet_updated"):
-				Voxel_Set.disconnect("updated_voxels", self, "_on_VoxelSet_updated")
-			if Voxel_Set.is_connected("updated_texture", self, "_on_VoxelSet_updated"):
-				Voxel_Set.disconnect("updated_texture", self, "_on_VoxelSet_updated")
+			if Voxel_Set.is_connected("updated_voxels", self, "_update"):
+				Voxel_Set.disconnect("updated_voxels", self, "_update")
+			if Voxel_Set.is_connected("updated_texture", self, "_update"):
+				Voxel_Set.disconnect("updated_texture", self, "_update")
 		Voxel_Set = voxel_set
-		Voxel_Set.connect("updated_voxels", self, "_on_VoxelSet_updated")
-		Voxel_Set.connect("updated_texture", self, "_on_VoxelSet_updated")
+		Voxel_Set.connect("updated_voxels", self, "_update")
+		Voxel_Set.connect("updated_texture", self, "_update")
 		
 		if update: _update()
 	elif typeof(voxel_set) == TYPE_NIL:
@@ -87,24 +90,33 @@ func correct() -> void:
 
 
 func select(voxel_id, voxel_ref) -> int:
-	if SelectionMax == 0 or Selections.size() < SelectionMax:
-		Selections.append(voxel_id)
-		selections_ref.append(voxel_ref)
-	else:
-		unselect(Selections.size() - 1)
-		return select(voxel_id, voxel_ref)
-	emit_signal("selected", Selections.size() - 1)
-	return Selections.size() - 1
+	if SelectMode:
+		if SelectionMax == 0 or Selections.size() < SelectionMax:
+			voxel_ref.pressed = true
+			Selections.append([
+				voxel_id,
+				voxel_ref
+			])
+		else:
+			unselect(Selections.size() - 1)
+			return select(voxel_id, voxel_ref)
+		emit_signal("selected", Selections.size() - 1)
+		return Selections.size() - 1
+	else: return -1
 
 func unselect(index : int) -> void:
 	if index > Selections.size():
-		printerr("out of range index given to unselect: ", index)
+		printerr("unselect index out of range: ", index)
 		return
 	emit_signal("unselecting", index)
+	if is_instance_valid(Selections[index][1]):
+		Selections[index][1].pressed = false
 	Selections.remove(index)
-	selections_ref[index].pressed = false
-	selections_ref.remove(index)
 	emit_signal("unselected", index)
+
+func unselect_all() -> void:
+	while not Selections.empty():
+			unselect(Selections.size() - 1)
 
 
 func _update() -> void:
@@ -133,18 +145,21 @@ func _update() -> void:
 		
 		for voxel in voxels:
 			var voxel_ref = VoxelButton.instance()
+			voxel_ref.name = str(voxel)
 			voxel_ref.toggle_mode = true
 			voxel_ref.mouse_filter = Control.MOUSE_FILTER_PASS
-			voxel_ref.connect("toggled", self, "_on_VoxelButton_toggled", [voxel, voxel_ref])
+			voxel_ref.connect("pressed", self, "_on_VoxelButton_pressed", [voxel, voxel_ref])
 			voxel_ref.setup_voxel(voxel, Voxel_Set)
 			Voxels.add_child(voxel_ref)
+	
+	if Hints:
+		Hints.visible = EditMode or SelectMode
+		if HintRef:
+			HintRef.text = ""
+			if EditMode: HintRef.text += "right click : context menu"
+			if SelectMode: HintRef.text += ("   " if HintRef.text.length() > 0 else "")  + "ctrl + left click : select / unselect"
+	
 	call_deferred("correct")
-
-
-func _on_VoxelSet_updated() -> void:
-	selections_ref.clear()
-	Selections.clear()
-	_update()
 
 
 func _on_Search_text_changed(new_text):
@@ -190,31 +205,30 @@ func _on_Voxels_gui_input(event):
 		))
 
 
-func _on_VoxelButton_toggled(toggled : bool, voxel_id, voxel_ref) -> void:
+func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 	if SelectMode:
-		if toggled:
+		if voxel_ref.pressed:
 			if not Input.is_key_pressed(KEY_CONTROL):
-				while not Selections.empty():
-					unselect(Selections.size() - 1)
+				unselect_all()
 			select(voxel_id, voxel_ref)
 		else:
-			var index = Selections.find(voxel_id)
-			if index > -1: unselect(index)
+			if Selections.size() == 1 or (Selections.size() > 0 and Input.is_key_pressed(KEY_CONTROL)):
+				for selection in range(Selections.size()):
+					if Selections[selection][0] == voxel_id:
+						unselect(selection)
+						break
+			else:
+				unselect_all()
+				select(voxel_id, voxel_ref)
 	else: voxel_ref.pressed = false
-	
 
 
 func _on_ContextMenu_id_pressed(id : int):
 	match id:
-		0:
-			Voxel_Set.set_voxel(Voxel.colored(Color.white))
-		1:
-			Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]).duplicate(true))
-		2:
-			Voxel_Set.erase_voxel(Selections[0])
-		3:
-			while not Selections.empty():
-				unselect(Selections.size() - 1)
+		0: Voxel_Set.set_voxel(Voxel.colored(Color.white))
+		1: Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]).duplicate(true))
+		2: Voxel_Set.erase_voxel(Selections[0])
+		3: unselect_all()
 		4:
 			for selection in Selections:
 				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection).duplicate(true), Voxel_Set.get_id(), false)

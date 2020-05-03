@@ -35,18 +35,37 @@ caret_blink_speed = 0.5
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 margin_top = 28.0
 margin_right = 1024.0
-margin_bottom = 600.0
+margin_bottom = 578.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 
 [node name="Voxels" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
 margin_right = 1024.0
-margin_bottom = 572.0
+margin_bottom = 550.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/hseparation = 4
 columns = 28
+
+[node name="Hints" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 582.0
+margin_right = 1024.0
+margin_bottom = 600.0
+custom_constants/separation = 0
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Hints"]
+margin_right = 1024.0
+margin_bottom = 4.0
+
+[node name="Hint" type="Label" parent="VBoxContainer/Hints"]
+margin_top = 4.0
+margin_right = 1024.0
+margin_bottom = 18.0
+size_flags_vertical = 7
+text = "right click : select multiple voxels"
+align = 2
+valign = 1
 
 [node name="ContextMenu" type="PopupMenu" parent="."]
 margin_right = 146.0
