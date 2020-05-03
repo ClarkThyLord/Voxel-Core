@@ -4,21 +4,21 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
 
-[sub_resource type="ButtonGroup" id=6]
+[sub_resource type="ButtonGroup" id=1]
 
-[sub_resource type="Environment" id=7]
+[sub_resource type="Environment" id=2]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0.5, 0.5, 0.5, 1 )
 
-[sub_resource type="PlaneMesh" id=3]
+[sub_resource type="PlaneMesh" id=4]
 
-[sub_resource type="CubeMesh" id=4]
+[sub_resource type="CubeMesh" id=5]
 
-[sub_resource type="BoxShape" id=5]
+[sub_resource type="BoxShape" id=6]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
@@ -27,6 +27,8 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+EditMode = true
+SelectMode = true
 
 [node name="2DView" type="Control" parent="."]
 visible = false
@@ -43,7 +45,7 @@ anchor_top = 0.36
 anchor_right = 0.34082
 anchor_bottom = 0.64
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 
 [node name="Front" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.34112
@@ -51,7 +53,7 @@ anchor_top = 0.36
 anchor_right = 0.505183
 anchor_bottom = 0.64
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 
 [node name="Right" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.505183
@@ -59,7 +61,7 @@ anchor_top = 0.360361
 anchor_right = 0.669245
 anchor_bottom = 0.640361
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 
 [node name="Bottom" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.669245
@@ -67,7 +69,7 @@ anchor_top = 0.36
 anchor_right = 0.833308
 anchor_bottom = 0.64
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 
 [node name="Top" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.34112
@@ -75,7 +77,7 @@ anchor_top = 0.0802615
 anchor_right = 0.505183
 anchor_bottom = 0.360261
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 
 [node name="VoxelButton6" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.34082
@@ -83,7 +85,7 @@ anchor_top = 0.64
 anchor_right = 0.504883
 anchor_bottom = 0.92
 toggle_mode = true
-group = SubResource( 6 )
+group = SubResource( 1 )
 
 [node name="3DView" type="ViewportContainer" parent="."]
 anchor_right = 1.0
@@ -107,7 +109,7 @@ physics_object_picking = true
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 7 )
+environment = SubResource( 2 )
 
 [node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
@@ -115,18 +117,18 @@ visible = false
 
 [node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
-material_override = SubResource( 2 )
-mesh = SubResource( 3 )
+material_override = SubResource( 3 )
+mesh = SubResource( 4 )
 material/0 = null
 
 [node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 4 )
+mesh = SubResource( 5 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
 
 [node name="CollisionShape" type="CollisionShape" parent="3DView/Viewport/VoxelStaticBody"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
@@ -162,7 +164,6 @@ __meta__ = {
 [node name="ContextMenu" type="PopupMenu" parent="."]
 anchor_right = 0.0878906
 anchor_bottom = 0.206667
-items = [ "Face", null, 0, false, false, 0, 0, null, "", true, "Set color", null, 0, false, false, 1, 0, null, "", false, "Set texture", null, 0, false, false, 2, 0, null, "", false, "Remove texture", null, 0, false, false, 3, 0, null, "", false, "Main", null, 0, false, false, 4, 0, null, "", true, "Set color", null, 0, false, false, 5, 0, null, "", false, "Set texture", null, 0, false, false, 6, 0, null, "", false, "Remove texture", null, 0, false, false, 7, 0, null, "", false ]
 __meta__ = {
 "_edit_use_anchors_": true
 }

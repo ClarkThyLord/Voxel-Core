@@ -181,6 +181,12 @@ func _on_Search_text_changed(new_text):
 func _on_Voxels_gui_input(event):
 	if EditMode and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
 		ContextMenu.clear()
+		if Selections.size() > 1:
+			ContextMenu.add_icon_item(
+				preload("res://addons/Voxel-Core/assets/controls/cancel.png"),
+				"Deselect voxels", 3
+			)
+			ContextMenu.add_separator()
 		ContextMenu.add_icon_item(
 			preload("res://addons/Voxel-Core/assets/controls/add.png"),
 			"Add voxel", 0
@@ -196,10 +202,6 @@ func _on_Voxels_gui_input(event):
 			)
 		elif Selections.size() > 1:
 			ContextMenu.add_separator()
-			ContextMenu.add_icon_item(
-				preload("res://addons/Voxel-Core/assets/controls/cancel.png"),
-				"Deselect voxels", 3
-			)
 			ContextMenu.add_icon_item(
 				preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
 				"Duplicate voxels", 4

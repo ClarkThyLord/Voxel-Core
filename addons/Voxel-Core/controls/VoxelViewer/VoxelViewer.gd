@@ -34,16 +34,17 @@ onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/
 # Declarations
 signal selected_face(normal)
 
+
 var VT := VoxelTool.new()
 
 
-var Preview : Dictionary
+var dragging := false
+var edit_action := -1
+
+
+var placeholder := {}
 var Represents := [null, null] setget set_represents
 func set_represents(represents : Array) -> void: pass
-
-
-var editing := -1
-var dragging := false
 
 
 export(bool) var EditMode := false setget set_edit_mode
@@ -114,6 +115,18 @@ export(int, 0, 100) var MouseSensitivity := 6
 
 
 # Helpers
+func string_to_normal(string : String) -> Vector3:
+	string = string.to_lower()
+	var normal := Vector3.ZERO
+	match string:
+		"right": normal = Vector3.RIGHT
+		"left": normal = Vector3.LEFT
+		"top": normal = Vector3.UP
+		"bottom": normal = Vector3.DOWN
+		"front": normal = Vector3.FORWARD
+		"back": normal = Vector3.BACK
+	return normal
+
 func normal_to_string(normal : Vector3) -> String:
 	var string := ""
 	match normal:
@@ -131,6 +144,16 @@ func normal_to_string(normal : Vector3) -> String:
 func _ready():
 	set_view_mode(ViewMode)
 	set_selected_face(SelectedFace)
+	
+	if ContextMenu:
+		ContextMenu.add_item("Color side", 0)
+		ContextMenu.add_item("Remove side's color", 1)
+		ContextMenu.add_item("Texture side", 2)
+		ContextMenu.add_item("Remove side's texture", 3)
+		ContextMenu.add_separator()
+		ContextMenu.add_item("Color voxel", 4)
+		ContextMenu.add_item("Texture voxel", 5)
+		ContextMenu.add_item("Remove voxel's texture", 6)
 
 
 func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
@@ -141,10 +164,20 @@ func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
 	Represents[0] = voxel
 
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
-	Preview = voxel.duplicate(true)
+	placeholder = voxel.duplicate(true)
 	Represents[0] = voxel
 	Represents[1] = voxelset
 	update_voxel_preview()
+
+
+func get_real_voxel() -> Dictionary:
+	var voxel := {}
+	match typeof(Represents[0]):
+		TYPE_DICTIONARY: voxel = Represents[0]
+		TYPE_INT, TYPE_STRING:
+			if is_instance_valid(Represents[1]):
+				voxel = Represents[1].get_voxel(Represents[0])
+	return voxel
 
 
 func update_hint() -> void:
@@ -155,6 +188,14 @@ func update_hint() -> void:
 			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
 
 func update_voxel_preview() -> void:
+	if _2DView:
+		for side in _2DView.get_children():
+			side.setup_rvoxel(
+				placeholder,
+				Represents[1],
+				string_to_normal(side.name)
+			)
+	
 	if VoxelPreview:
 		VT.start(true, 2)
 		for direction in [
@@ -166,7 +207,7 @@ func update_voxel_preview() -> void:
 			Vector3.BACK
 		]:
 			VT.add_face(
-				Preview,
+				placeholder,
 				direction,
 				-Vector3.ONE / 2
 			)
@@ -219,53 +260,61 @@ func _on_3DView_gui_input(event : InputEvent) -> void:
 
 
 func _on_ContextMenu_id_pressed(id):
-	editing = id
+	edit_action = id
 	match id:
+		0:
+			ColorMenu.popup_centered()
 		1:
-			ColorMenu.popup_centered()
-		5:
-			ColorMenu.popup_centered()
+			Voxel.remove_color_side(get_real_voxel(), HoveredFace)
 		2:
 			TextureMenu.popup_centered()
-		6:
+		3:
+			Voxel.remove_texture_side(get_real_voxel(), HoveredFace)
+		4:
+			ColorMenu.popup_centered()
+		5:
 			TextureMenu.popup_centered()
-		3, 7:
-			print("erase")
+		6:
+			Voxel.remove_texture(get_real_voxel(), HoveredFace)
+
 
 func _on_ColorPicker_color_changed(color):
-	Voxel.set_color(Preview, color)
+	match edit_action:
+		0: Voxel.set_color_side(placeholder, HoveredFace, color)
+		4: Voxel.set_color(placeholder, color)
 	update_voxel_preview()
 
 func _on_ColorMenu_Cancel_pressed():
-	if is_instance_valid(Represents[1]):
-		Represents = Represents[1].get_voxel(Represents[0])
-	else: Represents = Represents[0]
+	placeholder = get_real_voxel().duplicate(true)
+	if ColorMenu: ColorMenu.hide()
 
 func _on_ColorMenu_Confirm_pressed():
-	var voxel : Dictionary
-	if is_instance_valid(Represents[1]):
-		voxel = Represents[1].get_voxel(Represents[0])
-	else: voxel = Represents[0]
-	match editing:
-		1: Voxel.set_color_side(voxel, HoveredFace, VoxelColor.color)
-		2: Voxel.set_color(voxel, VoxelColor.color)
-	ColorMenu.hide()
+	if ColorMenu:
+		match edit_action:
+			0:
+				Voxel.set_color_side(get_real_voxel(), HoveredFace, VoxelColor.color)
+			4:
+				Voxel.set_color(get_real_voxel(), VoxelColor.color)
+		ColorMenu.hide()
 
-func _on_TilesViewer_select(index):
-	Voxel.set_texture(Preview, VoxelTexture.Selections[index])
+
+func _on_TilesViewer_select(uv):
+	match edit_action:
+		2:
+			Voxel.set_texture_side(placeholder, HoveredFace, uv)
+		5:
+			Voxel.set_texture_color(placeholder, uv)
 	update_voxel_preview()
 
 func _on_TextureMenu_Cancel_pressed():
-	if is_instance_valid(Represents[1]):
-		Represents = Represents[1].get_voxel(Represents[0])
-	else: Represents = Represents[0]
+	placeholder = get_real_voxel().duplicate(true)
+	TextureMenu.hide()
 
 func _on_TextureMenu_Confirm_pressed():
-	var voxel : Dictionary
-	if is_instance_valid(Represents[1]):
-		voxel = Represents[1].get_voxel(Represents[0])
-	else: voxel = Represents[0]
-	match editing:
-		1: Voxel.set_texture_side(voxel, HoveredFace, VoxelColor.color)
-		2: Voxel.set_texture(voxel, VoxelColor.color)
-	TextureMenu.hide()
+	if TextureMenu:
+		match edit_action:
+			2:
+				Voxel.set_texture_side(get_real_voxel(), HoveredFace, VoxelTexture.Selections[0])
+			5:
+				Voxel.set_texture_color(get_real_voxel(), VoxelTexture.Selections[0])
+		TextureMenu.hide()
