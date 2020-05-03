@@ -270,7 +270,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
+[node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
 margin_left = 4.0
 margin_top = 4.0
 margin_right = 4.0
@@ -321,7 +321,7 @@ margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TilesViewer" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
+[node name="VoxelTexture" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 307.0
@@ -362,9 +362,9 @@ text = "Confirm"
 [connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
-[connection signal="color_changed" from="ColorMenu/VBoxContainer/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
-[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
+[connection signal="color_changed" from="ColorMenu/VBoxContainer/VoxelColor" to="." method="_on_ColorPicker_color_changed"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_ColorMenu_Cancel_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
-[connection signal="select" from="TextureMenu/VBoxContainer/ScrollContainer/TilesViewer" to="." method="_on_TilesViewer_select"]
-[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="TextureMenu" method="hide"]
+[connection signal="select" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_TilesViewer_select"]
+[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_TextureMenu_Cancel_pressed"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]

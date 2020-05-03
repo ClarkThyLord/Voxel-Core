@@ -192,7 +192,11 @@ func _on_Voxels_gui_input(event):
 
 func _on_VoxelButton_toggled(toggled : bool, voxel_id, voxel_ref) -> void:
 	if SelectMode:
-		if toggled: select(voxel_id, voxel_ref)
+		if toggled:
+			if not Input.is_key_pressed(KEY_CONTROL):
+				while not Selections.empty():
+					unselect(Selections.size() - 1)
+			select(voxel_id, voxel_ref)
 		else:
 			var index = Selections.find(voxel_id)
 			if index > -1: unselect(index)
@@ -205,7 +209,7 @@ func _on_ContextMenu_id_pressed(id : int):
 		0:
 			Voxel_Set.set_voxel(Voxel.colored(Color.white))
 		1:
-			Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]))
+			Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]).duplicate(true))
 		2:
 			Voxel_Set.erase_voxel(Selections[0])
 		3:
@@ -213,7 +217,7 @@ func _on_ContextMenu_id_pressed(id : int):
 				unselect(Selections.size() - 1)
 		4:
 			for selection in Selections:
-				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection), Voxel_Set.get_id(), false)
+				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection).duplicate(true), Voxel_Set.get_id(), false)
 			Voxel_Set.updated_voxels()
 		5: 
 			for selection in Selections:

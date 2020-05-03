@@ -71,7 +71,7 @@ func _on_Add_pressed():
 
 func _on_Duplicate_pressed():
 	if is_instance_valid(Voxel_Set):
-		Voxel_Set.set_voxel(Voxel_Set.get_voxel(SelectedVoxel))
+		Voxel_Set.set_voxel(Voxel_Set.get_voxel(SelectedVoxel).duplicate(true))
 		set_selected_voxel(-1)
 
 func _on_Remove_pressed():

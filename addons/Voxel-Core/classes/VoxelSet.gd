@@ -94,10 +94,6 @@ func set_voxel(voxel : Dictionary, id = get_id(), update := true) -> int:
 	return id
 
 func get_voxel(id) -> Dictionary:
-	if Locked:
-		printerr("VoxelSet Locked")
-		return {}
-	
 	return Voxels.get(name_to_id(id) if typeof(id) == TYPE_STRING else id, {})
 
 func erase_voxel(id, update := true) -> void:
