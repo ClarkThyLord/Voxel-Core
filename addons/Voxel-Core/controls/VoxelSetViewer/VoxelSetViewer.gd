@@ -141,6 +141,7 @@ func _update() -> void:
 							else: voxels.append(name)
 		
 		for child in Voxels.get_children():
+			Voxels.remove_child(child)
 			child.queue_free()
 		
 		for voxel in voxels:
@@ -151,6 +152,18 @@ func _update() -> void:
 			voxel_ref.connect("pressed", self, "_on_VoxelButton_pressed", [voxel, voxel_ref])
 			voxel_ref.setup_voxel(voxel, Voxel_Set)
 			Voxels.add_child(voxel_ref)
+		
+		for selection in range(Selections.size()):
+			var voxel_ref = Voxels.find_node(
+				str(Selections[selection][0]),
+				false,
+				false
+			)
+			
+			if is_instance_valid(voxel_ref):
+				voxel_ref.pressed = true
+				Selections[selection][1] = voxel_ref
+			else: unselect(selection)
 	
 	if Hints:
 		Hints.visible = EditMode or SelectMode
