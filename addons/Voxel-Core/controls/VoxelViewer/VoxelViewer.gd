@@ -9,6 +9,7 @@ onready var ColorMenu := get_node("ColorMenu")
 onready var TextureMenu := get_node("TextureMenu")
 
 
+onready var ViewModeRef := get_node("ToolBar/ViewMode")
 onready var ViewerHint := get_node("ToolBar/Hint")
 
 
@@ -61,7 +62,9 @@ export(ViewModes) var ViewMode := ViewModes._3D setget set_view_mode
 func set_view_mode(view_mode : int) -> void:
 	set_hovered_face(Vector3.ZERO)
 	ViewMode = int(clamp(view_mode, 0, 1))
-	$ToolBar/ViewMode.selected = ViewMode
+	
+	if ViewModeRef:
+		ViewModeRef.selected = ViewMode
 	if _2DView:
 		_2DView.visible = ViewMode == ViewModes._2D
 	if _3DView:
@@ -170,7 +173,7 @@ func update_voxel_preview() -> void:
 		VoxelPreview.mesh = VT.end()
 
 
-func _on_Face_input_event(event : InputEvent, normal : Vector3) -> void:
+func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
 			if SelectMode: set_selected_face(normal)

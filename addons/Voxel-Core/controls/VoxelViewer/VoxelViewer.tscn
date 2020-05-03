@@ -1,24 +1,24 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
-[ext_resource path="res://addons/Voxel-Core/controls/VoxelRect/VoxelRect.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
 
-[sub_resource type="ButtonGroup" id=1]
+[sub_resource type="ButtonGroup" id=6]
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=2]
 flags_transparent = true
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0.5, 0.5, 0.5, 1 )
 
-[sub_resource type="PlaneMesh" id=4]
+[sub_resource type="PlaneMesh" id=3]
 
-[sub_resource type="CubeMesh" id=5]
+[sub_resource type="CubeMesh" id=4]
 
-[sub_resource type="BoxShape" id=6]
+[sub_resource type="BoxShape" id=5]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
@@ -29,7 +29,6 @@ __meta__ = {
 }
 
 [node name="2DView" type="Control" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -37,139 +36,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Left" type="Button" parent="2DView"]
-anchor_left = 0.177058
-anchor_top = 0.360361
-anchor_right = 0.34112
-anchor_bottom = 0.640361
-mouse_default_cursor_shape = 2
+[node name="Left" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.176758
+anchor_top = 0.36
+anchor_right = 0.34082
+anchor_bottom = 0.64
 toggle_mode = true
-group = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
+group = SubResource( 6 )
 
-[node name="VoxelRect" parent="2DView/Left" instance=ExtResource( 2 )]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-
-[node name="Front" type="Button" parent="2DView"]
+[node name="Front" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.34112
-anchor_top = 0.360361
+anchor_top = 0.36
 anchor_right = 0.505183
-anchor_bottom = 0.640361
-mouse_default_cursor_shape = 2
+anchor_bottom = 0.64
 toggle_mode = true
-group = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
+group = SubResource( 6 )
 
-[node name="VoxelRect" parent="2DView/Front" instance=ExtResource( 2 )]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-
-[node name="Right" type="Button" parent="2DView"]
+[node name="Right" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.505183
 anchor_top = 0.360361
 anchor_right = 0.669245
 anchor_bottom = 0.640361
-mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
+group = SubResource( 6 )
 
-[node name="VoxelRect" parent="2DView/Right" instance=ExtResource( 2 )]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-
-[node name="Back" type="Button" parent="2DView"]
+[node name="Bottom" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.669245
-anchor_top = 0.360261
+anchor_top = 0.36
 anchor_right = 0.833308
-anchor_bottom = 0.640261
-mouse_default_cursor_shape = 2
+anchor_bottom = 0.64
 toggle_mode = true
-group = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
+group = SubResource( 6 )
 
-[node name="VoxelRect" parent="2DView/Back" instance=ExtResource( 2 )]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-
-[node name="Top" type="Button" parent="2DView"]
+[node name="Top" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.34112
 anchor_top = 0.0802615
 anchor_right = 0.505183
 anchor_bottom = 0.360261
-mouse_default_cursor_shape = 2
 toggle_mode = true
-group = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
+group = SubResource( 6 )
 
-[node name="VoxelRect" parent="2DView/Top" instance=ExtResource( 2 )]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-
-[node name="Bottom" type="Button" parent="2DView"]
-anchor_left = 0.34112
-anchor_top = 0.640361
-anchor_right = 0.505183
-anchor_bottom = 0.920361
-mouse_default_cursor_shape = 2
+[node name="VoxelButton6" parent="2DView" instance=ExtResource( 2 )]
+anchor_left = 0.34082
+anchor_top = 0.64
+anchor_right = 0.504883
+anchor_bottom = 0.92
 toggle_mode = true
-group = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="VoxelRect" parent="2DView/Bottom" instance=ExtResource( 2 )]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 2
-mouse_default_cursor_shape = 0
+group = SubResource( 6 )
 
 [node name="3DView" type="ViewportContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -184,14 +100,14 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 3
+render_target_update_mode = 0
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 2 )
+environment = SubResource( 1 )
 
 [node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
@@ -199,18 +115,18 @@ visible = false
 
 [node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
-material_override = SubResource( 3 )
-mesh = SubResource( 4 )
+material_override = SubResource( 2 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 5 )
+mesh = SubResource( 4 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
 
 [node name="CollisionShape" type="CollisionShape" parent="3DView/Viewport/VoxelStaticBody"]
-shape = SubResource( 6 )
+shape = SubResource( 5 )
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
@@ -226,10 +142,10 @@ margin_right = 64.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 64, 20 )
 size_flags_horizontal = 3
-text = "3D"
+text = "2D"
 align = 1
 items = [ "2D", null, false, 0, null, "3D", null, false, 1, null ]
-selected = 1
+selected = 0
 
 [node name="Hint" type="Label" parent="ToolBar"]
 margin_left = 68.0
@@ -347,18 +263,18 @@ margin_right = 307.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
-[connection signal="gui_input" from="2DView/Left" to="." method="_on_Face_input_event" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Front" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="gui_input" from="2DView/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
 [connection signal="mouse_exited" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Right" to="." method="_on_Face_input_event" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/Right" to="." method="_on_Face_gui_input" binds= [ Vector3( 1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Back" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 0, 1 ) ]]
-[connection signal="mouse_exited" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Top" to="." method="_on_Face_input_event" binds= [ Vector3( 0, 1, 0 ) ]]
-[connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Face_input_event" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, 1 ) ]]
 [connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/Top" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="2DView/VoxelButton6" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="mouse_exited" from="2DView/VoxelButton6" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
