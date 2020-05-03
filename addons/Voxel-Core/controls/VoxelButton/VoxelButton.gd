@@ -4,7 +4,7 @@ extends Button
 
 
 # Declarations
-var Represents := [null, null] setget set_represents
+var Represents := [{}, null] setget set_represents
 func set_represents(represents : Array) -> void: pass
 
 

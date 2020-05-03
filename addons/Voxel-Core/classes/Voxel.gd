@@ -53,7 +53,7 @@ static func colored(color : Color, colors := {}) -> Dictionary:
 	return voxel
 
 static func get_color(voxel : Dictionary) -> Color:
-	return voxel.get("color", Color.white)
+	return voxel.get("color", Color.transparent)
 
 static func set_color(voxel : Dictionary, color : Color) -> void:
 	voxel["color"] = color

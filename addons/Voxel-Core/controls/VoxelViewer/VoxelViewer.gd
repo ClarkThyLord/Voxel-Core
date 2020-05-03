@@ -40,10 +40,11 @@ var VT := VoxelTool.new()
 
 var dragging := false
 var edit_action := -1
+var edit_face := Vector3.ZERO
 
 
 var placeholder := {}
-var Represents := [null, null] setget set_represents
+var Represents := [{}, null] setget set_represents
 func set_represents(represents : Array) -> void: pass
 
 
@@ -94,7 +95,9 @@ func set_selected_face(selected_face : Vector3) -> void:
 		for side in _2DView.get_children():
 			if side.name == normal_to_string(SelectedFace).capitalize():
 				side.disabled = true
-				side.modulate = Color.white.contrasted()
+				var color = Voxel.get_color_side(placeholder, SelectedFace)
+				color.a = 1
+				side.modulate = color.darkened(0.3)
 			else:
 				side.disabled = false
 				side.modulate = Color.white
@@ -104,7 +107,9 @@ func set_selected_face(selected_face : Vector3) -> void:
 		if not select_rot == Vector3.INF:
 			SelectPivot.rotation_degrees = select_rot
 		if Select:
-			Select.material_override.albedo_color = Color.white.contrasted()
+			var color = Voxel.get_color_side(placeholder, SelectedFace)
+			color.a = 1
+			Select.material_override.albedo_color = color.darkened(0.3)
 	
 	update_hint()
 	emit_signal("selected_face", SelectedFace)
@@ -144,16 +149,7 @@ func normal_to_string(normal : Vector3) -> String:
 func _ready():
 	set_view_mode(ViewMode)
 	set_selected_face(SelectedFace)
-	
-	if ContextMenu:
-		ContextMenu.add_item("Color side", 0)
-		ContextMenu.add_item("Remove side's color", 1)
-		ContextMenu.add_item("Texture side", 2)
-		ContextMenu.add_item("Remove side's texture", 3)
-		ContextMenu.add_separator()
-		ContextMenu.add_item("Color voxel", 4)
-		ContextMenu.add_item("Texture voxel", 5)
-		ContextMenu.add_item("Remove voxel's texture", 6)
+	update_voxel_preview()
 
 
 func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
@@ -214,15 +210,36 @@ func update_voxel_preview() -> void:
 		VoxelPreview.mesh = VT.end()
 
 
+func setup_context_menu(global_position : Vector2, face := HoveredFace) -> void:
+	edit_face = face
+	
+	if ContextMenu:
+		ContextMenu.clear()
+		ContextMenu.add_item("Color side", 0)
+		if Voxel.get_color_side(placeholder, HoveredFace).a > 0:
+			ContextMenu.add_item("Remove side color", 1)
+		ContextMenu.add_item("Texture side", 2)
+		if not Voxel.get_texture_side(placeholder, HoveredFace) == -Vector2.ONE:
+			ContextMenu.add_item("Remove side texture", 3)
+		ContextMenu.add_separator()
+		ContextMenu.add_item("Color voxel", 4)
+		ContextMenu.add_item("Texture voxel", 5)
+		if not Voxel.get_texture(placeholder) == -Vector2.ONE:
+			ContextMenu.add_item("Remove voxel texture", 6)
+		ContextMenu.set_as_minsize()
+		
+		ContextMenu.popup(Rect2(
+			global_position,
+			ContextMenu.rect_size
+		))
+
+
 func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
 			if SelectMode: set_selected_face(normal)
 		elif event.button_index == BUTTON_RIGHT :
-			if EditMode: ContextMenu.popup(Rect2(
-				event.global_position,
-				Vector2(90, 124)
-			))
+			if EditMode: setup_context_menu(event.global_position, HoveredFace)
 	set_hovered_face(normal)
 
 
@@ -244,10 +261,7 @@ func _on_3DView_gui_input(event : InputEvent) -> void:
 				elif event.is_pressed(): dragging = true
 				else: dragging = false
 			elif event.button_index == BUTTON_RIGHT and not HoveredFace == Vector3.ZERO:
-				if EditMode: ContextMenu.popup(Rect2(
-					event.global_position,
-					Vector2(90, 124)
-				))
+				if EditMode: setup_context_menu(event.global_position, HoveredFace)
 		elif event is InputEventMouseMotion:
 			if dragging:
 				var motion = event.relative.normalized()
@@ -263,58 +277,63 @@ func _on_ContextMenu_id_pressed(id):
 	edit_action = id
 	match id:
 		0:
+			VoxelColor.color = Voxel.get_color_side(placeholder, edit_face)
 			ColorMenu.popup_centered()
 		1:
-			Voxel.remove_color_side(get_real_voxel(), HoveredFace)
+			Voxel.remove_color_side(get_real_voxel(), edit_face)
 		2:
+			# TODO select
 			TextureMenu.popup_centered()
 		3:
-			Voxel.remove_texture_side(get_real_voxel(), HoveredFace)
+			Voxel.remove_texture_side(get_real_voxel(), edit_face)
 		4:
+			VoxelColor.color = Voxel.get_color(placeholder)
 			ColorMenu.popup_centered()
 		5:
 			TextureMenu.popup_centered()
 		6:
-			Voxel.remove_texture(get_real_voxel(), HoveredFace)
+			Voxel.remove_texture(get_real_voxel(), edit_face)
 
 
 func _on_ColorPicker_color_changed(color):
 	match edit_action:
-		0: Voxel.set_color_side(placeholder, HoveredFace, color)
+		0: Voxel.set_color_side(placeholder, edit_face, color)
 		4: Voxel.set_color(placeholder, color)
 	update_voxel_preview()
 
-func _on_ColorMenu_Cancel_pressed():
+func close_ColorMenu():
 	placeholder = get_real_voxel().duplicate(true)
 	if ColorMenu: ColorMenu.hide()
+	update_voxel_preview()
 
 func _on_ColorMenu_Confirm_pressed():
 	if ColorMenu:
 		match edit_action:
 			0:
-				Voxel.set_color_side(get_real_voxel(), HoveredFace, VoxelColor.color)
+				Voxel.set_color_side(get_real_voxel(), edit_face, VoxelColor.color)
 			4:
 				Voxel.set_color(get_real_voxel(), VoxelColor.color)
-		ColorMenu.hide()
+		close_ColorMenu()
 
 
 func _on_TilesViewer_select(uv):
 	match edit_action:
 		2:
-			Voxel.set_texture_side(placeholder, HoveredFace, uv)
+			Voxel.set_texture_side(placeholder, edit_face, uv)
 		5:
 			Voxel.set_texture_color(placeholder, uv)
 	update_voxel_preview()
 
-func _on_TextureMenu_Cancel_pressed():
+func close_TextureMenu():
 	placeholder = get_real_voxel().duplicate(true)
-	TextureMenu.hide()
+	if TextureMenu: TextureMenu.hide()
+	update_voxel_preview()
 
 func _on_TextureMenu_Confirm_pressed():
 	if TextureMenu:
 		match edit_action:
 			2:
-				Voxel.set_texture_side(get_real_voxel(), HoveredFace, VoxelTexture.Selections[0])
+				Voxel.set_texture_side(get_real_voxel(), edit_face, VoxelTexture.Selections[0])
 			5:
 				Voxel.set_texture_color(get_real_voxel(), VoxelTexture.Selections[0])
-		TextureMenu.hide()
+		close_TextureMenu()
