@@ -69,14 +69,13 @@ icon = ExtResource( 8 )
 [node name="VoxelSetInfo" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 300.0
-margin_bottom = 200.0
+margin_bottom = 112.0
 size_flags_vertical = 3
 text = "Voxels: 4
 Tiled: False
 Tile Size: (32, 32)"
 
 [node name="VoxelInfo" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
-visible = false
 margin_top = 116.0
 margin_right = 300.0
 margin_bottom = 200.0
@@ -97,6 +96,7 @@ margin_left = 23.0
 margin_right = 81.0
 margin_bottom = 24.0
 editable = false
+placeholder_text = "ID"
 
 [node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer"]
 margin_left = 85.0
@@ -110,6 +110,7 @@ margin_left = 131.0
 margin_right = 300.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
+placeholder_text = "Enter name..."
 
 [node name="VoxelData" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/VoxelInfo"]
 margin_top = 28.0
@@ -190,6 +191,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 EditMode = true
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
+[connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName" to="." method="_on_VoxelName_text_entered"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Duplicate" to="." method="_on_Duplicate_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Remove" to="." method="_on_Remove_pressed"]

@@ -53,13 +53,15 @@ func _update() -> void:
 	
 	if VoxelSetViewer:
 		if VoxelSetViewer.Selections.size() == 1:
-			var id = str(VoxelSetViewer.Selections[0])
+			var id = VoxelSetViewer.Selections[0]
 			if Duplicate: Duplicate.visible = true
 			if Remove: Remove.visible = true
 			
+			VoxelInfo.visible = true
 			if typeof(id) == TYPE_STRING:
 				VoxelName.text = id
 				id = Voxel_Set.name_to_id(id)
+			else: VoxelName.text = ""
 			VoxelID.text = str(id)
 			VoxelData.text = var2str(Voxel_Set.get_voxel(id))
 			
@@ -70,12 +72,20 @@ func _update() -> void:
 			if Duplicate: Duplicate.visible = false
 			if Remove: Remove.visible = false
 			
+			if VoxelInfo:
+				VoxelInfo.visible = false
+			
 			if VoxelInspector:
 				VoxelInspector.visible = false
 
 
 func _on_Save_pressed():
 	ResourceSaver.save(Voxel_Set.resource_path, Voxel_Set.duplicate())
+
+func _on_VoxelName_text_entered(new_text):
+	Voxel_Set.Names[new_text] = VoxelSetViewer.Selections[0]
+	VoxelSetViewer.Selections[0] = new_text
+	Voxel_Set.updated_voxels()
 
 
 func _on_Add_pressed():
