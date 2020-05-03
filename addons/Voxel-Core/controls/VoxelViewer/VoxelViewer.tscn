@@ -6,7 +6,7 @@
 
 [sub_resource type="ButtonGroup" id=6]
 
-[sub_resource type="Environment" id=1]
+[sub_resource type="Environment" id=7]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="SpatialMaterial" id=2]
@@ -29,6 +29,7 @@ __meta__ = {
 }
 
 [node name="2DView" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -85,7 +86,6 @@ toggle_mode = true
 group = SubResource( 6 )
 
 [node name="3DView" type="ViewportContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -100,14 +100,14 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 1 )
+environment = SubResource( 7 )
 
 [node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
@@ -142,10 +142,10 @@ margin_right = 64.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 64, 20 )
 size_flags_horizontal = 3
-text = "2D"
+text = "3D"
 align = 1
 items = [ "2D", null, false, 0, null, "3D", null, false, 1, null ]
-selected = 0
+selected = 1
 
 [node name="Hint" type="Label" parent="ToolBar"]
 margin_left = 68.0
