@@ -46,10 +46,8 @@ export(int, 0, 1000000000) var SelectionMax := 0 setget set_selection_max
 func set_selection_max(selection_max : int) -> void:
 	selection_max = abs(selection_max)
 	if selection_max > 0 and selection_max < SelectionMax:
-		var size = Selections.size()
-		while size > selection_max:
-			unselect(size - 1)
-			size = Selections.size()
+		while Selections.size() > selection_max:
+			unselect(Selections.size() - 1)
 	
 	SelectionMax = selection_max
 
@@ -239,14 +237,16 @@ func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 func _on_ContextMenu_id_pressed(id : int):
 	match id:
 		0: Voxel_Set.set_voxel(Voxel.colored(Color.white))
-		1: Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]).duplicate(true))
-		2: Voxel_Set.erase_voxel(Selections[0])
+		1: Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0][0]).duplicate(true))
+		2: Voxel_Set.erase_voxel(Selections[0][0])
 		3: unselect_all()
 		4:
 			for selection in Selections:
-				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection).duplicate(true), Voxel_Set.get_id(), false)
+				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection[0]).duplicate(true), Voxel_Set.get_id(), false)
+			unselect_all()
 			Voxel_Set.updated_voxels()
 		5: 
 			for selection in Selections:
-				Voxel_Set.erase_voxel(selection, false)
+				Voxel_Set.erase_voxel(selection[0], false)
+			unselect_all()
 			Voxel_Set.updated_voxels()

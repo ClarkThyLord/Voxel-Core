@@ -69,13 +69,14 @@ icon = ExtResource( 8 )
 [node name="VoxelSetInfo" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 300.0
-margin_bottom = 112.0
+margin_bottom = 200.0
 size_flags_vertical = 3
 text = "Voxels: 4
 Tiled: False
 Tile Size: (32, 32)"
 
 [node name="VoxelInfo" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+visible = false
 margin_top = 116.0
 margin_right = 300.0
 margin_bottom = 200.0
@@ -167,8 +168,6 @@ margin_right = 712.0
 margin_bottom = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-EditMode = true
-SelectMode = true
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false

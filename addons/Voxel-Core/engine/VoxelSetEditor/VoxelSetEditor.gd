@@ -53,7 +53,7 @@ func _update() -> void:
 	
 	if VoxelSetViewer:
 		if VoxelSetViewer.Selections.size() == 1:
-			var id = VoxelSetViewer.Selections[0]
+			var id = VoxelSetViewer.Selections[0][0]
 			if Duplicate: Duplicate.visible = true
 			if Remove: Remove.visible = true
 			
@@ -83,8 +83,8 @@ func _on_Save_pressed():
 	ResourceSaver.save(Voxel_Set.resource_path, Voxel_Set.duplicate())
 
 func _on_VoxelName_text_entered(new_text):
-	Voxel_Set.Names[new_text] = VoxelSetViewer.Selections[0]
-	VoxelSetViewer.Selections[0] = new_text
+	Voxel_Set.Names[new_text] = VoxelSetViewer.Selections[0][0]
+	VoxelSetViewer.Selections[0][0] = new_text
 	Voxel_Set.updated_voxels()
 
 
@@ -94,11 +94,11 @@ func _on_Add_pressed():
 
 func _on_Duplicate_pressed():
 	if is_instance_valid(Voxel_Set):
-		Voxel_Set.set_voxel(Voxel_Set.get_voxel(VoxelSetViewer.Selections[0]).duplicate(true))
+		Voxel_Set.set_voxel(Voxel_Set.get_voxel(VoxelSetViewer.Selections[0][0]).duplicate(true))
 
 func _on_Remove_pressed():
 	if is_instance_valid(Voxel_Set):
-		Voxel_Set.erase_voxel(VoxelSetViewer.Selections[0])
+		Voxel_Set.erase_voxel(VoxelSetViewer.Selections[0][0])
 
 func _on_VoxelSetViewer_selected(index): _update()
 func _on_VoxelSetViewer_unselected(index): _update()
