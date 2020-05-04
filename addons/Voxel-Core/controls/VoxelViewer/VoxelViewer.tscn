@@ -6,21 +6,21 @@
 
 [sub_resource type="ButtonGroup" id=1]
 
-[sub_resource type="Environment" id=7]
+[sub_resource type="Environment" id=2]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=8]
+[sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0.7, 0.7, 0.7, 1 )
 
-[sub_resource type="PlaneMesh" id=9]
+[sub_resource type="PlaneMesh" id=4]
 
-[sub_resource type="SpatialMaterial" id=10]
+[sub_resource type="SpatialMaterial" id=8]
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 
-[sub_resource type="ArrayMesh" id=11]
+[sub_resource type="ArrayMesh" id=9]
 surfaces/0 = {
 "aabb": AABB( -1, -1, -1, 2.00001, 2, 2 ),
 "array_data": PoolByteArray( 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0 ),
@@ -28,13 +28,13 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97547,
 "index_count": 36,
-"material": SubResource( 10 ),
+"material": SubResource( 8 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 24
 }
 
-[sub_resource type="BoxShape" id=6]
+[sub_resource type="BoxShape" id=7]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
@@ -142,7 +142,7 @@ physics_object_picking = true
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 7 )
+environment = SubResource( 2 )
 
 [node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
@@ -150,18 +150,18 @@ visible = false
 
 [node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
-material_override = SubResource( 8 )
-mesh = SubResource( 9 )
+material_override = SubResource( 3 )
+mesh = SubResource( 4 )
 material/0 = null
 
 [node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 11 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
 
 [node name="CollisionShape" type="CollisionShape" parent="3DView/Viewport/VoxelStaticBody"]
-shape = SubResource( 6 )
+shape = SubResource( 7 )
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
@@ -280,6 +280,7 @@ margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 SelectMode = true
+SelectionMax = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
@@ -318,6 +319,5 @@ text = "Confirm"
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ColorMenu"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
 [connection signal="popup_hide" from="TextureMenu" to="." method="close_TextureMenu"]
-[connection signal="select" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_TilesViewer_select"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_TextureMenu"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
