@@ -14,33 +14,52 @@ class_name VoxelTool, "res://addons/Voxel-Core/assets/classes/VoxelTool.png"
 var _index := 0 setget set_index
 func set_index(_index : int) -> void: pass
 
-export(bool) var VoxelUV := false setget set_voxel_uv
+
+var VoxelUV := false setget set_voxel_uv
 func set_voxel_uv(voxel_uv : bool) -> void: pass
 
-export(float, 0, 100) var VoxelSize := 0.5 setget set_voxel_size
+var VoxelUVScale := 1.0 setget set_uv_scale
+func set_uv_scale(voxel_uv_scale : float) -> void: pass
+
+
+var VoxelSize := 0.5 setget set_voxel_size
 func set_voxel_size(voxel_size : float) -> void: pass
 
-export(SpatialMaterial) var VoxelMaterial : SpatialMaterial = SpatialMaterial.new() setget set_voxel_material
+
+var VoxelMaterial : SpatialMaterial = SpatialMaterial.new() setget set_voxel_material
 func set_voxel_material(voxel_material : SpatialMaterial) -> void: pass
+
+var Voxel_Set : VoxelSet = null setget set_voxel_set
+func set_voxel_set(voxel_set : VoxelSet) -> void: pass
 
 
 
 # Core
 func _init():
-	VoxelMaterial.roughness = 1
-	VoxelMaterial.vertex_color_is_srgb = true
 	VoxelMaterial.vertex_color_use_as_albedo = true
 
 
 func start(
-	voxel_uv := false, 
-	voxel_size := Voxel.VoxelSize, 
+	voxel_uv := false,
+	voxel_set := Voxel_Set,
+	voxel_size := Voxel.VoxelSize,
 	voxel_material := VoxelMaterial
 	) -> void:
 	_index = 0
-	VoxelUV = voxel_uv
+	
 	VoxelSize = voxel_size
+	
+	VoxelUV = voxel_uv
+	Voxel_Set = voxel_set
+	VoxelUVScale = Voxel_Set.UVScale if is_instance_valid(Voxel_Set) else 1
+	
+	if not is_instance_valid(voxel_material) or not voxel_material is SpatialMaterial:
+		printerr("invalid material given to start: ", voxel_material)
+		return
 	VoxelMaterial = voxel_material
+	if VoxelUV and is_instance_valid(Voxel_Set):
+		VoxelMaterial.albedo_texture = Voxel_Set.Tiles
+	
 	begin(Mesh.PRIMITIVE_TRIANGLES)
 
 func end() -> ArrayMesh:
@@ -64,36 +83,62 @@ func add_face(
 	add_normal(normal)
 	add_color(Voxel.get_color_side(voxel, normal))
 	
+	var uv := Voxel.get_texture_side(voxel, normal) if VoxelUV else -Vector2.ONE
+	
 	match normal:
 		Vector3.RIGHT:
+			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right + Vector3.RIGHT) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
 			add_vertex((bottom_left + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
 			add_vertex((top_right + Vector3.RIGHT + Vector3.UP) * VoxelSize)
+			if VoxelUV: add_uv((uv) * VoxelUVScale)
 			add_vertex((top_left + Vector3.ONE) * VoxelSize)
 		Vector3.LEFT:
+			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
 			add_vertex((bottom_left) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
 			add_vertex((top_right + Vector3.UP + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv) * VoxelUVScale)
 			add_vertex((top_left + Vector3.UP) * VoxelSize)
 		Vector3.UP:
+			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right + Vector3.ONE) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
 			add_vertex((bottom_left + Vector3.UP + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
 			add_vertex((top_right + Vector3.RIGHT + Vector3.UP) * VoxelSize)
+			if VoxelUV: add_uv((uv) * VoxelUVScale)
 			add_vertex((top_left + Vector3.UP) * VoxelSize)
 		Vector3.DOWN:
+			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
 			add_vertex((bottom_left  + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
 			add_vertex((top_right) * VoxelSize)
+			if VoxelUV: add_uv((uv) * VoxelUVScale)
 			add_vertex((top_left + Vector3.RIGHT) * VoxelSize)
 		Vector3.FORWARD:
+			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
 			add_vertex((bottom_left + Vector3.RIGHT) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
 			add_vertex((top_right + Vector3.UP) * VoxelSize)
+			if VoxelUV: add_uv((uv) * VoxelUVScale)
 			add_vertex((top_left + Vector3.RIGHT + Vector3.UP) * VoxelSize)
 		Vector3.BACK:
+			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
 			add_vertex((bottom_left + Vector3.BACK) * VoxelSize)
+			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
 			add_vertex((top_right + Vector3.ONE) * VoxelSize)
+			if VoxelUV: add_uv((uv) * VoxelUVScale)
 			add_vertex((top_left + Vector3.UP + Vector3.BACK) * VoxelSize)
 	
 	_index += 4

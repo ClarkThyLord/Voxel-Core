@@ -195,7 +195,11 @@ func update_voxel_preview() -> void:
 			)
 	
 	if VoxelPreview:
-		VT.start(true, 2)
+		VT.start(
+			true,
+			Represents[1],
+			2
+		)
 		for direction in [
 			Vector3.RIGHT,
 			Vector3.LEFT,
