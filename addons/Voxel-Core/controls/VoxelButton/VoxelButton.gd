@@ -38,7 +38,7 @@ func setup_voxel(voxel, voxelset : VoxelSet, face := Vector3.ZERO) -> void:
 	Represents[0] = voxel
 
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null, face := Vector3.ZERO) -> void:
-	hint_tooltip = str(voxel)
+	hint_tooltip = ""
 	Represents[0] = voxel
 	Represents[1] = voxelset
 	
@@ -58,3 +58,4 @@ func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null, face := Vector
 			Vector2.ONE * voxelset.TileSize
 		)))
 		set_voxel_texture(img_texture)
+	else: set_voxel_texture(null)
