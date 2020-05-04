@@ -9,7 +9,7 @@ signal unselecting(index)
 signal unselected(index)
 
 
-var hovered : Vector2 setget set_hovered
+var hovered := -Vector2.ONE setget set_hovered
 func set_hovered(hovered : Vector2) -> void: pass
 
 var Selections := [] setget set_selections
@@ -33,6 +33,7 @@ func set_selection_max(selection_max : int) -> void:
 export(float, 1, 1000000000, 1) var TileSize := 32.0 setget set_texture_tile
 func set_texture_tile(tile_size : float, update := true) -> void:
 	TileSize = floor(clamp(tile_size, 1, 1000000000))
+	update()
 
 
 export(Color) var HoveredColor := Color(1, 1, 1, 0.6)
@@ -42,12 +43,11 @@ export(Color) var SelectionColor := Color.white
 export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	if voxel_set is VoxelSet:
-		if Voxel_Set.is_connected("updated_texture", self, "update"):
-			Voxel_Set.disconnect("updated_texture", self, "update")
+		if Voxel_Set.is_connected("updated_texture", self, "correct"):
+			Voxel_Set.disconnect("updated_texture", self, "correct")
 		Voxel_Set = voxel_set
-		texture = Voxel_Set.Tiles
-		TileSize = Voxel_Set.TileSize
-		Voxel_Set.connect("updated_texture", self, "update")
+		correct()
+		Voxel_Set.connect("updated_texture", self, "correct")
 		
 		if update: self.update()
 	elif typeof(voxel_set) == TYPE_NIL:
@@ -62,6 +62,13 @@ func world_to_uv(world : Vector2) -> Vector2:
 
 
 # Core
+func correct() -> void:
+	if Voxel_Set:
+		texture = Voxel_Set.Tiles
+		TileSize = Voxel_Set.TileSize
+	update()
+
+
 func select(uv : Vector2) -> int:
 	if SelectMode:
 		if SelectionMax == 0 or Selections.size() < SelectionMax:
@@ -102,13 +109,17 @@ func _gui_input(event : InputEvent):
 func _draw():
 	if SelectMode:
 		for selection in Selections:
-			draw_rect(Rect2(
-			selection * TileSize,
-			Vector2(TileSize, TileSize)
-			), SelectionColor, false, 3)
+			if not selection == -Vector2.ONE:
+				draw_rect(Rect2(
+				selection * TileSize,
+				Vector2(TileSize, TileSize)
+				), SelectionColor, false, 3)
 	
-	draw_rect(Rect2(
-		hovered * TileSize,
-		Vector2(TileSize, TileSize)
-	), HoveredColor, false, 3)
-	hint_tooltip = str(hovered)
+	if hovered == -Vector2.ONE:
+		hint_tooltip = ""
+	else:
+		hint_tooltip = str(hovered)
+		draw_rect(Rect2(
+			hovered * TileSize,
+			Vector2(TileSize, TileSize)
+		), HoveredColor, false, 3)

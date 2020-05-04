@@ -163,6 +163,8 @@ func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
 	placeholder = voxel.duplicate(true)
 	Represents[0] = voxel
 	Represents[1] = voxelset
+	if VoxelTexture:
+		VoxelTexture.Voxel_Set = voxelset
 	update_voxel_preview()
 
 
@@ -216,15 +218,15 @@ func setup_context_menu(global_position : Vector2, face := HoveredFace) -> void:
 	if ContextMenu:
 		ContextMenu.clear()
 		ContextMenu.add_item("Color side", 0)
-		if Voxel.get_color_side(placeholder, HoveredFace).a > 0:
+		if Voxel.has_color_side(placeholder, HoveredFace):
 			ContextMenu.add_item("Remove side color", 1)
 		ContextMenu.add_item("Texture side", 2)
-		if not Voxel.get_texture_side(placeholder, HoveredFace) == -Vector2.ONE:
+		if Voxel.has_texture_side(placeholder, HoveredFace):
 			ContextMenu.add_item("Remove side texture", 3)
 		ContextMenu.add_separator()
 		ContextMenu.add_item("Color voxel", 4)
 		ContextMenu.add_item("Texture voxel", 5)
-		if not Voxel.get_texture(placeholder) == -Vector2.ONE:
+		if Voxel.has_texture(placeholder):
 			ContextMenu.add_item("Remove voxel texture", 6)
 		ContextMenu.set_as_minsize()
 		
@@ -284,7 +286,8 @@ func _on_ContextMenu_id_pressed(id):
 			if is_instance_valid(Represents[1]):
 				Represents[1].updated_voxels()
 		2:
-			# TODO select
+			VoxelTexture.unselect_all()
+			VoxelTexture.select(Voxel.get_texture_side(placeholder, edit_face))
 			TextureMenu.popup_centered()
 		3:
 			Voxel.remove_texture_side(get_real_voxel(), edit_face)
@@ -294,6 +297,8 @@ func _on_ContextMenu_id_pressed(id):
 			VoxelColor.color = Voxel.get_color(placeholder)
 			ColorMenu.popup_centered()
 		5:
+			VoxelTexture.unselect_all()
+			VoxelTexture.select(Voxel.get_texture(placeholder))
 			TextureMenu.popup_centered()
 		6:
 			Voxel.remove_texture(get_real_voxel(), edit_face)

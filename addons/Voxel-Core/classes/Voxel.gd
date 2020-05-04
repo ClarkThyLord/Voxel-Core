@@ -52,11 +52,17 @@ static func colored(color : Color, colors := {}) -> Dictionary:
 	if colors.size() > 0: voxel["colors"] = colors.duplicate()
 	return voxel
 
+static func has_color(voxel : Dictionary) -> bool:
+	return voxel.has("color")
+
 static func get_color(voxel : Dictionary) -> Color:
 	return voxel.get("color", Color.transparent)
 
 static func set_color(voxel : Dictionary, color : Color) -> void:
 	voxel["color"] = color
+
+static func has_color_side(voxel : Dictionary, side : Vector3) -> bool:
+	return voxel.has("colors") and voxel["colors"].has(side)
 
 static func get_color_side(voxel : Dictionary, side : Vector3) -> Color:
 	return voxel["colors"].get(side, get_color(voxel)) if voxel.has("colors") else get_color(voxel)
@@ -75,6 +81,9 @@ static func textured(texture : Vector2, textures := {}, color := Color.white, co
 	if textures.size() > 0: voxel["textures"] = textures
 	return voxel
 
+static func has_texture(voxel : Dictionary) -> bool:
+	return voxel.has("texture")
+
 static func get_texture(voxel : Dictionary) -> Vector2:
 	return voxel.get("texture", -Vector2.ONE)
 
@@ -83,6 +92,9 @@ static func set_texture(voxel : Dictionary, texture : Vector2) -> void:
 
 static func remove_texture(voxel : Dictionary, side : Vector3) -> void:
 	voxel.erase("texture")
+
+static func has_texture_side(voxel : Dictionary, side : Vector3) -> bool:
+	return voxel.has("textures") and voxel["textures"].has(side)
 
 static func get_texture_side(voxel : Dictionary, side : Vector3) -> Vector2:
 	return voxel["textures"].get(side, get_texture(voxel)) if voxel.has("textures") else get_texture(voxel)
