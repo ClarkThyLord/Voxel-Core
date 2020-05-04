@@ -1,6 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/classes/VoxelSet.gd" type="Script" id=1]
+[ext_resource path="res://assets/examples/textured/Tileset.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -19,12 +20,16 @@ __meta__ = {
 "color": Color( 0, 1, 0.0925267, 1 )
 },
 3: {
-"color": Color( 0.0371078, 0.0538831, 0.626335, 1 ),
+"color": Color( 0.105314, 0.592527, 0.472891, 1 ),
 "colors": {
-Vector3( 0, 0, 1 ): Color( 0.798932, 0.0874953, 0.0874953, 1 )
+
+},
+"textures": {
+Vector3( 0, 0, 1 ): Vector2( 2, 0 )
 }
 }
 }
 }
 Locked = false
-TileSize = 32.0
+TileSize = 16.0
+Tiles = ExtResource( 2 )

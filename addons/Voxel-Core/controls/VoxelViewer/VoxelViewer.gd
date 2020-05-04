@@ -334,7 +334,7 @@ func _on_TilesViewer_select(uv):
 		2:
 			Voxel.set_texture_side(placeholder, edit_face, uv)
 		5:
-			Voxel.set_texture_color(placeholder, uv)
+			Voxel.set_texture(placeholder, uv)
 	update_voxel_preview()
 
 func close_TextureMenu():
@@ -346,9 +346,13 @@ func _on_TextureMenu_Confirm_pressed():
 	if TextureMenu:
 		match edit_action:
 			2:
-				Voxel.set_texture_side(get_real_voxel(), edit_face, VoxelTexture.Selections[0])
+				if VoxelTexture.Selections.size() > 0:
+					Voxel.set_texture_side(get_real_voxel(), edit_face, VoxelTexture.Selections[0])
+				else: Voxel.remove_texture_side(get_real_voxel(), edit_face)
 			5:
-				Voxel.set_texture_color(get_real_voxel(), VoxelTexture.Selections[0])
+				if VoxelTexture.Selections.size() > 0:
+					Voxel.set_texture(get_real_voxel(), VoxelTexture.Selections[0])
+				else: Voxel.remove_texture(get_real_voxel(), edit_face)
 		if is_instance_valid(Represents[1]):
 			Represents[1].updated_voxels()
 		close_TextureMenu()

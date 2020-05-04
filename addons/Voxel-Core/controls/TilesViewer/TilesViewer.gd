@@ -10,7 +10,9 @@ signal unselected(index)
 
 
 var hovered := -Vector2.ONE setget set_hovered
-func set_hovered(hovered : Vector2) -> void: pass
+func set_hovered(_hovered : Vector2, update := true) -> void:
+	hovered = _hovered
+	if update: self.update()
 
 var Selections := [] setget set_selections
 func set_selections(selections : Array) -> void: pass
@@ -19,6 +21,7 @@ export(bool) var SelectMode := false setget set_select_mode
 func set_select_mode(select_mode : bool) -> void:
 	SelectMode = select_mode
 	if not SelectMode: unselect_all()
+	update()
 
 export(int, 0, 1000000000) var SelectionMax := 0 setget set_selection_max
 func set_selection_max(selection_max : int) -> void:
@@ -26,6 +29,7 @@ func set_selection_max(selection_max : int) -> void:
 	if selection_max > 0 and selection_max < SelectionMax:
 		while Selections.size() > selection_max:
 			unselect(Selections.size() - 1)
+		update()
 	
 	SelectionMax = selection_max
 
@@ -36,8 +40,15 @@ func set_texture_tile(tile_size : float, update := true) -> void:
 	update()
 
 
-export(Color) var HoveredColor := Color(1, 1, 1, 0.6)
-export(Color) var SelectionColor := Color.white
+export(Color) var HoveredColor := Color(1, 1, 1, 0.6) setget set_hovered_color
+func set_hovered_color(hovered_color : Color, update := true) -> void:
+	HoveredColor = hovered_color
+	if update: self.update()
+
+export(Color) var SelectionColor := Color.white setget set_selection_color
+func set_selection_color(selection_color : Color, update := true) -> void:
+	SelectionColor = selection_color
+	if update: self.update()
 
 
 export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
