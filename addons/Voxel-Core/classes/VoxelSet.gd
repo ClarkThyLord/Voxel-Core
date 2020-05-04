@@ -106,9 +106,11 @@ func erase_voxel(id, update := true) -> void:
 		id = name_to_id(id)
 		if id == -1:
 			printerr("invalid name given when erasing voxel, name: ", name)
+			return
 		Names.erase(name)
 	elif not typeof(id) == TYPE_INT:
 		printerr("invalid id given when erasing voxel, id: ", id)
+		return
 	id = int(abs(id))
 	
 	Voxels.erase(id)

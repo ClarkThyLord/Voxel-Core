@@ -82,7 +82,29 @@ func _update() -> void:
 func _on_Save_pressed():
 	ResourceSaver.save(Voxel_Set.resource_path, Voxel_Set.duplicate())
 
-func _on_VoxelName_text_entered(new_text):
+
+func _on_VoxelID_text_entered(new_text : String):
+	if not new_text.is_valid_integer(): return
+	var value = new_text.to_int()
+	
+	var id := 0
+	var name := ""
+	var voxel = Voxel_Set.get_voxel(VoxelSetViewer.Selections[0][0])
+	if typeof(VoxelSetViewer.Selections[0][0]) == TYPE_STRING:
+		name = VoxelSetViewer.Selections[0][0]
+		id = Voxel_Set.name_to_id(name)
+	else: id = VoxelSetViewer.Selections[0][0]
+	Voxel_Set.erase_voxel(id, false)
+	Voxel_Set.erase_voxel(value, false)
+	Voxel_Set.set_voxel(voxel, value, false)
+	VoxelSetViewer.Selections[0][0] = value
+	if name.length() > 0:
+		Voxel_Set.Names[name] = value
+		VoxelSetViewer.Selections[0][0] = name
+	Voxel_Set.updated_voxels()
+
+func _on_VoxelName_text_entered(new_text : String):
+	Voxel_Set.Names.erase(VoxelSetViewer.Selections[0][0])
 	Voxel_Set.Names[new_text] = VoxelSetViewer.Selections[0][0]
 	VoxelSetViewer.Selections[0][0] = new_text
 	Voxel_Set.updated_voxels()

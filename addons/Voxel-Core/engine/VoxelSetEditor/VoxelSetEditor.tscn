@@ -72,8 +72,8 @@ margin_right = 300.0
 margin_bottom = 200.0
 size_flags_vertical = 3
 text = "Voxels: 4
-Tiled: False
-Tile Size: (32, 32)"
+Tiled: True
+Tile Size: (16, 16)"
 
 [node name="VoxelInfo" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
 visible = false
@@ -93,11 +93,8 @@ margin_bottom = 19.0
 text = "ID:"
 
 [node name="VoxelID" type="LineEdit" parent="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer"]
-margin_left = 23.0
-margin_right = 81.0
+margin_right = 58.0
 margin_bottom = 24.0
-editable = false
-placeholder_text = "ID"
 
 [node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer"]
 margin_left = 85.0
@@ -170,6 +167,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 EditMode = true
 SelectMode = true
+SelectionMax = 0
+Search = ""
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false
@@ -192,6 +191,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 EditMode = true
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
+[connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID" to="." method="_on_VoxelID_text_entered"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName" to="." method="_on_VoxelName_text_entered"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Duplicate" to="." method="_on_Duplicate_pressed"]

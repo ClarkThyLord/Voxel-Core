@@ -72,7 +72,9 @@ static func set_color_side(voxel : Dictionary, side : Vector3, color : Color) ->
 	voxel["colors"][side] = color
 
 static func remove_color_side(voxel : Dictionary, side : Vector3) -> void:
-	if voxel.has("colors"): voxel["colors"].erase(side)
+	if voxel.has("colors"):
+		voxel["colors"].erase(side)
+		if voxel["colors"].empty(): voxel.erase("colors")
 
 
 static func textured(texture : Vector2, textures := {}, color := Color.white, colors := {}) -> Dictionary:
@@ -104,7 +106,9 @@ static func set_texture_side(voxel : Dictionary, side : Vector3, texture : Vecto
 	voxel["textures"][side] = texture
 
 static func remove_texture_side(voxel : Dictionary, side : Vector3) -> void:
-	if voxel.has("textures"): voxel["textures"].erase(side)
+	if voxel.has("textures"):
+		voxel["textures"].erase(side)
+		if voxel["textures"].empty(): voxel.erase("textures")
 
 
 static func world_to_snapped(world : Vector3) -> Vector3:
