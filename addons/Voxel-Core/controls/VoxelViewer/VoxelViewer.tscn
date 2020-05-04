@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
@@ -6,17 +6,33 @@
 
 [sub_resource type="ButtonGroup" id=1]
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=7]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=8]
 flags_transparent = true
 vertex_color_use_as_albedo = true
-albedo_color = Color( 0.5, 0.5, 0.5, 1 )
+albedo_color = Color( 0.7, 0.7, 0.7, 1 )
 
-[sub_resource type="PlaneMesh" id=4]
+[sub_resource type="PlaneMesh" id=9]
 
-[sub_resource type="CubeMesh" id=5]
+[sub_resource type="SpatialMaterial" id=10]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="ArrayMesh" id=11]
+surfaces/0 = {
+"aabb": AABB( -1, -1, -1, 2.00001, 2, 2 ),
+"array_data": PoolByteArray( 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0 ),
+"array_index_data": PoolByteArray( 0, 0, 1, 0, 2, 0, 1, 0, 3, 0, 2, 0, 4, 0, 5, 0, 6, 0, 5, 0, 7, 0, 6, 0, 8, 0, 9, 0, 10, 0, 9, 0, 11, 0, 10, 0, 12, 0, 13, 0, 14, 0, 13, 0, 15, 0, 14, 0, 16, 0, 17, 0, 18, 0, 17, 0, 19, 0, 18, 0, 20, 0, 21, 0, 22, 0, 21, 0, 23, 0, 22, 0 ),
+"blend_shape_data": [  ],
+"format": 97547,
+"index_count": 36,
+"material": SubResource( 10 ),
+"primitive": 4,
+"skeleton_aabb": [  ],
+"vertex_count": 24
+}
 
 [sub_resource type="BoxShape" id=6]
 
@@ -27,10 +43,9 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-EditMode = true
-SelectMode = true
 
 [node name="2DView" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -40,54 +55,72 @@ __meta__ = {
 
 [node name="Left" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.176758
-anchor_top = 0.36
+anchor_top = 0.366667
 anchor_right = 0.34082
-anchor_bottom = 0.64
+anchor_bottom = 0.646667
+hint_tooltip = "{}"
 toggle_mode = true
 group = SubResource( 1 )
+VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Front" parent="2DView" instance=ExtResource( 2 )]
-anchor_left = 0.34112
-anchor_top = 0.36
-anchor_right = 0.505183
-anchor_bottom = 0.64
+anchor_left = 0.34082
+anchor_top = 0.366667
+anchor_right = 0.504883
+anchor_bottom = 0.646667
+hint_tooltip = "{}"
 toggle_mode = true
 group = SubResource( 1 )
+VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Right" parent="2DView" instance=ExtResource( 2 )]
-anchor_left = 0.505183
-anchor_top = 0.360361
-anchor_right = 0.669245
-anchor_bottom = 0.640361
+anchor_left = 0.504883
+anchor_top = 0.366666
+anchor_right = 0.668945
+anchor_bottom = 0.646666
+margin_left = -1.0
+margin_top = 0.000335693
+margin_right = -1.0
+margin_bottom = 0.000335693
+hint_tooltip = "{}"
 toggle_mode = true
 group = SubResource( 1 )
+VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Back" parent="2DView" instance=ExtResource( 2 )]
-anchor_left = 0.669245
-anchor_top = 0.36
-anchor_right = 0.833308
-anchor_bottom = 0.64
+anchor_left = 0.668945
+anchor_top = 0.366667
+anchor_right = 0.833008
+anchor_bottom = 0.646667
+margin_left = -0.999939
+margin_top = 1.52588e-05
+margin_right = -0.999939
+hint_tooltip = "{}"
 toggle_mode = true
 group = SubResource( 1 )
+VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Top" parent="2DView" instance=ExtResource( 2 )]
-anchor_left = 0.34112
-anchor_top = 0.0802615
-anchor_right = 0.505183
-anchor_bottom = 0.360261
+anchor_left = 0.34082
+anchor_top = 0.0866667
+anchor_right = 0.504883
+anchor_bottom = 0.366666
+hint_tooltip = "{}"
 toggle_mode = true
 group = SubResource( 1 )
+VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Bottom" parent="2DView" instance=ExtResource( 2 )]
 anchor_left = 0.34082
-anchor_top = 0.64
+anchor_top = 0.646667
 anchor_right = 0.504883
-anchor_bottom = 0.92
+anchor_bottom = 0.926667
+hint_tooltip = "{}"
 toggle_mode = true
 group = SubResource( 1 )
+VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="3DView" type="ViewportContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -102,14 +135,14 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
 
 [node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 2 )
+environment = SubResource( 7 )
 
 [node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
@@ -117,12 +150,12 @@ visible = false
 
 [node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
-material_override = SubResource( 3 )
-mesh = SubResource( 4 )
+material_override = SubResource( 8 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 5 )
+mesh = SubResource( 11 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]

@@ -281,11 +281,15 @@ func _on_ContextMenu_id_pressed(id):
 			ColorMenu.popup_centered()
 		1:
 			Voxel.remove_color_side(get_real_voxel(), edit_face)
+			if is_instance_valid(Represents[1]):
+				Represents[1].updated_voxels()
 		2:
 			# TODO select
 			TextureMenu.popup_centered()
 		3:
 			Voxel.remove_texture_side(get_real_voxel(), edit_face)
+			if is_instance_valid(Represents[1]):
+				Represents[1].updated_voxels()
 		4:
 			VoxelColor.color = Voxel.get_color(placeholder)
 			ColorMenu.popup_centered()
@@ -293,6 +297,8 @@ func _on_ContextMenu_id_pressed(id):
 			TextureMenu.popup_centered()
 		6:
 			Voxel.remove_texture(get_real_voxel(), edit_face)
+			if is_instance_valid(Represents[1]):
+				Represents[1].updated_voxels()
 
 
 func _on_ColorPicker_color_changed(color):
@@ -313,6 +319,8 @@ func _on_ColorMenu_Confirm_pressed():
 				Voxel.set_color_side(get_real_voxel(), edit_face, VoxelColor.color)
 			4:
 				Voxel.set_color(get_real_voxel(), VoxelColor.color)
+		if is_instance_valid(Represents[1]):
+			Represents[1].updated_voxels()
 		close_ColorMenu()
 
 
@@ -336,4 +344,6 @@ func _on_TextureMenu_Confirm_pressed():
 				Voxel.set_texture_side(get_real_voxel(), edit_face, VoxelTexture.Selections[0])
 			5:
 				Voxel.set_texture_color(get_real_voxel(), VoxelTexture.Selections[0])
+		if is_instance_valid(Represents[1]):
+			Represents[1].updated_voxels()
 		close_TextureMenu()
