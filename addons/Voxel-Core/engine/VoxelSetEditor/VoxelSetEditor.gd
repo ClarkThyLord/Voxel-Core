@@ -46,9 +46,11 @@ func set_editing_voxel_set(editing_voxel_set : Resource, update := true) -> void
 # Core
 func _ready():
 	_update()
+	
 	if not is_instance_valid(Undo_Redo):
 		Undo_Redo = UndoRedo.new()
 	VoxelViewer.Undo_Redo = Undo_Redo
+	VoxelSetViewer.Undo_Redo = Undo_Redo
 
 
 func _update() -> void:

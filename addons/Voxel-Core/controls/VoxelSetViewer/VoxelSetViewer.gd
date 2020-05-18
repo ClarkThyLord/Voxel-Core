@@ -24,6 +24,7 @@ onready var ContextMenu := get_node("ContextMenu")
 signal selected(voxel_id)
 signal unselected(index)
 
+var Undo_Redo : UndoRedo
 
 export(bool) var EditMode := false setget set_edit_mode
 func set_edit_mode(edit_mode : bool, update := true) -> void:
@@ -79,6 +80,9 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 # Core
 func _ready():
 	set_voxel_set(VoxelSet)
+	
+	if not is_instance_valid(Undo_Redo):
+		Undo_Redo = UndoRedo.new()
 
 
 func correct() -> void:
@@ -229,9 +233,27 @@ func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 
 func _on_ContextMenu_id_pressed(id : int):
 	match id:
-		0: Voxel_Set.set_voxel(Voxel.colored(Color.white))
-		1: Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]).duplicate(true))
-		2: Voxel_Set.erase_voxel(Selections[0])
+		0:
+			Undo_Redo.create_action("VoxelSetViewer : Add voxel")
+			Undo_Redo.add_do_method(Voxel_Set, "set_voxel", Voxel.colored(Color.white))
+			Undo_Redo.add_undo_method(Voxel_Set, "erase_voxel", Voxel_Set.get_id())
+			Undo_Redo.commit_action()
+		1:
+			Undo_Redo.create_action("VoxelSetViewer : Duplicate voxel")
+			Undo_Redo.add_do_method(Voxel_Set, "set_voxel", Voxel_Set.get_voxel(Selections[0]).duplicate(true))
+			Undo_Redo.add_undo_method(Voxel_Set, "erase_voxel", Voxel_Set.get_id())
+			Undo_Redo.commit_action()
+		2:
+			Undo_Redo.create_action("VoxelSetViewer : Remove voxel")
+			Undo_Redo.add_do_method(Voxel_Set, "erase_voxel", Selections[0])
+			Undo_Redo.add_undo_method(
+				Voxel_Set,
+				"set_voxel",
+				Voxel_Set.get_voxel(Selections[0]),
+				Selections[0],
+				Voxel_Set.id_to_name(Selections[0])
+			)
+			Undo_Redo.commit_action()
 		3: unselect_all()
 		4:
 			for selection in Selections:
