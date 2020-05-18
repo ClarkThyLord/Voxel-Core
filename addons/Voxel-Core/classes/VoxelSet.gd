@@ -24,6 +24,12 @@ var Names := {}
 func name_to_id(name : String) -> int:
 	return Names.get(name.to_lower(), -1)
 
+func id_to_name(id : int) -> String:
+	for name in Names:
+		if Names[name] == id:
+			return name
+	return ""
+
 
 var Voxels := {} setget set_voxels
 func set_voxels(voxels : Dictionary, emit := true) -> void:
@@ -72,20 +78,16 @@ func _load() -> void:
 func _init(): call_deferred("_load")
 
 
-func set_voxel(voxel : Dictionary, id = get_id(), update := true) -> int:
+func set_voxel(voxel : Dictionary, id := get_id(), name := "", update := true) -> int:
 	if Locked:
 		printerr("VoxelSet Locked")
 		return -1
-	
-	if typeof(id) == TYPE_STRING:
-		id = id.to_lower()
-		if not Names.has(id):
-			Names[id] = get_id()
-		id = Names[id]
-	elif not typeof(id) == TYPE_INT:
-		printerr("invalid id given when setting voxel, id: ", str(id))
+	elif id < 0:
+		printerr("given id out of VoxelSet range")
 		return -1
-	id = int(abs(id))
+	
+	if not name.empty():
+		Names[name] = id
 	
 	Voxels[id] = voxel
 	
@@ -96,28 +98,17 @@ func set_voxel(voxel : Dictionary, id = get_id(), update := true) -> int:
 func get_voxel(id) -> Dictionary:
 	return Voxels.get(name_to_id(id) if typeof(id) == TYPE_STRING else id, {})
 
-func erase_voxel(id, update := true) -> void:
+func erase_voxel(id : int, update := true) -> void:
 	if Locked:
 		printerr("VoxelSet Locked")
 		return
-	
-	if typeof(id) == TYPE_STRING:
-		var name = id
-		id = name_to_id(id)
-		if id == -1:
-			printerr("invalid name given when erasing voxel, name: ", name)
-			return
-		Names.erase(name)
-	elif typeof(id) == TYPE_INT:
-		for name in Names.keys():
-			if Names[name] == id:
-				Names.erase(name)
-				break
-	else:
-		printerr("invalid id given when erasing voxel, id: ", id)
+	elif id < 0:
+		printerr("given id out of VoxelSet range")
 		return
 	
-	id = int(abs(id))
+	var name := id_to_name(id)
+	if not name.empty():
+		Names[name].erase(name)
 	
 	Voxels.erase(id)
 	
