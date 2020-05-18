@@ -108,7 +108,7 @@ func erase_voxel(id : int, update := true) -> void:
 	
 	var name := id_to_name(id)
 	if not name.empty():
-		Names[name].erase(name)
+		Names.erase(name)
 	
 	Voxels.erase(id)
 	

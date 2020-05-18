@@ -21,8 +21,7 @@ onready var ContextMenu := get_node("ContextMenu")
 
 
 # Declarations
-signal selected(index)
-signal unselecting(index)
+signal selected(voxel_id)
 signal unselected(index)
 
 
@@ -31,7 +30,6 @@ func set_edit_mode(edit_mode : bool, update := true) -> void:
 	EditMode = edit_mode
 	
 	if update: _update()
-
 
 
 var Selections := [] setget set_selections
@@ -87,28 +85,29 @@ func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
 
 
+func get_voxel_button(id : int):
+	return Voxels.find_node(str(id), false, false) if Voxels else null
+
+
 func select(voxel_id, voxel_ref) -> int:
 	if SelectMode:
 		if SelectionMax == 0 or Selections.size() < SelectionMax:
 			voxel_ref.pressed = true
-			Selections.append([
-				voxel_id,
-				voxel_ref
-			])
+			Selections.append(voxel_id)
 		else:
 			unselect(Selections.size() - 1)
 			return select(voxel_id, voxel_ref)
-		emit_signal("selected", Selections.size() - 1)
+		emit_signal("selected", voxel_id)
 		return Selections.size() - 1
 	else: return -1
 
 func unselect(index : int) -> void:
-	if index > Selections.size():
+	if index < 0 or index > Selections.size():
 		printerr("unselect index out of range: ", index)
 		return
-	emit_signal("unselecting", index)
-	if is_instance_valid(Selections[index][1]):
-		Selections[index][1].pressed = false
+	var voxel_button = get_voxel_button(Selections[index])
+	if is_instance_valid(voxel_button):
+		voxel_button.pressed = false
 	Selections.remove(index)
 	emit_signal("unselected", index)
 
@@ -122,8 +121,6 @@ func _update() -> void:
 		var voxels := []
 		if Search.length() == 0:
 			voxels = Voxel_Set.Voxels.keys()
-			for name in Voxel_Set.Names:
-				voxels[voxels.find(Voxel_Set.name_to_id(name))] = name
 		else:
 			for key in Search.to_lower().split(","):
 				if key.is_valid_integer():
@@ -133,10 +130,8 @@ func _update() -> void:
 				else:
 					for name in Voxel_Set.Names:
 						if name.find(key) > -1:
-							var index := voxels.find(Voxel_Set.name_to_id(name))
-							if index > -1:
-								voxels[index] = name
-							else: voxels.append(name)
+							key = Voxel_Set.name_to_id(name)
+							if not voxels.has(key): voxels.append(key)
 		
 		for child in Voxels.get_children():
 			Voxels.remove_child(child)
@@ -152,15 +147,10 @@ func _update() -> void:
 			Voxels.add_child(voxel_ref)
 		
 		for selection in range(Selections.size()):
-			var voxel_ref = Voxels.find_node(
-				str(Selections[selection][0]),
-				false,
-				false
-			)
+			var voxel_ref = Voxels.find_node(str(Selections[selection]), false, false)
 			
 			if is_instance_valid(voxel_ref):
 				voxel_ref.pressed = true
-				Selections[selection][1] = voxel_ref
 			else: unselect(selection)
 	
 	if Hints:
@@ -227,7 +217,7 @@ func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 		else:
 			if Selections.size() == 1 or (Selections.size() > 0 and Input.is_key_pressed(KEY_CONTROL)):
 				for selection in range(Selections.size()):
-					if Selections[selection][0] == voxel_id:
+					if Selections[selection] == voxel_id:
 						unselect(selection)
 						break
 			else:
@@ -239,16 +229,16 @@ func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 func _on_ContextMenu_id_pressed(id : int):
 	match id:
 		0: Voxel_Set.set_voxel(Voxel.colored(Color.white))
-		1: Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0][0]).duplicate(true))
-		2: Voxel_Set.erase_voxel(Selections[0][0])
+		1: Voxel_Set.set_voxel(Voxel_Set.get_voxel(Selections[0]).duplicate(true))
+		2: Voxel_Set.erase_voxel(Selections[0])
 		3: unselect_all()
 		4:
 			for selection in Selections:
-				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection[0]).duplicate(true), Voxel_Set.get_id(), false)
+				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection).duplicate(true), Voxel_Set.get_id(), "", false)
 			unselect_all()
 			Voxel_Set.updated_voxels()
 		5: 
 			for selection in Selections:
-				Voxel_Set.erase_voxel(selection[0], false)
+				Voxel_Set.erase_voxel(selection, false)
 			unselect_all()
 			Voxel_Set.updated_voxels()

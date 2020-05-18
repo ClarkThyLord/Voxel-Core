@@ -34,8 +34,18 @@ func setup_voxel(voxel, voxelset : VoxelSet, face := Vector3.ZERO) -> void:
 		voxelset,
 		face
 	)
-	hint_tooltip = str(voxel)
-	Represents[0] = voxel
+	
+	var name = ""
+	var id = voxel
+	if typeof(voxel) == TYPE_STRING:
+		name = voxel
+		id = voxelset.name_to_id(id)
+	elif typeof(voxel) == TYPE_INT:
+		name = voxelset.id_to_name(id)
+	hint_tooltip = str(id)
+	if not name.empty():
+		hint_tooltip += " | " + name
+	Represents[0] = id
 
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null, face := Vector3.ZERO) -> void:
 	hint_tooltip = ""
