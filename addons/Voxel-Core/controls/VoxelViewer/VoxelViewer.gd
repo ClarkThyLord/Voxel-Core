@@ -35,6 +35,8 @@ onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/
 signal selected_face(normal)
 
 
+var Undo_Redo : UndoRedo
+
 var VT := VoxelTool.new()
 
 
@@ -150,6 +152,9 @@ func _ready():
 	set_view_mode(ViewMode)
 	set_selected_face(SelectedFace)
 	update_voxel_preview()
+	
+	if not is_instance_valid(Undo_Redo):
+		Undo_Redo = UndoRedo.new()
 
 
 func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
@@ -162,7 +167,11 @@ func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
 	placeholder = voxel.duplicate(true)
 	Represents[0] = voxel
+	if is_instance_valid(Represents[1]) and Represents[1].is_connected("updated_voxels", self, "update_voxel_preview"):
+		Represents[1].disconnect("updated_voxels", self, "update_voxel_preview")
 	Represents[1] = voxelset
+	if is_instance_valid(voxelset):
+		voxelset.connect("updated_voxels", self, "update_voxel_preview", [true])
 	if VoxelTexture:
 		VoxelTexture.Voxel_Set = voxelset
 	update_voxel_preview()
@@ -185,7 +194,10 @@ func update_hint() -> void:
 			if not ViewerHint.text.empty(): ViewerHint.text += " | "
 			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
 
-func update_voxel_preview() -> void:
+func update_voxel_preview(refresh := false) -> void:
+	if refresh:
+		placeholder = get_real_voxel().duplicate(true)
+	
 	if _2DView:
 		for side in _2DView.get_children():
 			side.setup_rvoxel(
@@ -286,21 +298,33 @@ func _on_ContextMenu_id_pressed(id):
 			VoxelColor.color = Voxel.get_color_side(placeholder, edit_face)
 			ColorMenu.popup_centered()
 		1:
-			Voxel.remove_color_side(get_real_voxel(), edit_face)
-			placeholder = get_real_voxel().duplicate(true)
+			var voxel = get_real_voxel()
+			Undo_Redo.create_action("VoxelViewer : Remove side color")
+			Undo_Redo.add_do_method(Voxel, "remove_color_side", voxel, edit_face)
+			Undo_Redo.add_undo_method(Voxel, "set_color_side", voxel, edit_face, Voxel.get_color_side(voxel, edit_face))
 			if is_instance_valid(Represents[1]):
-				Represents[1].updated_voxels()
-			update_voxel_preview()
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
 		2:
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_texture_side(placeholder, edit_face))
 			TextureMenu.popup_centered()
 		3:
-			Voxel.remove_texture_side(get_real_voxel(), edit_face)
-			placeholder = get_real_voxel().duplicate(true)
+#			Voxel.remove_texture_side(get_real_voxel(), edit_face)
+#			placeholder = get_real_voxel().duplicate(true)
+#			if is_instance_valid(Represents[1]):
+#				Represents[1].updated_voxels()
+#			update_voxel_preview()
+			
+			var voxel = get_real_voxel()
+			Undo_Redo.create_action("VoxelViewer : Remove side texture")
+			Undo_Redo.add_do_method(Voxel, "remove_texture_side", voxel, edit_face)
+			Undo_Redo.add_undo_method(Voxel, "set_texture_side", voxel, edit_face, Voxel.get_texture_side(voxel, edit_face))
 			if is_instance_valid(Represents[1]):
-				Represents[1].updated_voxels()
-			update_voxel_preview()
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
 		4:
 			VoxelColor.color = Voxel.get_color(placeholder)
 			ColorMenu.popup_centered()

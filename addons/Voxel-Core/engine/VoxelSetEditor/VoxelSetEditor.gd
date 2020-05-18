@@ -48,6 +48,7 @@ func _ready():
 	_update()
 	if not is_instance_valid(Undo_Redo):
 		Undo_Redo = UndoRedo.new()
+	VoxelViewer.Undo_Redo = Undo_Redo
 
 
 func _update() -> void:

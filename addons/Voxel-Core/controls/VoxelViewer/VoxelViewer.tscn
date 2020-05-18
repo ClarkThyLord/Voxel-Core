@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/examples/textured/Tileset.png" type="Texture" id=4]
+[ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=4]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -17,12 +17,10 @@ albedo_color = Color( 0.7, 0.7, 0.7, 1 )
 
 [sub_resource type="PlaneMesh" id=4]
 
-[sub_resource type="SpatialMaterial" id=8]
+[sub_resource type="SpatialMaterial" id=5]
 vertex_color_use_as_albedo = true
-vertex_color_is_srgb = true
-albedo_texture = ExtResource( 4 )
 
-[sub_resource type="ArrayMesh" id=9]
+[sub_resource type="ArrayMesh" id=6]
 surfaces/0 = {
 "aabb": AABB( -1, -1, -1, 2.00001, 2, 2 ),
 "array_data": PoolByteArray( 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 188, 0, 188 ),
@@ -30,7 +28,7 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97563,
 "index_count": 36,
-"material": SubResource( 8 ),
+"material": SubResource( 5 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 24
@@ -151,7 +149,7 @@ mesh = SubResource( 4 )
 material/0 = null
 
 [node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
-mesh = SubResource( 9 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
@@ -277,6 +275,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 SelectMode = true
 SelectionMax = 1
+HoveredColor = Color( 1, 1, 1, 0.6 )
+SelectionColor = Color( 1, 1, 1, 1 )
+InvalidColor = Color( 1, 0, 0, 1 )
+Voxel_Set = ExtResource( 4 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
