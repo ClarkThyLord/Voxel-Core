@@ -348,15 +348,34 @@ func close_ColorMenu():
 	update_voxel_preview(true)
 
 func _on_ColorMenu_Confirm_pressed():
-	if ColorMenu:
-		match edit_action:
-			0:
-				Voxel.set_color_side(get_real_voxel(), edit_face, VoxelColor.color)
-			4:
-				Voxel.set_color(get_real_voxel(), VoxelColor.color)
-		if is_instance_valid(Represents[1]):
-			Represents[1].updated_voxels()
-		close_ColorMenu()
+	match edit_action:
+		0:
+			var voxel = get_real_voxel()
+			var color = Voxel.get_color_side(voxel, edit_face)
+			Undo_Redo.create_action("VoxelViewer : Set side color")
+			Undo_Redo.add_do_method(Voxel, "set_color_side", voxel, edit_face, Voxel.get_color_side(placeholder, edit_face))
+			if color.a == 0:
+				Undo_Redo.add_undo_method(Voxel, "remove_color_side", voxel, edit_face)
+			else:
+				Undo_Redo.add_undo_method(Voxel, "set_color_side", voxel, edit_face, color)
+			if is_instance_valid(Represents[1]):
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
+		4:
+			var voxel = get_real_voxel()
+			var color = Voxel.get_color(voxel)
+			Undo_Redo.create_action("VoxelViewer : Set color")
+			Undo_Redo.add_do_method(Voxel, "set_color", voxel, Voxel.get_color(placeholder))
+			if color.a == 0:
+				Undo_Redo.add_undo_method(Voxel, "remove_color", voxel)
+			else:
+				Undo_Redo.add_undo_method(Voxel, "set_color", voxel, color)
+			if is_instance_valid(Represents[1]):
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
+	close_ColorMenu()
 
 
 func _on_TilesViewer_select(index : int):
@@ -371,16 +390,31 @@ func close_TextureMenu():
 	update_voxel_preview(true)
 
 func _on_TextureMenu_Confirm_pressed():
-	if TextureMenu:
-		match edit_action:
-			2:
-				if VoxelTexture.Selections.size() > 0:
-					Voxel.set_texture_side(get_real_voxel(), edit_face, VoxelTexture.Selections[0])
-				else: Voxel.remove_texture_side(get_real_voxel(), edit_face)
-			5:
-				if VoxelTexture.Selections.size() > 0:
-					Voxel.set_texture(get_real_voxel(), VoxelTexture.Selections[0])
-				else: Voxel.remove_texture(get_real_voxel())
-		if is_instance_valid(Represents[1]):
-			Represents[1].updated_voxels()
-		close_TextureMenu()
+	match edit_action:
+		2:
+			var voxel = get_real_voxel()
+			var texture = Voxel.get_texture_side(voxel, edit_face)
+			Undo_Redo.create_action("VoxelViewer : Set side texture")
+			Undo_Redo.add_do_method(Voxel, "set_texture_side", voxel, edit_face, Voxel.get_texture_side(placeholder, edit_face))
+			if texture == -Vector2.ONE:
+				Undo_Redo.add_undo_method(Voxel, "remove_texture_side", voxel, edit_face)
+			else:
+				Undo_Redo.add_undo_method(Voxel, "set_texture_side", voxel, edit_face, texture)
+			if is_instance_valid(Represents[1]):
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
+		5:
+			var voxel = get_real_voxel()
+			var texture = Voxel.get_texture(voxel)
+			Undo_Redo.create_action("VoxelViewer : Set texture")
+			Undo_Redo.add_do_method(Voxel, "set_texture", voxel, Voxel.get_texture(placeholder))
+			if texture == -Vector2.ONE:
+				Undo_Redo.add_undo_method(Voxel, "remove_texture", voxel)
+			else:
+				Undo_Redo.add_undo_method(Voxel, "set_texture", voxel, texture)
+			if is_instance_valid(Represents[1]):
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
+	close_TextureMenu()
