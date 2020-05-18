@@ -92,7 +92,7 @@ static func get_texture(voxel : Dictionary) -> Vector2:
 static func set_texture(voxel : Dictionary, texture : Vector2) -> void:
 	voxel["texture"] = texture
 
-static func remove_texture(voxel : Dictionary, side : Vector3) -> void:
+static func remove_texture(voxel : Dictionary) -> void:
 	voxel.erase("texture")
 
 static func has_texture_side(voxel : Dictionary, side : Vector3) -> bool:

@@ -311,12 +311,6 @@ func _on_ContextMenu_id_pressed(id):
 			VoxelTexture.select(Voxel.get_texture_side(placeholder, edit_face))
 			TextureMenu.popup_centered()
 		3:
-#			Voxel.remove_texture_side(get_real_voxel(), edit_face)
-#			placeholder = get_real_voxel().duplicate(true)
-#			if is_instance_valid(Represents[1]):
-#				Represents[1].updated_voxels()
-#			update_voxel_preview()
-			
 			var voxel = get_real_voxel()
 			Undo_Redo.create_action("VoxelViewer : Remove side texture")
 			Undo_Redo.add_do_method(Voxel, "remove_texture_side", voxel, edit_face)
@@ -333,11 +327,14 @@ func _on_ContextMenu_id_pressed(id):
 			VoxelTexture.select(Voxel.get_texture(placeholder))
 			TextureMenu.popup_centered()
 		6:
-			Voxel.remove_texture(get_real_voxel(), edit_face)
-			placeholder = get_real_voxel().duplicate(true)
+			var voxel = get_real_voxel()
+			Undo_Redo.create_action("VoxelViewer : Remove texture")
+			Undo_Redo.add_do_method(Voxel, "remove_texture", voxel)
+			Undo_Redo.add_undo_method(Voxel, "set_texture", voxel, Voxel.get_texture(voxel))
 			if is_instance_valid(Represents[1]):
-				Represents[1].updated_voxels()
-			update_voxel_preview()
+				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
+				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.commit_action()
 
 
 func _on_ColorPicker_color_changed(color):
@@ -347,9 +344,8 @@ func _on_ColorPicker_color_changed(color):
 	update_voxel_preview()
 
 func close_ColorMenu():
-	placeholder = get_real_voxel().duplicate(true)
 	if ColorMenu: ColorMenu.hide()
-	update_voxel_preview()
+	update_voxel_preview(true)
 
 func _on_ColorMenu_Confirm_pressed():
 	if ColorMenu:
@@ -363,18 +359,16 @@ func _on_ColorMenu_Confirm_pressed():
 		close_ColorMenu()
 
 
-func _on_TilesViewer_select(uv):
+func _on_TilesViewer_select(index : int):
+	var uv = VoxelTexture.Selections[index]
 	match edit_action:
-		2:
-			Voxel.set_texture_side(placeholder, edit_face, uv)
-		5:
-			Voxel.set_texture(placeholder, uv)
+		2: Voxel.set_texture_side(placeholder, edit_face, uv)
+		5: Voxel.set_texture(placeholder, uv)
 	update_voxel_preview()
 
 func close_TextureMenu():
-	placeholder = get_real_voxel().duplicate(true)
 	if TextureMenu: TextureMenu.hide()
-	update_voxel_preview()
+	update_voxel_preview(true)
 
 func _on_TextureMenu_Confirm_pressed():
 	if TextureMenu:
@@ -386,7 +380,7 @@ func _on_TextureMenu_Confirm_pressed():
 			5:
 				if VoxelTexture.Selections.size() > 0:
 					Voxel.set_texture(get_real_voxel(), VoxelTexture.Selections[0])
-				else: Voxel.remove_texture(get_real_voxel(), edit_face)
+				else: Voxel.remove_texture(get_real_voxel())
 		if is_instance_valid(Represents[1]):
 			Represents[1].updated_voxels()
 		close_TextureMenu()

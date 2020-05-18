@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=4]
 
 [sub_resource type="ButtonGroup" id=1]
 
@@ -275,10 +274,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 SelectMode = true
 SelectionMax = 1
-HoveredColor = Color( 1, 1, 1, 0.6 )
-SelectionColor = Color( 1, 1, 1, 1 )
-InvalidColor = Color( 1, 0, 0, 1 )
-Voxel_Set = ExtResource( 4 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
@@ -317,5 +312,6 @@ text = "Confirm"
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ColorMenu"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
 [connection signal="popup_hide" from="TextureMenu" to="." method="close_TextureMenu"]
+[connection signal="selected" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_TilesViewer_select"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_TextureMenu"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
