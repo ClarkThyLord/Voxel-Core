@@ -71,7 +71,7 @@ margin_top = 28.0
 margin_right = 300.0
 margin_bottom = 200.0
 size_flags_vertical = 3
-text = "Voxels: 4
+text = "Voxels: 3
 Tiled: True
 Tile Size: (16, 16)"
 

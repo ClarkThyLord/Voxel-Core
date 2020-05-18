@@ -93,6 +93,16 @@ func name_voxel(id : int, name : String) -> void:
 	if not prev.empty(): Names.erase(prev)
 	Names[name.to_lower()] = id
 
+func unname_voxel(name : String) -> void:
+	if Locked:
+		printerr("VoxelSet Locked")
+		return
+	elif name.empty():
+		printerr("given Voxel name invalid")
+		return
+	
+	Names.erase(name)
+
 
 func set_voxel(voxel : Dictionary, id := get_id(), name := "", update := true) -> int:
 	if Locked:
