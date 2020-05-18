@@ -111,12 +111,13 @@ func _on_VoxelName_text_entered(new_name : String):
 	var id = Voxel_Set.name_to_id(new_name)
 	if id > -1:
 		Undo_Redo.add_undo_method(Voxel_Set, "name_voxel", id, new_name)
-	else:
+	var name = Voxel_Set.id_to_name(VoxelSetViewer.Selections[0])
+	if not name.empty():
 		Undo_Redo.add_undo_method(
 			Voxel_Set,
 			"name_voxel",
 			VoxelSetViewer.Selections[0],
-			Voxel_Set.id_to_name(VoxelSetViewer.Selections[0])
+			name
 		)
 	Undo_Redo.add_do_method(Voxel_Set, "updated_voxels")
 	Undo_Redo.add_undo_method(Voxel_Set, "updated_voxels")
