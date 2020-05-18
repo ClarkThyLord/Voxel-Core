@@ -50,6 +50,11 @@ func set_selection_color(selection_color : Color, update := true) -> void:
 	SelectionColor = selection_color
 	if update: self.update()
 
+export(Color) var InvalidColor := Color.red setget set_invalid_color
+func set_invalid_color(color : Color, update := true) -> void:
+	InvalidColor = color
+	if update: self.update()
+
 
 export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
@@ -69,6 +74,12 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 # Helpers
 func world_to_uv(world : Vector2) -> Vector2:
 	return (world / TileSize).floor()
+
+func world_within_bounds(world : Vector2) -> bool:
+	if is_instance_valid(Voxel_Set) and Voxel_Set.Tiles:
+		var bounds = Voxel_Set.Tiles.get_size() / Voxel_Set.TileSize
+		return world.x >= 0 and world.y >= 0 and world.x < bounds.x and world.y < bounds.y
+	return true
 
 
 
@@ -110,7 +121,7 @@ func _gui_input(event : InputEvent):
 		if event is InputEventMouseMotion:
 			hovered = uv
 		elif SelectMode and event is InputEventMouseButton:
-			if event.button_index == BUTTON_LEFT and not event.is_pressed():
+			if world_within_bounds(uv) and event.button_index == BUTTON_LEFT and not event.is_pressed():
 				var index := Selections.find(uv)
 				if index == -1: select(uv)
 				else: unselect(index)
@@ -133,4 +144,4 @@ func _draw():
 		draw_rect(Rect2(
 			hovered * TileSize,
 			Vector2(TileSize, TileSize)
-		), HoveredColor, false, 3)
+		), HoveredColor if world_within_bounds(hovered) else InvalidColor, false, 3)
