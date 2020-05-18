@@ -107,28 +107,17 @@ func _on_VoxelID_text_entered(new_text : String):
 
 func _on_VoxelName_text_entered(new_name : String):
 	Undo_Redo.create_action("VoxelSetEditor : Rename voxel")
-	Undo_Redo.add_do_method(Voxel_Set, "erase_voxel", VoxelSetViewer.Selections[0], false)
-	Undo_Redo.add_undo_method(
-		Voxel_Set,
-		"set_voxel",
-		Voxel_Set.get_voxel(VoxelSetViewer.Selections[0]),
-		VoxelSetViewer.Selections[0],
-		Voxel_Set.id_to_name(VoxelSetViewer.Selections[0]),
-		false
-	)
-	Undo_Redo.add_do_method(
-		Voxel_Set,
-		"set_voxel",
-		Voxel_Set.get_voxel(VoxelSetViewer.Selections[0]),
-		VoxelSetViewer.Selections[0],
-		new_name,
-		false
-	)
+	Undo_Redo.add_do_method(Voxel_Set, "name_voxel", VoxelSetViewer.Selections[0], new_name)
 	var id = Voxel_Set.name_to_id(new_name)
 	if id > -1:
-		Undo_Redo.add_undo_method(Voxel_Set, "set_voxel", Voxel_Set.get_voxel(id), id, new_name, false)
+		Undo_Redo.add_undo_method(Voxel_Set, "name_voxel", id, new_name)
 	else:
-		Undo_Redo.add_undo_method(Voxel_Set, "erase_voxel", VoxelSetViewer.Selections[0], false)
+		Undo_Redo.add_undo_method(
+			Voxel_Set,
+			"name_voxel",
+			VoxelSetViewer.Selections[0],
+			Voxel_Set.id_to_name(VoxelSetViewer.Selections[0])
+		)
 	Undo_Redo.add_do_method(Voxel_Set, "updated_voxels")
 	Undo_Redo.add_undo_method(Voxel_Set, "updated_voxels")
 	Undo_Redo.commit_action()

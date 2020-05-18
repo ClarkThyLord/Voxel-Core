@@ -78,6 +78,22 @@ func _load() -> void:
 func _init(): call_deferred("_load")
 
 
+func name_voxel(id : int, name : String) -> void:
+	if Locked:
+		printerr("VoxelSet Locked")
+		return
+	elif id < 0:
+		printerr("given id out of VoxelSet range")
+		return
+	elif name.empty():
+		printerr("given Voxel name invalid")
+		return
+	
+	var prev := id_to_name(id)
+	if not prev.empty(): Names.erase(prev)
+	Names[name.to_lower()] = id
+
+
 func set_voxel(voxel : Dictionary, id := get_id(), name := "", update := true) -> int:
 	if Locked:
 		printerr("VoxelSet Locked")
@@ -87,7 +103,7 @@ func set_voxel(voxel : Dictionary, id := get_id(), name := "", update := true) -
 		return -1
 	
 	if not name.empty():
-		Names[name] = id
+		Names[name.to_lower()] = id
 	
 	Voxels[id] = voxel
 	
