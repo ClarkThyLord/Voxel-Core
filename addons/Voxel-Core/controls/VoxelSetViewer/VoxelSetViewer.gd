@@ -128,10 +128,11 @@ func _update() -> void:
 					if not voxels.has(key) and Voxel_Set.Voxels.has(key):
 						voxels.append(key)
 				else:
+					key = key.to_lower()
 					for name in Voxel_Set.Names:
 						if name.find(key) > -1:
-							key = Voxel_Set.name_to_id(name)
-							if not voxels.has(key): voxels.append(key)
+							var id = Voxel_Set.name_to_id(name)
+							if not voxels.has(id): voxels.append(id)
 		
 		for child in Voxels.get_children():
 			Voxels.remove_child(child)

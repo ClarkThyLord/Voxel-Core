@@ -188,6 +188,10 @@ rect_min_size = Vector2( 332, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
 EditMode = true
+SelectMode = false
+ViewMode = 1
+SelectedFace = Vector3( 0, 0, 0 )
+MouseSensitivity = 6
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID" to="." method="_on_VoxelID_text_entered"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName" to="." method="_on_VoxelName_text_entered"]
