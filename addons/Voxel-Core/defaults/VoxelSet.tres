@@ -23,9 +23,6 @@ __meta__ = {
 "color": Color( 0.105314, 0.592527, 0.472891, 1 ),
 "colors": {
 
-},
-"textures": {
-Vector3( 0, 0, 1 ): Vector2( 2, 0 )
 }
 }
 }

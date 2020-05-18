@@ -24,6 +24,8 @@ onready var VoxelViewer := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
 
 
 # Declarations
+var Undo_Redo : UndoRedo
+
 export(Resource) var Voxel_Set = load("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_editing_voxel_set
 func set_editing_voxel_set(editing_voxel_set : Resource, update := true) -> void:
 	if editing_voxel_set is VoxelSet:
@@ -42,7 +44,10 @@ func set_editing_voxel_set(editing_voxel_set : Resource, update := true) -> void
 
 
 # Core
-func _ready(): _update()
+func _ready():
+	_update()
+	if not is_instance_valid(Undo_Redo):
+		Undo_Redo = UndoRedo.new()
 
 
 func _update() -> void:
@@ -111,16 +116,28 @@ func _on_VoxelName_text_entered(new_text : String):
 
 
 func _on_Add_pressed():
-	if is_instance_valid(Voxel_Set):
-		Voxel_Set.set_voxel(Voxel.colored(Color.white))
+	Undo_Redo.create_action("VoxelSetEditor : Add voxel")
+	Undo_Redo.add_do_method(Voxel_Set, "set_voxel", Voxel.colored(Color.white))
+	Undo_Redo.add_undo_method(Voxel_Set, "erase_voxel", Voxel_Set.get_id())
+	Undo_Redo.commit_action()
 
 func _on_Duplicate_pressed():
-	if is_instance_valid(Voxel_Set):
-		Voxel_Set.set_voxel(Voxel_Set.get_voxel(VoxelSetViewer.Selections[0][0]).duplicate(true))
+	Undo_Redo.create_action("VoxelSetEditor : Duplicate voxel")
+	Undo_Redo.add_do_method(Voxel_Set, "set_voxel", Voxel_Set.get_voxel(VoxelSetViewer.Selections[0][0]).duplicate(true))
+	Undo_Redo.add_undo_method(Voxel_Set, "erase_voxel", Voxel_Set.get_id())
+	Undo_Redo.commit_action()
 
 func _on_Remove_pressed():
-	if is_instance_valid(Voxel_Set):
-		Voxel_Set.erase_voxel(VoxelSetViewer.Selections[0][0])
+	var name = ""
+	var id = VoxelSetViewer.Selections[0][0]
+	if typeof(id) == TYPE_STRING:
+		name = id
+		id = Voxel_Set.name_to_id(id)
+	
+	Undo_Redo.create_action("VoxelSetEditor : Remove voxel")
+	Undo_Redo.add_do_method(Voxel_Set, "erase_voxel", id)
+	Undo_Redo.add_undo_method(Voxel_Set, "set_voxel", Voxel_Set.get_voxel(id), id, name)
+	Undo_Redo.commit_action()
 
 func _on_VoxelSetViewer_selected(index): _update()
 func _on_VoxelSetViewer_unselected(index): _update()
