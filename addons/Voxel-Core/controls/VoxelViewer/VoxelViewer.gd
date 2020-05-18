@@ -167,11 +167,15 @@ func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
 func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
 	placeholder = voxel.duplicate(true)
 	Represents[0] = voxel
-	if is_instance_valid(Represents[1]) and Represents[1].is_connected("updated_voxels", self, "update_voxel_preview"):
-		Represents[1].disconnect("updated_voxels", self, "update_voxel_preview")
+	if is_instance_valid(Represents[1]):
+		if Represents[1].is_connected("updated_voxels", self, "update_voxel_preview"):
+			Represents[1].disconnect("updated_voxels", self, "update_voxel_preview")
+		if Represents[1].is_connected("updated_texture", self, "update_voxel_preview"):
+			Represents[1].disconnect("updated_texture", self, "update_voxel_preview")
 	Represents[1] = voxelset
 	if is_instance_valid(voxelset):
 		voxelset.connect("updated_voxels", self, "update_voxel_preview", [true])
+		voxelset.connect("updated_texture", self, "update_voxel_preview")
 	if VoxelTexture:
 		VoxelTexture.Voxel_Set = voxelset
 	update_voxel_preview()
