@@ -231,8 +231,8 @@ func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 	else: voxel_ref.pressed = false
 
 
-func _on_ContextMenu_id_pressed(id : int):
-	match id:
+func _on_ContextMenu_id_pressed(_id : int):
+	match _id:
 		0:
 			Undo_Redo.create_action("VoxelSetViewer : Add voxel")
 			Undo_Redo.add_do_method(Voxel_Set, "set_voxel", Voxel.colored(Color.white))
@@ -256,12 +256,27 @@ func _on_ContextMenu_id_pressed(id : int):
 			Undo_Redo.commit_action()
 		3: unselect_all()
 		4:
-			for selection in Selections:
-				Voxel_Set.set_voxel(Voxel_Set.get_voxel(selection).duplicate(true), Voxel_Set.get_id(), "", false)
-			unselect_all()
-			Voxel_Set.updated_voxels()
+			Undo_Redo.create_action("VoxelSetViewer : Duplicate voxels")
+			var id = Voxel_Set.get_id()
+			for selection in range(Selections.size()):
+				Undo_Redo.add_do_method(Voxel_Set, "set_voxel", Voxel_Set.get_voxel(Selections[selection]).duplicate(true), id + selection, "", false)
+				Undo_Redo.add_undo_method(Voxel_Set, "erase_voxel", id + selection, false)
+			Undo_Redo.add_do_method(Voxel_Set, "updated_voxels")
+			Undo_Redo.add_undo_method(Voxel_Set, "updated_voxels")
+			Undo_Redo.commit_action()
 		5: 
+			Undo_Redo.create_action("VoxelSetViewer : Remove voxels")
 			for selection in Selections:
-				Voxel_Set.erase_voxel(selection, false)
+				Undo_Redo.add_do_method(Voxel_Set, "erase_voxel", selection, false)
+				Undo_Redo.add_undo_method(
+					Voxel_Set,
+					"set_voxel",
+					Voxel_Set.get_voxel(selection),
+					selection,
+					Voxel_Set.id_to_name(selection),
+					false
+				)
+			Undo_Redo.add_do_method(Voxel_Set, "updated_voxels")
+			Undo_Redo.add_undo_method(Voxel_Set, "updated_voxels")
 			unselect_all()
-			Voxel_Set.updated_voxels()
+			Undo_Redo.commit_action()
