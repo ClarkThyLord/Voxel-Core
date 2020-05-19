@@ -24,7 +24,11 @@ onready var VoxelViewer := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
 
 
 # Declarations
+signal close
+
+
 var Undo_Redo : UndoRedo
+
 
 export(Resource) var Voxel_Set = load("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_editing_voxel_set
 func set_editing_voxel_set(editing_voxel_set : Resource, update := true) -> void:
@@ -86,6 +90,9 @@ func _update() -> void:
 
 func _on_Save_pressed():
 	ResourceSaver.save(Voxel_Set.resource_path, Voxel_Set.duplicate())
+
+func _on_Close_pressed():
+	emit_signal("close")
 
 
 func _on_VoxelID_text_entered(new_id):

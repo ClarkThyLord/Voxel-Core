@@ -12,6 +12,7 @@ const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/V
 
 # Declarations
 var handling : Object
+var handling_voxel_set : VoxelSet
 
 var VoxelSetEditorRef
 
@@ -45,6 +46,7 @@ func show_voxel_set_editor(voxelset : VoxelSet) -> void:
 	if not VoxelSetEditorRef:
 		VoxelSetEditorRef = VoxelSetEditor.instance()
 		VoxelSetEditorRef.Undo_Redo = get_undo_redo()
+		VoxelSetEditorRef.connect("close", self, "close_voxel_set_editor")
 		add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
 	VoxelSetEditorRef.Voxel_Set = voxelset
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
@@ -54,12 +56,14 @@ func close_voxel_set_editor() -> void:
 		remove_control_from_bottom_panel(VoxelSetEditorRef)
 		VoxelSetEditorRef.queue_free()
 		VoxelSetEditorRef = null
+	handling_voxel_set = null
 
 
 func handles(object : Object) -> bool:
 	if typeof_voxel_core(object) == VoxelCore.VOXEL_SET:
-		handling = object
-		show_voxel_set_editor(handling)
+		if not object == handling_voxel_set:
+			handling_voxel_set = object
+			show_voxel_set_editor(handling_voxel_set)
 		return true
 	elif handling:
 		match typeof_voxel_core(handling):
