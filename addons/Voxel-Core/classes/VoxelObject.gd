@@ -106,7 +106,7 @@ func erase_voxels() -> void:
 
 func update_mesh(save := true) -> void:
 	if save: _save()
-	if EditHint or EmbedStaticBody: update_static_body()
+	update_static_body()
 
 func update_static_body() -> void:
 	pass
