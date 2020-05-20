@@ -23,11 +23,11 @@ func _save() -> void:
 func _load() -> void:
 	if has_meta("voxels"):
 		voxels = get_meta("voxels")
-		._load()
+	._load()
 
 
-func _init() -> void: _load()
-func _ready() -> void: _load()
+func _init() -> void: call_deferred("_load")
+func _ready() -> void: call_deferred("_load")
 
 
 func set_voxel(grid : Vector3, voxel) -> void:
@@ -77,7 +77,7 @@ func update_mesh(save := true) -> void:
 			Voxel_Set
 		)
 		
-		match MeshMode:
+		match MeshModes.NAIVE if EditHint else MeshMode:
 			MeshModes.GREEDY: continue # TODO
 			_:
 				for grid in voxels:
@@ -92,22 +92,20 @@ func update_mesh(save := true) -> void:
 	.update_mesh(save)
 
 func update_static_body() -> void:
-	var staticbody
-	if has_node('StaticBody'):
-		staticbody = get_node('StaticBody')
+	var staticbody = get_node_or_null("StaticBody")
 	
 	if (EditHint or EmbedStaticBody) and is_instance_valid(mesh):
-		if not staticbody:
+		if not is_instance_valid(staticbody):
 			staticbody = StaticBody.new()
-			staticbody.set_name('StaticBody')
+			staticbody.set_name("StaticBody")
 			add_child(staticbody)
 		
 		var collisionshape
-		if staticbody.has_node('CollisionShape'):
-			collisionshape = staticbody.get_node('CollisionShape')
+		if staticbody.has_node("CollisionShape"):
+			collisionshape = staticbody.get_node("CollisionShape")
 		else:
 			collisionshape = CollisionShape.new()
-			collisionshape.set_name('CollisionShape')
+			collisionshape.set_name("CollisionShape")
 			staticbody.add_child(collisionshape)
 		collisionshape.shape = mesh.create_trimesh_shape()
 		

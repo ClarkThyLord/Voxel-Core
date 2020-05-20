@@ -27,8 +27,7 @@ var VoxelSize := 0.5 setget set_voxel_size
 func set_voxel_size(voxel_size : float) -> void: pass
 
 
-var VoxelMaterial : SpatialMaterial = SpatialMaterial.new() setget set_voxel_material
-func set_voxel_material(voxel_material : SpatialMaterial) -> void: pass
+var VoxelMaterial := SpatialMaterial.new()
 
 var Voxel_Set : VoxelSet = null setget set_voxel_set
 func set_voxel_set(voxel_set : VoxelSet) -> void: pass
