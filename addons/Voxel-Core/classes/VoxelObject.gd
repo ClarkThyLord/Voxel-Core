@@ -4,7 +4,7 @@ extends MeshInstance
 
 
 #
-# VoxelObject, 
+# VoxelObject, makeshift abstract class for all voxel visualization objects.
 #
 
 
