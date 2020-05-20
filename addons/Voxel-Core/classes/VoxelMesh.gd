@@ -78,12 +78,12 @@ func update_mesh(save := true) -> void:
 	
 	vt.start(
 		UVMapping,
-		Voxel_Set,
-		Voxel.VoxelSize
+		Voxel_Set
 	)
 	
 	match MeshMode:
-		MeshModes.NAIVE:
+		MeshModes.GREEDY: continue # TODO
+		_:
 			for grid in voxels:
 				for direction in Voxel.Directions:
 					if not voxels.has(grid + direction):
