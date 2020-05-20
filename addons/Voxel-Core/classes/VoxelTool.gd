@@ -5,7 +5,8 @@ class_name VoxelTool, "res://addons/Voxel-Core/assets/classes/VoxelTool.png"
 
 
 #
-# VoxelTool, 
+# VoxelTool, used to construct a Mesh with specified voxel data.
+# It can be used to construct a Mesh from a script.
 #
 
 

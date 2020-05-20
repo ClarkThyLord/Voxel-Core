@@ -24,6 +24,11 @@ func _load() -> void:
 	if has_meta("voxels"):
 		voxels = get_meta("voxels")
 		._load()
+	voxels = {
+		Vector3.ZERO: Voxel.colored(Color.red),
+		Vector3(1, 0, 0): Voxel.colored(Color.white)
+	}
+	._load()
 
 
 func _init() -> void: _load()
@@ -68,7 +73,51 @@ func erase_voxels() -> void:
 
 
 func update_mesh(save := true) -> void:
-	if save: _save()
+	var vt := VoxelTool.new()
+	
+	vt.start(
+		UVMapping,
+		Voxel_Set,
+		Voxel.VoxelSize,
+		get_surface_material(0) if get_surface_material_count() > 0 else vt.VoxelMaterial
+	)
+	
+	match MeshMode:
+		MeshModes.NAIVE:
+			for grid in voxels:
+				for direction in Voxel.Directions:
+					if not voxels.has(grid + direction):
+						vt.add_face( voxels[grid], direction, grid)
+	
+	mesh = vt.end()
+	.update_mesh(save)
 
 func update_static_body() -> void:
-	pass
+	var staticbody
+	if has_node('StaticBody'):
+		staticbody = get_node('StaticBody')
+	
+	if (EditHint or EmbedStaticBody) and mesh:
+		if not staticbody:
+			staticbody = StaticBody.new()
+			staticbody.set_name('StaticBody')
+		
+		var collisionshape
+		if staticbody.has_node('CollisionShape'):
+			collisionshape = staticbody.get_node('CollisionShape')
+		else:
+			collisionshape = CollisionShape.new()
+			collisionshape.set_name('CollisionShape')
+			staticbody.add_child(collisionshape)
+		
+		collisionshape.shape = mesh.create_trimesh_shape()
+		
+		if not has_node('StaticBody'): add_child(staticbody)
+		
+		if EmbedStaticBody and not staticbody.owner: staticbody.set_owner(get_tree().get_edited_scene_root())
+		elif not EmbedStaticBody and staticbody.owner: staticbody.set_owner(null)
+		if EmbedStaticBody and not collisionshape.owner: collisionshape.set_owner(get_tree().get_edited_scene_root())
+		elif not EmbedStaticBody and staticbody.owner: collisionshape.set_owner(null)
+	elif is_instance_valid(staticbody):
+		remove_child(staticbody)
+		staticbody.queue_free()

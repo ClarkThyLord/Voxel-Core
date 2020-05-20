@@ -17,15 +17,15 @@ func set_edit_hint(edit_hint : bool, update := is_inside_tree()) -> void:
 	if update: update_mesh(false)
 
 
-enum VoxelMeshes {
+enum MeshModes {
 	NAIVE,
 	GREEDY
 #	MARCHING_CUBES
 #	TRANSVOXEL
 }
-export(VoxelMeshes) var VoxelMesh := VoxelMeshes.NAIVE setget set_voxel_mesh
-func set_voxel_mesh(voxel_mesh : int, update := is_inside_tree()) -> void:
-	VoxelMesh = voxel_mesh
+export(MeshModes) var MeshMode := MeshModes.NAIVE setget set_voxel_mesh
+func set_voxel_mesh(mesh_mode : int, update := is_inside_tree()) -> void:
+	MeshMode = mesh_mode
 	
 	if update and not EditHint: update_mesh(false)
 
@@ -80,8 +80,8 @@ func set_rvoxel(grid : Vector3, voxel) -> void:
 
 func set_voxels(voxels : Dictionary) -> void:
 	erase_voxels()
-	for voxel_position in voxels:
-		set_voxel(voxel_position, voxels[voxel_position])
+	for grid in voxels:
+		set_voxel(grid, voxels[grid])
 
 func get_voxel(grid : Vector3) -> Dictionary:
 	var voxel = get_rvoxel(grid)
@@ -100,12 +100,13 @@ func erase_voxel(grid : Vector3) -> void:
 	pass
 
 func erase_voxels() -> void:
-	for voxel_position in get_voxels():
-		erase_voxel(voxel_position)
+	for grid in get_voxels():
+		erase_voxel(grid)
 
 
 func update_mesh(save := true) -> void:
 	if save: _save()
+	if EditHint or EmbedStaticBody: update_static_body()
 
 func update_static_body() -> void:
 	pass

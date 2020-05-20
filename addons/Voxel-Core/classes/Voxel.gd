@@ -41,6 +41,15 @@ class_name Voxel, "res://addons/Voxel-Core/assets/classes/Voxel.png"
 
 
 # Declarations
+const Directions := [
+	Vector3.RIGHT,
+	Vector3.UP,
+	Vector3.FORWARD,
+	Vector3.LEFT,
+	Vector3.DOWN,
+	Vector3.BACK
+]
+
 const VoxelSize := 0.5
 
 
