@@ -43,8 +43,7 @@ func _init():
 func start(
 	voxel_uv := false,
 	voxel_set := Voxel_Set,
-	voxel_size := Voxel.VoxelSize,
-	voxel_material := VoxelMaterial
+	voxel_size := Voxel.VoxelSize
 	) -> void:
 	_index = 0
 	
@@ -54,10 +53,6 @@ func start(
 	Voxel_Set = voxel_set
 	VoxelUVScale = Voxel_Set.UVScale if is_instance_valid(Voxel_Set) else 1
 	
-	if not is_instance_valid(voxel_material) or not voxel_material is SpatialMaterial:
-		printerr("invalid material given to start: ", voxel_material)
-		return
-	VoxelMaterial = voxel_material
 	if VoxelUV and is_instance_valid(Voxel_Set):
 		VoxelMaterial.albedo_texture = Voxel_Set.Tiles
 	

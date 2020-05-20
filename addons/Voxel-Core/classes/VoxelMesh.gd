@@ -74,12 +74,12 @@ func erase_voxels() -> void:
 
 func update_mesh(save := true) -> void:
 	var vt := VoxelTool.new()
+	var material = get_surface_material(0) if get_surface_material_count() > 0 else null
 	
 	vt.start(
 		UVMapping,
 		Voxel_Set,
-		Voxel.VoxelSize,
-		get_surface_material(0) if get_surface_material_count() > 0 else vt.VoxelMaterial
+		Voxel.VoxelSize
 	)
 	
 	match MeshMode:
@@ -90,6 +90,8 @@ func update_mesh(save := true) -> void:
 						vt.add_face( voxels[grid], direction, grid)
 	
 	mesh = vt.end()
+	mesh.surface_set_name(0, "voxels")
+	set_surface_material(0, material)
 	.update_mesh(save)
 
 func update_static_body() -> void:
