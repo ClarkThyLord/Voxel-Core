@@ -106,6 +106,36 @@ func erase_voxels() -> void:
 		erase_voxel(grid)
 
 
+func greed_voxels(voxels : Array, vt := VoxelTool.new()) -> ArrayMesh:
+	print('greed')
+	var face
+	var voxel
+	var bottom_right : Vector3
+	var bottom_left : Vector3
+	var top_right : Vector3
+	var top_left : Vector3
+	
+	vt.start(UVMapping, Voxel_Set)
+	
+	for direction in Voxel.Directions:
+		var faces := voxels.duplicate()
+		while not faces.empty():
+			voxel = get_voxel(bottom_right)
+			bottom_right = faces.pop_front()
+			bottom_left = bottom_right
+			top_right = bottom_right
+			top_left = bottom_right
+			
+			if UVMapping and not Voxel.get_texture_side(voxel, direction) == -Vector2.ONE:
+				vt.add_face(voxel, direction, bottom_right)
+			else:
+				face = get_rvoxel(bottom_right)
+				if typeof(face) == TYPE_DICTIONARY:
+					face = Voxel.get_color_side(voxel, direction)
+	
+	return vt.end()
+
+
 func update_mesh(save := true) -> void:
 	if save: _save()
 	update_static_body()
