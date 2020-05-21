@@ -1,0 +1,129 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
+[ext_resource path="res://addons/Voxel-Core/controls/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/raw.png" type="Texture" id=4]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorz.png" type="Texture" id=5]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=6]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=7]
+
+[node name="VoxelObjectEditor" type="ScrollContainer"]
+anchor_right = 1.0
+rect_min_size = Vector2( 0, 200 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_right = 338.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+margin_right = 338.0
+margin_bottom = 24.0
+
+[node name="ToolButton" type="ToolButton" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 65.0
+margin_bottom = 24.0
+mouse_filter = 2
+text = "Tools"
+icon = ExtResource( 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 69.0
+margin_right = 338.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="Raw" type="CheckBox" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_left = 196.0
+margin_right = 269.0
+margin_bottom = 24.0
+text = "Raw"
+icon = ExtResource( 4 )
+flat = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 338.0
+margin_bottom = 76.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VBoxContainer"]
+margin_right = 338.0
+margin_bottom = 20.0
+
+[node name="Tool" type="OptionButton" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 167.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="SelectMode" type="OptionButton" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 171.0
+margin_right = 338.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VBoxContainer"]
+margin_top = 24.0
+margin_right = 338.0
+margin_bottom = 48.0
+
+[node name="MirrorX" type="CheckBox" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 110.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Mirror X"
+icon = ExtResource( 6 )
+
+[node name="MirrorY" type="CheckBox" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 114.0
+margin_right = 224.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Mirror Y"
+icon = ExtResource( 7 )
+
+[node name="MirrorZ" type="CheckBox" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 228.0
+margin_right = 338.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Mirror Z"
+icon = ExtResource( 5 )
+
+[node name="VoxelSet" parent="HBoxContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 80.0
+margin_right = 338.0
+margin_bottom = 200.0
+size_flags_vertical = 3
+EditMode = false
+SelectMode = false
+SelectionMax = 0
+Search = ""
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 342.0
+margin_right = 680.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 684.0
+margin_right = 1024.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
