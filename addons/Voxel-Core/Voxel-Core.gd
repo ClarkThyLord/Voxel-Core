@@ -43,9 +43,14 @@ func _enter_tree():
 	connect("scene_closed", self, "on_scene_closed")
 	connect("main_screen_changed", self, "on_main_screen_changed")
 	
+	get_editor_interface().get_selection().connect("selection_changed", self, "on_selection_changed")
+	
 	print("Voxel-Core is active...")
 
 func _exit_tree():
+	close_voxel_set_editor()
+	close_voxel_object_editor()
+	
 	print("Voxel-Core is inactive!")
 
 
@@ -104,3 +109,7 @@ func on_main_screen_changed(screen_name : String) -> void:
 	if screen_name == "3D" and is_instance_valid(handling_voxel_object):
 		show_voxel_object_editor(handling_voxel_object)
 	else: close_voxel_object_editor()
+
+func on_selection_changed() -> void:
+	if get_editor_interface().get_selection().get_selected_nodes().empty():
+		close_voxel_object_editor()
