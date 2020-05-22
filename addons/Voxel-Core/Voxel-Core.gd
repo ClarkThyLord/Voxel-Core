@@ -11,8 +11,8 @@ const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/V
 
 
 # Declarations
-var handling : Object
 var handling_voxel_set : VoxelSet
+var handling_voxel_object : VoxelObject
 
 var VoxelSetEditorRef
 
@@ -65,9 +65,10 @@ func handles(object : Object) -> bool:
 			handling_voxel_set = object
 			show_voxel_set_editor(handling_voxel_set)
 		return true
-	elif handling:
-		match typeof_voxel_core(handling):
-			VoxelCore.VOXEL_SET:
-				close_voxel_set_editor()
-		handling = null
+	elif handling_voxel_object:
+		match typeof_voxel_core(handling_voxel_object):
+			VoxelCore.VOXEL_MESH:
+				pass
+			_: pass
+		handling_voxel_object = null
 	return false
