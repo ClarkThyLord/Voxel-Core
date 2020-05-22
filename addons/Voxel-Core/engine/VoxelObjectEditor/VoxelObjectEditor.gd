@@ -32,5 +32,5 @@ func cancel() -> void:
 	pass
 
 
-func handle_input(event : InputEvent, camera : Camera) -> void:
-	pass
+func handle_input(camera : Camera, event : InputEvent) -> bool:
+	return false

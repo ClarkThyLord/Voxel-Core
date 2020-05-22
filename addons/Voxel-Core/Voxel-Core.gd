@@ -113,3 +113,7 @@ func on_main_screen_changed(screen_name : String) -> void:
 func on_selection_changed() -> void:
 	if get_editor_interface().get_selection().get_selected_nodes().empty():
 		close_voxel_object_editor()
+
+
+func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
+	return VoxelObjectEditorRef.handle_input(camera, event) if is_instance_valid(VoxelObjectEditorRef) else false
