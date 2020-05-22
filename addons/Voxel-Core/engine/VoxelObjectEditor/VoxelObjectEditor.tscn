@@ -15,6 +15,7 @@
 [node name="Control" type="Control"]
 anchor_right = 1.0
 rect_min_size = Vector2( 0, 200 )
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -27,7 +28,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
 scroll_vertical_enabled = false
-script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -472,7 +472,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ColorMenu" type="WindowDialog" parent="."]
-visible = true
 margin_right = 310.0
 margin_bottom = 463.0
 __meta__ = {
@@ -487,31 +486,31 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 344.0
+margin_right = 310.0
 margin_bottom = 438.0
 edit_alpha = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
 margin_top = 442.0
-margin_right = 344.0
+margin_right = 310.0
 margin_bottom = 462.0
 
 [node name="Use" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_right = 110.0
+margin_right = 106.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Use As Palette"
 
 [node name="Add" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 114.0
-margin_right = 229.0
+margin_left = 110.0
+margin_right = 225.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Add To VoxelSet"
 
 [node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 233.0
-margin_right = 344.0
+margin_left = 229.0
+margin_right = 310.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"

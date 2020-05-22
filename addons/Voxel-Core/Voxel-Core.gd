@@ -7,14 +7,18 @@ extends EditorPlugin
 const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/VoxelSetEditor.tscn")
+const VoxelObjectEditor := preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.tscn")
 
 
 
 # Declarations
+var current_main_scene : String
+
 var handling_voxel_set : VoxelSet
 var handling_voxel_object : VoxelObject
 
 var VoxelSetEditorRef
+var VoxelObjectEditorRef
 
 
 
@@ -36,19 +40,22 @@ static func typeof_voxel_core(object : Object) -> int:
 
 # Core
 func _enter_tree():
+	connect("scene_closed", self, "on_scene_closed")
+	connect("main_screen_changed", self, "on_main_screen_changed")
+	
 	print("Voxel-Core is active...")
 
 func _exit_tree():
 	print("Voxel-Core is inactive!")
 
 
-func show_voxel_set_editor(voxelset : VoxelSet) -> void:
+func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 	if not VoxelSetEditorRef:
 		VoxelSetEditorRef = VoxelSetEditor.instance()
 		VoxelSetEditorRef.Undo_Redo = get_undo_redo()
 		VoxelSetEditorRef.connect("close", self, "close_voxel_set_editor")
 		add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
-	VoxelSetEditorRef.Voxel_Set = voxelset
+	VoxelSetEditorRef.Voxel_Set = voxel_set
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
 
 func close_voxel_set_editor() -> void:
@@ -56,19 +63,44 @@ func close_voxel_set_editor() -> void:
 		remove_control_from_bottom_panel(VoxelSetEditorRef)
 		VoxelSetEditorRef.queue_free()
 		VoxelSetEditorRef = null
-	handling_voxel_set = null
+
+
+func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
+	if not VoxelObjectEditorRef:
+		VoxelObjectEditorRef = VoxelObjectEditor.instance()
+		VoxelObjectEditorRef.Undo_Redo = get_undo_redo()
+		add_control_to_bottom_panel(VoxelObjectEditorRef, "VoxelObject")
+	VoxelObjectEditorRef.VoxelObject = voxel_object
+	make_bottom_panel_item_visible(VoxelObjectEditorRef)
+
+func close_voxel_object_editor() -> void:
+	if VoxelObjectEditorRef:
+		remove_control_from_bottom_panel(VoxelObjectEditorRef)
+		VoxelObjectEditorRef.queue_free()
+		VoxelObjectEditorRef = null
 
 
 func handles(object : Object) -> bool:
-	if typeof_voxel_core(object) == VoxelCore.VOXEL_SET:
-		if not object == handling_voxel_set:
+	match typeof_voxel_core(object):
+		VoxelCore.VOXEL_SET:
 			handling_voxel_set = object
-			show_voxel_set_editor(handling_voxel_set)
-		return true
-	elif handling_voxel_object:
-		match typeof_voxel_core(handling_voxel_object):
-			VoxelCore.VOXEL_MESH:
-				pass
-			_: pass
+			show_voxel_set_editor(object)
+			return true
+		VoxelCore.VOXEL_OBJECT:
+			handling_voxel_object = object
+			show_voxel_object_editor(object)
+			return true
+	if is_instance_valid(handling_voxel_object):
 		handling_voxel_object = null
+		close_voxel_object_editor()
 	return false
+
+
+func on_scene_closed(filepath : String) -> void:
+	close_voxel_object_editor()
+
+func on_main_screen_changed(screen_name : String) -> void:
+	current_main_scene = screen_name
+	if screen_name == "3D" and is_instance_valid(handling_voxel_object):
+		show_voxel_object_editor(handling_voxel_object)
+	else: close_voxel_object_editor()

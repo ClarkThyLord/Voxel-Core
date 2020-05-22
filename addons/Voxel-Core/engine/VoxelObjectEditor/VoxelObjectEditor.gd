@@ -1,17 +1,36 @@
 tool
-extends ScrollContainer
+extends Control
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+
+# Refrences
 
 
-# Called when the node enters the scene tree for the first time.
+
+# Declarations
+var Undo_Redo : UndoRedo
+
+var VoxelObject setget begin
+
+
+
+# Core
 func _ready():
-	pass # Replace with function body.
+	if not is_instance_valid(Undo_Redo):
+		Undo_Redo = UndoRedo.new()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func begin(voxelobject) -> void:
+	cancel()
+	
+	VoxelObject = voxelobject
+
+func commit() -> void:
+	pass
+
+func cancel() -> void:
+	pass
+
+
+func handle_input(event : InputEvent, camera : Camera) -> void:
+	pass
