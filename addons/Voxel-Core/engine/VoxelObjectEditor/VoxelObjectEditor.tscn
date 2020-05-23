@@ -154,7 +154,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VoxelSet" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer" instance=ExtResource( 3 )]
+[node name="VoxelSetViewer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 112.0
@@ -480,8 +480,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 310.0
-margin_bottom = 512.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 4.0
+margin_bottom = 4.0
 size_flags_vertical = 3
 edit_alpha = false
 

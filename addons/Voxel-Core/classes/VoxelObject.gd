@@ -10,6 +10,9 @@ extends MeshInstance
 
 
 # Declarations
+signal set_voxel_set(voxel_set)
+
+
 var loaded_hint := false
 var EditHint := false setget set_edit_hint
 func set_edit_hint(edit_hint : bool, update := loaded_hint and is_inside_tree()) -> void:
@@ -49,6 +52,7 @@ func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tre
 		Voxel_Set = voxel_set
 		
 		if update: update_mesh(false)
+		emit_signal("set_voxel_set", Voxel_Set)
 	elif typeof(voxel_set) == TYPE_NIL:
 		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
 
