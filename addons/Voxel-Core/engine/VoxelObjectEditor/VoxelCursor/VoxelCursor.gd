@@ -49,6 +49,51 @@ func update() -> void:
 						if not Selections.has(selection + direction):
 							vt.add_face(voxel, direction, selection)
 				TYPE_ARRAY:
-					pass
+					var origin := Vector3(
+						selection[0 if selection[0].x < selection[1].x else 1].x,
+						selection[0 if selection[0].y < selection[1].y else 1].y,
+						selection[0 if selection[0].z < selection[1].z else 1].z
+					)
+					var dimensions : Vector3 = (selection[0] - selection[1]).abs()
+					if dimensions.x == 0: dimensions.x = 1
+					if dimensions.y == 0: dimensions.y = 1
+					if dimensions.z == 0: dimensions.z = 1
+					
+					vt.add_face(voxel, Vector3.RIGHT,
+						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.x + dimensions.x, origin.z + dimensions.z)
+					)
+					vt.add_face(voxel, Vector3.LEFT,
+						Vector3(origin.x, origin.y, origin.z),
+						Vector3(origin.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z),
+						Vector3(origin.x, origin.x + dimensions.x, origin.z + dimensions.z)
+					)
+					vt.add_face(voxel, Vector3.UP,
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z)
+					)
+					vt.add_face(voxel, Vector3.DOWN,
+						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x, origin.y , origin.z)
+					)
+					vt.add_face(voxel, Vector3.FORWARD,
+						Vector3(origin.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z)
+					)
+					vt.add_face(voxel, Vector3.BACK,
+						Vector3(origin.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z)
+					)
 		mesh = vt.end()
 	else: mesh = null
