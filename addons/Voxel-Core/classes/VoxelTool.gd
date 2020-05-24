@@ -92,13 +92,13 @@ func add_face(
 			add_vertex((top_left + Vector3.ONE) * VoxelSize)
 		Vector3.LEFT:
 			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
-			add_vertex((bottom_right + Vector3.BACK) * VoxelSize)
+			add_vertex((bottom_left + Vector3.BACK) * VoxelSize)
 			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
-			add_vertex((bottom_left) * VoxelSize)
+			add_vertex((bottom_right) * VoxelSize)
 			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
-			add_vertex((top_right + Vector3.UP + Vector3.BACK) * VoxelSize)
+			add_vertex((top_left + Vector3.UP + Vector3.BACK) * VoxelSize)
 			if VoxelUV: add_uv((uv) * VoxelUVScale)
-			add_vertex((top_left + Vector3.UP) * VoxelSize)
+			add_vertex((top_right + Vector3.UP) * VoxelSize)
 		Vector3.UP:
 			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right + Vector3.ONE) * VoxelSize)
@@ -110,13 +110,13 @@ func add_face(
 			add_vertex((top_left + Vector3.UP) * VoxelSize)
 		Vector3.DOWN:
 			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
-			add_vertex((bottom_right + Vector3.BACK) * VoxelSize)
+			add_vertex((bottom_left + Vector3.BACK) * VoxelSize)
 			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
-			add_vertex((bottom_left  + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
+			add_vertex((bottom_right  + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
 			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
-			add_vertex((top_right) * VoxelSize)
+			add_vertex((top_left) * VoxelSize)
 			if VoxelUV: add_uv((uv) * VoxelUVScale)
-			add_vertex((top_left + Vector3.RIGHT) * VoxelSize)
+			add_vertex((top_right + Vector3.RIGHT) * VoxelSize)
 		Vector3.FORWARD:
 			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
 			add_vertex((bottom_right) * VoxelSize)
@@ -128,13 +128,13 @@ func add_face(
 			add_vertex((top_left + Vector3.RIGHT + Vector3.UP) * VoxelSize)
 		Vector3.BACK:
 			if VoxelUV: add_uv((uv + Vector2.ONE) * VoxelUVScale)
-			add_vertex((bottom_right + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
+			add_vertex((bottom_left + Vector3.RIGHT + Vector3.BACK) * VoxelSize)
 			if VoxelUV: add_uv((uv + Vector2.DOWN) * VoxelUVScale)
-			add_vertex((bottom_left + Vector3.BACK) * VoxelSize)
+			add_vertex((bottom_right + Vector3.BACK) * VoxelSize)
 			if VoxelUV: add_uv((uv + Vector2.RIGHT) * VoxelUVScale)
-			add_vertex((top_right + Vector3.ONE) * VoxelSize)
+			add_vertex((top_left + Vector3.ONE) * VoxelSize)
 			if VoxelUV: add_uv((uv) * VoxelUVScale)
-			add_vertex((top_left + Vector3.UP + Vector3.BACK) * VoxelSize)
+			add_vertex((top_right + Vector3.UP + Vector3.BACK) * VoxelSize)
 	
 	_index += 4
 	add_index(_index - 4)
