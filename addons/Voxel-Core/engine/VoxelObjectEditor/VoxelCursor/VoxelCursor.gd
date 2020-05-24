@@ -7,17 +7,6 @@ extends MeshInstance
 var vt := VoxelTool.new()
 
 
-var Represents setget set_represents
-func set_represents(represents, update := true) -> void:
-	match typeof(represents):
-		TYPE_INT, TYPE_DICTIONARY:
-			Represents = represents
-		_:
-			printerr("invalid representation given")
-			return
-	
-	if update: self.update()
-
 var Selections := [] setget set_selections
 func set_selections(selections : Array, update := true) -> void:
 	Selections = selections
@@ -25,17 +14,41 @@ func set_selections(selections : Array, update := true) -> void:
 	if update: self.update()
 
 
-export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
-func set_voxel_set(voxel_set : Resource, update := true) -> void:
-	if voxel_set is VoxelSet:
-		Voxel_Set = voxel_set
-		
-		if update: self.update()
-	elif typeof(voxel_set) == TYPE_NIL:
-		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
+export(Color) var Modulate := Color.white setget set_modulate
+func set_modulate(modulate : Color) -> void:
+	Modulate = modulate
+	Modulate.a = 0.6
+	
+	material_override.albedo_color = Modulate
 
 
 
 # Core
+func setup() -> void:
+	if not is_instance_valid(material_override):
+		material_override = SpatialMaterial.new()
+	material_override.flags_transparent = true
+	material_override.params_grow = true
+	material_override.params_grow_amount = 0.001
+	material_override.albedo_color = Modulate
+	update()
+
+
+func _init(): setup()
+func _ready() -> void: setup()
+
+
 func update() -> void:
-	pass
+	if not Selections.empty():
+		vt.start()
+		var voxel := Voxel.colored(Modulate)
+		for selection in Selections:
+			match typeof(selection):
+				TYPE_VECTOR3:
+					for direction in Voxel.Directions:
+						if not Selections.has(selection + direction):
+							vt.add_face(voxel, direction, selection)
+				TYPE_ARRAY:
+					pass
+		mesh = vt.end()
+	else: mesh = null
