@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -12,6 +12,16 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/info.png" type="Texture" id=10]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/commit.png" type="Texture" id=11]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/lock.png" type="Texture" id=12]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/add.png" type="Texture" id=13]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/sub.png" type="Texture" id=14]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/effects.png" type="Texture" id=15]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/export.png" type="Texture" id=16]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/import.png" type="Texture" id=17]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/voxelobject.png" type="Texture" id=18]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/cursor.png" type="Texture" id=19]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/grid.png" type="Texture" id=20]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/general.png" type="Texture" id=21]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/about.png" type="Texture" id=22]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 32
@@ -85,33 +95,37 @@ margin_bottom = 32.0
 [node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 margin_top = 36.0
 margin_right = 333.0
-margin_bottom = 108.0
+margin_bottom = 110.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
 margin_right = 333.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 
 [node name="Tool" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_right = 108.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
+text = "ADD"
+icon = ExtResource( 13 )
+items = [ "ADD", ExtResource( 13 ), false, 0, null, "SUB", ExtResource( 14 ), false, 1, null, "ADD", ExtResource( 13 ), false, 0, null, "SUB", ExtResource( 14 ), false, 1, null ]
+selected = 0
 
 [node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 112.0
 margin_right = 220.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 
 [node name="SelectMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 224.0
 margin_right = 333.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
-margin_top = 24.0
+margin_top = 26.0
 margin_right = 333.0
-margin_bottom = 48.0
+margin_bottom = 50.0
 
 [node name="MirrorX" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_right = 108.0
@@ -137,9 +151,9 @@ text = "Mirror Z"
 icon = ExtResource( 5 )
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
-margin_top = 52.0
+margin_top = 54.0
 margin_right = 333.0
-margin_bottom = 72.0
+margin_bottom = 74.0
 
 [node name="ColorChooser" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
 margin_right = 333.0
@@ -164,7 +178,7 @@ __meta__ = {
 [node name="VoxelSetViewer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 112.0
+margin_top = 114.0
 margin_right = 333.0
 margin_bottom = 200.0
 size_flags_vertical = 3
@@ -242,15 +256,18 @@ tab_align = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 18 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject"]
 margin_right = 325.0
-margin_bottom = 128.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
@@ -261,7 +278,7 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer"]
 margin_right = 325.0
-margin_bottom = 128.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -270,11 +287,14 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 15 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Effects"]
 margin_top = 66.0
@@ -294,16 +314,51 @@ margin_bottom = 62.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Import" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 34.0
+margin_right = -4.0
+margin_bottom = -4.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 17 )
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Import"]
+margin_top = 66.0
+margin_right = 325.0
+margin_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Import/ScrollContainer"]
+margin_right = 325.0
+margin_bottom = 62.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="Export" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 16 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Export"]
 margin_top = 66.0
@@ -374,6 +429,9 @@ margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 21 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General"]
 margin_right = 326.0
@@ -402,6 +460,9 @@ margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 19 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor"]
 margin_top = 66.0
@@ -431,6 +492,9 @@ margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 20 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid"]
 margin_top = 66.0
@@ -460,6 +524,9 @@ margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+__meta__ = {
+"_tab_icon": ExtResource( 22 )
+}
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About"]
 margin_top = 66.0
