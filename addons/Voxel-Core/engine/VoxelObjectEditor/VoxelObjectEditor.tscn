@@ -596,5 +596,4 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="ColorMenu" method="popup_centered"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="set_cursors_visibility"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="_on_Lock_toggled"]

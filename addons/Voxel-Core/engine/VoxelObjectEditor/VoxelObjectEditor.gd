@@ -42,11 +42,11 @@ onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3
 # Declarations
 signal editing(state)
 
-export(bool) var Setup := false setget set_setup
-func set_setup(setup : bool) -> void: self.setup()
-
 
 var Undo_Redo : UndoRedo
+
+
+var last_position
 
 
 var Grid := VoxelGrid.new() setget set_grid
@@ -63,9 +63,13 @@ var Cursors := {
 	Vector3(1, 0, 1): VoxelCursor.new()
 } setget set_cursors
 func set_cursors(cursors : Dictionary) -> void: pass
+
 func set_cursors_visibility(visible := not Lock.pressed) -> void:
 	for cursor in Cursors.values():
 		cursor.visible = visible
+
+func set_cursors_position(position : Vector3) -> void: 
+	Cursors[Vector3.ZERO].Selections = [position]
 
 
 enum Tools { ADD, SUB }
@@ -92,7 +96,10 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 
 
 # Core
-func setup() -> void:
+func _ready():
+	if not is_instance_valid(Undo_Redo):
+		Undo_Redo = UndoRedo.new()
+	
 	Tool.clear()
 	for tool_ in Tools.keys():
 		Tool.add_icon_item(
@@ -108,11 +115,6 @@ func setup() -> void:
 	for tab in range(Settings.get_tab_count()):
 		var name : String = Settings.get_tab_title(tab)
 		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
-
-
-func _ready():
-	if not is_instance_valid(Undo_Redo):
-		Undo_Redo = UndoRedo.new()
 
 func _exit_tree():
 	Grid.queue_free()
@@ -152,16 +154,24 @@ func cancel() -> void:
 
 
 func handle_input(camera : Camera, event : InputEvent) -> bool:
-	if is_instance_valid(VoxelObjectRef) and not Lock.pressed:
+	if is_instance_valid(VoxelObjectRef):
 		if event is InputEventMouse:
 			var hit := raycast_for(camera, event.position, VoxelObjectRef)
-			if not hit.empty():
-				Cursors[Vector3.ZERO].Selections = [Voxel.world_to_grid(hit.position)]
 			
-			set_cursors_visibility(not hit.empty())
-			return true
+			last_position = null if hit.empty() else Voxel.world_to_grid(hit.position)
+			if typeof(last_position) == TYPE_VECTOR3:
+				set_cursors_position(last_position)
+			
+			
+			if not Lock.pressed:
+				set_cursors_visibility(not hit.empty())
+				return true
 	return false
 
 
-func _on_Lock_toggled(button_pressed : bool) -> void:
-	emit_signal("editing", !button_pressed)
+func _on_Lock_toggled(locked : bool) -> void:
+	if locked: set_cursors_visibility(false)
+	elif typeof(last_position) == TYPE_VECTOR3:
+		set_cursors_visibility(true)
+		set_cursors_position(last_position)
+	emit_signal("editing", !locked)
