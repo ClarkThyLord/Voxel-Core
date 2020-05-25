@@ -40,6 +40,9 @@ onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3
 
 
 # Declarations
+signal editing(state)
+
+
 var Undo_Redo : UndoRedo
 
 
@@ -121,6 +124,7 @@ func begin(voxelobject : VoxelObject) -> void:
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
 	VoxelSetViewer.set_voxel_set(VoxelObjectRef.Voxel_Set)
+	VoxelObjectRef.connect("tree_exiting", self, "cancel")
 	VoxelObjectRef.connect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 
 func commit() -> void:
@@ -132,6 +136,7 @@ func cancel() -> void:
 		VoxelObjectRef.remove_child(Grid)
 		for cursor in Cursors.values():
 			VoxelObjectRef.remove_child(cursor)
+		VoxelObjectRef.disconnect("tree_exiting", self, "cancel")
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 	
 	Lock.pressed = true
@@ -151,3 +156,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			set_cursors_visibility(not hit.empty())
 			return true
 	return false
+
+
+func _on_Lock_toggled(button_pressed : bool) -> void:
+	emit_signal("editing", !button_pressed)

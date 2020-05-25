@@ -107,7 +107,7 @@ margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "ADD"
 icon = ExtResource( 13 )
-items = [ "ADD", ExtResource( 13 ), false, 0, null, "SUB", ExtResource( 14 ), false, 1, null, "ADD", ExtResource( 13 ), false, 0, null, "SUB", ExtResource( 14 ), false, 1, null ]
+items = [ "ADD", ExtResource( 13 ), false, 0, null, "SUB", ExtResource( 14 ), false, 1, null ]
 selected = 0
 
 [node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
@@ -424,7 +424,7 @@ tab_align = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
@@ -435,7 +435,7 @@ __meta__ = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General"]
 margin_right = 326.0
-margin_bottom = 128.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
@@ -446,7 +446,7 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer"]
 margin_right = 326.0
-margin_bottom = 128.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -455,7 +455,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
@@ -487,7 +487,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
@@ -519,7 +519,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 34.0
 margin_right = -4.0
 margin_bottom = -4.0
 size_flags_horizontal = 3
@@ -597,3 +597,4 @@ size_flags_horizontal = 3
 text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="ColorMenu" method="popup_centered"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="set_cursors_visibility"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="_on_Lock_toggled"]

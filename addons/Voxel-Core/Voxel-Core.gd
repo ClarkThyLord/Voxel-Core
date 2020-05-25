@@ -55,7 +55,7 @@ func _exit_tree():
 
 
 func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
-	if not VoxelSetEditorRef:
+	if not is_instance_valid(VoxelSetEditorRef):
 		VoxelSetEditorRef = VoxelSetEditor.instance()
 		VoxelSetEditorRef.Undo_Redo = get_undo_redo()
 		VoxelSetEditorRef.connect("close", self, "close_voxel_set_editor")
@@ -64,25 +64,30 @@ func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
 
 func close_voxel_set_editor() -> void:
-	if VoxelSetEditorRef:
+	if is_instance_valid(VoxelSetEditorRef):
 		remove_control_from_bottom_panel(VoxelSetEditorRef)
 		VoxelSetEditorRef.queue_free()
 		VoxelSetEditorRef = null
 
 
 func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
-	if not VoxelObjectEditorRef:
+	if not is_instance_valid(VoxelObjectEditorRef):
 		VoxelObjectEditorRef = VoxelObjectEditor.instance()
 		VoxelObjectEditorRef.Undo_Redo = get_undo_redo()
+		VoxelObjectEditorRef.connect("editing", self, "on_voxel_object_editor_editing_toggled")
 		add_control_to_bottom_panel(VoxelObjectEditorRef, "VoxelObject")
 	VoxelObjectEditorRef.begin(voxel_object)
 	make_bottom_panel_item_visible(VoxelObjectEditorRef)
 
 func close_voxel_object_editor() -> void:
-	if VoxelObjectEditorRef:
+	if is_instance_valid(VoxelObjectEditorRef):
 		remove_control_from_bottom_panel(VoxelObjectEditorRef)
 		VoxelObjectEditorRef.queue_free()
 		VoxelObjectEditorRef = null
+
+func on_voxel_object_editor_editing_toggled(toggled : bool) -> void:
+	if toggled: get_editor_interface().get_selection().clear()
+	else: get_editor_interface().get_selection().add_node(handling_voxel_object)
 
 
 func handles(object : Object) -> bool:
@@ -111,8 +116,9 @@ func on_main_screen_changed(screen_name : String) -> void:
 	else: close_voxel_object_editor()
 
 func on_selection_changed() -> void:
-	if get_editor_interface().get_selection().get_selected_nodes().empty():
-		close_voxel_object_editor()
+	pass
+#	if get_editor_interface().get_selection().get_selected_nodes().empty():
+#		close_voxel_object_editor()
 
 
 func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
