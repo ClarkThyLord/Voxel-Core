@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -11,6 +11,12 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/settings.png" type="Texture" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/info.png" type="Texture" id=10]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/commit.png" type="Texture" id=11]
+
+[sub_resource type="InputEventKey" id=1]
+scancode = 32
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -134,12 +140,12 @@ margin_top = 52.0
 margin_right = 333.0
 margin_bottom = 72.0
 
-[node name="ColorPicker" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
+[node name="ColorChooser" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
 margin_right = 333.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 
-[node name="ColorRect" type="ColorRect" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorPicker"]
+[node name="ColorPicked" type="ColorRect" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -161,6 +167,10 @@ margin_top = 112.0
 margin_right = 333.0
 margin_bottom = 200.0
 size_flags_vertical = 3
+EditMode = false
+SelectMode = false
+SelectionMax = 0
+Search = ""
 
 [node name="VSeparator" type="VSeparator" parent="VoxelObjectEditor/HBoxContainer"]
 margin_left = 337.0
@@ -196,6 +206,7 @@ alignment = 2
 margin_left = 27.0
 margin_right = 104.0
 margin_bottom = 24.0
+shortcut = SubResource( 2 )
 text = "Lock"
 icon = ExtResource( 4 )
 flat = true
@@ -219,14 +230,14 @@ margin_top = 28.0
 margin_right = 333.0
 margin_bottom = 32.0
 
-[node name="TabContainer" type="TabContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2"]
+[node name="More" type="TabContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2"]
 margin_top = 36.0
 margin_right = 333.0
 margin_bottom = 200.0
 size_flags_vertical = 3
 tab_align = 0
 
-[node name="VoxelObject" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer"]
+[node name="VoxelObject" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -236,7 +247,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer/VoxelObject"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject"]
 margin_right = 325.0
 margin_bottom = 128.0
 size_flags_horizontal = 3
@@ -247,13 +258,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer/VoxelObject/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer"]
 margin_right = 325.0
 margin_bottom = 128.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Effects" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer"]
+[node name="Effects" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -264,7 +275,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer/Effects"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Effects"]
 margin_top = 66.0
 margin_right = 325.0
 margin_bottom = 128.0
@@ -276,13 +287,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer/Effects/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Effects/ScrollContainer"]
 margin_right = 325.0
 margin_bottom = 62.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Export" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer"]
+[node name="Export" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -293,7 +304,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer/Export"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Export"]
 margin_top = 66.0
 margin_right = 325.0
 margin_bottom = 128.0
@@ -305,7 +316,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/TabContainer/Export/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Export/ScrollContainer"]
 margin_right = 325.0
 margin_bottom = 62.0
 size_flags_horizontal = 3
@@ -346,14 +357,14 @@ margin_top = 28.0
 margin_right = 334.0
 margin_bottom = 32.0
 
-[node name="TabContainer" type="TabContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3"]
+[node name="Settings" type="TabContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3"]
 margin_top = 36.0
 margin_right = 334.0
 margin_bottom = 200.0
 size_flags_vertical = 3
 tab_align = 0
 
-[node name="General" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer"]
+[node name="General" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -363,7 +374,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/General"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General"]
 margin_right = 326.0
 margin_bottom = 128.0
 size_flags_horizontal = 3
@@ -374,13 +385,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/General/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer"]
 margin_right = 326.0
 margin_bottom = 128.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Cursor" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer"]
+[node name="Cursor" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -391,7 +402,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/Cursor"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor"]
 margin_top = 66.0
 margin_right = 326.0
 margin_bottom = 128.0
@@ -403,13 +414,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/Cursor/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer"]
 margin_right = 326.0
 margin_bottom = 62.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Grid" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer"]
+[node name="Grid" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -420,7 +431,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/Grid"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid"]
 margin_top = 66.0
 margin_right = 326.0
 margin_bottom = 128.0
@@ -432,13 +443,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/Grid/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer"]
 margin_right = 326.0
 margin_bottom = 62.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="About" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer"]
+[node name="About" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -449,7 +460,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/About"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About"]
 margin_top = 66.0
 margin_right = 326.0
 margin_bottom = 128.0
@@ -461,7 +472,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/TabContainer/About/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer"]
 margin_right = 326.0
 margin_bottom = 62.0
 size_flags_horizontal = 3
@@ -516,4 +527,5 @@ margin_right = 310.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorPicker" to="ColorMenu" method="popup_centered"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="ColorMenu" method="popup_centered"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="set_cursors_visibility"]

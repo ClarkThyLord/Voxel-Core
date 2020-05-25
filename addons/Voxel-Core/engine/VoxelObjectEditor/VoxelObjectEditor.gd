@@ -12,7 +12,30 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 
 # Refrences
+onready var Raw := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Raw")
+
+onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
+onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette")
+onready var SelectMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectMode")
+
+onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX")
+onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY")
+onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ")
+
+onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser")
+onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser/ColorPicked")
+
 onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer")
+
+
+onready var Lock := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock")
+onready var Commit := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Commit")
+onready var Cancel := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Cancel")
+
+onready var More := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/More")
+
+
+onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
 
 
 
@@ -34,6 +57,9 @@ var Cursors := {
 	Vector3(1, 0, 1): VoxelCursor.new()
 } setget set_cursors
 func set_cursors(cursors : Dictionary) -> void: pass
+func set_cursors_visibility(visible := not Lock.pressed) -> void:
+	for cursor in Cursors.values():
+		cursor.visible = visible
 
 
 var VoxelObjectRef : VoxelObject setget begin
@@ -86,14 +112,21 @@ func cancel() -> void:
 		for cursor in Cursors.values():
 			VoxelObjectRef.remove_child(cursor)
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
+	
+	Lock.pressed = true
+	Commit.disabled = true
+	Cancel.disabled = true
+	
 	VoxelObjectRef = null
 
 
 func handle_input(camera : Camera, event : InputEvent) -> bool:
-	if is_instance_valid(VoxelObjectRef):
+	if is_instance_valid(VoxelObjectRef) and not Lock.pressed:
 		if event is InputEventMouse:
 			var hit := raycast_for(camera, event.position, VoxelObjectRef)
 			if not hit.empty():
-				
-				return true
+				Cursors[Vector3.ZERO].Selections = [Voxel.world_to_grid(hit.position)]
+			
+			set_cursors_visibility(not hit.empty())
+			return true
 	return false
