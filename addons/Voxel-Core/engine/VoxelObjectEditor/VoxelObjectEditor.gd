@@ -40,6 +40,22 @@ var VoxelObjectRef : VoxelObject setget begin
 
 
 
+# Utilities
+func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> Dictionary:
+	var hit := {}
+	var exclude := []
+	var from = camera.project_ray_origin(screen_position)
+	var to = from + camera.project_ray_normal(screen_position) * 1000
+	while true:
+		hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
+		if not hit.empty():
+			if target.is_a_parent_of(hit.collider): break
+			else: exclude.append(hit.collider)
+		else: break
+	return hit
+
+
+
 # Core
 func _ready():
 	if not is_instance_valid(Undo_Redo):
@@ -55,6 +71,9 @@ func begin(voxelobject : VoxelObject) -> void:
 	cancel()
 	
 	VoxelObjectRef = voxelobject
+	VoxelObjectRef.add_child(Grid)
+	for cursor in Cursors.values():
+		VoxelObjectRef.add_child(cursor)
 	VoxelSetViewer.set_voxel_set(VoxelObjectRef.Voxel_Set)
 	VoxelObjectRef.connect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 
@@ -63,9 +82,18 @@ func commit() -> void:
 
 func cancel() -> void:
 	if is_instance_valid(VoxelObjectRef):
+		VoxelObjectRef.remove_child(Grid)
+		for cursor in Cursors.values():
+			VoxelObjectRef.remove_child(cursor)
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 	VoxelObjectRef = null
 
 
 func handle_input(camera : Camera, event : InputEvent) -> bool:
+	if is_instance_valid(VoxelObjectRef):
+		if event is InputEventMouse:
+			var hit := raycast_for(camera, event.position, VoxelObjectRef)
+			if not hit.empty():
+				
+				return true
 	return false
