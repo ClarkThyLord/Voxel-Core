@@ -164,8 +164,16 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			
 			
 			if not Lock.pressed:
-				set_cursors_visibility(not hit.empty())
-				return true
+				if event.button_mask & BUTTON_MASK_RIGHT == BUTTON_MASK_RIGHT:
+					set_cursors_visibility(false)
+					return false
+				var cursors_visible := not hit.empty()
+				
+				if event is InputEventMouseButton:
+					match event.button_index:
+						BUTTON_LEFT: return true
+				
+				set_cursors_visibility(cursors_visible)
 	return false
 
 
