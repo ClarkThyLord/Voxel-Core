@@ -62,6 +62,9 @@ func set_cursors_visibility(visible := not Lock.pressed) -> void:
 		cursor.visible = visible
 
 
+enum Tools { ADD, SUB }
+
+
 var VoxelObjectRef : VoxelObject setget begin
 
 
@@ -86,6 +89,13 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 func _ready():
 	if not is_instance_valid(Undo_Redo):
 		Undo_Redo = UndoRedo.new()
+	
+	for tool_ in Tools.keys():
+		Tool.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + tool_.to_lower() + ".png"),
+			tool_,
+			Tools[tool_]
+		)
 
 func _exit_tree():
 	Grid.queue_free()
@@ -97,6 +107,7 @@ func begin(voxelobject : VoxelObject) -> void:
 	cancel()
 	
 	VoxelObjectRef = voxelobject
+	VoxelObjectRef.EditHint = true
 	VoxelObjectRef.add_child(Grid)
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
@@ -108,6 +119,7 @@ func commit() -> void:
 
 func cancel() -> void:
 	if is_instance_valid(VoxelObjectRef):
+		VoxelObjectRef.EditHint = false
 		VoxelObjectRef.remove_child(Grid)
 		for cursor in Cursors.values():
 			VoxelObjectRef.remove_child(cursor)

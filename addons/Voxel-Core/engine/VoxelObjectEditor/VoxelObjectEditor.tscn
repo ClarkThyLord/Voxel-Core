@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/settings.png" type="Texture" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/info.png" type="Texture" id=10]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/commit.png" type="Texture" id=11]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/lock.png" type="Texture" id=12]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 32
@@ -208,7 +209,7 @@ margin_right = 104.0
 margin_bottom = 24.0
 shortcut = SubResource( 2 )
 text = "Lock"
-icon = ExtResource( 4 )
+icon = ExtResource( 12 )
 flat = true
 
 [node name="Commit" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
