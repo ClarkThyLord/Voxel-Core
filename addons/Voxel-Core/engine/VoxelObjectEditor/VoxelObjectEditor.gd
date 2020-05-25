@@ -42,6 +42,9 @@ onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3
 # Declarations
 signal editing(state)
 
+export(bool) var Setup := false setget set_setup
+func set_setup(setup : bool) -> void: self.setup()
+
 
 var Undo_Redo : UndoRedo
 
@@ -89,10 +92,7 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 
 
 # Core
-func _ready():
-	if not is_instance_valid(Undo_Redo):
-		Undo_Redo = UndoRedo.new()
-	
+func setup() -> void:
 	Tool.clear()
 	for tool_ in Tools.keys():
 		Tool.add_icon_item(
@@ -108,6 +108,11 @@ func _ready():
 	for tab in range(Settings.get_tab_count()):
 		var name : String = Settings.get_tab_title(tab)
 		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
+
+
+func _ready():
+	if not is_instance_valid(Undo_Redo):
+		Undo_Redo = UndoRedo.new()
 
 func _exit_tree():
 	Grid.queue_free()
