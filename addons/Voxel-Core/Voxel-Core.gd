@@ -75,6 +75,7 @@ func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
 		VoxelObjectEditorRef = VoxelObjectEditor.instance()
 		VoxelObjectEditorRef.Undo_Redo = get_undo_redo()
 		VoxelObjectEditorRef.connect("editing", self, "on_voxel_object_editor_editing_toggled")
+		VoxelObjectEditorRef.connect("close", self, "close_voxel_object_editor")
 		add_control_to_bottom_panel(VoxelObjectEditorRef, "VoxelObject")
 	VoxelObjectEditorRef.begin(voxel_object)
 	make_bottom_panel_item_visible(VoxelObjectEditorRef)

@@ -41,6 +41,7 @@ onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3
 
 # Declarations
 signal editing(state)
+signal close
 
 
 var Undo_Redo : UndoRedo
@@ -131,13 +132,13 @@ func begin(voxelobject : VoxelObject) -> void:
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
 	VoxelSetViewer.set_voxel_set(VoxelObjectRef.Voxel_Set)
-	VoxelObjectRef.connect("tree_exiting", self, "cancel")
+	VoxelObjectRef.connect("tree_exiting", self, "cancel", [true])
 	VoxelObjectRef.connect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 
 func commit() -> void:
 	cancel()
 
-func cancel() -> void:
+func cancel(close := false) -> void:
 	if is_instance_valid(VoxelObjectRef):
 		VoxelObjectRef.EditHint = false
 		VoxelObjectRef.remove_child(Grid)
@@ -151,6 +152,8 @@ func cancel() -> void:
 	Cancel.disabled = true
 	
 	VoxelObjectRef = null
+	
+	if close: emit_signal("close")
 
 
 func handle_input(camera : Camera, event : InputEvent) -> bool:
@@ -158,7 +161,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 		if event is InputEventMouse:
 			var hit := raycast_for(camera, event.position, VoxelObjectRef)
 			
-			last_position = null if hit.empty() else Voxel.world_to_grid(hit.position)
+			last_position = null if hit.empty() else Voxel.world_to_grid(VoxelObjectRef.to_local(hit.position))
 			if typeof(last_position) == TYPE_VECTOR3:
 				set_cursors_position(last_position)
 			
