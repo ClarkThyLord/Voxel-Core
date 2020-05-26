@@ -69,8 +69,8 @@ func set_cursors_visibility(visible := not Lock.pressed) -> void:
 	for cursor in Cursors.values():
 		cursor.visible = visible
 
-func set_cursors_position(position : Vector3) -> void: 
-	Cursors[Vector3.ZERO].Selections = [position]
+func set_cursors_selections(selections) -> void:
+	Cursors[Vector3.ZERO].Selections = selections
 
 
 enum Tools { ADD, SUB }
@@ -181,9 +181,13 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 		if event is InputEventMouse:
 			var hit := raycast_for(camera, event.position, VoxelObjectRef)
 			
-			last_position = null if hit.empty() else Voxel.world_to_grid(VoxelObjectRef.to_local(hit.position))
-			if typeof(last_position) == TYPE_VECTOR3:
-				set_cursors_position(last_position)
+			
+			if hit.empty():
+				last_position = null
+				set_cursors_selections([])
+			else:
+				last_position = Voxel.world_to_grid(VoxelObjectRef.to_local(hit.position))
+				set_cursors_selections([last_position])
 			
 			
 			if not Lock.pressed:
@@ -204,5 +208,4 @@ func _on_Lock_toggled(locked : bool) -> void:
 	if locked: set_cursors_visibility(false)
 	elif typeof(last_position) == TYPE_VECTOR3:
 		set_cursors_visibility(true)
-		set_cursors_position(last_position)
 	emit_signal("editing", !locked)
