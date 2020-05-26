@@ -560,34 +560,40 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ColorMenu" type="WindowDialog" parent="."]
-margin_right = 310.0
-margin_bottom = 540.0
-popup_exclusive = true
+visible = true
+margin_right = 325.0
+margin_bottom = 545.0
+window_title = "Color Picker"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 4.0
-margin_bottom = 4.0
+margin_right = 315.0
+margin_bottom = 507.0
 size_flags_vertical = 3
 edit_alpha = false
 
 [node name="VSplitContainer" type="VSplitContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 516.0
-margin_right = 310.0
-margin_bottom = 516.0
+margin_top = 511.0
+margin_right = 315.0
+margin_bottom = 511.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 520.0
-margin_right = 310.0
-margin_bottom = 540.0
+margin_top = 515.0
+margin_right = 315.0
+margin_bottom = 535.0
 
 [node name="Use" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
 margin_right = 106.0
@@ -604,9 +610,10 @@ text = "Add To VoxelSet"
 
 [node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
 margin_left = 229.0
-margin_right = 310.0
+margin_right = 315.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="ColorMenu" method="popup_centered"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="_on_Lock_toggled"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
