@@ -14,10 +14,10 @@ func set_selections(selections : Array, update := true) -> void:
 	if update: self.update()
 
 
-export(Color) var Modulate := Color.white setget set_modulate
+export(Color) var Modulate := Color(1, 1, 1, 0.5) setget set_modulate
 func set_modulate(modulate : Color) -> void:
 	Modulate = modulate
-	Modulate.a = 0.6
+	Modulate.a = 0.5
 	
 	material_override.albedo_color = Modulate
 
