@@ -46,9 +46,6 @@ signal close
 
 var Undo_Redo : UndoRedo
 
-
-var last_position
-
 func get_mirrors() -> Array:
 	var mirrors := []
 	
@@ -73,6 +70,8 @@ func get_mirrors() -> Array:
 var Grid := VoxelGrid.new() setget set_grid
 func set_grid(grid : VoxelGrid) -> void: pass
 
+var last_hit
+var selection := []
 var Cursors := {
 	Vector3(0, 0, 0): VoxelCursor.new(),
 	Vector3(1, 0, 0): VoxelCursor.new(),
@@ -92,7 +91,7 @@ func set_cursors_visibility(visible := not Lock.pressed) -> void:
 		if not cursor == Vector3.ZERO:
 			Cursors[cursor].visible = visible and mirrors.has(cursor)
 
-func set_cursors_selections(selections : Array = [ last_position ] if typeof(last_position) == TYPE_VECTOR3 else []) -> void:
+func set_cursors_selections(selections := [last_hit] if typeof(last_hit) == TYPE_VECTOR3 else []) -> void:
 	Cursors[Vector3.ZERO].Selections = selections
 	var mirrors := get_mirrors()
 	for mirror in mirrors:
@@ -241,31 +240,43 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			var hit := raycast_for(camera, event.position, VoxelObjectRef)
 			
 			
-			if hit.empty():
-				last_position = null
-				set_cursors_selections([])
-			else:
-				last_position = Voxel.world_to_grid(VoxelObjectRef.to_local(hit.position))
-				set_cursors_selections([last_position])
+			var prev_hit = last_hit
+			last_hit = null
+			if not hit.empty():
+				last_hit = Voxel.world_to_grid(VoxelObjectRef.to_local(hit.position))
 			
 			
 			if not Lock.pressed:
 				if event.button_mask & BUTTON_MASK_RIGHT == BUTTON_MASK_RIGHT:
 					set_cursors_visibility(false)
 					return false
-				var cursors_visible := not hit.empty()
 				
-				if event is InputEventMouseButton:
-					match event.button_index:
-						BUTTON_LEFT: return true
 				
-				set_cursors_visibility(cursors_visible)
+				var consume := true
+				if not last_hit == prev_hit:
+					match SelectionMode.get_selected_id():
+						SelectionModes.INDIVIDUAL:
+							selection.clear()
+							selection.append(last_hit)
+						SelectionModes.AREA:
+							if event is InputEventMouseButton:
+								match event.button_index:
+									BUTTON_LEFT: return true
+							elif event is InputEventMouseMotion:
+								pass
+						SelectionModes.EXTRUDE:
+							pass
+					set_cursors_selections(selection)
+				
+				
+				set_cursors_visibility(not hit.empty())
+				return consume
 	return false
 
 
 func _on_Lock_toggled(locked : bool) -> void:
 	if locked: set_cursors_visibility(false)
-	elif typeof(last_position) == TYPE_VECTOR3:
+	elif typeof(last_hit) == TYPE_VECTOR3:
+		set_cursors_selections()
 		set_cursors_visibility(true)
-		set_cursors_selections([last_position])
 	emit_signal("editing", !locked)
