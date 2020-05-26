@@ -138,9 +138,11 @@ func _ready():
 		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
 
 func _exit_tree():
-	Grid.queue_free()
+	if is_instance_valid(Grid):
+		Grid.queue_free()
 	for cursor in Cursors:
-		Cursors[cursor].queue_free()
+		if is_instance_valid(Cursors[cursor]):
+			Cursors[cursor].queue_free()
 
 
 func begin(voxelobject : VoxelObject) -> void:

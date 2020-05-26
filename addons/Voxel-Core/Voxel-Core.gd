@@ -43,8 +43,6 @@ func _enter_tree():
 	connect("scene_closed", self, "on_scene_closed")
 	connect("main_screen_changed", self, "on_main_screen_changed")
 	
-	get_editor_interface().get_selection().connect("selection_changed", self, "on_selection_changed")
-	
 	print("Voxel-Core is active...")
 
 func _exit_tree():
@@ -87,8 +85,9 @@ func close_voxel_object_editor() -> void:
 		VoxelObjectEditorRef = null
 
 func on_voxel_object_editor_editing_toggled(toggled : bool) -> void:
-	if toggled: get_editor_interface().get_selection().clear()
-	else: get_editor_interface().get_selection().add_node(handling_voxel_object)
+	if is_instance_valid(VoxelObjectEditorRef) and VoxelObjectEditorRef.VoxelObjectRef == handling_voxel_object:
+		if toggled: get_editor_interface().get_selection().clear()
+		else: get_editor_interface().get_selection().add_node(handling_voxel_object)
 
 
 func handles(object : Object) -> bool:
@@ -99,7 +98,9 @@ func handles(object : Object) -> bool:
 			return true
 		VoxelCore.VOXEL_OBJECT:
 			handling_voxel_object = object
-			show_voxel_object_editor(object)
+			if current_main_scene == "3D":
+				show_voxel_object_editor(object)
+			else: close_voxel_object_editor()
 			return true
 	if is_instance_valid(handling_voxel_object):
 		handling_voxel_object = null
@@ -115,11 +116,6 @@ func on_main_screen_changed(screen_name : String) -> void:
 	if screen_name == "3D" and is_instance_valid(handling_voxel_object):
 		show_voxel_object_editor(handling_voxel_object)
 	else: close_voxel_object_editor()
-
-func on_selection_changed() -> void:
-	pass
-#	if get_editor_interface().get_selection().get_selected_nodes().empty():
-#		close_voxel_object_editor()
 
 
 func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
