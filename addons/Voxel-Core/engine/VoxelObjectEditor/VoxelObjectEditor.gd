@@ -252,23 +252,42 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					return false
 				
 				
-				var consume := true
-				if not last_hit == prev_hit:
+				var consume := false
+				if typeof(last_hit) == TYPE_VECTOR3: #  and not last_hit == prev_hit
 					match SelectionMode.get_selected_id():
 						SelectionModes.INDIVIDUAL:
 							selection.clear()
 							selection.append(last_hit)
 						SelectionModes.AREA:
+							print(0)
 							if event is InputEventMouseButton:
 								match event.button_index:
-									BUTTON_LEFT: return true
+									BUTTON_LEFT:
+										if event.pressed:
+											print(1)
+											selection.clear()
+											selection.append([last_hit, last_hit])
+										else:
+											print(2)
+											selection.clear()
+											selection.append(last_hit)
+										consume = true
 							elif event is InputEventMouseMotion:
-								pass
+								if not selection.empty() and typeof(selection[0]) == TYPE_ARRAY:
+									print(3)
+									if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
+										print(4)
+										selection[0][1] = last_hit
+										consume = true
+								else:
+									print(5)
+									selection.clear()
+									selection.append(last_hit)
 						SelectionModes.EXTRUDE:
 							pass
 					set_cursors_selections(selection)
 				
-				
+				print("---")
 				set_cursors_visibility(not hit.empty())
 				return consume
 	return false
