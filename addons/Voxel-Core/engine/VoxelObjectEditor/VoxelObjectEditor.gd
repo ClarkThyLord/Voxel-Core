@@ -75,6 +75,10 @@ func set_cursors_position(position : Vector3) -> void:
 
 enum Tools { ADD, SUB }
 
+enum Palettes { PRIMARY, SECONDARY }
+
+enum SelectionModes { INDIVIDUAL, AREA, EXTRUDE }
+
 
 var VoxelObjectRef : VoxelObject setget begin
 
@@ -105,8 +109,24 @@ func _ready():
 	for tool_ in Tools.keys():
 		Tool.add_icon_item(
 			load("res://addons/Voxel-Core/assets/controls/" + tool_.to_lower() + ".png"),
-			tool_,
+			tool_.capitalize(),
 			Tools[tool_]
+		)
+	
+	Palette.clear()
+	for palette in Palettes.keys():
+		Palette.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + palette.to_lower() + ".png"),
+			palette.capitalize(),
+			Palettes[palette]
+		)
+	
+	SelectMode.clear()
+	for select_mode in SelectionModes.keys():
+		SelectMode.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + select_mode.to_lower() + ".png"),
+			select_mode.capitalize(),
+			SelectionModes[select_mode]
 		)
 	
 	for tab in range(More.get_tab_count()):

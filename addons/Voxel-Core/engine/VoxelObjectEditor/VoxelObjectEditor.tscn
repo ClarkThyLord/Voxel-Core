@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -22,6 +22,11 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/grid.png" type="Texture" id=20]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/general.png" type="Texture" id=21]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/about.png" type="Texture" id=22]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/primary.png" type="Texture" id=23]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/area.png" type="Texture" id=24]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/extrude.png" type="Texture" id=25]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/secondary.png" type="Texture" id=26]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/individual.png" type="Texture" id=27]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 32
@@ -102,25 +107,33 @@ margin_right = 333.0
 margin_bottom = 22.0
 
 [node name="Tool" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_right = 108.0
+margin_right = 107.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-text = "ADD"
+text = "Add"
 icon = ExtResource( 13 )
-items = [ "ADD", ExtResource( 13 ), false, 0, null, "SUB", ExtResource( 14 ), false, 1, null ]
+items = [ "Add", ExtResource( 13 ), false, 0, null, "Sub", ExtResource( 14 ), false, 1, null ]
 selected = 0
 
 [node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 112.0
-margin_right = 220.0
+margin_left = 111.0
+margin_right = 218.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
+text = "Primary"
+icon = ExtResource( 23 )
+items = [ "Primary", ExtResource( 23 ), false, 0, null, "Secondary", ExtResource( 26 ), false, 1, null ]
+selected = 0
 
 [node name="SelectMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 224.0
-margin_right = 333.0
+margin_left = 222.0
+margin_right = 332.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
+text = "Individual"
+icon = ExtResource( 27 )
+items = [ "Individual", ExtResource( 27 ), false, 0, null, "Area", ExtResource( 24 ), false, 1, null, "Extrude", ExtResource( 25 ), false, 2, null ]
+selected = 0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
 margin_top = 26.0
