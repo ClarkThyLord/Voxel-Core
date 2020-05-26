@@ -16,7 +16,7 @@ onready var Raw := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxC
 
 onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
 onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette")
-onready var SelectMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectMode")
+onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode")
 
 onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX")
 onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY")
@@ -49,6 +49,26 @@ var Undo_Redo : UndoRedo
 
 var last_position
 
+func get_mirrors() -> Array:
+	var mirrors := []
+	
+	if MirrorX.pressed:
+		mirrors.append(Vector3(1, 0, 0))
+		if MirrorZ.pressed:
+			mirrors.append(Vector3(1, 0, 1))
+	if MirrorY.pressed:
+		mirrors.append(Vector3(0, 1, 0))
+		if MirrorX.pressed:
+			mirrors.append(Vector3(1, 1, 0))
+		if MirrorZ.pressed:
+			mirrors.append(Vector3(0, 1, 1))
+		if MirrorX.pressed && MirrorZ.pressed:
+			mirrors.append(Vector3(1, 1, 1))
+	if MirrorZ.pressed:
+		mirrors.append(Vector3(0, 0, 1))
+	
+	return mirrors
+
 
 var Grid := VoxelGrid.new() setget set_grid
 func set_grid(grid : VoxelGrid) -> void: pass
@@ -66,11 +86,17 @@ var Cursors := {
 func set_cursors(cursors : Dictionary) -> void: pass
 
 func set_cursors_visibility(visible := not Lock.pressed) -> void:
-	for cursor in Cursors.values():
-		cursor.visible = visible
+	Cursors[Vector3.ZERO].visible = visible
+	var mirrors := get_mirrors()
+	for cursor in Cursors:
+		if not cursor == Vector3.ZERO:
+			Cursors[cursor].visible = visible and mirrors.has(cursor)
 
-func set_cursors_selections(selections) -> void:
+func set_cursors_selections(selections : Array) -> void:
 	Cursors[Vector3.ZERO].Selections = selections
+	var mirrors := get_mirrors()
+	for mirror in mirrors:
+		Cursors[mirror].Selections = mirror_positions(selections, mirror)
 
 
 enum Tools { ADD, SUB }
@@ -98,6 +124,37 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 		else: break
 	return hit
 
+func mirror_position(position : Vector3, mirror : Vector3) -> Vector3:
+	match mirror:
+		Vector3(1, 0, 0):
+			return Vector3(position.x, position.y, (position.z + 1) * -1)
+		Vector3(1, 0, 1):
+			return Vector3((position.x + 1) * -1, position.y, (position.z + 1) * -1)
+		Vector3(0, 1, 0):
+			return Vector3(position.x, (position.y + 1) * -1, position.z)
+		Vector3(1, 1, 0):
+			return Vector3(position.x, (position.y + 1) * -1, (position.z + 1) * -1)
+		Vector3(0, 1, 1):
+			return Vector3((position.x + 1) * -1, (position.y + 1) * -1, position.z)
+		Vector3(1, 1, 1):
+			return Vector3((position.x + 1) * -1, (position.y + 1) * -1, (position.z + 1) * -1)
+		Vector3(0, 0, 1):
+			return Vector3((position.x + 1) * -1, position.y, position.z)
+	return position
+
+func mirror_positions(positions : Array, mirror : Vector3) -> Array:
+	var mirrored := []
+	for position in positions:
+		match typeof(position):
+			TYPE_VECTOR3:
+				mirrored.append(mirror_position(position, mirror))
+			TYPE_ARRAY:
+				var mirroring := []
+				for index in range(position.size()):
+					mirroring.append(mirror_position(position[index], mirror))
+				mirrored.append(mirroring)
+	return mirrored
+
 
 
 # Core
@@ -121,9 +178,9 @@ func _ready():
 			Palettes[palette]
 		)
 	
-	SelectMode.clear()
+	SelectionMode.clear()
 	for select_mode in SelectionModes.keys():
-		SelectMode.add_icon_item(
+		SelectionMode.add_icon_item(
 			load("res://addons/Voxel-Core/assets/controls/" + select_mode.to_lower() + ".png"),
 			select_mode.capitalize(),
 			SelectionModes[select_mode]

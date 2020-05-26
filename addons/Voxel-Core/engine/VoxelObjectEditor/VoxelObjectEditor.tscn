@@ -5,8 +5,8 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/raw.png" type="Texture" id=4]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorz.png" type="Texture" id=5]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=6]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=7]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=6]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=7]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/cancel.png" type="Texture" id=8]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/settings.png" type="Texture" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/info.png" type="Texture" id=10]
@@ -28,56 +28,56 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/secondary.png" type="Texture" id=26]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/individual.png" type="Texture" id=27]
 
-[sub_resource type="InputEventKey" id=3]
+[sub_resource type="InputEventKey" id=1]
 scancode = 49
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[sub_resource type="InputEventKey" id=3]
+scancode = 50
 
 [sub_resource type="ShortCut" id=4]
 shortcut = SubResource( 3 )
 
 [sub_resource type="InputEventKey" id=5]
-scancode = 50
+scancode = 51
 
 [sub_resource type="ShortCut" id=6]
 shortcut = SubResource( 5 )
 
 [sub_resource type="InputEventKey" id=7]
-scancode = 51
+shift = true
+scancode = 49
 
 [sub_resource type="ShortCut" id=8]
 shortcut = SubResource( 7 )
 
 [sub_resource type="InputEventKey" id=9]
 shift = true
-scancode = 49
+scancode = 50
 
 [sub_resource type="ShortCut" id=10]
 shortcut = SubResource( 9 )
 
 [sub_resource type="InputEventKey" id=11]
 shift = true
-scancode = 50
+scancode = 51
 
 [sub_resource type="ShortCut" id=12]
 shortcut = SubResource( 11 )
 
 [sub_resource type="InputEventKey" id=13]
-shift = true
-scancode = 51
+scancode = 52
 
 [sub_resource type="ShortCut" id=14]
 shortcut = SubResource( 13 )
 
 [sub_resource type="InputEventKey" id=15]
-scancode = 52
+scancode = 32
 
 [sub_resource type="ShortCut" id=16]
 shortcut = SubResource( 15 )
-
-[sub_resource type="InputEventKey" id=1]
-scancode = 32
-
-[sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -155,7 +155,7 @@ margin_bottom = 22.0
 margin_right = 107.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-shortcut = SubResource( 4 )
+shortcut = SubResource( 2 )
 text = "Add"
 icon = ExtResource( 13 )
 items = [ "Add", ExtResource( 13 ), false, 0, null, "Sub", ExtResource( 14 ), false, 1, null ]
@@ -166,18 +166,18 @@ margin_left = 111.0
 margin_right = 218.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-shortcut = SubResource( 6 )
+shortcut = SubResource( 4 )
 text = "Primary"
 icon = ExtResource( 23 )
 items = [ "Primary", ExtResource( 23 ), false, 0, null, "Secondary", ExtResource( 26 ), false, 1, null ]
 selected = 0
 
-[node name="SelectMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="SelectionMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 222.0
 margin_right = 332.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
-shortcut = SubResource( 8 )
+shortcut = SubResource( 6 )
 text = "Individual"
 icon = ExtResource( 27 )
 items = [ "Individual", ExtResource( 27 ), false, 0, null, "Area", ExtResource( 24 ), false, 1, null, "Extrude", ExtResource( 25 ), false, 2, null ]
@@ -192,7 +192,7 @@ margin_bottom = 50.0
 margin_right = 108.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-shortcut = SubResource( 10 )
+shortcut = SubResource( 8 )
 text = "Mirror X"
 icon = ExtResource( 6 )
 
@@ -201,7 +201,7 @@ margin_left = 112.0
 margin_right = 220.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-shortcut = SubResource( 12 )
+shortcut = SubResource( 10 )
 text = "Mirror Y"
 icon = ExtResource( 7 )
 
@@ -210,7 +210,7 @@ margin_left = 224.0
 margin_right = 333.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-shortcut = SubResource( 14 )
+shortcut = SubResource( 12 )
 text = "Mirror Z"
 icon = ExtResource( 5 )
 
@@ -223,7 +223,7 @@ margin_bottom = 74.0
 margin_right = 333.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-shortcut = SubResource( 16 )
+shortcut = SubResource( 14 )
 
 [node name="ColorPicked" type="ColorRect" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser"]
 anchor_right = 1.0
@@ -286,7 +286,7 @@ alignment = 2
 margin_left = 27.0
 margin_right = 104.0
 margin_bottom = 24.0
-shortcut = SubResource( 2 )
+shortcut = SubResource( 16 )
 text = "Lock"
 icon = ExtResource( 12 )
 flat = true
@@ -631,8 +631,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 315.0
-margin_bottom = 507.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 4.0
+margin_bottom = 4.0
 size_flags_vertical = 3
 edit_alpha = false
 
