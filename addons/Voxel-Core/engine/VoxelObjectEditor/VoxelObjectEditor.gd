@@ -97,7 +97,9 @@ func set_cursors_visibility(visible := not Lock.pressed) -> void:
 		if not cursor == Vector3.ZERO:
 			Cursors[cursor].visible = visible and mirrors.has(cursor)
 
-func set_cursors_selections(selections := [last_hit] if typeof(last_hit) == TYPE_VECTOR3 else []) -> void:
+func set_cursors_selections(
+		selections := ([last_hit] if typeof(last_hit) == TYPE_VECTOR3 else []) if Lock.pressed else selection
+	) -> void:
 	Cursors[Vector3.ZERO].Selections = selections
 	var mirrors := get_mirrors()
 	for mirror in mirrors:
@@ -313,7 +315,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 func _on_Lock_toggled(locked : bool) -> void:
 	if locked: set_cursors_visibility(false)
 	elif typeof(last_hit) == TYPE_VECTOR3:
-		set_cursors_selections()
+		set_cursors_selections([last_hit])
 		set_cursors_visibility(true)
 	emit_signal("editing", !locked)
 
