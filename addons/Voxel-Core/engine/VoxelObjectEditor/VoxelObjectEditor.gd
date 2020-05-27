@@ -276,13 +276,9 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			
 			
 			if not Lock.pressed:
-				if event.button_mask & BUTTON_MASK_RIGHT == BUTTON_MASK_RIGHT:
+				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
 					set_cursors_visibility(false)
 					return false
-				elif event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
-					set_cursors_visibility(false)
-					return false
-				
 				
 				var consume := true
 				if typeof(last_hit) == TYPE_VECTOR3: #  and not last_hit == prev_hit
