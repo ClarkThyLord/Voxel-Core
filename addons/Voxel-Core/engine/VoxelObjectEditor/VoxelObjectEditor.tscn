@@ -665,12 +665,13 @@ margin_right = 315.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_visibility"]
+[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_selections"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="set_cursors_visibility"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_visibility"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="set_cursors_selections"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="set_cursors_visibility"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="set_cursors_visibility"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="set_cursors_selections"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="set_cursors_visibility"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="_on_ColorChooser_pressed"]
 [connection signal="selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]

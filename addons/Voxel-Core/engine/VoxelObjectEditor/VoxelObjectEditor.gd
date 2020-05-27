@@ -118,7 +118,13 @@ var PaletteRepresents := [
 func set_palette(palette : int, voxel) -> void:
 	PaletteRepresents[palette] = voxel
 	
-	ColorPicked.color = Voxel.get_color(get_rpalette(palette))
+	if palette == Palette.get_selected_id():
+		ColorPicked.color = Voxel.get_color(get_rpalette(palette))
+		match typeof(voxel):
+			TYPE_INT, TYPE_STRING:
+				if VoxelSetViewer.Selections.empty() or not VoxelSetViewer.Selections[0] == voxel:
+					VoxelSetViewer.select(voxel, null, false)
+			_: VoxelSetViewer.unselect_all(false)
 
 func get_palette(palette : int):
 	return PaletteRepresents[palette]
@@ -328,7 +334,7 @@ func _on_ColorChooser_pressed():
 	ColorMenu.popup_centered()
 
 func _on_ColorMenu_Use_pressed():
-	set_palette(Tool.get_selected_id(), Voxel.colored(ColorPickerRef.color))
+	set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))
 	ColorMenu.hide()
 
 func _on_ColorMenu_Add_pressed():
@@ -341,11 +347,13 @@ func _on_ColorMenu_Add_pressed():
 	ColorMenu.hide()
 
 
-func _on_VoxelSetViewer_selected(voxel_id : int):
-	set_palette(Tool.get_selected_id(), voxel_id)
-	ColorPicked.color = Voxel.get_color(VoxelObjectRef.Voxel_Set.get_voxel(voxel_id))
+func _on_Palette_selected(id : int) -> void:
+	set_palette(Palette.get_selected_id(), PaletteRepresents[Palette.get_selected_id()])
 
-func _on_VoxelSetViewer_unselected(voxel_id : int):
+
+func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
+	set_palette(Palette.get_selected_id(), voxel_id)
+
+func _on_VoxelSetViewer_unselected(voxel_id : int) -> void:
 	if VoxelSetViewer.Selections.empty():
-		ColorPicked.color = ColorPickerRef.color
-		set_palette(Tool.get_selected_id(), Voxel.colored(ColorPickerRef.color))
+		set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))

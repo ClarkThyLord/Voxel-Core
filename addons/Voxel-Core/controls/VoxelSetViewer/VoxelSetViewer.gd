@@ -105,7 +105,7 @@ func get_voxel_button(voxel_id : int):
 	return Voxels.find_node(str(voxel_id), false, false) if Voxels else null
 
 
-func select(voxel_id, voxel_ref = null) -> int:
+func select(voxel_id, voxel_ref = null, emit := true) -> int:
 	if typeof(voxel_ref) == TYPE_NIL:
 		voxel_ref = get_voxel_button(voxel_id)
 		if typeof(voxel_ref) == TYPE_NIL:
@@ -116,13 +116,13 @@ func select(voxel_id, voxel_ref = null) -> int:
 			voxel_ref.pressed = true
 			Selections.append(voxel_id)
 		else:
-			unselect(Selections.size() - 1)
-			return select(voxel_id, voxel_ref)
+			unselect(Selections.size() - 1, emit)
+			return select(voxel_id, voxel_ref, emit)
 		emit_signal("selected", voxel_id)
 		return Selections.size() - 1
 	else: return -1
 
-func unselect(index : int) -> void:
+func unselect(index : int, emit := true) -> void:
 	if index < 0 or index > Selections.size():
 		printerr("unselect index out of range: ", index)
 		return
@@ -131,11 +131,11 @@ func unselect(index : int) -> void:
 		voxel_button.pressed = false
 	var voxel_id = Selections[index]
 	Selections.remove(index)
-	emit_signal("unselected", voxel_id)
+	if emit: emit_signal("unselected", voxel_id)
 
-func unselect_all() -> void:
+func unselect_all(emit := true) -> void:
 	while not Selections.empty():
-			unselect(Selections.size() - 1)
+			unselect(Selections.size() - 1, emit)
 
 
 func _update() -> void:
