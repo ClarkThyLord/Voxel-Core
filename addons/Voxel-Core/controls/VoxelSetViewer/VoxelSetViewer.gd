@@ -22,7 +22,7 @@ onready var ContextMenu := get_node("ContextMenu")
 
 # Declarations
 signal selected(voxel_id)
-signal unselected(index)
+signal unselected(voxel_id)
 
 var Undo_Redo : UndoRedo
 
@@ -49,6 +49,18 @@ func set_selection_max(selection_max : int) -> void:
 			unselect(Selections.size() - 1)
 	
 	SelectionMax = selection_max
+
+export(bool) var ShowControls := false setget show_controls
+func show_controls(show := ShowControls) -> void:
+	ShowControls = show
+	
+	
+	if ShowControls and is_instance_valid(Hints):
+		Hints.visible = EditMode or SelectMode
+		
+		HintRef.text = ""
+		if EditMode: HintRef.text += "right click : context menu"
+		if SelectMode: HintRef.text += ("   " if HintRef.text.length() > 0 else "")  + "ctrl + left click : select / unselect"
 
 
 export(String) var Search := "" setget set_search
@@ -89,11 +101,16 @@ func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
 
 
-func get_voxel_button(id : int):
-	return Voxels.find_node(str(id), false, false) if Voxels else null
+func get_voxel_button(voxel_id : int):
+	return Voxels.find_node(str(voxel_id), false, false) if Voxels else null
 
 
-func select(voxel_id, voxel_ref) -> int:
+func select(voxel_id, voxel_ref = null) -> int:
+	if typeof(voxel_ref) == TYPE_NIL:
+		voxel_ref = get_voxel_button(voxel_id)
+		if typeof(voxel_ref) == TYPE_NIL:
+			return -1
+	
 	if SelectMode:
 		if SelectionMax == 0 or Selections.size() < SelectionMax:
 			voxel_ref.pressed = true
@@ -112,8 +129,9 @@ func unselect(index : int) -> void:
 	var voxel_button = get_voxel_button(Selections[index])
 	if is_instance_valid(voxel_button):
 		voxel_button.pressed = false
+	var voxel_id = Selections[index]
 	Selections.remove(index)
-	emit_signal("unselected", index)
+	emit_signal("unselected", voxel_id)
 
 func unselect_all() -> void:
 	while not Selections.empty():
@@ -157,13 +175,6 @@ func _update() -> void:
 			if is_instance_valid(voxel_ref):
 				voxel_ref.pressed = true
 			else: unselect(selection)
-	
-	if Hints:
-		Hints.visible = EditMode or SelectMode
-		if HintRef:
-			HintRef.text = ""
-			if EditMode: HintRef.text += "right click : context menu"
-			if SelectMode: HintRef.text += ("   " if HintRef.text.length() > 0 else "")  + "ctrl + left click : select / unselect"
 	
 	call_deferred("correct")
 

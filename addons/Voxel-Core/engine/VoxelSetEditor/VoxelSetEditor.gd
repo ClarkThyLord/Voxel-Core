@@ -169,4 +169,4 @@ func _on_Remove_pressed():
 	Undo_Redo.commit_action()
 
 func _on_VoxelSetViewer_selected(voxel_id): _update()
-func _on_VoxelSetViewer_unselected(index): _update()
+func _on_VoxelSetViewer_unselected(voxel_id): _update()

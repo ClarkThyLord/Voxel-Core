@@ -175,8 +175,7 @@ size_flags_horizontal = 7
 size_flags_vertical = 3
 EditMode = true
 SelectMode = true
-SelectionMax = 0
-Search = ""
+ShowControls = true
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false

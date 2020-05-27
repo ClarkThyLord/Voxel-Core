@@ -38,6 +38,12 @@ onready var More := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/Mor
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
 
 
+onready var ColorMenu := get_node("ColorMenu")
+onready var ColorPickerRef := get_node("ColorMenu/VBoxContainer/ColorPicker")
+onready var ColorMenuUse := get_node("ColorMenu/VBoxContainer/HBoxContainer/Use")
+onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
+
+
 
 # Declarations
 signal editing(state)
@@ -100,7 +106,30 @@ func set_cursors_selections(selections := [last_hit] if typeof(last_hit) == TYPE
 
 enum Tools { ADD, SUB }
 
+
 enum Palettes { PRIMARY, SECONDARY }
+var PaletteRepresents := [
+	Voxel.colored(Color.white),
+	Voxel.colored(Color.white)
+]
+
+func set_palette(palette : int, voxel) -> void:
+	PaletteRepresents[palette] = voxel
+	
+	ColorPicked.color = Voxel.get_color(get_rpalette(palette))
+
+func get_palette(palette : int):
+	return PaletteRepresents[palette]
+
+func get_rpalette(palette : int) -> Dictionary:
+	var represents = get_palette(palette)
+	match typeof(represents):
+		TYPE_INT, TYPE_STRING:
+			if is_instance_valid(VoxelObjectRef.Voxel_Set):
+				represents = VoxelObjectRef.Voxel_Set.get_voxel(represents)
+			else: represents = Voxel.colored(Color.transparent)
+	return represents
+
 
 enum SelectionModes { INDIVIDUAL, AREA, EXTRUDE }
 
@@ -291,3 +320,34 @@ func _on_Lock_toggled(locked : bool) -> void:
 		set_cursors_selections()
 		set_cursors_visibility(true)
 	emit_signal("editing", !locked)
+
+
+func _on_ColorChooser_pressed():
+	ColorPickerRef.color = ColorPicked.color
+	
+	ColorMenuAdd.visible = is_instance_valid(VoxelObjectRef.Voxel_Set) and not VoxelObjectRef.Voxel_Set.Locked
+	
+	ColorMenu.popup_centered()
+
+func _on_ColorMenu_Use_pressed():
+	set_palette(Tool.get_selected_id(), Voxel.colored(ColorPickerRef.color))
+	ColorMenu.hide()
+
+func _on_ColorMenu_Add_pressed():
+	var voxel_id = VoxelObjectRef.Voxel_Set.get_id()
+	Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
+	Undo_Redo.add_do_method(VoxelObjectRef.Voxel_Set, "set_voxel", Voxel.colored(ColorPickerRef.color))
+	Undo_Redo.add_undo_method(VoxelObjectRef.Voxel_Set, "erase_voxel", voxel_id)
+	Undo_Redo.commit_action()
+	VoxelSetViewer.select(voxel_id)
+	ColorMenu.hide()
+
+
+func _on_VoxelSetViewer_selected(voxel_id : int):
+	set_palette(Tool.get_selected_id(), voxel_id)
+	ColorPicked.color = Voxel.get_color(VoxelObjectRef.Voxel_Set.get_voxel(voxel_id))
+
+func _on_VoxelSetViewer_unselected(voxel_id : int):
+	if VoxelSetViewer.Selections.empty():
+		ColorPicked.color = ColorPickerRef.color
+		set_palette(Tool.get_selected_id(), Voxel.colored(ColorPickerRef.color))
