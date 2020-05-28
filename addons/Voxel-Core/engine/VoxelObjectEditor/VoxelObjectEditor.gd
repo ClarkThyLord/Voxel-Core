@@ -38,6 +38,7 @@ func update_palette(palettes := Palettes.keys()) -> void:
 
 onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode")
 func update_selections(selection_modes := SelectionModes.keys()) -> void:
+	var prev = SelectionMode.get_selected_id()
 	SelectionMode.clear()
 	for select_mode in selection_modes:
 		SelectionMode.add_icon_item(
@@ -45,6 +46,8 @@ func update_selections(selection_modes := SelectionModes.keys()) -> void:
 			select_mode.capitalize(),
 			SelectionModes[select_mode.to_upper()]
 		)
+	if SelectionMode.get_item_index(prev) > -1:
+		SelectionMode.select(SelectionMode.get_item_index(prev))
 
 
 onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX")
@@ -52,8 +55,11 @@ onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/V
 onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ")
 func update_mirrors(mirror := Vector3.ONE) -> void:
 	MirrorX.visible = mirror.x == 1
+	MirrorX.pressed = MirrorX.pressed if mirror.x == 1 else false
 	MirrorY.visible = mirror.y == 1
+	MirrorY.pressed = MirrorY.pressed if mirror.y == 1 else false
 	MirrorZ.visible = mirror.z == 1
+	MirrorZ.pressed = MirrorZ.pressed if mirror.z == 1 else false
 
 
 onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser")
@@ -370,7 +376,8 @@ func _on_ColorMenu_Add_pressed():
 
 
 func _on_Tool_selected(id : int):
-	print(id, " : ", Tools[id])
+	update_selections(Tools[id].selection_modes)
+	update_mirrors(Tools[id].mirror_modes)
 
 func _on_Palette_selected(id : int) -> void:
 	set_palette(Palette.get_selected_id(), PaletteRepresents[Palette.get_selected_id()])
