@@ -5,7 +5,7 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 
 # Core
 func _init():
-	name = "replace"
+	name = "fill"
 	selection_offset = -1
 
 

@@ -128,6 +128,12 @@ func set_grid(grid : VoxelGrid) -> void: pass
 
 var last_hit
 var selection := []
+func get_selections() -> Array:
+	var selections := [Cursors[Vector3.ZERO].Selections]
+	for mirror in get_mirrors():
+		selections.append(Cursors[mirror].Selections)
+	return selections
+
 var Cursors := {
 	Vector3(0, 0, 0): VoxelCursor.new(),
 	Vector3(1, 0, 0): VoxelCursor.new(),
@@ -160,7 +166,8 @@ func set_cursors_selections(
 var Tools := [
 	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Add.gd").new(),
 	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Sub.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Replace.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Swap.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Fill.gd").new(),
 	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Pick.gd").new()
 ]
 
@@ -324,14 +331,10 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					match SelectionMode.get_selected_id():
 						SelectionModes.AREA:
 							if event is InputEventMouseButton:
-								match event.button_index:
-									BUTTON_LEFT:
-										if event.pressed:
-											selection.clear()
-											selection.append([last_hit, last_hit])
-										else:
-											selection.clear()
-											selection.append(last_hit)
+								if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+									selection.clear()
+									selection.append([last_hit, last_hit])
+								else: continue
 							elif event is InputEventMouseMotion:
 								if not selection.empty() and typeof(selection[0]) == TYPE_ARRAY:
 									if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
@@ -340,6 +343,8 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 						SelectionModes.EXTRUDE:
 							pass
 						_:
+							if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
+								Tools[Tool.get_selected_id()].work(self)
 							selection.clear()
 							selection.append(last_hit)
 					set_cursors_selections(selection)
