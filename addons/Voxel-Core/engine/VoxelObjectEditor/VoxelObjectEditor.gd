@@ -15,12 +15,46 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 onready var Raw := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Raw")
 
 onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
+func update_tools(tools := Tools) -> void:
+	Tool.clear()
+	for tool_index in range(tools.size()):
+		Tool.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + tools[tool_index].name.to_lower() + ".png"),
+			tools[tool_index].name.capitalize(),
+			tool_index
+		)
+
+
 onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette")
+func update_palette(palettes := Palettes.keys()) -> void:
+	Palette.clear()
+	for palette in palettes:
+		Palette.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + palette.to_lower() + ".png"),
+			palette.capitalize(),
+			Palettes[palette.to_upper()]
+		)
+
+
 onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode")
+func update_selections(selection_modes := SelectionModes.keys()) -> void:
+	SelectionMode.clear()
+	for select_mode in selection_modes:
+		SelectionMode.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + select_mode.to_lower() + ".png"),
+			select_mode.capitalize(),
+			SelectionModes[select_mode.to_upper()]
+		)
+
 
 onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX")
 onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY")
 onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ")
+func update_mirrors(mirror := Vector3.ONE) -> void:
+	MirrorX.visible = mirror.x == 1
+	MirrorY.visible = mirror.y == 1
+	MirrorZ.visible = mirror.z == 1
+
 
 onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser")
 onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser/ColorPicked")
@@ -33,9 +67,17 @@ onready var Commit := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/H
 onready var Cancel := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Cancel")
 
 onready var More := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/More")
+func update_more() -> void:
+	for tab in range(More.get_tab_count()):
+		var name : String = More.get_tab_title(tab)
+		More.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
 
 
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
+func update_settings() -> void:
+	for tab in range(Settings.get_tab_count()):
+		var name : String = Settings.get_tab_title(tab)
+		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
 
 
 onready var ColorMenu := get_node("ColorMenu")
@@ -203,37 +245,12 @@ func _ready():
 	if not is_instance_valid(Undo_Redo):
 		Undo_Redo = UndoRedo.new()
 	
-	Tool.clear()
-	for tool_index in range(Tools.size()):
-		Tool.add_icon_item(
-			load("res://addons/Voxel-Core/assets/controls/" + Tools[tool_index].name.to_lower() + ".png"),
-			Tools[tool_index].name.capitalize(),
-			tool_index
-		)
-	
-	Palette.clear()
-	for palette in Palettes.keys():
-		Palette.add_icon_item(
-			load("res://addons/Voxel-Core/assets/controls/" + palette.to_lower() + ".png"),
-			palette.capitalize(),
-			Palettes[palette]
-		)
-	
-	SelectionMode.clear()
-	for select_mode in SelectionModes.keys():
-		SelectionMode.add_icon_item(
-			load("res://addons/Voxel-Core/assets/controls/" + select_mode.to_lower() + ".png"),
-			select_mode.capitalize(),
-			SelectionModes[select_mode]
-		)
-	
-	for tab in range(More.get_tab_count()):
-		var name : String = More.get_tab_title(tab)
-		More.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
-	
-	for tab in range(Settings.get_tab_count()):
-		var name : String = Settings.get_tab_title(tab)
-		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
+	update_tools()
+	update_palette()
+	update_selections()
+	update_mirrors()
+	update_more()
+	update_settings()
 
 func _exit_tree():
 	if is_instance_valid(Grid):
@@ -351,6 +368,9 @@ func _on_ColorMenu_Add_pressed():
 	VoxelSetViewer.select(voxel_id)
 	ColorMenu.hide()
 
+
+func _on_Tool_selected(id : int):
+	print(id, " : ", Tools[id])
 
 func _on_Palette_selected(id : int) -> void:
 	set_palette(Palette.get_selected_id(), PaletteRepresents[Palette.get_selected_id()])
