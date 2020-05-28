@@ -667,6 +667,7 @@ size_flags_horizontal = 3
 text = "Cancel"
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
+[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_visibility"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_selections"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="set_cursors_visibility"]
