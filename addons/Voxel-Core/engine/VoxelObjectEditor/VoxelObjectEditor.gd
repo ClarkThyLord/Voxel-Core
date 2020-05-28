@@ -106,7 +106,12 @@ func set_cursors_selections(
 		Cursors[mirror].Selections = mirror_positions(selections, mirror)
 
 
-enum Tools { ADD, SUB }
+var Tools := [
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Add.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Sub.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Replace.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Pick.gd").new()
+]
 
 
 enum Palettes { PRIMARY, SECONDARY }
@@ -199,11 +204,11 @@ func _ready():
 		Undo_Redo = UndoRedo.new()
 	
 	Tool.clear()
-	for tool_ in Tools.keys():
+	for tool_index in range(Tools.size()):
 		Tool.add_icon_item(
-			load("res://addons/Voxel-Core/assets/controls/" + tool_.to_lower() + ".png"),
-			tool_.capitalize(),
-			Tools[tool_]
+			load("res://addons/Voxel-Core/assets/controls/" + Tools[tool_index].name.to_lower() + ".png"),
+			Tools[tool_index].name.capitalize(),
+			tool_index
 		)
 	
 	Palette.clear()
