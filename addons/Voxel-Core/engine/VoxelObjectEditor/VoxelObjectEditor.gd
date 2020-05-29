@@ -351,6 +351,9 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 							selection.clear()
 							selection.append(last_hit)
 					set_cursors_selections(selection)
+				else:
+					selection.clear()
+					set_cursors_selections(selection)
 				
 				set_cursors_visibility(not hit.empty())
 				return consume
