@@ -55,9 +55,6 @@ func update() -> void:
 						selection[0 if selection[0].z < selection[1].z else 1].z
 					)
 					var dimensions : Vector3 = (selection[0] - selection[1]).abs()
-#					if dimensions.x == 0: dimensions.x = 1
-#					if dimensions.y == 0: dimensions.y = 1
-#					if dimensions.z == 0: dimensions.z = 1
 					
 					vt.add_face(voxel, Vector3.RIGHT,
 						Vector3(origin.x + dimensions.x, origin.y, origin.z),

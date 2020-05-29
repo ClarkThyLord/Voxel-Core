@@ -189,10 +189,10 @@ func set_palette(palette : int, voxel) -> void:
 					VoxelSetViewer.select(voxel, null, false)
 			_: VoxelSetViewer.unselect_all(false)
 
-func get_palette(palette : int):
+func get_palette(palette : int = Palette.get_selected_id()):
 	return PaletteRepresents[palette]
 
-func get_rpalette(palette : int) -> Dictionary:
+func get_rpalette(palette : int = Palette.get_selected_id()) -> Dictionary:
 	var represents = get_palette(palette)
 	match typeof(represents):
 		TYPE_INT, TYPE_STRING:
