@@ -81,7 +81,7 @@ func update_mesh(save := true) -> void:
 				for grid in voxels:
 					for direction in Voxel.Directions:
 						if not voxels.has(grid + direction):
-							vt.add_face(voxels[grid], direction, grid)
+							vt.add_face(get_voxel(grid), direction, grid)
 				mesh = vt.end()
 		
 		mesh.surface_set_name(0, "voxels")

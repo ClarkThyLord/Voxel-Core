@@ -185,8 +185,7 @@ func set_palette(palette : int, voxel) -> void:
 		ColorPicked.color = Voxel.get_color(get_rpalette(palette))
 		match typeof(voxel):
 			TYPE_INT, TYPE_STRING:
-				if VoxelSetViewer.Selections.empty() or not VoxelSetViewer.Selections[0] == voxel:
-					VoxelSetViewer.select(voxel, null, false)
+				VoxelSetViewer.select(voxel, null, false)
 			_: VoxelSetViewer.unselect_all(false)
 
 func get_palette(palette : int = Palette.get_selected_id()):

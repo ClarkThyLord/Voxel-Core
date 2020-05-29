@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -27,6 +27,9 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/extrude.png" type="Texture" id=25]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/secondary.png" type="Texture" id=26]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/individual.png" type="Texture" id=27]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/swap.png" type="Texture" id=28]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/fill.png" type="Texture" id=29]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/pick.png" type="Texture" id=30]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 49
@@ -158,7 +161,7 @@ size_flags_horizontal = 3
 shortcut = SubResource( 2 )
 text = "Add"
 icon = ExtResource( 13 )
-items = [ "Add", ExtResource( 13 ), false, 0, null, "Sub", ExtResource( 14 ), false, 1, null ]
+items = [ "Add", ExtResource( 13 ), false, 0, null, "Sub", ExtResource( 14 ), false, 1, null, "Swap", ExtResource( 28 ), false, 2, null, "Fill", ExtResource( 29 ), false, 3, null, "Pick", ExtResource( 30 ), false, 4, null ]
 selected = 0
 
 [node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]

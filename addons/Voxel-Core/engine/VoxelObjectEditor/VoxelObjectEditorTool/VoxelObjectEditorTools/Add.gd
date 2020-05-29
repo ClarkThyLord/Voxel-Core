@@ -18,12 +18,13 @@ func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
 
 
 func work(editor) -> void:
+	var voxel = editor.get_rpalette() if editor.Raw.pressed else editor.get_palette()
 	editor.Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
 	for cursor_selection in editor.get_selections():
 		for selection in cursor_selection:
 			match typeof(selection):
 				TYPE_VECTOR3:
-					add(editor.VoxelObjectRef, selection, editor.get_rpalette(), editor.Undo_Redo)
+					add(editor.VoxelObjectRef, selection, voxel, editor.Undo_Redo)
 				TYPE_ARRAY:
 					var origin := Vector3(
 						selection[0 if selection[0].x < selection[1].x else 1].x,
@@ -34,7 +35,7 @@ func work(editor) -> void:
 					for x in range(origin.x, origin.x + dimensions.x + 1):
 						for y in range(origin.y, origin.y + dimensions.y + 1):
 							for z in range(origin.z, origin.z + dimensions.z + 1):
-								add(editor.VoxelObjectRef, Vector3(x, y, z), editor.get_rpalette(), editor.Undo_Redo)
+								add(editor.VoxelObjectRef, Vector3(x, y, z), voxel, editor.Undo_Redo)
 	editor.Undo_Redo.add_do_method(editor.VoxelObjectRef, "update_mesh")
 	editor.Undo_Redo.add_undo_method(editor.VoxelObjectRef, "update_mesh")
 	editor.Undo_Redo.commit_action()

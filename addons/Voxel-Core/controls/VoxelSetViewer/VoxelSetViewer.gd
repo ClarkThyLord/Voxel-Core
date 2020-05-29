@@ -118,7 +118,7 @@ func select(voxel_id, voxel_ref = null, emit := true) -> int:
 		else:
 			unselect(Selections.size() - 1, emit)
 			return select(voxel_id, voxel_ref, emit)
-		emit_signal("selected", voxel_id)
+		if emit: emit_signal("selected", voxel_id)
 		return Selections.size() - 1
 	else: return -1
 

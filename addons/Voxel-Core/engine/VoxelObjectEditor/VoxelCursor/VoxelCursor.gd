@@ -28,6 +28,7 @@ func setup() -> void:
 	if not is_instance_valid(material_override):
 		material_override = SpatialMaterial.new()
 	material_override.flags_transparent = true
+	material_override.params_blend_mode = SpatialMaterial.BLEND_MODE_ADD
 	material_override.params_grow = true
 	material_override.params_grow_amount = 0.001
 	material_override.albedo_color = Modulate
