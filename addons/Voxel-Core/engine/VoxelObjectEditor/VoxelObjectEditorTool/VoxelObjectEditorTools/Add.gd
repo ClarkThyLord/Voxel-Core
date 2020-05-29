@@ -19,7 +19,6 @@ func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
 
 func work(editor) -> void:
 	editor.Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
-	
 	for cursor_selection in editor.get_selections():
 		for selection in cursor_selection:
 			match typeof(selection):

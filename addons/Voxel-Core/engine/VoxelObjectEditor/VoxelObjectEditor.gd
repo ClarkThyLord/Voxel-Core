@@ -318,7 +318,11 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			var prev_hit = last_hit
 			last_hit = null
 			if not hit.empty():
-				last_hit = Voxel.world_to_grid(VoxelObjectRef.to_local(hit.position))
+				last_hit = Voxel.world_to_grid(
+					VoxelObjectRef.to_local(
+						hit.position + (hit.normal * (Voxel.VoxelSize / 2) * Tools[Tool.get_selected_id()].selection_offset)
+					)
+				)
 			
 			
 			if not Lock.pressed:
