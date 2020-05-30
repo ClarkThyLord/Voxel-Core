@@ -189,6 +189,7 @@ static func flood_select(voxel_object, position : Vector3, target = null, leads 
 		leads = voxel_object.get_voxels()
 	
 	var selected := []
+	leads.erase(position)
 	var voxel = voxel_object.get_rvoxel(position)
 	match typeof(target):
 		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
@@ -202,16 +203,29 @@ static func flood_select(voxel_object, position : Vector3, target = null, leads 
 			for direction in Directions:
 				if leads.find(position + direction) > -1:
 					selected += flood_select(voxel_object, position + direction, target, leads)
-	leads.erase(position)
 	return selected
 
-static func face_select(voxel_object, position : Vector3, face : Vector3, target = null, leads = null) -> Array:
+static func face_select(voxel_object, position : Vector3, face : Vector3, leads = null) -> Array:
+	if typeof(leads) == TYPE_NIL:
+		leads = voxel_object.get_voxels()
+	
+	var selected := []
+	leads.erase(position)
+	if not typeof(voxel_object.get_rvoxel(position)) == TYPE_NIL and typeof(voxel_object.get_rvoxel(position + face)) == TYPE_NIL:
+		selected.append(position)
+		for direction in Directions[face]:
+			if leads.find(position + direction) > -1:
+				selected += face_select(voxel_object, position + direction, face, leads)
+	return selected
+
+static func face_select_target(voxel_object, position : Vector3, face : Vector3, target = null, leads = null) -> Array:
 	if typeof(target) == TYPE_NIL:
 		target = voxel_object.get_rvoxel(position)
 	if typeof(leads) == TYPE_NIL:
 		leads = voxel_object.get_voxels()
 	
 	var selected := []
+	leads.erase(position)
 	var voxel = voxel_object.get_rvoxel(position)
 	match typeof(target):
 		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
@@ -223,8 +237,7 @@ static func face_select(voxel_object, position : Vector3, face : Vector3, target
 		_:
 			if typeof(voxel_object.get_rvoxel(position + face)) == TYPE_NIL:
 				selected.append(position)
-				for direction in Directions:
+				for direction in Directions[face]:
 					if leads.find(position + direction) > -1:
-						selected += face_select(voxel_object, position + direction, face, target, leads)
-	leads.erase(position)
+						selected += face_select_target(voxel_object, position + direction, face, target, leads)
 	return selected

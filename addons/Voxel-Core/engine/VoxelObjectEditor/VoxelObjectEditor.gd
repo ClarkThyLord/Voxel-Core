@@ -344,7 +344,16 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 										selection[0][1] = last_hit
 								else: continue
 						SelectionModes.EXTRUDE:
-							pass
+							if event is InputEventMouseButton:
+								if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
+									print(last_hit - hit["normal"])
+									print(Voxel.face_select(VoxelObjectRef, last_hit - hit["normal"], hit["normal"]))
+								else: continue
+							elif event is InputEventMouseMotion:
+								if not selection.empty() and typeof(selection[0]) == TYPE_ARRAY:
+									if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
+										pass
+								else: continue
 						_:
 							if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
 								Tools[Tool.get_selected_id()].work(self)
