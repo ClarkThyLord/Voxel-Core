@@ -131,3 +131,100 @@ static func world_to_grid(world : Vector3) -> Vector3:
 
 static func grid_to_snapped(grid : Vector3) -> Vector3:
 	return grid * VoxelSize
+
+
+static func vox_to_voxels(file : File) -> void:
+	pass
+
+static func qb_to_voxels(file : File) -> void:
+	pass
+
+static func qbt_to_voxels(file : File) -> void:
+	pass
+
+static func vxm_to_voxels(file : File) -> void:
+	pass
+
+
+static func get_boundings(voxels : Array) -> Dictionary:
+	var dimensions := { "origin": Vector3.ZERO, "dimensions": Vector3.ZERO }
+	
+	if not voxels.empty():
+		dimensions["origin"] = Vector3.INF
+		dimensions["dimensions"] = -Vector3.INF
+		
+		for voxel_grid in voxels:
+			if voxel_grid.x < dimensions["origin"].x:
+				dimensions["origin"].x = voxel_grid.x
+			if voxel_grid.y < dimensions["origin"].y: 
+				dimensions["origin"].y = voxel_grid.y
+			if voxel_grid.z < dimensions["origin"].z:
+				dimensions["origin"].z = voxel_grid.z
+			
+			if voxel_grid.x > dimensions["dimensions"].x:
+				dimensions["dimensions"].x = voxel_grid.x
+			if voxel_grid.y > dimensions["dimensions"].y:
+				dimensions["dimensions"].y = voxel_grid.y
+			if voxel_grid.z > dimensions["dimensions"].z:
+				dimensions["dimensions"].z = voxel_grid.z
+		
+		dimensions["dimensions"] = (dimensions["dimensions"] - dimensions["origin"]).abs()
+	
+	return dimensions
+
+static func align(voxels : Array, alignment := Vector3(0.5, 0.5, 0.5)) -> Array:
+	var aligned := []
+	if not voxels.empty():
+		var boundings := get_boundings(voxels)
+		
+		for voxel in voxels:
+			aligned.append((voxel - boundings["origin"] + boundings["dimensions"] * alignment).floor())
+	return aligned
+
+
+static func flood_select(voxel_object, position : Vector3, target = null, leads = null) -> Array:
+	if typeof(target) == TYPE_NIL:
+		target = voxel_object.get_rvoxel(position)
+	if typeof(leads) == TYPE_NIL:
+		leads = voxel_object.get_voxels()
+	
+	var selected := []
+	var voxel = voxel_object.get_rvoxel(position)
+	match typeof(target):
+		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
+			if str(voxel) == str(target): continue
+		TYPE_COLOR:
+			if get_color(voxel) == target: continue
+		TYPE_VECTOR2:
+			if get_texture(voxel) == target: continue
+		_:
+			selected.append(position)
+			for direction in Directions:
+				if leads.find(position + direction) > -1:
+					selected += flood_select(voxel_object, position + direction, target, leads)
+	leads.erase(position)
+	return selected
+
+static func face_select(voxel_object, position : Vector3, face : Vector3, target = null, leads = null) -> Array:
+	if typeof(target) == TYPE_NIL:
+		target = voxel_object.get_rvoxel(position)
+	if typeof(leads) == TYPE_NIL:
+		leads = voxel_object.get_voxels()
+	
+	var selected := []
+	var voxel = voxel_object.get_rvoxel(position)
+	match typeof(target):
+		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
+			if str(voxel) == str(target): continue
+		TYPE_COLOR:
+			if get_color(voxel) == target: continue
+		TYPE_VECTOR2:
+			if get_texture(voxel) == target: continue
+		_:
+			if typeof(voxel_object.get_rvoxel(position + face)) == TYPE_NIL:
+				selected.append(position)
+				for direction in Directions:
+					if leads.find(position + direction) > -1:
+						selected += face_select(voxel_object, position + direction, face, target, leads)
+	leads.erase(position)
+	return selected
