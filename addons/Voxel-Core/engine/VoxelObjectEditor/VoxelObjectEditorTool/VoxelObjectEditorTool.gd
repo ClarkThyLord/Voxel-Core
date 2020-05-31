@@ -7,7 +7,7 @@ extends Reference
 export(String) var name := ""
 
 
-export(int) var selection_offset := 1
+export(int) var selection_offset := 0
 
 export(PoolStringArray) var selection_modes := PoolStringArray([
 	"individual",

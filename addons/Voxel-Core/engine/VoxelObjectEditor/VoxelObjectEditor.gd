@@ -126,8 +126,14 @@ func get_mirrors() -> Array:
 var Grid := VoxelGrid.new() setget set_grid
 func set_grid(grid : VoxelGrid) -> void: pass
 
-var last_hit
-var selection := []
+var last_hit := {}
+
+var area_points := []
+
+var extrude_face := []
+var extrude_amount := 0
+var extrude_normal : Vector3
+
 func get_selections() -> Array:
 	var selections := [Cursors[Vector3.ZERO].Selections]
 	for mirror in get_mirrors():
@@ -154,9 +160,8 @@ func set_cursors_visibility(visible := not Lock.pressed) -> void:
 			Cursors[cursor].visible = visible and mirrors.has(cursor)
 
 func set_cursors_selections(
-		selections := ([last_hit] if typeof(last_hit) == TYPE_VECTOR3 else []) if Lock.pressed else selection
+		selections := [last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset] if not last_hit.empty() else []
 	) -> void:
-	selection = selections
 	Cursors[Vector3.ZERO].Selections = selections
 	var mirrors := get_mirrors()
 	for mirror in mirrors:
@@ -217,7 +222,15 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 	while true:
 		hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
 		if not hit.empty():
-			if target.is_a_parent_of(hit.collider): break
+			if target.is_a_parent_of(hit.collider):
+				if Grid.is_a_parent_of(hit.collider):
+					hit["normal"] = Vector3.ZERO
+				hit["position"] = Voxel.world_to_grid(
+					VoxelObjectRef.to_local(
+						hit.position + -hit.normal * (Voxel.VoxelSize / 2)
+					)
+				)
+				break
 			else: exclude.append(hit.collider)
 		else: break
 	return hit
@@ -311,17 +324,8 @@ func cancel(close := false) -> void:
 func handle_input(camera : Camera, event : InputEvent) -> bool:
 	if is_instance_valid(VoxelObjectRef):
 		if event is InputEventMouse:
-			var hit := raycast_for(camera, event.position, VoxelObjectRef)
-			
-			
 			var prev_hit = last_hit
-			last_hit = null
-			if not hit.empty():
-				last_hit = Voxel.world_to_grid(
-					VoxelObjectRef.to_local(
-						hit.position + (hit.normal * (Voxel.VoxelSize / 2) * Tools[Tool.get_selected_id()].selection_offset)
-					)
-				)
+			last_hit = raycast_for(camera, event.position, VoxelObjectRef)
 			
 			
 			if not Lock.pressed:
@@ -330,49 +334,79 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					return false
 				
 				var consume := true
-				if typeof(last_hit) == TYPE_VECTOR3: #  and not last_hit == prev_hit
+				var selection := []
+				if not last_hit.empty(): # TODO and not last_hit == prev_hit
 					match SelectionMode.get_selected_id():
 						SelectionModes.AREA:
 							if event is InputEventMouseButton:
-								if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-									selection.clear()
-									selection.append([last_hit, last_hit])
+								if event.pressed:
+									area_points = [
+										last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset,
+										last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
+									]
+									selection.append(area_points)
 								else: continue
 							elif event is InputEventMouseMotion:
-								if not selection.empty() and typeof(selection[0]) == TYPE_ARRAY:
+								if not area_points.empty():
 									if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
-										selection[0][1] = last_hit
+										area_points[1] = last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
+									selection.append(area_points)
 								else: continue
 						SelectionModes.EXTRUDE:
+							
+							
 							if event is InputEventMouseButton:
-								if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.pressed:
-									print(last_hit - hit["normal"])
-									print(Voxel.face_select(VoxelObjectRef, last_hit - hit["normal"], hit["normal"]))
+								if event.pressed:
+									var extrude := []
+									extrude_amount = 0
+									extrude_face = Voxel.face_select(
+										VoxelObjectRef,
+										last_hit["position"],
+										last_hit["normal"]
+									)
+									for e in range(Tools[Tool.get_selected_id()].selection_offset, Tools[Tool.get_selected_id()].selection_offset + 1):
+										for position in extrude_face:
+											extrude.append(
+												position + last_hit["normal"] * e
+											)
+									selection = extrude
 								else: continue
 							elif event is InputEventMouseMotion:
-								if not selection.empty() and typeof(selection[0]) == TYPE_ARRAY:
-									if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
-										pass
-								else: continue
+								if not extrude_face.empty():
+									extrude_amount += sign(event.relative.normalized().x)
+								else:
+									var extrude := []
+									var face := Voxel.face_select(
+										VoxelObjectRef,
+										last_hit["position"],
+										last_hit["normal"]
+									)
+									for e in range(Tools[Tool.get_selected_id()].selection_offset, Tools[Tool.get_selected_id()].selection_offset + 1):
+										for position in face:
+											extrude.append(
+												position + last_hit["normal"] * e
+											)
+									selection = extrude
 						_:
-							if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
+							if event is InputEventMouseButton and not event.pressed:
 								Tools[Tool.get_selected_id()].work(self)
-							selection.clear()
-							selection.append(last_hit)
+								extrude_face.clear()
+								extrude_amount = 0
+								area_points.clear()
+							selection.append(last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset)
 					set_cursors_selections(selection)
 				else:
-					selection.clear()
-					set_cursors_selections(selection)
+					set_cursors_selections()
 				
-				set_cursors_visibility(not hit.empty())
+				set_cursors_visibility(not last_hit.empty())
 				return consume
 	return false
 
 
 func _on_Lock_toggled(locked : bool) -> void:
 	if locked: set_cursors_visibility(false)
-	elif typeof(last_hit) == TYPE_VECTOR3:
-		set_cursors_selections([last_hit])
+	elif not last_hit.empty():
+		set_cursors_selections()
 		set_cursors_visibility(true)
 	emit_signal("editing", !locked)
 
@@ -406,7 +440,7 @@ func _on_Palette_selected(id : int) -> void:
 	set_palette(Palette.get_selected_id(), PaletteRepresents[Palette.get_selected_id()])
 
 func _on_SelectionMode_selected(id : int):
-	set_cursors_selections([last_hit] if typeof(last_hit) == TYPE_VECTOR3 else [])
+	set_cursors_selections()
 
 
 func _on_VoxelSetViewer_selected(voxel_id : int) -> void:

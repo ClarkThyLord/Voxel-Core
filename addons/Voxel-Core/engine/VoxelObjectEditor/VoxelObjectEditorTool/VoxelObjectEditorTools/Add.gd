@@ -6,6 +6,7 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 # Core
 func _init():
 	name = "add"
+	selection_offset = 1
 
 
 func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
