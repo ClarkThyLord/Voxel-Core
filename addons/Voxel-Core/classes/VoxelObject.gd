@@ -97,7 +97,7 @@ func get_voxel(grid : Vector3) -> Dictionary:
 	return voxel
 
 func get_rvoxel(grid : Vector3):
-	return -1
+	return null
 
 func get_voxels() -> Array:
 	return []

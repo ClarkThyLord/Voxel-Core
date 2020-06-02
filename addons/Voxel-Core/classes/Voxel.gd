@@ -182,15 +182,16 @@ static func align(voxels : Array, alignment := Vector3(0.5, 0.5, 0.5)) -> Array:
 	return aligned
 
 
-static func flood_select(voxel_object, position : Vector3, target = null, leads = null) -> Array:
+static func flood_select(voxels, position : Vector3, target = null, selected = []) -> Array:
 	if typeof(target) == TYPE_NIL:
-		target = voxel_object.get_rvoxel(position)
-	if typeof(leads) == TYPE_NIL:
-		leads = voxel_object.get_voxels()
+		if typeof(voxels) == TYPE_DICTIONARY:
+			target = voxels.get(position)
+		else:
+			target = voxels.get_rvoxel(position)
+		if typeof(target) == TYPE_NIL:
+			return selected
 	
-	var selected := []
-	leads.erase(position)
-	var voxel = voxel_object.get_rvoxel(position)
+	var voxel = voxels.get(position) if typeof(voxels) == TYPE_DICTIONARY else voxels.get_rvoxel(position)
 	match typeof(target):
 		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
 			if str(voxel) == str(target): continue
@@ -199,45 +200,16 @@ static func flood_select(voxel_object, position : Vector3, target = null, leads 
 		TYPE_VECTOR2:
 			if get_texture(voxel) == target: continue
 		_:
-			selected.append(position)
-			for direction in Directions:
-				if leads.find(position + direction) > -1:
-					selected += flood_select(voxel_object, position + direction, target, leads)
-	return selected
-
-static func face_select(voxel_object, position : Vector3, face : Vector3, leads = null) -> Array:
-	if typeof(leads) == TYPE_NIL:
-		leads = voxel_object.get_voxels()
-	
-	var selected := []
-	leads.erase(position)
-	if not typeof(voxel_object.get_rvoxel(position)) == TYPE_NIL and typeof(voxel_object.get_rvoxel(position + face)) == TYPE_NIL:
-		selected.append(position)
-		for direction in Directions[face]:
-			if leads.find(position + direction) > -1:
-				selected += face_select(voxel_object, position + direction, face, leads)
-	return selected
-
-static func face_select_target(voxel_object, position : Vector3, face : Vector3, target = null, leads = null) -> Array:
-	if typeof(target) == TYPE_NIL:
-		target = voxel_object.get_rvoxel(position)
-	if typeof(leads) == TYPE_NIL:
-		leads = voxel_object.get_voxels()
-	
-	var selected := []
-	leads.erase(position)
-	var voxel = voxel_object.get_rvoxel(position)
-	match typeof(target):
-		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
-			if str(voxel) == str(target): continue
-		TYPE_COLOR:
-			if get_color(voxel) == target: continue
-		TYPE_VECTOR2:
-			if get_texture(voxel) == target: continue
-		_:
-			if typeof(voxel_object.get_rvoxel(position + face)) == TYPE_NIL:
+			if not selected.has(position):
 				selected.append(position)
-				for direction in Directions[face]:
-					if leads.find(position + direction) > -1:
-						selected += face_select_target(voxel_object, position + direction, face, target, leads)
+				for direction in Directions:
+					flood_select(voxels, position + direction, target, selected)
+	return selected
+
+static func face_select(voxels, position : Vector3, face : Vector3, selected := []) -> Array:
+	if not typeof(voxels.get(position) if typeof(voxels) == TYPE_DICTIONARY else voxels.get_rvoxel(position)) == TYPE_NIL and typeof(voxels.get(position) if typeof(voxels) == TYPE_DICTIONARY else voxels.get_rvoxel(position + face)) == TYPE_NIL:
+		if not selected.has(position):
+			selected.append(position)
+			for direction in Directions[face]:
+				face_select(voxels, position + direction, face, selected)
 	return selected
