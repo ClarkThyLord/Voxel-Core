@@ -140,12 +140,6 @@ var SelectionModes := [
 
 var last_hit := {}
 
-var area_points := []
-
-var extrude_face := []
-var extrude_amount := 0
-var extrude_normal : Vector3
-
 func get_selections() -> Array:
 	var selections := [Cursors[Vector3.ZERO].Selections]
 	for mirror in get_mirrors():
@@ -345,65 +339,13 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 				var consume := true
 				var selection := []
 				if not last_hit.empty(): # TODO and not last_hit == prev_hit
-					match SelectionMode.get_selected_id():
-						1:
-							if event is InputEventMouseButton:
-								if event.pressed:
-									area_points = [
-										last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset,
-										last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
-									]
-									selection.append(area_points)
-								else: continue
-							elif event is InputEventMouseMotion:
-								if not area_points.empty():
-									if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
-										area_points[1] = last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
-									selection.append(area_points)
-								else: continue
-						2:
-							
-							
-							if event is InputEventMouseButton:
-								if event.pressed:
-									var extrude := []
-									extrude_amount = 0
-									extrude_face = Voxel.face_select(
-										VoxelObjectRef,
-										last_hit["position"],
-										last_hit["normal"]
-									)
-									for e in range(Tools[Tool.get_selected_id()].selection_offset, Tools[Tool.get_selected_id()].selection_offset + 1):
-										for position in extrude_face:
-											extrude.append(
-												position + last_hit["normal"] * e
-											)
-									selection = extrude
-								else: continue
-							elif event is InputEventMouseMotion:
-								if not extrude_face.empty():
-									extrude_amount += sign(event.relative.normalized().x)
-								else:
-									var extrude := []
-									var face := Voxel.face_select(
-										VoxelObjectRef,
-										last_hit["position"],
-										last_hit["normal"]
-									)
-									for e in range(Tools[Tool.get_selected_id()].selection_offset, Tools[Tool.get_selected_id()].selection_offset + 1):
-										for position in face:
-											extrude.append(
-												position + last_hit["normal"] * e
-											)
-									selection = extrude
-						_:
-							if event is InputEventMouseButton and not event.pressed:
-								Tools[Tool.get_selected_id()].work(self)
-								extrude_face.clear()
-								extrude_amount = 0
-								area_points.clear()
-							selection.append(last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset)
-					set_cursors_selections(selection)
+					var result = SelectionModes[SelectionMode.get_selected_id()].select(
+						self,
+						event,
+						prev_hit
+					)
+					consume = result["consume"]
+					set_cursors_selections(result["selection"])
 				else:
 					set_cursors_selections()
 				

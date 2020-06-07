@@ -9,5 +9,8 @@ export(String) var name := ""
 
 
 # Core
-func select(prev_hit : Dictionary, last_hit : Dictionary, event : InputEvent) -> void:
-	pass
+func select(editor, event : InputEvent, prev_hit : Dictionary) -> Dictionary:
+	return {
+		"consume": true,
+		"selection": []
+	}
