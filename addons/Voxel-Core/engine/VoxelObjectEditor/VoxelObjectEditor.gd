@@ -37,15 +37,20 @@ func update_palette(palettes := Palettes.keys()) -> void:
 
 
 onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode")
-func update_selections(selection_modes := SelectionModes.keys()) -> void:
+func update_selections(selection_modes := [
+		"individual",
+		"area",
+		"extrude"
+	]) -> void:
 	var prev = SelectionMode.get_selected_id()
 	SelectionMode.clear()
-	for select_mode in selection_modes:
-		SelectionMode.add_icon_item(
-			load("res://addons/Voxel-Core/assets/controls/" + select_mode.to_lower() + ".png"),
-			select_mode.capitalize(),
-			SelectionModes[select_mode.to_upper()]
-		)
+	for select_mode in range(SelectionModes.size()):
+		if selection_modes.find(SelectionModes[select_mode].name.to_lower()) > -1:
+			SelectionMode.add_icon_item(
+				load("res://addons/Voxel-Core/assets/controls/" + SelectionModes[select_mode].name.to_lower() + ".png"),
+				SelectionModes[select_mode].name.capitalize(),
+				select_mode
+			)
 	if SelectionMode.get_item_index(prev) > -1:
 		SelectionMode.select(SelectionMode.get_item_index(prev))
 	else: _on_SelectionMode_selected(SelectionMode.get_selected_id())
@@ -126,6 +131,13 @@ func get_mirrors() -> Array:
 var Grid := VoxelGrid.new() setget set_grid
 func set_grid(grid : VoxelGrid) -> void: pass
 
+
+var SelectionModes := [
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Individual.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Area.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Extrude.gd").new()
+]
+
 var last_hit := {}
 
 var area_points := []
@@ -204,9 +216,6 @@ func get_rpalette(palette : int = Palette.get_selected_id()) -> Dictionary:
 				represents = VoxelObjectRef.Voxel_Set.get_voxel(represents)
 			else: represents = Voxel.colored(Color.transparent)
 	return represents
-
-
-enum SelectionModes { INDIVIDUAL, AREA, EXTRUDE }
 
 
 var VoxelObjectRef : VoxelObject setget begin
@@ -337,7 +346,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 				var selection := []
 				if not last_hit.empty(): # TODO and not last_hit == prev_hit
 					match SelectionMode.get_selected_id():
-						SelectionModes.AREA:
+						1:
 							if event is InputEventMouseButton:
 								if event.pressed:
 									area_points = [
@@ -352,7 +361,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 										area_points[1] = last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
 									selection.append(area_points)
 								else: continue
-						SelectionModes.EXTRUDE:
+						2:
 							
 							
 							if event is InputEventMouseButton:
