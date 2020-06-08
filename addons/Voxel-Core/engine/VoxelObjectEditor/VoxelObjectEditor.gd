@@ -336,21 +336,18 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					set_cursors_visibility(false)
 					return false
 				
-				var consume := true
-				var selection := []
-				if not last_hit.empty(): # TODO and not last_hit == prev_hit
-					var result = SelectionModes[SelectionMode.get_selected_id()].select(
-						self,
-						event,
-						prev_hit
-					)
-					consume = result["consume"]
-					set_cursors_selections(result["selection"])
-				else:
-					set_cursors_selections()
+				var result = SelectionModes[SelectionMode.get_selected_id()].select(
+					self,
+					event,
+					prev_hit
+				)
 				
-				set_cursors_visibility(not last_hit.empty())
-				return consume
+				set_cursors_visibility(true)
+				if result["selection"].empty():
+					set_cursors_selections()
+				else:
+					set_cursors_selections(result["selection"])
+				return result["consume"]
 	return false
 
 

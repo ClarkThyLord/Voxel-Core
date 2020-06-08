@@ -15,11 +15,12 @@ func _init():
 	name = "extrude"
 
 
-func select(editor, event : InputEvent, prev_hit : Dictionary) -> Dictionary:
-	return {
-		"consume": true,
-		"selection": []
-	}
+func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> Dictionary:
+	var result := .select(editor, event, prev_hit)
+	
+	
+	
+	return result
 #	if event is InputEventMouseButton:
 #		if event.pressed:
 #			var extrude := []
