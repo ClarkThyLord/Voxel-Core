@@ -344,20 +344,6 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					event,
 					prev_hit
 				)
-#				var result = SelectionModes[SelectionMode.get_selected_id()].select(
-#					self,
-#					event,
-#					prev_hit
-#				)
-#
-#				set_cursors_visibility(true)
-#				if result["selection"].empty():
-#					set_cursors_selections()
-#				else:
-#					set_cursors_selections(result["selection"])
-#				if result["work"]:
-#					Tools[Tool.get_selected_id()].work(self)
-#				return result["consume"]
 	return false
 
 
