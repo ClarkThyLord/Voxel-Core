@@ -347,6 +347,8 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					set_cursors_selections()
 				else:
 					set_cursors_selections(result["selection"])
+				if result["work"]:
+					Tools[Tool.get_selected_id()].work(self)
 				return result["consume"]
 	return false
 
