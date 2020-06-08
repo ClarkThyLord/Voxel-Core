@@ -250,8 +250,11 @@ margin_top = 114.0
 margin_right = 333.0
 margin_bottom = 200.0
 size_flags_vertical = 3
+EditMode = false
 SelectMode = true
 SelectionMax = 1
+ShowControls = false
+Search = ""
 
 [node name="VSeparator" type="VSeparator" parent="VoxelObjectEditor/HBoxContainer"]
 margin_left = 337.0
@@ -671,12 +674,9 @@ text = "Cancel"
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_visibility"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="set_cursors_selections"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="set_cursors_visibility"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="set_cursors_selections"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="set_cursors_visibility"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="set_cursors_selections"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="update_cursors"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="update_cursors"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="update_cursors"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="_on_ColorChooser_pressed"]
 [connection signal="selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]

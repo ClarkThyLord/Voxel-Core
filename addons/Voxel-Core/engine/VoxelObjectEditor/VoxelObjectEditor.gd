@@ -176,6 +176,17 @@ func set_cursors_selections(
 	for mirror in mirrors:
 		Cursors[mirror].Selections = mirror_positions(selections, mirror)
 
+func update_cursors() -> void:
+	var mirrors := get_mirrors()
+	for cursor in Cursors:
+		if not cursor == Vector3.ZERO:
+			Cursors[cursor].visible = Cursors[Vector3.ZERO].visible and mirrors.has(cursor)
+			if mirrors.has(cursor):
+				Cursors[cursor].Selections = mirror_positions(
+					Cursors[Vector3.ZERO].Selections,
+					cursor
+				)
+
 
 var Tools := [
 	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Add.gd").new(),
