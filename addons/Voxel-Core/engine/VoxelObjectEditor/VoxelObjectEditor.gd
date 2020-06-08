@@ -140,6 +140,9 @@ var SelectionModes := [
 
 var last_hit := {}
 
+func get_selection():
+	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset)
+
 func get_selections() -> Array:
 	var selections := [Cursors[Vector3.ZERO].Selections]
 	for mirror in get_mirrors():

@@ -4,7 +4,7 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelec
 
 
 # Declarations
-var area_points := []
+var selection := []
 
 
 
@@ -16,20 +16,19 @@ func _init():
 func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> Dictionary:
 	var result := .select(editor, event, prev_hit)
 	
-	
+	if not editor.last_hit.empty():
+		if event is InputEventMouseButton:
+			if event.pressed:
+				selection.clear()
+				selection.append(editor.get_selection())
+				selection.append(editor.get_selection())
+				result["selection"].append(selection)
+			else:
+				editor.Tools[editor.Tool.get_selected_id()].work(editor)
+				selection.clear()
+		elif event is InputEventMouseMotion:
+			if not selection.empty():
+				selection[1] = editor.get_selection()
+				result["selection"].append(selection)
 	
 	return result
-#	if event is InputEventMouseButton:
-#		if event.pressed:
-#			area_points = [
-#				last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset,
-#				last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
-#			]
-#			selection.append(area_points)
-#		else: continue
-#	elif event is InputEventMouseMotion:
-#		if not area_points.empty():
-#			if event.button_mask & BUTTON_MASK_LEFT == BUTTON_MASK_LEFT:
-#				area_points[1] = last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset
-#			selection.append(area_points)
-#		else: continue
