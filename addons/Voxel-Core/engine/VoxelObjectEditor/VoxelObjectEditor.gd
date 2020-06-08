@@ -140,7 +140,7 @@ var SelectionModes := [
 
 var last_hit := {}
 
-func get_selection():
+func get_selection() -> Vector3:
 	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset)
 
 func get_selections() -> Array:
@@ -339,20 +339,25 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					set_cursors_visibility(false)
 					return false
 				
-				var result = SelectionModes[SelectionMode.get_selected_id()].select(
+				return SelectionModes[SelectionMode.get_selected_id()].select(
 					self,
 					event,
 					prev_hit
 				)
-				
-				set_cursors_visibility(true)
-				if result["selection"].empty():
-					set_cursors_selections()
-				else:
-					set_cursors_selections(result["selection"])
-				if result["work"]:
-					Tools[Tool.get_selected_id()].work(self)
-				return result["consume"]
+#				var result = SelectionModes[SelectionMode.get_selected_id()].select(
+#					self,
+#					event,
+#					prev_hit
+#				)
+#
+#				set_cursors_visibility(true)
+#				if result["selection"].empty():
+#					set_cursors_selections()
+#				else:
+#					set_cursors_selections(result["selection"])
+#				if result["work"]:
+#					Tools[Tool.get_selected_id()].work(self)
+#				return result["consume"]
 	return false
 
 

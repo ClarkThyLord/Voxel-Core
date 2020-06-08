@@ -4,9 +4,9 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelec
 
 
 # Declarations
-var extrude_face := []
+var face := []
+var normal : Vector3
 var extrude_amount := 0
-var extrude_normal : Vector3
 
 
 
@@ -15,12 +15,11 @@ func _init():
 	name = "extrude"
 
 
-func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> Dictionary:
-	var result := .select(editor, event, prev_hit)
+func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	
 	
 	
-	return result
+	return true
 #	if event is InputEventMouseButton:
 #		if event.pressed:
 #			var extrude := []
