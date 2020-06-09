@@ -141,7 +141,7 @@ var SelectionModes := [
 var last_hit := {}
 
 func get_selection() -> Vector3:
-	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset)
+	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].tool_normal)
 
 func get_selections() -> Array:
 	var selections := [Cursors[Vector3.ZERO].Selections]
@@ -169,7 +169,7 @@ func set_cursors_visibility(visible := not Lock.pressed) -> void:
 			Cursors[cursor].visible = visible and mirrors.has(cursor)
 
 func set_cursors_selections(
-		selections := [last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].selection_offset] if not last_hit.empty() else []
+		selections := [last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].tool_normal] if not last_hit.empty() else []
 	) -> void:
 	Cursors[Vector3.ZERO].Selections = selections
 	var mirrors := get_mirrors()
