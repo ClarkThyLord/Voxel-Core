@@ -80,6 +80,7 @@ func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
 
 func close_voxel_object_editor() -> void:
 	if is_instance_valid(VoxelObjectEditorRef):
+		VoxelObjectEditorRef.cancel()
 		remove_control_from_bottom_panel(VoxelObjectEditorRef)
 		VoxelObjectEditorRef.queue_free()
 		VoxelObjectEditorRef = null

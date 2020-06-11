@@ -309,7 +309,6 @@ func begin(voxelobject : VoxelObject) -> void:
 	cancel()
 	
 	VoxelObjectRef = voxelobject
-	VoxelObjectRef.EditHint = true
 	VoxelObjectRef.add_child(Grid)
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
@@ -322,7 +321,8 @@ func commit() -> void:
 
 func cancel(close := false) -> void:
 	if is_instance_valid(VoxelObjectRef):
-		VoxelObjectRef.EditHint = false
+		if VoxelObjectRef.EditHint:
+			VoxelObjectRef.EditHint = false
 		VoxelObjectRef.remove_child(Grid)
 		for cursor in Cursors.values():
 			VoxelObjectRef.remove_child(cursor)
@@ -359,6 +359,9 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 
 
 func _on_Lock_toggled(locked : bool) -> void:
+	if is_instance_valid(VoxelObjectRef):
+		VoxelObjectRef.EditHint = not locked
+	
 	if locked: set_cursors_visibility(false)
 	elif not last_hit.empty():
 		set_cursors_selections()
