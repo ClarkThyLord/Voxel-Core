@@ -111,7 +111,6 @@ func erase_voxels() -> void:
 
 
 func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
-	print('greeding')
 	vt.start(UVMapping, Voxel_Set)
 	
 	var growth := 0
@@ -125,97 +124,35 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 		for position in volume:
 			if typeof(get_rvoxel(position + face)) == TYPE_NIL:
 				faces[face].append(position)
-#	print("faces : ", faces)
 	
 	for face in faces:
 		while not faces[face].empty():
-			p1 = faces[face].pop_front()
-			p2 = p1
-			current = p1
-			var voxel = get_voxel(p1)
+			var bottom_right : Vector3 = faces[face].pop_front()
+			var bottom_left : Vector3 = bottom_right
+			var top_right : Vector3 = bottom_right
+			var top_left : Vector3 = bottom_right
+			var voxel : Dictionary = get_voxel(bottom_right)
 			
-			while true:
-				var index = faces[face].find(current + Voxel.Directions[face][1])
-				if index > -1:
-					p2 += Voxel.Directions[face][1]
-					faces[face].remove(index)
-				else: break
 			
-#			while true:
-#				var expand = false
-#				var index = faces[face].find(current + Voxel.Directions[face][3])
-#				if index > -1:
-#					while true:
-#						var index = faces[face].find(current + Voxel.Directions[face][1])
-#						if index > -1:
-#							p2.x += 1
-#							faces[face].remove(index)
-#						else: break
-#				else: break
+			if not (UVMapping and Voxel.get_texture_side(voxel, face) == -Vector2.ONE):
+				while true:
+					var index = faces[face].find(bottom_left + Voxel.Directions[face][1])
+					if index > -1 and Voxel.get_color_side(get_voxel(faces[face][index]), face) == Voxel.get_color_side(voxel, face):
+						faces[face].remove(index)
+						bottom_right += Voxel.Directions[face][1]
+						bottom_left += Voxel.Directions[face][1]
+					else: break
 			
-#			for direction in Voxel.Directions[face]:
-#				var index = faces[face].find(current + direction)
-#				if index > -1:
-#					pass
-#				if direction > Vector3.ZERO:
-#					p1 += direction
-#				else:
-#					p2 += direction
 			
 			vt.add_face(
 				voxel,
 				face,
-				p2,
-				Vector3(
-					p1.x,
-					p2.y,
-					p1.z
-				),
-				Vector3(
-					p2.x,
-					p1.y,
-					p2.z
-				),
-				p1
+				bottom_right,
+				bottom_left,
+				top_right,
+				top_left
 			)
 	
-	print('greeded')
-#	var face
-#	var voxel
-#	var bottom_right : Vector3
-#	var bottom_left : Vector3
-#	var top_right : Vector3
-#	var top_left : Vector3
-#
-#	vt.start(UVMapping, Voxel_Set)
-#
-#	# top_right.x += 
-#	# bottom_right.x += 
-#
-#	# bottom_left.y += 
-#	# bottom_right.y += 
-#
-#	# top_left.x -= 
-#	# bottom_left.x -= 
-#
-#	# top_left.y -= 
-#	# top_right.y -= 
-#
-#	for direction in Voxel.Directions:
-#		var faces := voxels.duplicate()
-#		while not faces.empty():
-#			voxel = get_voxel(bottom_right)
-#			bottom_right = faces.pop_front()
-#			bottom_left = bottom_right
-#			top_right = bottom_right
-#			top_left = bottom_right
-#
-#			if UVMapping and not Voxel.get_texture_side(voxel, direction) == -Vector2.ONE:
-#				vt.add_face(voxel, direction, bottom_right)
-#			else:
-#				face = get_rvoxel(bottom_right)
-#				if typeof(face) == TYPE_DICTIONARY:
-#					face = Voxel.get_color_side(voxel, direction)
 	return vt.end()
 
 

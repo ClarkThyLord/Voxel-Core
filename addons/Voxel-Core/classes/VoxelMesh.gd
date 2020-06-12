@@ -68,7 +68,6 @@ func erase_voxels() -> void:
 
 
 func update_mesh(save := true) -> void:
-	print("update")
 	if voxels.size() > 0:
 		var vt := VoxelTool.new()
 		var material = get_surface_material(0) if get_surface_material_count() > 0 else null
