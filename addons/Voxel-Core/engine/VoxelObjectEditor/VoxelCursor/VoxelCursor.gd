@@ -7,7 +7,12 @@ extends MeshInstance
 var vt := VoxelTool.new()
 
 
-var Selections := [] setget set_selections
+var Selections := [
+	[
+		Vector3.ZERO,
+		Vector3(3, 3, 3)
+	]
+] setget set_selections
 func set_selections(selections : Array, update := true) -> void:
 	Selections = selections
 	
@@ -58,16 +63,16 @@ func update() -> void:
 					var dimensions : Vector3 = (selection[0] - selection[1]).abs()
 					
 					vt.add_face(voxel, Vector3.RIGHT,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
 						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
 						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z)
+						Vector3(origin.x + dimensions.x, origin.y, origin.z)
 					)
 					vt.add_face(voxel, Vector3.LEFT,
-						Vector3(origin.x, origin.y, origin.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
 						Vector3(origin.x, origin.y, origin.z + dimensions.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z)
+						Vector3(origin.x, origin.y, origin.z)
 					)
 					vt.add_face(voxel, Vector3.UP,
 						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
@@ -82,16 +87,16 @@ func update() -> void:
 						Vector3(origin.x, origin.y , origin.z)
 					)
 					vt.add_face(voxel, Vector3.FORWARD,
-						Vector3(origin.x, origin.y, origin.z),
 						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z)
+						Vector3(origin.x, origin.y, origin.z)
 					)
 					vt.add_face(voxel, Vector3.BACK,
-						Vector3(origin.x, origin.y, origin.z + dimensions.z),
 						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z)
+						Vector3(origin.x, origin.y, origin.z + dimensions.z)
 					)
 		mesh = vt.end()
 	else: mesh = null
