@@ -63,40 +63,40 @@ func update() -> void:
 					var dimensions : Vector3 = (selection[0] - selection[1]).abs()
 					
 					vt.add_face(voxel, Vector3.RIGHT,
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
 						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y, origin.z)
+						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z)
 					)
 					vt.add_face(voxel, Vector3.LEFT,
-						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
 						Vector3(origin.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x, origin.y, origin.z)
-					)
-					vt.add_face(voxel, Vector3.UP,
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y, origin.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z)
 					)
-					vt.add_face(voxel, Vector3.DOWN,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y, origin.z),
-						Vector3(origin.x, origin.y , origin.z)
-					)
-					vt.add_face(voxel, Vector3.FORWARD,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+					vt.add_face(voxel, Vector3.UP,
 						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x, origin.y, origin.z)
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z)
+					)
+					vt.add_face(voxel, Vector3.DOWN,
+						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y, origin.z + dimensions.z)
 					)
 					vt.add_face(voxel, Vector3.BACK,
 						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+						Vector3(origin.x, origin.y, origin.z + dimensions.z),
 						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y, origin.z + dimensions.z)
+						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z)
+					)
+					vt.add_face(voxel, Vector3.FORWARD,
+						Vector3(origin.x + dimensions.x, origin.y, origin.z),
+						Vector3(origin.x, origin.y, origin.z),
+						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
+						Vector3(origin.x, origin.y + dimensions.y, origin.z)
 					)
 		mesh = vt.end()
 	else: mesh = null
