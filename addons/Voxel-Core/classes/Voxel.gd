@@ -43,10 +43,10 @@ class_name Voxel, "res://addons/Voxel-Core/assets/classes/Voxel.png"
 # Declarations
 const Directions := {
 	Vector3.RIGHT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
-	Vector3.UP: [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ],
+	Vector3.UP: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
 	Vector3.FORWARD: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
 	Vector3.LEFT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
-	Vector3.DOWN: [ Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT ],
+	Vector3.DOWN: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
 	Vector3.BACK: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
 }
 
