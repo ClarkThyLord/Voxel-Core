@@ -136,7 +136,16 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 			
 			if not (UVMapping and Voxel.get_texture_side(voxel, face) == -Vector2.ONE):
 				var width := 1
-				var height := 1
+				
+				while true:
+					var index = faces[face].find(top_left + Voxel.Directions[face][0])
+					if index > -1 and Voxel.get_color_side(get_voxel(faces[face][index]), face) == Voxel.get_color_side(voxel, face):
+						width += 1
+						faces[face].remove(index)
+						top_left += Voxel.Directions[face][0]
+						bottom_left += Voxel.Directions[face][0]
+					else: break
+				
 				while true:
 					var index = faces[face].find(top_right + Voxel.Directions[face][1])
 					if index > -1 and Voxel.get_color_side(get_voxel(faces[face][index]), face) == Voxel.get_color_side(voxel, face):
@@ -164,37 +173,8 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 								temp_2 += Voxel.Directions[face][0]
 							else: break
 						if temp.size() == width:
-							height += 1
-							top_right += Voxel.Directions[face][3]
 							top_left += Voxel.Directions[face][3]
-							for index in temp:
-								faces[face].remove(index)
-						else:
-							_break = true
-					else: break
-					if _break: break
-				
-				while true:
-					var temp := []
-					var _break = false
-					var temp_1 := top_left
-					var temp_2 := bottom_left
-					var index = faces[face].find(temp_1 + Voxel.Directions[face][0])
-					if index > -1 and Voxel.get_color_side(get_voxel(faces[face][index]), face) == Voxel.get_color_side(voxel, face):
-						temp.append(index)
-						temp_1 += Voxel.Directions[face][0]
-						temp_2 += Voxel.Directions[face][0]
-						while true:
-							index = faces[face].find(temp_1 + Voxel.Directions[face][2])
-							if index > -1 and Voxel.get_color_side(get_voxel(faces[face][index]), face) == Voxel.get_color_side(voxel, face):
-								temp.append(index)
-								temp_1 += Voxel.Directions[face][2]
-								temp_2 += Voxel.Directions[face][2]
-							else: break
-						if temp.size() == height:
-							width += 1
-							top_left += Voxel.Directions[face][0]
-							bottom_left += Voxel.Directions[face][0]
+							top_right += Voxel.Directions[face][3]
 							for index in temp:
 								faces[face].remove(index)
 						else:
@@ -213,15 +193,13 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 						temp_1 += Voxel.Directions[face][2]
 						temp_2 += Voxel.Directions[face][2]
 						while true:
-							index = faces[face].find(temp_1 + Voxel.Directions[face][1])
+							index = faces[face].find(temp_1 + Voxel.Directions[face][0])
 							if index > -1 and Voxel.get_color_side(get_voxel(faces[face][index]), face) == Voxel.get_color_side(voxel, face):
 								temp.append(index)
-								temp_1 += Voxel.Directions[face][1]
-								temp_2 += Voxel.Directions[face][1]
+								temp_1 += Voxel.Directions[face][0]
+								temp_2 += Voxel.Directions[face][0]
 							else: break
-						
 						if temp.size() == width:
-							height += 1
 							bottom_right += Voxel.Directions[face][2]
 							bottom_left += Voxel.Directions[face][2]
 							for index in temp:
@@ -230,7 +208,6 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 							_break = true
 					else: break
 					if _break: break
-			
 			
 			vt.add_face(
 				voxel,
