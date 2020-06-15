@@ -76,12 +76,7 @@ func update_mesh(save := true) -> void:
 			MeshModes.GREEDY:
 				mesh = greed_volume(voxels.keys(), vt)
 			_:
-				vt.start(UVMapping, Voxel_Set)
-				for grid in voxels:
-					for direction in Voxel.Directions:
-						if not voxels.has(grid + direction):
-							vt.add_face(get_voxel(grid), direction, grid)
-				mesh = vt.end()
+				mesh = naive_volume(voxels.keys(), vt)
 		
 		mesh.surface_set_name(0, "voxels")
 		set_surface_material(0, material)

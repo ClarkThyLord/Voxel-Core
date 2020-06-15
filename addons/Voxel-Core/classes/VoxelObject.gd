@@ -110,6 +110,16 @@ func erase_voxels() -> void:
 		erase_voxel(grid)
 
 
+func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
+	vt.start(UVMapping, Voxel_Set)
+	
+	for position in volume:
+		for direction in Voxel.Directions:
+			if typeof(get_rvoxel(position + direction)) == TYPE_NIL:
+				vt.add_face(get_voxel(position), direction, position)
+	
+	return vt.end()
+
 func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	vt.start(UVMapping, Voxel_Set)
 	
