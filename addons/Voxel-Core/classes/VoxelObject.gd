@@ -165,6 +165,70 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 							bottom_left += Voxel.Directions[face][0]
 						else: break
 					else: break
+				
+				while true:
+					var temp := []
+					var _break = false
+					var temp_1 := top_right
+					var temp_2 := top_left
+					var index = faces[face].find(temp_1 + Voxel.Directions[face][3])
+					if index > -1:
+						var _voxel = get_voxel(faces[face][index])
+						if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(voxel, face) == -Vector2.ONE):
+							temp.append(index)
+							temp_1 += Voxel.Directions[face][3]
+							temp_2 += Voxel.Directions[face][3]
+							while true:
+								index = faces[face].find(temp_1 + Voxel.Directions[face][0])
+								if index > -1:
+									_voxel = get_voxel(faces[face][index])
+									if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(voxel, face) == -Vector2.ONE):
+										temp.append(index)
+										temp_1 += Voxel.Directions[face][0]
+										temp_2 += Voxel.Directions[face][0]
+									else: break
+								else: break
+							if temp.size() == width:
+								top_right += Voxel.Directions[face][3]
+								top_left += Voxel.Directions[face][3]
+								for index in temp:
+									faces[face].remove(index)
+							else: _break = true
+						else: break
+					else: break
+					if _break: break
+				
+				while true:
+					var temp := []
+					var _break = false
+					var temp_1 := bottom_right
+					var temp_2 := bottom_left
+					var index = faces[face].find(temp_1 + Voxel.Directions[face][2])
+					if index > -1:
+						var _voxel = get_voxel(faces[face][index])
+						if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(voxel, face) == -Vector2.ONE):
+							temp.append(index)
+							temp_1 += Voxel.Directions[face][2]
+							temp_2 += Voxel.Directions[face][2]
+							while true:
+								index = faces[face].find(temp_1 + Voxel.Directions[face][1])
+								if index > -1:
+									_voxel = get_voxel(faces[face][index])
+									if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(voxel, face) == -Vector2.ONE):
+										temp.append(index)
+										temp_1 += Voxel.Directions[face][1]
+										temp_2 += Voxel.Directions[face][1]
+									else: break
+								else: break
+							if temp.size() == width:
+								bottom_right += Voxel.Directions[face][2]
+								bottom_left += Voxel.Directions[face][2]
+								for index in temp:
+									faces[face].remove(index)
+							else: _break = true
+						else: break
+					else: break
+					if _break: break
 			
 			vt.add_face(
 				voxel,
