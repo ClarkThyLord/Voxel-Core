@@ -216,14 +216,7 @@ func update_voxel_preview(refresh := false) -> void:
 			Represents[1],
 			2
 		)
-		for direction in [
-			Vector3.RIGHT,
-			Vector3.LEFT,
-			Vector3.UP,
-			Vector3.DOWN,
-			Vector3.FORWARD,
-			Vector3.BACK
-		]:
+		for direction in Voxel.Directions:
 			VT.add_face(
 				placeholder,
 				direction,
