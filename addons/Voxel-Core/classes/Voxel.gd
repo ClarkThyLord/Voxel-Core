@@ -133,16 +133,143 @@ static func grid_to_snapped(grid : Vector3) -> Vector3:
 	return grid * VoxelSize
 
 
-static func vox_to_voxels(file : File) -> void:
+static func vox_to_voxels(file_path : String) -> Array:
+	var voxels := []
+	
+	
+	var file := File.new()
+	var error = file.open(file_path, File.READ)
+	if error == OK:
+		var magic := PoolByteArray([
+			file.get_8(),
+			file.get_8(),
+			file.get_8(),
+			file.get_8()
+		]).get_string_from_ascii()
+		
+		var magic_version := file.get_32()
+		
+		if magic == "VOX ":
+			print("vox ", magic_version)
+			
+			var palette := []
+			
+			while file.get_position() < file.get_len():
+				var chunk_name = PoolByteArray([
+					file.get_8(),
+					file.get_8(),
+					file.get_8(),
+					file.get_8()
+				]).get_string_from_ascii()
+				var chunk_size = file.get_32()
+				var chunk_children = file.get_32()
+				
+#				print(chunk_name, ", ", chunk_size, ", ", chunk_children)
+				match chunk_name:
+					"XYZI":
+						voxels.append({})
+						for i in range(0, file.get_32()):
+							voxels.back()[Vector3(
+								file.get_8(),
+								-file.get_8(),
+								file.get_8()
+							).floor()] = file.get_8()
+					"RGBA":
+						for i in range(0,256):
+							palette.append(Color(
+								float(file.get_8() / 255.0),
+								float(file.get_8() / 255.0),
+								float(file.get_8() / 255.0),
+								float(file.get_8() / 255.0)
+							))
+					_: file.get_buffer(chunk_size)
+			
+			for set in voxels:
+				for voxel in set:
+					set[voxel] = colored(palette[set[voxel]])
+			print("Voxels : ", voxels.size())
+#			print("VOXELS : ", voxels)
+#			print("PALETTE : ", palette)
+	else:
+		printerr("Vox To Voxels : Couldn't open file `", file_path, "`")
+	
+	if file.is_open():
+		file.close()
+	
+	
+	print("vox_to_voxels")
+	return voxels
+	
+	
+#	var voxels := {}
+#
+#
+#	var magic := PoolByteArray([
+#		file.get_8(),
+#		file.get_8(),
+#		file.get_8(),
+#		file.get_8()
+#	]).get_string_from_ascii()
+#
+#	var magic_version := file.get_32()
+#
+#	var magic_custom_colors := []
+#
+#	if magic == "VOX ":
+#		while file.get_position() < file.get_len():
+#			var chunkId = PoolByteArray([
+#				file.get_8(),
+#				file.get_8(),
+#				file.get_8(),
+#				file.get_8()
+#			]).get_string_from_ascii()
+#			var chunkSize = file.get_32()
+#			var childChunks = file.get_32()
+#			var chunkName = chunkId
+#
+#			if chunkName == "SIZE":
+#				file.get_32()   #   size X-axis
+#				file.get_32()   #   size Y-axis
+#				file.get_32()   #   size Z-axis
+#				file.get_buffer(chunkSize - 4 * 3)
+#			elif chunkName == "XYZI":
+#				for i in range(0, file.get_32()):
+#					var x := file.get_8()
+#					var z := -file.get_8()
+#					var y := file.get_8()
+#					voxels[Vector3(x, y, z).floor()] = file.get_8()
+#			elif chunkName == "RGBA":
+#				magic_custom_colors = []
+#				for i in range(0,256):
+#					magic_custom_colors.append(Color(
+#						float(file.get_8() / 255.0),
+#						float(file.get_8() / 255.0),
+#						float(file.get_8() / 255.0),
+#						float(file.get_8() / 255.0)
+#					))
+#			else: file.get_buffer(chunkSize)
+#	else:
+#		printerr("VoxToVoxels: file not valid .vox")
+#		return FAILED
+#	file.close()
+#
+#	if magic_custom_colors.size() > 0:
+#		for voxel_grid in voxels.keys():
+#			voxels[voxel_grid] = colored(magic_custom_colors[voxels[voxel_grid] - 1])
+#	else:
+#		for voxel_grid in voxels.keys():
+#			voxels[voxel_grid] = colored(Color(MagicaVoxelColors[voxels[voxel_grid]] - 1))
+#
+#
+#	return voxels
+
+static func qb_to_voxels(file_path : String) -> void:
 	pass
 
-static func qb_to_voxels(file : File) -> void:
+static func qbt_to_voxels(file_path : String) -> void:
 	pass
 
-static func qbt_to_voxels(file : File) -> void:
-	pass
-
-static func vxm_to_voxels(file : File) -> void:
+static func vxm_to_voxels(file_path : String) -> void:
 	pass
 
 
@@ -156,7 +283,7 @@ static func get_boundings(voxels : Array) -> Dictionary:
 		for voxel_grid in voxels:
 			if voxel_grid.x < dimensions["origin"].x:
 				dimensions["origin"].x = voxel_grid.x
-			if voxel_grid.y < dimensions["origin"].y: 
+			if voxel_grid.y < dimensions["origin"].y:
 				dimensions["origin"].y = voxel_grid.y
 			if voxel_grid.z < dimensions["origin"].z:
 				dimensions["origin"].z = voxel_grid.z

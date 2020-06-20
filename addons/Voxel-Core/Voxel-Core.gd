@@ -6,6 +6,8 @@ extends EditorPlugin
 # Imports
 const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
+var VoxelObjects := preload("res://addons/Voxel-Core/engine/Importer/VoxelObjects.gd").new()
+
 const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/VoxelSetEditor.tscn")
 const VoxelObjectEditor := preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.tscn")
 
@@ -40,12 +42,16 @@ static func typeof_voxel_core(object : Object) -> int:
 
 # Core
 func _enter_tree():
+	add_import_plugin(VoxelObjects)
+	
 	connect("scene_closed", self, "on_scene_closed")
 	connect("main_screen_changed", self, "on_main_screen_changed")
 	
 	print("Voxel-Core is active...")
 
 func _exit_tree():
+	remove_import_plugin(VoxelObjects)
+	
 	close_voxel_set_editor()
 	close_voxel_object_editor()
 	
