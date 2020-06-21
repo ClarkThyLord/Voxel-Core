@@ -133,63 +133,44 @@ static func grid_to_snapped(grid : Vector3) -> Vector3:
 	return grid * VoxelSize
 
 
-static func vox_to_voxels(file_path : String) -> Array:
-	var voxels := []
+static func read_vox(file_path : String) -> Dictionary:
+	var result := {
+		"error": OK,
+		"palette": [],
+		"chunks": []
+	}
 	
 	
 	var file := File.new()
 	var error = file.open(file_path, File.READ)
 	if error == OK:
-		var magic := PoolByteArray([
-			file.get_8(),
-			file.get_8(),
-			file.get_8(),
-			file.get_8()
-		]).get_string_from_ascii()
-		
+		var magic := file.get_buffer(4).get_string_from_ascii()
 		var magic_version := file.get_32()
 		
 		if magic == "VOX ":
-			print("vox ", magic_version)
-			
-			var palette := []
-			
 			while file.get_position() < file.get_len():
-				var chunk_name = PoolByteArray([
-					file.get_8(),
-					file.get_8(),
-					file.get_8(),
-					file.get_8()
-				]).get_string_from_ascii()
+				var chunk_name = file.get_buffer(4).get_string_from_ascii()
 				var chunk_size = file.get_32()
 				var chunk_children = file.get_32()
 				
-#				print(chunk_name, ", ", chunk_size, ", ", chunk_children)
 				match chunk_name:
 					"XYZI":
-						voxels.append({})
+						result["chunks"].append({})
 						for i in range(0, file.get_32()):
-							voxels.back()[Vector3(
+							result["chunks"].back()[Vector3(
 								file.get_8(),
 								-file.get_8(),
 								file.get_8()
 							).floor()] = file.get_8()
 					"RGBA":
 						for i in range(0,256):
-							palette.append(Color(
+							result["palette"].append(Color(
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0)
 							))
 					_: file.get_buffer(chunk_size)
-			
-			for set in voxels:
-				for voxel in set:
-					set[voxel] = colored(palette[set[voxel]])
-			print("Voxels : ", voxels.size())
-#			print("VOXELS : ", voxels)
-#			print("PALETTE : ", palette)
 	else:
 		printerr("Vox To Voxels : Couldn't open file `", file_path, "`")
 	
@@ -198,70 +179,7 @@ static func vox_to_voxels(file_path : String) -> Array:
 	
 	
 	print("vox_to_voxels")
-	return voxels
-	
-	
-#	var voxels := {}
-#
-#
-#	var magic := PoolByteArray([
-#		file.get_8(),
-#		file.get_8(),
-#		file.get_8(),
-#		file.get_8()
-#	]).get_string_from_ascii()
-#
-#	var magic_version := file.get_32()
-#
-#	var magic_custom_colors := []
-#
-#	if magic == "VOX ":
-#		while file.get_position() < file.get_len():
-#			var chunkId = PoolByteArray([
-#				file.get_8(),
-#				file.get_8(),
-#				file.get_8(),
-#				file.get_8()
-#			]).get_string_from_ascii()
-#			var chunkSize = file.get_32()
-#			var childChunks = file.get_32()
-#			var chunkName = chunkId
-#
-#			if chunkName == "SIZE":
-#				file.get_32()   #   size X-axis
-#				file.get_32()   #   size Y-axis
-#				file.get_32()   #   size Z-axis
-#				file.get_buffer(chunkSize - 4 * 3)
-#			elif chunkName == "XYZI":
-#				for i in range(0, file.get_32()):
-#					var x := file.get_8()
-#					var z := -file.get_8()
-#					var y := file.get_8()
-#					voxels[Vector3(x, y, z).floor()] = file.get_8()
-#			elif chunkName == "RGBA":
-#				magic_custom_colors = []
-#				for i in range(0,256):
-#					magic_custom_colors.append(Color(
-#						float(file.get_8() / 255.0),
-#						float(file.get_8() / 255.0),
-#						float(file.get_8() / 255.0),
-#						float(file.get_8() / 255.0)
-#					))
-#			else: file.get_buffer(chunkSize)
-#	else:
-#		printerr("VoxToVoxels: file not valid .vox")
-#		return FAILED
-#	file.close()
-#
-#	if magic_custom_colors.size() > 0:
-#		for voxel_grid in voxels.keys():
-#			voxels[voxel_grid] = colored(magic_custom_colors[voxels[voxel_grid] - 1])
-#	else:
-#		for voxel_grid in voxels.keys():
-#			voxels[voxel_grid] = colored(Color(MagicaVoxelColors[voxels[voxel_grid]] - 1))
-#
-#
-#	return voxels
+	return result
 
 static func qb_to_voxels(file_path : String) -> void:
 	pass
