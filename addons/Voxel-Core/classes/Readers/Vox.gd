@@ -137,7 +137,7 @@ static func compile_translation(nodes : Dictionary, models : Array, rotation : B
 
 static func read(file_path : String) -> Dictionary:
 	var result := {
-		"success": OK,
+		"error": OK,
 		"palette": [],
 		"models": []
 	}
@@ -183,13 +183,13 @@ static func read(file_path : String) -> Dictionary:
 					_: file.get_buffer(chunk_size)
 			compile_translation(nodes, result["models"], nodes[0].rotation, nodes[0].translation, nodes[0])
 		else:
-			result["success"] = ERR_FILE_UNRECOGNIZED
+			result["error"] = ERR_FILE_UNRECOGNIZED
 	else:
-		result["success"] = ERR_FILE_CANT_READ
+		result["error"] = ERR_FILE_CANT_READ
 	
 	if file.is_open():
 		file.close()
-	if result["success"] == OK:
+	if result["error"] == OK:
 		if result["palette"].empty():
 			result["palette"] = magicavoxel_default_palette
 	

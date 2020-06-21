@@ -42,7 +42,7 @@ static func typeof_voxel_core(object : Object) -> int:
 
 # Core
 func _enter_tree():
-#	add_import_plugin(VoxelObjects)
+	add_import_plugin(VoxelObjects)
 	
 	connect("scene_closed", self, "on_scene_closed")
 	connect("main_screen_changed", self, "on_main_screen_changed")
@@ -50,7 +50,7 @@ func _enter_tree():
 	print("Voxel-Core is active...")
 
 func _exit_tree():
-#	remove_import_plugin(VoxelObjects)
+	remove_import_plugin(VoxelObjects)
 	
 	close_voxel_set_editor()
 	close_voxel_object_editor()

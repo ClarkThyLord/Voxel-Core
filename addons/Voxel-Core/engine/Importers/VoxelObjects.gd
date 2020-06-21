@@ -74,9 +74,11 @@ func get_option_visibility(option : String, options : Dictionary) -> bool:
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
+	var data := {}
+	var error = FAILED
 	match source_file.get_extension():
 		"vox":
-			Vox.read(source_file)
+			data = Vox.read(source_file)
 		"qb":
 			continue
 		"qbt":
@@ -88,49 +90,17 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		"jpg":
 			continue
 		_:
-			printerr(get_importer_name(), " : ERR_FILE_UNRECOGNIZED")
 			return ERR_FILE_UNRECOGNIZED
-	
-	
-	printerr(get_importer_name(), " : FAILED")
-	return FAILED
-	
-#	var file := File.new()
-#	var error = file.open(source_file, File.READ)
-#	if error != OK:
-#		printerr("Could not open `", source_file, "`")
-#		if file.is_open(): file.close()
-#		return error
-#
-#	var voxels = Voxel.vox_to_voxels(file)
-#	if typeof(voxels) == TYPE_DICTIONARY and voxels.size() > 0:
-#		var voxelobject
-#		var voxelobjecttype : int = options.get("VoxelObject", 0)
-#
-#		if voxelobjecttype == 0:
-#			voxelobjecttype = 1
-#
-#		match voxelobjecttype:
-#			1:
-#				voxelobject = VoxelMesh.new()
-#				print("IMPORTED ", source_file.get_file(), " AS VoxelObject : VoxelMesh")
-#
-#		voxelobject.set_name(options["Name"] if options["Name"] != "" else source_file.get_file().replace("." + source_file.get_extension(), ""))
-#
-#		if options.get("Center", 1) > 0: voxels = Voxel.center(voxels, options.get("Center", 1) == 2)
-#		voxelobject.set_voxels(voxels, false)
-#		voxelobject.set_mesh_type(options.get("MeshType", 1), false, false)
-#		voxelobject.update()
-#
-#		var scene = PackedScene.new()
-#		if scene.pack(voxelobject) == OK:
-#			var result = ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], scene)
-#
-#			voxelobject.queue_free()
-#			return result
-#		else:
-#			voxelobject.queue_free()
-#			printerr("Couldn\"t save resource!")
-#			return FAILED
-#	printerr("VOX FILE EMPTY")
-#	return FAILED
+	error = data.get("error", FAILED)
+	if error == OK:
+		var voxelobject := VoxelMesh.new()
+		for model in data["models"]:
+			for position in model:
+				voxelobject.set_voxel(position, Voxel.colored(data["palette"][model[position]]))
+		voxelobject.update_mesh()
+		var scene = PackedScene.new()
+		error = scene.pack(voxelobject)
+		if error == OK:
+			error = ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], scene)
+		voxelobject.queue_free()
+	return error
