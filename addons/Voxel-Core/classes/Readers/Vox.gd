@@ -121,19 +121,41 @@ const magicavoxel_default_palette := [
 
 
 # Core
-static func compile_translation(nodes : Dictionary, models : Array, rotation : Basis, translation : Vector3, node := null) -> void:
-	if node is nTRN:
-		for child in node.children:
-			compile_translation(nodes, models, rotation + node.rotation, translation + node.translation, nodes[child])
-	elif node is nGRP:
-		for child in node.children:
-			compile_translation(nodes, models, rotation, translation, nodes[child])
-	elif node is nSHP:
-		for model in node.models:
-			var new_model := {}
+static func compile_translation(
+		node := 0,
+		nodes := {},
+		models := [],
+		rotation := Basis(),
+		translation = Vector3()
+	) -> void:
+	print(node, " = ", translation, ", ", rotation)
+	if nodes[node] is nTRN:
+		print('nTRN -> ', nodes[node].children)
+		for child in nodes[node].children:
+			compile_translation(
+				child,
+				nodes,
+				models,
+				rotation, #  + nodes[node].rotation
+				translation + nodes[node].translation
+			)
+	elif nodes[node] is nGRP:
+		print('nGRP -> ', nodes[node].children)
+		for child in nodes[node].children:
+			compile_translation(
+				child,
+				nodes,
+				models,
+				rotation,
+				translation
+			)
+	elif nodes[node] is nSHP:
+		print('nSHP -> ', nodes[node].models)
+		for model in nodes[node].models:
+			var translated_model := {}
 			for position in models[model]:
-				new_model[rotation.xform(position + translation)] = models[model][position]
-			models.insert(model, new_model)
+				translated_model[rotation.xform(position + translation)] = models[model][position]
+			models[model] = translated_model
 
 static func read(file_path : String) -> Dictionary:
 	var result := {
@@ -158,10 +180,13 @@ static func read(file_path : String) -> Dictionary:
 					"XYZI":
 						result["models"].append({})
 						for i in range(0, file.get_32()):
+							var x := file.get_8()
+							var z := -file.get_8()
+							var y := file.get_8()
 							result["models"].back()[Vector3(
-								file.get_8(),
-								-file.get_8(),
-								file.get_8()
+								x,
+								y,
+								z
 							).floor()] = file.get_8()
 					"RGBA":
 						for i in range(0,256):
@@ -181,7 +206,8 @@ static func read(file_path : String) -> Dictionary:
 						var node := nSHP.new(file)
 						nodes[node.node_id] = node
 					_: file.get_buffer(chunk_size)
-			compile_translation(nodes, result["models"], nodes[0].rotation, nodes[0].translation, nodes[0])
+			if not nodes.empty():
+				compile_translation(0, nodes, result["models"])
 		else:
 			result["error"] = ERR_FILE_UNRECOGNIZED
 	else:

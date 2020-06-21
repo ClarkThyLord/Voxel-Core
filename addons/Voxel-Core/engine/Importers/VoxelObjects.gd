@@ -94,6 +94,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	error = data.get("error", FAILED)
 	if error == OK:
 		var voxelobject := VoxelMesh.new()
+		voxelobject.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["Name"].empty() else options["Name"])
 		for model in data["models"]:
 			for position in model:
 				voxelobject.set_voxel(position, Voxel.colored(data["palette"][model[position]]))
