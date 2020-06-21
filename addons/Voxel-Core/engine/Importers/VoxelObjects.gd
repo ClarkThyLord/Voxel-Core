@@ -97,7 +97,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		voxelobject.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["Name"].empty() else options["Name"])
 		for model in data["models"]:
 			for position in model:
-				voxelobject.set_voxel(position, Voxel.colored(data["palette"][model[position]]))
+				voxelobject.set_voxel(position, Voxel.colored(data["palette"][model[position] - 1]))
 		voxelobject.update_mesh()
 		var scene = PackedScene.new()
 		error = scene.pack(voxelobject)
