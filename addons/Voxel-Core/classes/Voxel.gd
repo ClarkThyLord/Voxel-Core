@@ -133,64 +133,6 @@ static func grid_to_snapped(grid : Vector3) -> Vector3:
 	return grid * VoxelSize
 
 
-static func read_vox(file_path : String) -> Dictionary:
-	var result := {
-		"error": OK,
-		"palette": [],
-		"chunks": []
-	}
-	
-	
-	var file := File.new()
-	var error = file.open(file_path, File.READ)
-	if error == OK:
-		var magic := file.get_buffer(4).get_string_from_ascii()
-		var magic_version := file.get_32()
-		
-		if magic == "VOX ":
-			while file.get_position() < file.get_len():
-				var chunk_name = file.get_buffer(4).get_string_from_ascii()
-				var chunk_size = file.get_32()
-				var chunk_children = file.get_32()
-				
-				match chunk_name:
-					"XYZI":
-						result["chunks"].append({})
-						for i in range(0, file.get_32()):
-							result["chunks"].back()[Vector3(
-								file.get_8(),
-								-file.get_8(),
-								file.get_8()
-							).floor()] = file.get_8()
-					"RGBA":
-						for i in range(0,256):
-							result["palette"].append(Color(
-								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0)
-							))
-					_: file.get_buffer(chunk_size)
-	else:
-		printerr("Vox To Voxels : Couldn't open file `", file_path, "`")
-	
-	if file.is_open():
-		file.close()
-	
-	
-	print("vox_to_voxels")
-	return result
-
-static func qb_to_voxels(file_path : String) -> void:
-	pass
-
-static func qbt_to_voxels(file_path : String) -> void:
-	pass
-
-static func vxm_to_voxels(file_path : String) -> void:
-	pass
-
-
 static func get_boundings(voxels : Array) -> Dictionary:
 	var dimensions := { "origin": Vector3.ZERO, "dimensions": Vector3.ZERO }
 	

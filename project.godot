@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "Vox",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Readers/Vox.gd"
+}, {
 "base": "Object",
 "class": "Voxel",
 "language": "GDScript",
@@ -30,6 +35,7 @@ _global_script_classes=[ {
 "path": "res://addons/Voxel-Core/classes/VoxelTool.gd"
 } ]
 _global_script_class_icons={
+"Vox": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
 "Voxel": "res://addons/Voxel-Core/assets/classes/Voxel.png",
 "VoxelMesh": "res://addons/Voxel-Core/assets/classes/VoxelMesh.png",
 "VoxelSet": "res://addons/Voxel-Core/assets/classes/VoxelSet.png",

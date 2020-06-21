@@ -74,10 +74,9 @@ func get_option_visibility(option : String, options : Dictionary) -> bool:
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
-	var voxels : Array
 	match source_file.get_extension():
 		"vox":
-			voxels = Voxel.vox_to_voxels(source_file)
+			Vox.read(source_file)
 		"qb":
 			continue
 		"qbt":
@@ -91,9 +90,6 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		_:
 			printerr(get_importer_name(), " : ERR_FILE_UNRECOGNIZED")
 			return ERR_FILE_UNRECOGNIZED
-	
-	
-	
 	
 	
 	printerr(get_importer_name(), " : FAILED")
