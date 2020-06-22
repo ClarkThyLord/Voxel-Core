@@ -25,6 +25,9 @@ class nTRN:
 	
 	func string_to_vector3(string: String) -> Vector3:
 		var floats = string.split_floats(' ')
+		if floats[0] == 0: floats[0] = 1
+		if floats[1] == 0: floats[1] = 1
+		if floats[2] == 0: floats[2] = 1
 		return Vector3(floats[0], floats[2], -floats[1])
 	
 	func byte_to_basis(byte: int) -> Basis:
@@ -129,18 +132,20 @@ static func compile_translation(
 		node := 0,
 		nodes := {},
 		models := [],
-		rotation := Basis(),
+		rotations := [Basis()],
 		translation := Vector3()
 	) -> void:
 	print("At node #", node, ", translation ", translation)
 	if nodes[node] is nTRN:
 		print('nTRN : ', nodes[node].translation, ' -> ', nodes[node].children, " <---")
+		var _rotations = rotations.duplicate()
+		_rotations.append(nodes[node].rotation)
 		for child in nodes[node].children:
 			compile_translation(
 				child,
 				nodes,
 				models,
-				rotation, # + nodes[node].rotation
+				_rotations,
 				translation + nodes[node].translation
 			)
 	elif nodes[node] is nGRP:
@@ -150,21 +155,19 @@ static func compile_translation(
 				child,
 				nodes,
 				models,
-				rotation,
+				rotations,
 				translation
 			)
 	elif nodes[node] is nSHP:
 		print('nSHP -> ', nodes[node].models, " <===")
 		for model in nodes[node].models:
-			var translated_model := {}
-			print("TRANSLATION")
-			print((models[model].size / 2).floor())
-			print("+ ", translation + (models[model].size / 2).floor())
-			print("- ", translation - (models[model].size / 2).floor())
+			var transformed_model := {}
 			for position in models[model].voxels:
-				translated_model[position + (translation - (models[model].size / 2).floor())] = models[model].voxels[position] # rotation.xform()
-			models[model] = translated_model
-			print("TRANSLATION END")
+				var _position = position + (translation - (models[model].size / 2).floor())
+				for rotation in rotations:
+					_position = rotation.xform(_position)
+				transformed_model[_position] = models[model].voxels[position]
+			models[model] = transformed_model
 
 static func read(file_path : String) -> Dictionary:
 	var result := {
