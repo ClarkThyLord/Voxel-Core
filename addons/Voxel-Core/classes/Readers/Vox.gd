@@ -4,6 +4,10 @@ class_name Vox, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
 
 
 # Declarations
+class Model:
+	var size : Vector3
+	var voxels := {}
+
 class nTRN:
 	var node_id : int
 	var attributes := {}
@@ -21,7 +25,7 @@ class nTRN:
 	
 	func string_to_vector3(string: String) -> Vector3:
 		var floats = string.split_floats(' ')
-		return Vector3(floats[0], floats[1], floats[2])
+		return Vector3(floats[0], floats[2], -floats[1])
 	
 	func byte_to_basis(byte: int) -> Basis:
 		var x_ind = ((byte >> 0) & 0x03)
@@ -126,17 +130,17 @@ static func compile_translation(
 		nodes := {},
 		models := [],
 		rotation := Basis(),
-		translation = Vector3()
+		translation := Vector3()
 	) -> void:
-	print(node, " = ", translation, ", ", rotation)
+	print("At node #", node, ", translation ", translation)
 	if nodes[node] is nTRN:
-		print('nTRN -> ', nodes[node].children)
+		print('nTRN : ', nodes[node].translation, ' -> ', nodes[node].children, " <---")
 		for child in nodes[node].children:
 			compile_translation(
 				child,
 				nodes,
 				models,
-				rotation, #  + nodes[node].rotation
+				rotation, # + nodes[node].rotation
 				translation + nodes[node].translation
 			)
 	elif nodes[node] is nGRP:
@@ -150,12 +154,17 @@ static func compile_translation(
 				translation
 			)
 	elif nodes[node] is nSHP:
-		print('nSHP -> ', nodes[node].models)
+		print('nSHP -> ', nodes[node].models, " <===")
 		for model in nodes[node].models:
 			var translated_model := {}
-			for position in models[model]:
-				translated_model[rotation.xform(position + translation)] = models[model][position]
+			print("TRANSLATION")
+			print((models[model].size / 2).floor())
+			print("+ ", translation + (models[model].size / 2).floor())
+			print("- ", translation - (models[model].size / 2).floor())
+			for position in models[model].voxels:
+				translated_model[position + (translation - (models[model].size / 2).floor())] = models[model].voxels[position] # rotation.xform()
 			models[model] = translated_model
+			print("TRANSLATION END")
 
 static func read(file_path : String) -> Dictionary:
 	var result := {
@@ -177,13 +186,20 @@ static func read(file_path : String) -> Dictionary:
 				var chunk_children = file.get_32()
 				
 				match chunk_name:
+					"SIZE":
+						var x := file.get_32()
+						var z := -file.get_32()
+						var y := file.get_32()
+						
+						var model := Model.new()
+						model.size = Vector3(x, y, z)
+						result["models"].append(model)
 					"XYZI":
-						result["models"].append({})
 						for i in range(0, file.get_32()):
 							var x := file.get_8()
 							var z := -file.get_8()
 							var y := file.get_8()
-							result["models"].back()[Vector3(
+							result["models"].back().voxels[Vector3(
 								x,
 								y,
 								z
@@ -206,7 +222,10 @@ static func read(file_path : String) -> Dictionary:
 						var node := nSHP.new(file)
 						nodes[node.node_id] = node
 					_: file.get_buffer(chunk_size)
-			if not nodes.empty():
+			if nodes.empty():
+				for model in range(result["models"].size()):
+					result["models"][model] = result["models"][model].voxels
+			else:
 				compile_translation(0, nodes, result["models"])
 		else:
 			result["error"] = ERR_FILE_UNRECOGNIZED
