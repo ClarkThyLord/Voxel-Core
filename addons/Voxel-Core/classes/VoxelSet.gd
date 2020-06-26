@@ -140,7 +140,7 @@ func erase_voxel(id : int, update := true) -> void:
 	
 	if update: updated_voxels()
 
-func erase_voxels(update := true, update := true) -> void:
+func erase_voxels(update := true) -> void:
 	if Locked:
 		printerr("VoxelSet Locked")
 		return
