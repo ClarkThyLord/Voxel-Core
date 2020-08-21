@@ -407,3 +407,13 @@ func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 func _on_VoxelSetViewer_unselected(voxel_id : int) -> void:
 	if VoxelSetViewer.Selections.empty():
 		set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))
+
+
+func _on_Docs_pressed():
+	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core/wiki")
+
+func _on_Issues_pressed():
+	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core/issues")
+
+func _on_GitHub_pressed():
+	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core")

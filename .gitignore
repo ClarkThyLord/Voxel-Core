@@ -4,5 +4,6 @@
 export.cfg
 export_presets.cfg
 
+testing/
 # Mono-specific ignores
 .mono/
