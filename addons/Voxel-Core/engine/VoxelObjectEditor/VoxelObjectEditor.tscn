@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -21,7 +21,6 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/cursor.png" type="Texture" id=19]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/grid.png" type="Texture" id=20]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/general.png" type="Texture" id=21]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/about.png" type="Texture" id=22]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/primary.png" type="Texture" id=23]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/area.png" type="Texture" id=24]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/extrude.png" type="Texture" id=25]
@@ -33,6 +32,8 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/docs.png" type="Texture" id=31]
 [ext_resource path="res://addons/Voxel-Core/assets/logos/GitHub.png" type="Texture" id=32]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/issues.png" type="Texture" id=33]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/reset.png" type="Texture" id=34]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/refresh.png" type="Texture" id=35]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 49
@@ -522,6 +523,71 @@ margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer"]
+margin_right = 326.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Docs" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 53.0
+margin_top = 38.0
+margin_right = 116.0
+margin_bottom = 62.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Docs"
+icon = ExtResource( 31 )
+align = 0
+
+[node name="Issues" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 120.0
+margin_top = 38.0
+margin_right = 193.0
+margin_bottom = 62.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Issues"
+icon = ExtResource( 33 )
+align = 0
+
+[node name="GitHub" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 197.0
+margin_top = 38.0
+margin_right = 273.0
+margin_bottom = 62.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "GitHub"
+icon = ExtResource( 32 )
+align = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer"]
+margin_top = 104.0
+margin_right = 326.0
+margin_bottom = 126.0
+size_flags_horizontal = 3
+
+[node name="SettingsRefresh" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_right = 161.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Refresh Settings"
+icon = ExtResource( 35 )
+align = 0
+
+[node name="SettingsReset2" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 165.0
+margin_right = 326.0
+margin_bottom = 22.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Reset Settings"
+icon = ExtResource( 34 )
+align = 0
+
 [node name="Cursor" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 visible = false
 anchor_right = 1.0
@@ -552,6 +618,33 @@ margin_right = 326.0
 margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="CursorVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
+margin_right = 326.0
+margin_bottom = 24.0
+text = "Visible"
+
+[node name="CursorDynamicColor2" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
+margin_right = 326.0
+margin_bottom = 24.0
+text = "Dynamic Color"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
+margin_top = 28.0
+margin_right = 326.0
+margin_bottom = 48.0
+
+[node name="CursorStaticColor" type="ColorPickerButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_right = 32.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 32, 0 )
+
+[node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
+margin_left = 36.0
+margin_top = 3.0
+margin_right = 108.0
+margin_bottom = 17.0
+text = "Static Color"
 
 [node name="Grid" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 visible = false
@@ -584,70 +677,38 @@ margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="About" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 34.0
-margin_right = -4.0
-margin_bottom = -4.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_tab_icon": ExtResource( 22 )
-}
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About"]
+[node name="GridVisible2" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_right = 326.0
-margin_bottom = 126.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-follow_focus = true
-scroll_horizontal_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_bottom = 24.0
+text = "Visible"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer"]
+[node name="GridConstant" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
+margin_top = 28.0
 margin_right = 326.0
-margin_bottom = 126.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
+margin_bottom = 52.0
+text = "Constant"
 
-[node name="Docs" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer/HBoxContainer"]
-margin_left = 53.0
-margin_top = 51.0
-margin_right = 116.0
-margin_bottom = 75.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Docs"
-icon = ExtResource( 31 )
-align = 0
+[node name="GridMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
+margin_top = 56.0
+margin_right = 326.0
+margin_bottom = 76.0
 
-[node name="Issues" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer/HBoxContainer"]
-margin_left = 120.0
-margin_top = 51.0
-margin_right = 193.0
-margin_bottom = 75.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Issues"
-icon = ExtResource( 33 )
-align = 0
+[node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
+margin_top = 80.0
+margin_right = 326.0
+margin_bottom = 100.0
 
-[node name="GitHub" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer/HBoxContainer"]
-margin_left = 197.0
-margin_top = 51.0
-margin_right = 273.0
-margin_bottom = 75.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "GitHub"
-icon = ExtResource( 32 )
-align = 0
+[node name="GridColor" type="ColorPickerButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 32.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 32, 0 )
+
+[node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 36.0
+margin_top = 3.0
+margin_right = 100.0
+margin_bottom = 17.0
+text = "Grid Color"
 
 [node name="ColorMenu" type="WindowDialog" parent="."]
 margin_right = 325.0
@@ -669,10 +730,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 16.0
-margin_bottom = 16.0
+margin_left = 68.0
+margin_top = 68.0
+margin_right = 68.0
+margin_bottom = 68.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -715,9 +776,9 @@ text = "Cancel"
 [connection signal="selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="_on_Lock_toggled"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer/HBoxContainer/Docs" to="." method="_on_Docs_pressed"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer/HBoxContainer/Issues" to="." method="_on_Issues_pressed"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/About/ScrollContainer/HBoxContainer/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Issues" to="." method="_on_Issues_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Use" to="." method="_on_ColorMenu_Use_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Add" to="." method="_on_ColorMenu_Add_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
