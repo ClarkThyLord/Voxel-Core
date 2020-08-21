@@ -7,3 +7,4 @@ export_presets.cfg
 testing/
 # Mono-specific ignores
 .mono/
+addons/Voxel-Core/engine/VoxelObjectEditor/config.json

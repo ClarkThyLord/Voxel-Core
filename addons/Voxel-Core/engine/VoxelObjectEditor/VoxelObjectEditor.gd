@@ -96,24 +96,29 @@ onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxConta
 func set_cursor_visible(visible : bool) -> void:
 	Config["cursor.visible"] = visible
 	CursorVisible.pressed = visible
+	save_config()
 onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 func set_cursor_dynamic(dynamic : bool) -> void:
 	Config["cursor.dynamic"] = dynamic
 	CursorDynamic.pressed = dynamic
 	CursorColor.disabled = dynamic
+	save_config()
 onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
 func set_cursor_color(color : Color) -> void:
 	Config["cursor.color"] = color
 	CursorColor.color = color
+	save_config()
 
 onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
 func set_grid_visible(visible : bool) -> void:
 	Config["grid.visible"] = visible
 	GridVisible.pressed = visible
+	save_config()
 onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
 func set_grid_constant(constant : bool) -> void:
 	Config["grid.constant"] = constant
 	GridConstant.pressed = constant
+	save_config()
 onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 func update_grid_mode() -> void:
 	GridMode.clear()
@@ -126,10 +131,12 @@ func update_grid_mode() -> void:
 func set_grid_mode(mode : int) -> void:
 	Config["grid.mode"] = mode
 	GridMode.selected = mode
+	save_config()
 onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
 func set_grid_color(color : Color) -> void:
 	Config["grid.color"] = color
 	GridColor.color = color
+	save_config()
 
 
 onready var ColorMenu := get_node("ColorMenu")
@@ -285,7 +292,7 @@ func save_config() -> void:
 	)
 	if opened == OK:
 		config.store_string(JSON.print(Config))
-		opened.close()
+		config.close()
 
 func load_config() -> void:
 	var config = File.new()
@@ -294,20 +301,29 @@ func load_config() -> void:
 		File.READ
 	)
 	if opened == OK:
-		var config_ = JSON.parse(opened.get_as_text())
+		var config_ = JSON.parse(config.get_as_text())
 		if config_.error == OK and typeof(config_.result) == TYPE_DICTIONARY:
-			Config = config.result
+			Config = config_.result
 		else: Config = DefaultConfig.duplicate()
 		config.close()
 	else: Config = DefaultConfig.duplicate()
 	
 	set_cursor_visible(Config["cursor.visible"])
 	set_cursor_dynamic(Config["cursor.dynamic"])
-	set_cursor_color(Config["cursor.color"])
+	var color
+	if typeof(Config["cursor.color"]) == TYPE_STRING:
+		color = Config["cursor.color"].split_floats(",")
+		color = Color(color[0], color[1], color[2], color[3])
+	else: color = Config["cursor.color"]
+	set_cursor_color(color)
 	
 	set_grid_visible(Config["grid.visible"])
 	set_grid_mode(Config["grid.mode"])
-	set_grid_color(Config["grid.color"])
+	if typeof(Config["grid.color"]) == TYPE_STRING:
+		color = Config["grid.color"].split_floats(",")
+		color = Color(color[0], color[1], color[2], color[3])
+	else: color = Config["grid.color"]
+	set_grid_color(color)
 	set_grid_constant(Config["grid.constant"])
 
 
