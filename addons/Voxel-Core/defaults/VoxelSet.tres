@@ -27,6 +27,10 @@ __meta__ = {
 },
 4: {
 "color": Color( 1, 1, 1, 1 )
+},
+5: {
+"color": Color( 1, 1, 1, 1 ),
+"texture": Vector2( 2, 3 )
 }
 }
 }

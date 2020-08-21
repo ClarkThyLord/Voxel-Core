@@ -351,7 +351,7 @@ margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Effects" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
+[node name="Edit" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -365,7 +365,7 @@ __meta__ = {
 "_tab_icon": ExtResource( 15 )
 }
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Effects"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Edit"]
 margin_top = 66.0
 margin_right = 325.0
 margin_bottom = 128.0
@@ -377,7 +377,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Effects/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/Edit/ScrollContainer"]
 margin_right = 325.0
 margin_bottom = 62.0
 size_flags_horizontal = 3
@@ -635,10 +635,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 4.0
-margin_bottom = 4.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 8.0
+margin_bottom = 8.0
 size_flags_vertical = 3
 edit_alpha = false
 

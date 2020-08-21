@@ -30,29 +30,29 @@ class nTRN:
 		if floats[2] == 0: floats[2] = 1
 		return Vector3(floats[0], floats[2], -floats[1])
 	
-	func byte_to_basis(byte: int) -> Basis:
-		var x_ind = ((byte >> 0) & 0x03)
-		var y_ind = ((byte >> 2) & 0x03)
+	func byte_to_basis(byte : int) -> Basis:
+		var y_ind = ((byte >> 0) & 0x03)
+		var z_ind = ((byte >> 2) & 0x03)
 		var indexes = [0, 1, 2]
-		indexes.erase(x_ind)
 		indexes.erase(y_ind)
-		var z_ind = indexes[0]
+		indexes.erase(z_ind)
+		var x_ind = indexes[0]
 		var x_sign = 1 if ((byte >> 4) & 0x01) == 0 else -1
-		var y_sign = 1 if ((byte >> 5) & 0x01) == 0 else -1
-		var z_sign = 1 if ((byte >> 6) & 0x01) == 0 else -1
-		var result = Basis()
-		result.x[0] = x_sign if x_ind == 0 else 0
-		result.x[1] = x_sign if x_ind == 1 else 0
-		result.x[2] = x_sign if x_ind == 2 else 0
-	
-		result.y[0] = y_sign if y_ind == 0 else 0
-		result.y[1] = y_sign if y_ind == 1 else 0
-		result.y[2] = y_sign if y_ind == 2 else 0
-	
-		result.z[0] = z_sign if z_ind == 0 else 0
-		result.z[1] = z_sign if z_ind == 1 else 0
-		result.z[2] = z_sign if z_ind == 2 else 0
-		return result
+		var y_sign = 1 if ((byte >> 6) & 0x01) == 0 else -1
+		var z_sign = -1 if ((byte >> 5) & 0x01) == 0 else 1
+		var basis = Basis()
+		basis.x[0] = x_sign if x_ind == 0 else 0
+		basis.x[1] = x_sign if x_ind == 1 else 0
+		basis.x[2] = x_sign if x_ind == 2 else 0
+		
+		basis.y[0] = y_sign if y_ind == 0 else 0
+		basis.y[1] = y_sign if y_ind == 1 else 0
+		basis.y[2] = y_sign if y_ind == 2 else 0
+		
+		basis.z[0] = z_sign if z_ind == 0 else 0
+		basis.z[1] = z_sign if z_ind == 1 else 0
+		basis.z[2] = z_sign if z_ind == 2 else 0
+		return basis
 	
 	
 	func _init(file : File) -> void:
@@ -65,6 +65,7 @@ class nTRN:
 			if frame_attributes.has("_t"):
 				translation = string_to_vector3(frame_attributes["_t"])
 			if frame_attributes.has("_r"):
+				print("BYTE TO BASIS")
 				rotation = byte_to_basis(int(frame_attributes["_r"]))
 
 class nGRP:
@@ -132,7 +133,7 @@ static func compile_translation(
 		node := 0,
 		nodes := {},
 		models := [],
-		rotations := [Basis()],
+		rotations := [],
 		translation := Vector3()
 	) -> void:
 	print("At node #", node, ", translation ", translation)
@@ -163,9 +164,12 @@ static func compile_translation(
 		for model in nodes[node].models:
 			var transformed_model := {}
 			for position in models[model].voxels:
-				var _position = position + (translation - (models[model].size / 2).floor())
+				var size = models[model].size
+				var _position = position
 				for rotation in rotations:
+					size = rotation.xform(size)
 					_position = rotation.xform(_position)
+				_position += translation - (size / 2).floor()
 				transformed_model[_position] = models[model].voxels[position]
 			models[model] = transformed_model
 
