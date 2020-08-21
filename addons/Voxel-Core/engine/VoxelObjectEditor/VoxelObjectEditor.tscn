@@ -634,7 +634,6 @@ text = "Visible"
 margin_top = 28.0
 margin_right = 326.0
 margin_bottom = 52.0
-pressed = true
 text = "Dynamic Color"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
@@ -646,8 +645,7 @@ margin_bottom = 76.0
 margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
-disabled = true
-color = Color( 1, 1, 1, 1 )
+color = Color( 0.521569, 0.05098, 0.05098, 1 )
 
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
@@ -690,7 +688,6 @@ size_flags_vertical = 3
 [node name="GridVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_right = 326.0
 margin_bottom = 24.0
-pressed = true
 text = "Visible"
 
 [node name="GridConstant" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
@@ -704,10 +701,10 @@ text = "Constant"
 margin_top = 56.0
 margin_right = 326.0
 margin_bottom = 76.0
-text = "Wired"
-icon = ExtResource( 36 )
+text = "Solid"
+icon = ExtResource( 22 )
 items = [ "Solid", ExtResource( 22 ), false, 0, null, "Wired", ExtResource( 36 ), false, 1, null ]
-selected = 1
+selected = 0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_top = 80.0
@@ -747,10 +744,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 100.0
-margin_top = 100.0
-margin_right = 100.0
-margin_bottom = 100.0
+margin_left = 104.0
+margin_top = 104.0
+margin_right = 104.0
+margin_bottom = 104.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -796,6 +793,8 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Issues" to="." method="_on_Issues_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer/SettingsRefresh" to="." method="load_config"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer/SettingsReset2" to="." method="reset_config"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible" to="." method="set_cursor_visible"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic" to="." method="set_cursor_dynamic"]
 [connection signal="color_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor" to="." method="set_cursor_color"]

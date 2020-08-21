@@ -326,6 +326,11 @@ func load_config() -> void:
 	set_grid_color(color)
 	set_grid_constant(Config["grid.constant"])
 
+func reset_config() -> void:
+	Config = DefaultConfig.duplicate()
+	save_config()
+	load_config()
+
 
 
 
