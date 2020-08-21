@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=2]
+[gd_scene load_steps=53 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -21,6 +21,7 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/cursor.png" type="Texture" id=19]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/grid.png" type="Texture" id=20]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/general.png" type="Texture" id=21]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/solid.png" type="Texture" id=22]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/primary.png" type="Texture" id=23]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/area.png" type="Texture" id=24]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/extrude.png" type="Texture" id=25]
@@ -34,6 +35,7 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/issues.png" type="Texture" id=33]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/reset.png" type="Texture" id=34]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/refresh.png" type="Texture" id=35]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/wired.png" type="Texture" id=36]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 49
@@ -535,6 +537,7 @@ margin_left = 53.0
 margin_top = 38.0
 margin_right = 116.0
 margin_bottom = 62.0
+mouse_default_cursor_shape = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Docs"
@@ -546,6 +549,7 @@ margin_left = 120.0
 margin_top = 38.0
 margin_right = 193.0
 margin_bottom = 62.0
+mouse_default_cursor_shape = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Issues"
@@ -557,6 +561,7 @@ margin_left = 197.0
 margin_top = 38.0
 margin_right = 273.0
 margin_bottom = 62.0
+mouse_default_cursor_shape = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "GitHub"
@@ -622,22 +627,27 @@ size_flags_vertical = 3
 [node name="CursorVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
 margin_right = 326.0
 margin_bottom = 24.0
+pressed = true
 text = "Visible"
 
-[node name="CursorDynamicColor2" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
+[node name="CursorDynamic" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
+margin_top = 28.0
 margin_right = 326.0
-margin_bottom = 24.0
+margin_bottom = 52.0
+pressed = true
 text = "Dynamic Color"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
-margin_top = 28.0
+margin_top = 56.0
 margin_right = 326.0
-margin_bottom = 48.0
+margin_bottom = 76.0
 
-[node name="CursorStaticColor" type="ColorPickerButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="CursorColor" type="ColorPickerButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+disabled = true
+color = Color( 1, 1, 1, 1 )
 
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
@@ -677,21 +687,27 @@ margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GridVisible2" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
+[node name="GridVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_right = 326.0
 margin_bottom = 24.0
+pressed = true
 text = "Visible"
 
 [node name="GridConstant" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 326.0
 margin_bottom = 52.0
+pressed = true
 text = "Constant"
 
 [node name="GridMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_top = 56.0
 margin_right = 326.0
 margin_bottom = 76.0
+text = "Wired"
+icon = ExtResource( 36 )
+items = [ "Solid", ExtResource( 22 ), false, 0, null, "Wired", ExtResource( 36 ), false, 1, null ]
+selected = 1
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
 margin_top = 80.0
@@ -702,6 +718,7 @@ margin_bottom = 100.0
 margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+color = Color( 1, 1, 1, 1 )
 
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 36.0
@@ -730,10 +747,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 68.0
-margin_top = 68.0
-margin_right = 68.0
-margin_bottom = 68.0
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 100.0
+margin_bottom = 100.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -779,6 +796,13 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Issues" to="." method="_on_Issues_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible" to="." method="set_cursor_visible"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic" to="." method="set_cursor_dynamic"]
+[connection signal="color_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor" to="." method="set_cursor_color"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible" to="." method="set_grid_visible"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant" to="." method="set_grid_constant"]
+[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode" to="." method="set_grid_mode"]
+[connection signal="color_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor" to="." method="set_grid_color"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Use" to="." method="_on_ColorMenu_Use_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Add" to="." method="_on_ColorMenu_Add_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]

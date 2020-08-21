@@ -92,6 +92,45 @@ func update_settings() -> void:
 		var name : String = Settings.get_tab_title(tab)
 		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
 
+onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible")
+func set_cursor_visible(visible : bool) -> void:
+	Config["cursor.visible"] = visible
+	CursorVisible.pressed = visible
+onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
+func set_cursor_dynamic(dynamic : bool) -> void:
+	Config["cursor.dynamic"] = dynamic
+	CursorDynamic.pressed = dynamic
+	CursorColor.disabled = dynamic
+onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
+func set_cursor_color(color : Color) -> void:
+	Config["cursor.color"] = color
+	CursorColor.color = color
+
+onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
+func set_grid_visible(visible : bool) -> void:
+	Config["grid.visible"] = visible
+	GridVisible.pressed = visible
+onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
+func set_grid_constant(constant : bool) -> void:
+	Config["grid.constant"] = constant
+	GridConstant.pressed = constant
+onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
+func update_grid_mode() -> void:
+	GridMode.clear()
+	for mode_index in range(VoxelGrid.GridModes.size()):
+		GridMode.add_icon_item(
+			load("res://addons/Voxel-Core/assets/controls/" + VoxelGrid.GridModes.keys()[mode_index].to_lower() + ".png"),
+			VoxelGrid.GridModes.keys()[mode_index].capitalize(),
+			mode_index
+		)
+func set_grid_mode(mode : int) -> void:
+	Config["grid.mode"] = mode
+	GridMode.selected = mode
+onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
+func set_grid_color(color : Color) -> void:
+	Config["grid.color"] = color
+	GridColor.color = color
+
 
 onready var ColorMenu := get_node("ColorMenu")
 onready var ColorPickerRef := get_node("ColorMenu/VBoxContainer/ColorPicker")
@@ -228,6 +267,50 @@ func get_rpalette(palette : int = Palette.get_selected_id()) -> Dictionary:
 
 var VoxelObjectRef : VoxelObject setget begin
 
+const DefaultConfig := {
+	"cursor.visible": true,
+	"cursor.dynamic": true,
+	"cursor.color": Color.white,
+	"grid.visible": true,
+	"grid.mode": VoxelGrid.GridModes.WIRED,
+	"grid.color": Color.white,
+	"grid.constant": true
+}
+var Config := {}
+func save_config() -> void:
+	var config = File.new()
+	var opened = config.open(
+		"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.json",
+		File.WRITE
+	)
+	if opened == OK:
+		config.store_string(JSON.print(Config))
+		opened.close()
+
+func load_config() -> void:
+	var config = File.new()
+	var opened = config.open(
+		"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.json",
+		File.READ
+	)
+	if opened == OK:
+		var config_ = JSON.parse(opened.get_as_text())
+		if config_.error == OK and typeof(config_.result) == TYPE_DICTIONARY:
+			Config = config.result
+		else: Config = DefaultConfig.duplicate()
+		config.close()
+	else: Config = DefaultConfig.duplicate()
+	
+	set_cursor_visible(Config["cursor.visible"])
+	set_cursor_dynamic(Config["cursor.dynamic"])
+	set_cursor_color(Config["cursor.color"])
+	
+	set_grid_visible(Config["grid.visible"])
+	set_grid_mode(Config["grid.mode"])
+	set_grid_color(Config["grid.color"])
+	set_grid_constant(Config["grid.constant"])
+
+
 
 
 # Utilities
@@ -296,6 +379,9 @@ func _ready():
 	update_mirrors()
 	update_more()
 	update_settings()
+	update_grid_mode()
+	
+	load_config()
 
 func _exit_tree():
 	if is_instance_valid(Grid):
