@@ -104,7 +104,11 @@ func set_cursor_dynamic(dynamic : bool) -> void:
 	Config["cursor.dynamic"] = dynamic
 	CursorDynamic.pressed = dynamic
 	CursorColor.disabled = dynamic
-	if not dynamic:
+	if dynamic:
+		var color = ColorPicked.color
+		color.a = 0.5
+		set_cursor_color(color)
+	else:
 		set_cursor_color(Config["cursor.color"])
 	save_config()
 onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
