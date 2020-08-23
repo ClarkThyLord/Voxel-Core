@@ -119,13 +119,14 @@ onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContain
 func set_grid_visible(visible : bool) -> void:
 	Config["grid.visible"] = visible
 	GridVisible.pressed = visible
-	Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.get_voxels().empty()) or not visible
+	GridConstant.disabled = not visible
+	Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.empty()) or not visible
 	save_config()
 onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
 func set_grid_constant(constant : bool) -> void:
 	Config["grid.constant"] = constant
 	GridConstant.pressed = constant
-	Grid.Disabled = (not constant and not VoxelObjectRef.get_voxels().empty()) or not GridVisible.pressed
+	Grid.Disabled = (not constant and not VoxelObjectRef.empty()) or not GridVisible.pressed
 	save_config()
 onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 func update_grid_mode() -> void:
@@ -480,7 +481,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 				)
 				
 				if not GridConstant.pressed:
-					Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.get_voxels().empty()) or not GridVisible.pressed
+					Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.empty()) or not GridVisible.pressed
 				
 				return handle_result
 	return false

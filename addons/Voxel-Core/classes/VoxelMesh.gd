@@ -30,6 +30,10 @@ func _init() -> void: call_deferred("_load")
 func _ready() -> void: call_deferred("_load")
 
 
+func empty() -> bool:
+	return voxels.empty()
+
+
 func set_voxel(grid : Vector3, voxel) -> void:
 	match typeof(voxel):
 		TYPE_INT, TYPE_DICTIONARY:
