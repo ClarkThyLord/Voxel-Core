@@ -96,28 +96,36 @@ onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxConta
 func set_cursor_visible(visible : bool) -> void:
 	Config["cursor.visible"] = visible
 	CursorVisible.pressed = visible
+	set_cursors_visibility(visible)
 	save_config()
 onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 func set_cursor_dynamic(dynamic : bool) -> void:
 	Config["cursor.dynamic"] = dynamic
 	CursorDynamic.pressed = dynamic
 	CursorColor.disabled = dynamic
+	if not dynamic:
+		set_cursor_color(Config["cursor.color"])
 	save_config()
 onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
 func set_cursor_color(color : Color) -> void:
 	Config["cursor.color"] = color
 	CursorColor.color = color
+	if not CursorDynamic:
+		for cursor in Cursors.values():
+			cursor.Modulate = color
 	save_config()
 
 onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
 func set_grid_visible(visible : bool) -> void:
 	Config["grid.visible"] = visible
 	GridVisible.pressed = visible
+	Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.get_voxels().empty()) or not visible
 	save_config()
 onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
 func set_grid_constant(constant : bool) -> void:
 	Config["grid.constant"] = constant
 	GridConstant.pressed = constant
+	Grid.Disabled = (not constant and not VoxelObjectRef.get_voxels().empty()) or not GridVisible.pressed
 	save_config()
 onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 func update_grid_mode() -> void:
@@ -131,11 +139,13 @@ func update_grid_mode() -> void:
 func set_grid_mode(mode : int) -> void:
 	Config["grid.mode"] = mode
 	GridMode.selected = mode
+	Grid.GridMode = mode
 	save_config()
 onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
 func set_grid_color(color : Color) -> void:
 	Config["grid.color"] = color
 	GridColor.color = color
+	Grid.Modulate = color
 	save_config()
 
 
@@ -208,11 +218,11 @@ var Cursors := {
 func set_cursors(cursors : Dictionary) -> void: pass
 
 func set_cursors_visibility(visible := not Lock.pressed) -> void:
-	Cursors[Vector3.ZERO].visible = visible
+	Cursors[Vector3.ZERO].visible = visible and CursorVisible
 	var mirrors := get_mirrors()
 	for cursor in Cursors:
 		if not cursor == Vector3.ZERO:
-			Cursors[cursor].visible = visible and mirrors.has(cursor)
+			Cursors[cursor].visible = Cursors[Vector3.ZERO].visible and mirrors.has(cursor)
 
 func set_cursors_selections(
 		selections := [last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].tool_normal] if not last_hit.empty() else []
@@ -304,26 +314,33 @@ func load_config() -> void:
 		var config_ = JSON.parse(config.get_as_text())
 		if config_.error == OK and typeof(config_.result) == TYPE_DICTIONARY:
 			Config = config_.result
+			
+			Config["cursor.color"] = Config["cursor.color"].split_floats(",")
+			Config["cursor.color"] = Color(
+				Config["cursor.color"][0],
+				Config["cursor.color"][1],
+				Config["cursor.color"][2],
+				Config["cursor.color"][3]
+			)
+			
+			Config["grid.color"] = Config["grid.color"].split_floats(",")
+			Config["grid.color"] = Color(
+				Config["grid.color"][0],
+				Config["grid.color"][1],
+				Config["grid.color"][2],
+				Config["grid.color"][3]
+			)
 		else: Config = DefaultConfig.duplicate()
 		config.close()
 	else: Config = DefaultConfig.duplicate()
 	
 	set_cursor_visible(Config["cursor.visible"])
 	set_cursor_dynamic(Config["cursor.dynamic"])
-	var color
-	if typeof(Config["cursor.color"]) == TYPE_STRING:
-		color = Config["cursor.color"].split_floats(",")
-		color = Color(color[0], color[1], color[2], color[3])
-	else: color = Config["cursor.color"]
-	set_cursor_color(color)
+	set_cursor_color(Config["cursor.color"])
 	
 	set_grid_visible(Config["grid.visible"])
 	set_grid_mode(Config["grid.mode"])
-	if typeof(Config["grid.color"]) == TYPE_STRING:
-		color = Config["grid.color"].split_floats(",")
-		color = Color(color[0], color[1], color[2], color[3])
-	else: color = Config["grid.color"]
-	set_grid_color(color)
+	set_grid_color(Config["grid.color"])
 	set_grid_constant(Config["grid.constant"])
 
 func reset_config() -> void:
@@ -451,17 +468,21 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			var prev_hit = last_hit
 			last_hit = raycast_for(camera, event.position, VoxelObjectRef)
 			
-			
 			if not Lock.pressed:
 				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
 					set_cursors_visibility(false)
 					return false
 				
-				return SelectionModes[SelectionMode.get_selected_id()].select(
+				var handle_result = SelectionModes[SelectionMode.get_selected_id()].select(
 					self,
 					event,
 					prev_hit
 				)
+				
+				if not GridConstant.pressed:
+					Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.get_voxels().empty()) or not GridVisible.pressed
+				
+				return handle_result
 	return false
 
 

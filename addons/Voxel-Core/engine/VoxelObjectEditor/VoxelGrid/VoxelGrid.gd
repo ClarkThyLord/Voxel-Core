@@ -7,11 +7,11 @@ extends MeshInstance
 var st := SurfaceTool.new()
 
 
-var Selections := [] setget set_selections
-func set_selections(selections : Array, update := true) -> void:
-	Selections = selections
-	
-	if update: self.update()
+export(bool) var Disabled := false setget set_disabled
+func set_disabled(disabled : bool) -> void:
+	Disabled = disabled
+	visible = not disabled
+	find_node("CollisionShape", true, false).disabled = disabled
 
 
 export(Color) var Modulate := Color.white setget set_modulate
@@ -19,7 +19,6 @@ func set_modulate(modulate : Color) -> void:
 	Modulate = modulate
 	
 	material_override.albedo_color = Modulate
-
 
 enum GridModes { SOLID, WIRED }
 export(GridModes) var GridMode := GridModes.WIRED setget set_grid_mode
