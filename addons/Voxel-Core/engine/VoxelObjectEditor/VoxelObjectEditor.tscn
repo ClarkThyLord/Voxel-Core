@@ -496,6 +496,7 @@ size_flags_vertical = 3
 tab_align = 0
 
 [node name="General" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -594,7 +595,6 @@ icon = ExtResource( 34 )
 align = 0
 
 [node name="Cursor" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -634,6 +634,7 @@ text = "Visible"
 margin_top = 28.0
 margin_right = 326.0
 margin_bottom = 52.0
+pressed = true
 text = "Dynamic Color"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
@@ -645,13 +646,15 @@ margin_bottom = 76.0
 margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
+disabled = true
+color = Color( 0.105314, 0.592527, 0.472891, 0.5 )
 
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
 margin_top = 3.0
-margin_right = 108.0
+margin_right = 114.0
 margin_bottom = 17.0
-text = "Static Color"
+text = "Cursor Color"
 
 [node name="Grid" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings"]
 visible = false
@@ -744,10 +747,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 108.0
-margin_top = 108.0
-margin_right = 108.0
-margin_bottom = 108.0
+margin_left = 112.0
+margin_top = 112.0
+margin_right = 112.0
+margin_bottom = 112.0
 size_flags_vertical = 3
 edit_alpha = false
 

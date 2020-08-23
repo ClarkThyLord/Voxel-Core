@@ -96,7 +96,8 @@ onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxConta
 func set_cursor_visible(visible : bool) -> void:
 	Config["cursor.visible"] = visible
 	CursorVisible.pressed = visible
-	set_cursors_visibility(visible)
+	if not visible:
+		set_cursors_visibility(visible)
 	save_config()
 onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 func set_cursor_dynamic(dynamic : bool) -> void:
@@ -110,9 +111,8 @@ onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContain
 func set_cursor_color(color : Color) -> void:
 	Config["cursor.color"] = color
 	CursorColor.color = color
-	if not CursorDynamic:
-		for cursor in Cursors.values():
-			cursor.Modulate = color
+	for cursor in Cursors.values():
+		cursor.Modulate = color
 	save_config()
 
 onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
@@ -219,7 +219,7 @@ var Cursors := {
 func set_cursors(cursors : Dictionary) -> void: pass
 
 func set_cursors_visibility(visible := not Lock.pressed) -> void:
-	Cursors[Vector3.ZERO].visible = visible and CursorVisible
+	Cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
 	var mirrors := get_mirrors()
 	for cursor in Cursors:
 		if not cursor == Vector3.ZERO:
@@ -257,14 +257,17 @@ var Tools := [
 enum Palettes { PRIMARY, SECONDARY }
 var PaletteRepresents := [
 	Voxel.colored(Color.white),
-	Voxel.colored(Color.white)
+	Voxel.colored(Color.black)
 ]
 
 func set_palette(palette : int, voxel) -> void:
 	PaletteRepresents[palette] = voxel
-	
 	if palette == Palette.get_selected_id():
 		ColorPicked.color = Voxel.get_color(get_rpalette(palette))
+		if CursorDynamic.pressed:
+			var color = ColorPicked.color
+			color.a = 0.5
+			set_cursor_color(color)
 		match typeof(voxel):
 			TYPE_INT, TYPE_STRING:
 				VoxelSetViewer.select(voxel, null, false)
