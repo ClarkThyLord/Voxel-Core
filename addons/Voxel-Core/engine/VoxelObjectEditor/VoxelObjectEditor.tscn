@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -7,10 +7,8 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorz.png" type="Texture" id=5]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=6]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=7]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/cancel.png" type="Texture" id=8]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/settings.png" type="Texture" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/info.png" type="Texture" id=10]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/commit.png" type="Texture" id=11]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/lock.png" type="Texture" id=12]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/add.png" type="Texture" id=13]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/sub.png" type="Texture" id=14]
@@ -36,6 +34,12 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/reset.png" type="Texture" id=34]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/refresh.png" type="Texture" id=35]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/wired.png" type="Texture" id=36]
+
+[sub_resource type="InputEventKey" id=15]
+scancode = 32
+
+[sub_resource type="ShortCut" id=16]
+shortcut = SubResource( 15 )
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 49
@@ -81,12 +85,6 @@ scancode = 52
 
 [sub_resource type="ShortCut" id=14]
 shortcut = SubResource( 13 )
-
-[sub_resource type="InputEventKey" id=15]
-scancode = 32
-
-[sub_resource type="ShortCut" id=16]
-shortcut = SubResource( 15 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -139,11 +137,20 @@ size_flags_horizontal = 3
 alignment = 2
 
 [node name="Raw" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
-margin_left = 191.0
-margin_right = 264.0
+margin_left = 110.0
+margin_right = 183.0
 margin_bottom = 24.0
 text = "Raw"
 icon = ExtResource( 4 )
+flat = true
+
+[node name="Lock" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_left = 187.0
+margin_right = 264.0
+margin_bottom = 24.0
+shortcut = SubResource( 16 )
+text = "Lock"
+icon = ExtResource( 12 )
 flat = true
 
 [node name="HSeparator" type="HSeparator" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
@@ -291,29 +298,6 @@ margin_right = 333.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 alignment = 2
-
-[node name="Lock" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
-margin_left = 27.0
-margin_right = 104.0
-margin_bottom = 24.0
-shortcut = SubResource( 16 )
-text = "Lock"
-icon = ExtResource( 12 )
-flat = true
-
-[node name="Commit" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
-margin_left = 108.0
-margin_right = 189.0
-margin_bottom = 24.0
-text = "Commit"
-icon = ExtResource( 11 )
-
-[node name="Cancel" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer"]
-margin_left = 193.0
-margin_right = 265.0
-margin_bottom = 24.0
-text = "Cancel"
-icon = ExtResource( 8 )
 
 [node name="HSeparator" type="HSeparator" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2"]
 margin_top = 28.0
@@ -783,6 +767,7 @@ margin_right = 315.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Lock" to="." method="_on_Lock_toggled"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
@@ -792,7 +777,6 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="_on_ColorChooser_pressed"]
 [connection signal="selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
-[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock" to="." method="_on_Lock_toggled"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Issues" to="." method="_on_Issues_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]

@@ -13,6 +13,7 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 # Refrences
 onready var Raw := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Raw")
+onready var Lock := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Lock")
 
 onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
 func update_tools(tools := Tools) -> void:
@@ -74,10 +75,6 @@ onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContain
 
 onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer")
 
-
-onready var Lock := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Lock")
-onready var Commit := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Commit")
-onready var Cancel := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/HBoxContainer/HBoxContainer/Cancel")
 
 onready var More := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/More")
 func update_more() -> void:
@@ -462,8 +459,6 @@ func cancel(close := false) -> void:
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 	
 	Lock.pressed = true
-	Commit.disabled = true
-	Cancel.disabled = true
 	
 	VoxelObjectRef = null
 	
