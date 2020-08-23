@@ -7,12 +7,7 @@ extends MeshInstance
 var vt := VoxelTool.new()
 
 
-var Selections := [
-	[
-		Vector3.ZERO,
-		Vector3(3, 3, 3)
-	]
-] setget set_selections
+var Selections := [] setget set_selections
 func set_selections(selections : Array, update := true) -> void:
 	Selections = selections
 	

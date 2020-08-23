@@ -120,13 +120,13 @@ func set_grid_visible(visible : bool) -> void:
 	Config["grid.visible"] = visible
 	GridVisible.pressed = visible
 	GridConstant.disabled = not visible
-	Grid.Disabled = (not GridConstant.pressed and not VoxelObjectRef.empty()) or not visible
+	Grid.Disabled = (not GridConstant.pressed and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())) or not visible
 	save_config()
 onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
 func set_grid_constant(constant : bool) -> void:
 	Config["grid.constant"] = constant
 	GridConstant.pressed = constant
-	Grid.Disabled = (not constant and not VoxelObjectRef.empty()) or not GridVisible.pressed
+	Grid.Disabled = (not constant and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())) or not GridVisible.pressed
 	save_config()
 onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 func update_grid_mode() -> void:
