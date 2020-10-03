@@ -548,3 +548,7 @@ func _on_Issues_pressed():
 
 func _on_GitHub_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core")
+
+
+func _on_ImportFile_file_selected(path : String):
+	print(path)
