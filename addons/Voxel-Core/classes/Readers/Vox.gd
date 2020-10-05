@@ -4,110 +4,6 @@ class_name Vox, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
 
 
 # Declarations
-class Model:
-	var size : Vector3
-	var voxels := {}
-
-class nTRN:
-	var node_id : int
-	var attributes := {}
-	var children := []
-	var rotation : Basis
-	var translation : Vector3
-	
-	
-	func vox_dict(file : File) -> Dictionary:
-		var dictionary := {}
-		for pair in range(file.get_32()):
-			dictionary[file.get_buffer(file.get_32()).get_string_from_ascii()] = file.get_buffer(file.get_32()).get_string_from_ascii()
-		return dictionary
-	
-	
-	func string_to_vector3(string: String) -> Vector3:
-		var floats = string.split_floats(' ')
-		if floats[0] == 0: floats[0] = 1
-		if floats[1] == 0: floats[1] = 1
-		if floats[2] == 0: floats[2] = 1
-		return Vector3(floats[0], floats[2], -floats[1])
-	
-	func byte_to_basis(byte : int) -> Basis:
-		var y_ind = ((byte >> 0) & 0x03)
-		var z_ind = ((byte >> 2) & 0x03)
-		var indexes = [0, 1, 2]
-		indexes.erase(y_ind)
-		indexes.erase(z_ind)
-		var x_ind = indexes[0]
-		var x_sign = 1 if ((byte >> 4) & 0x01) == 0 else -1
-		var y_sign = 1 if ((byte >> 6) & 0x01) == 0 else -1
-		var z_sign = -1 if ((byte >> 5) & 0x01) == 0 else 1
-		var basis = Basis()
-		basis.x[0] = x_sign if x_ind == 0 else 0
-		basis.x[1] = x_sign if x_ind == 1 else 0
-		basis.x[2] = x_sign if x_ind == 2 else 0
-		
-		basis.y[0] = y_sign if y_ind == 0 else 0
-		basis.y[1] = y_sign if y_ind == 1 else 0
-		basis.y[2] = y_sign if y_ind == 2 else 0
-		
-		basis.z[0] = z_sign if z_ind == 0 else 0
-		basis.z[1] = z_sign if z_ind == 1 else 0
-		basis.z[2] = z_sign if z_ind == 2 else 0
-		return basis
-	
-	
-	func _init(file : File) -> void:
-		node_id = file.get_32()
-		attributes = vox_dict(file)
-		children.append(file.get_32())
-		file.get_buffer(8)
-		for frame in range(file.get_32()):
-			var frame_attributes = vox_dict(file)
-			if frame_attributes.has("_t"):
-				translation = string_to_vector3(frame_attributes["_t"])
-			if frame_attributes.has("_r"):
-				print("BYTE TO BASIS")
-				rotation = byte_to_basis(int(frame_attributes["_r"]))
-
-class nGRP:
-	var node_id : int
-	var attributes := {}
-	var children := []
-	
-	
-	func vox_dict(file : File) -> Dictionary:
-		var dictionary := {}
-		for pair in range(file.get_32()):
-			dictionary[file.get_buffer(file.get_32()).get_string_from_ascii()] = file.get_buffer(file.get_32()).get_string_from_ascii()
-		return dictionary
-	
-	
-	func _init(file : File) -> void:
-		node_id = file.get_32()
-		attributes = vox_dict(file)
-		for child in range(file.get_32()):
-			children.append(file.get_32())
-
-class nSHP:
-	var node_id : int
-	var attributes := {}
-	var models := []
-	
-	
-	func vox_dict(file : File) -> Dictionary:
-		var dictionary := {}
-		for pair in range(file.get_32()):
-			dictionary[file.get_buffer(file.get_32()).get_string_from_ascii()] = file.get_buffer(file.get_32()).get_string_from_ascii()
-		return dictionary
-	
-	
-	func _init(file : File) -> void:
-		node_id = file.get_32()
-		attributes = vox_dict(file)
-		for model in range(file.get_32()):
-			models.append(file.get_32())
-			vox_dict(file)
-
-
 const magicavoxel_default_palette := [
 	Color("00000000"), Color("ffffffff"), Color("ffccffff"), Color("ff99ffff"), Color("ff66ffff"), Color("ff33ffff"), Color("ff00ffff"), Color("ffffccff"), Color("ffccccff"), Color("ff99ccff"), Color("ff66ccff"), Color("ff33ccff"), Color("ff00ccff"), Color("ffff99ff"), Color("ffcc99ff"), Color("ff9999ff"),
 	Color("ff6699ff"), Color("ff3399ff"), Color("ff0099ff"), Color("ffff66ff"), Color("ffcc66ff"), Color("ff9966ff"), Color("ff6666ff"), Color("ff3366ff"), Color("ff0066ff"), Color("ffff33ff"), Color("ffcc33ff"), Color("ff9933ff"), Color("ff6633ff"), Color("ff3333ff"), Color("ff0033ff"), Color("ffff00ff"),
@@ -128,56 +24,13 @@ const magicavoxel_default_palette := [
 ]
 
 
-# Core
-static func compile_translation(
-		node := 0,
-		nodes := {},
-		models := [],
-		rotations := [],
-		translation := Vector3()
-	) -> void:
-	print("At node #", node, ", translation ", translation)
-	if nodes[node] is nTRN:
-		print('nTRN : ', nodes[node].translation, ' -> ', nodes[node].children, " <---")
-		var _rotations = rotations.duplicate()
-		_rotations.append(nodes[node].rotation)
-		for child in nodes[node].children:
-			compile_translation(
-				child,
-				nodes,
-				models,
-				_rotations,
-				translation + nodes[node].translation
-			)
-	elif nodes[node] is nGRP:
-		print('nGRP -> ', nodes[node].children)
-		for child in nodes[node].children:
-			compile_translation(
-				child,
-				nodes,
-				models,
-				rotations,
-				translation
-			)
-	elif nodes[node] is nSHP:
-		print('nSHP -> ', nodes[node].models, " <===")
-		for model in nodes[node].models:
-			var transformed_model := {}
-			for position in models[model].voxels:
-				var size = models[model].size
-				var _position = position
-				for rotation in rotations:
-					size = rotation.xform(size)
-					_position = rotation.xform(_position)
-				_position += translation - (size / 2).floor()
-				transformed_model[_position] = models[model].voxels[position]
-			models[model] = transformed_model
 
+# Core
 static func read(file_path : String) -> Dictionary:
 	var result := {
 		"error": OK,
+		"voxels": {},
 		"palette": [],
-		"models": []
 	}
 	
 	var file := File.new()
@@ -193,24 +46,16 @@ static func read(file_path : String) -> Dictionary:
 				var chunk_children = file.get_32()
 				
 				match chunk_name:
-					"SIZE":
-						var x := file.get_32()
-						var z := -file.get_32()
-						var y := file.get_32()
-						
-						var model := Model.new()
-						model.size = Vector3(x, y, z)
-						result["models"].append(model)
 					"XYZI":
 						for i in range(0, file.get_32()):
 							var x := file.get_8()
 							var z := -file.get_8()
 							var y := file.get_8()
-							result["models"].back().voxels[Vector3(
+							result["voxels"][Vector3(
 								x,
 								y,
 								z
-							).floor()] = file.get_8()
+							).floor()] = file.get_8() - 1
 					"RGBA":
 						for i in range(0,256):
 							result["palette"].append(Color(
@@ -219,21 +64,7 @@ static func read(file_path : String) -> Dictionary:
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0)
 							))
-					"nTRN":
-						var node := nTRN.new(file)
-						nodes[node.node_id] = node
-					"nGRP":
-						var node := nGRP.new(file)
-						nodes[node.node_id] = node
-					"nSHP":
-						var node := nSHP.new(file)
-						nodes[node.node_id] = node
 					_: file.get_buffer(chunk_size)
-			if nodes.empty():
-				for model in range(result["models"].size()):
-					result["models"][model] = result["models"][model].voxels
-			else:
-				compile_translation(0, nodes, result["models"])
 		else:
 			result["error"] = ERR_FILE_UNRECOGNIZED
 	else:

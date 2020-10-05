@@ -47,9 +47,9 @@ func set_rvoxel(grid : Vector3, voxel) -> void:
 			voxel = Voxel_Set.get_voxel(voxel)
 	set_voxel(grid, voxel)
 
-func set_voxels(voxels : Dictionary) -> void:
+func set_voxels(_voxels : Dictionary) -> void:
 	erase_voxels()
-	voxels = voxels
+	voxels = _voxels
 
 func get_voxel(grid : Vector3) -> Dictionary:
 	var voxel = get_rvoxel(grid)

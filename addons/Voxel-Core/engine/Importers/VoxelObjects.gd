@@ -40,8 +40,13 @@ func get_import_options(preset : int) -> Array:
 			"usage": PROPERTY_USAGE_EDITOR
 		},
 		{
-			"name": "MeshType",
-			"default_value": 0,
+			"name": "VoxelSet",
+			"default_value": true,
+			"usage": PROPERTY_USAGE_EDITOR
+		},
+		{
+			"name": "MeshMode",
+			"default_value": VoxelMesh.MeshModes.NAIVE,
 			"property_hint": PROPERTY_HINT_ENUM,
 			"hint_string": PoolStringArray(VoxelMesh.MeshModes.keys()).join(","),
 			"usage": PROPERTY_USAGE_EDITOR
@@ -60,7 +65,7 @@ func get_import_options(preset : int) -> Array:
 			preset_options += [
 				{
 					"name": "VoxelObject",
-					"default_value": 1,
+					"default_value": 0,
 					"property_hint": PROPERTY_HINT_ENUM,
 					"hint_string": "DETECT,VOXELMESH",
 					"usage": PROPERTY_USAGE_EDITOR
@@ -74,11 +79,12 @@ func get_option_visibility(option : String, options : Dictionary) -> bool:
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
-	var data := {}
+	var read := {}
 	var error = FAILED
+	
 	match source_file.get_extension():
 		"vox":
-			data = Vox.read(source_file)
+			read = Vox.read(source_file)
 		"qb":
 			continue
 		"qbt":
@@ -91,13 +97,27 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 			continue
 		_:
 			return ERR_FILE_UNRECOGNIZED
-	error = data.get("error", FAILED)
+	
+	error = read.get("error", FAILED)
 	if error == OK:
-		var voxelobject := VoxelMesh.new()
+		var voxelobject
+		match options.get("VoxelObject", 0):
+			_: voxelobject = VoxelMesh.new()
 		voxelobject.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["Name"].empty() else options["Name"])
-		for model in data["models"]:
-			for position in model:
-				voxelobject.set_voxel(position, Voxel.colored(data["palette"][model[position] - 1]))
+		voxelobject.set_voxel_mesh(options.get("MeshMode", VoxelMesh.MeshModes.NAIVE))
+		
+		if options.get("VoxelSet", true):
+			var palette := {}
+			for index in range(read["palette"].size()):
+				palette[index] = Voxel.colored(read["palette"][index])
+			var voxelset = VoxelSet.new()
+			voxelset.set_voxels(palette)
+			voxelobject.set_voxel_set(voxelset)
+			voxelobject.set_voxels(read["voxels"])
+		else:
+			for voxel_position in read["voxels"]:
+				voxelobject.set_voxel(voxel_position, Voxel.colored(read["palette"][read["voxels"][voxel_position]]))
+		
 		voxelobject.update_mesh()
 		var scene = PackedScene.new()
 		error = scene.pack(voxelobject)
