@@ -89,10 +89,8 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	var error = FAILED
 	
 	match source_file.get_extension():
-		"png", "jpg":
-			continue
-		"vox":
-			read = Vox.read(source_file)
+#		"png", "jpg": read = ImageReader.read(source_file)
+		"vox": read = VoxReader.read(source_file)
 		"qb":
 			continue
 		"qbt":
@@ -113,14 +111,14 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		if options.get("VoxelSet", true):
 			var palette := {}
 			for index in range(read["palette"].size()):
-				palette[index] = Voxel.colored(read["palette"][index])
+				palette[index] = read["palette"][index]
 			var voxelset = VoxelSet.new()
 			voxelset.set_voxels(palette)
 			voxelobject.set_voxel_set(voxelset)
 			voxelobject.set_voxels(read["voxels"])
 		else:
 			for voxel_position in read["voxels"]:
-				voxelobject.set_voxel(voxel_position, Voxel.colored(read["palette"][read["voxels"][voxel_position]]))
+				voxelobject.set_voxel(voxel_position, read["palette"][read["voxels"][voxel_position]])
 		
 		voxelobject.update_mesh()
 		var scene = PackedScene.new()

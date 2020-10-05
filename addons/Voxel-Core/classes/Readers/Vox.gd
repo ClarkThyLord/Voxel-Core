@@ -1,5 +1,5 @@
 extends Reference
-class_name Vox, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
+class_name VoxReader, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
 
 
 
@@ -58,12 +58,12 @@ static func read(file_path : String) -> Dictionary:
 							).floor()] = file.get_8() - 1
 					"RGBA":
 						for i in range(0,256):
-							result["palette"].append(Color(
+							result["palette"].append(Voxel.colored(Color(
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0)
-							))
+							)))
 					_: file.get_buffer(chunk_size)
 		else:
 			result["error"] = ERR_FILE_UNRECOGNIZED
