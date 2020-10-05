@@ -3,12 +3,21 @@ extends EditorImportPlugin
 
 
 
+# Declarations
+var VoxelObject := VoxelMesh.new()
+
+
+
 # Core
+func exit() -> void:
+	VoxelObject.free()
+
+
 func get_visible_name() -> String:
-	return "VoxelObject"
+	return "Mesh"
 
 func get_importer_name() -> String:
-	return "VoxelCore.VoxelObject"
+	return "VoxelCore.Mesh"
 
 func get_recognized_extensions() -> Array:
 	return [
@@ -20,10 +29,10 @@ func get_recognized_extensions() -> Array:
 	]
 
 func get_resource_type() -> String:
-	return "PackedScene"
+	return "Mesh"
 
 func get_save_extension() -> String:
-	return "tscn"
+	return "mesh"
 
 
 enum Presets { DEFAULT }
@@ -41,16 +50,6 @@ func get_preset_name(preset : int) -> String:
 func get_import_options(preset : int) -> Array:
 	var preset_options = [
 		{
-			"name": "Name",
-			"default_value": "",
-			"usage": PROPERTY_USAGE_EDITOR
-		},
-		{
-			"name": "VoxelSet",
-			"default_value": true,
-			"usage": PROPERTY_USAGE_EDITOR
-		},
-		{
 			"name": "MeshMode",
 			"default_value": VoxelMesh.MeshModes.NAIVE,
 			"property_hint": PROPERTY_HINT_ENUM,
@@ -67,16 +66,8 @@ func get_import_options(preset : int) -> Array:
 	]
 	
 	match preset:
-		Presets.DEFAULT:
-			preset_options += [
-				{
-					"name": "VoxelObject",
-					"default_value": 0,
-					"property_hint": PROPERTY_HINT_ENUM,
-					"hint_string": "DETECT,VOXELMESH",
-					"usage": PROPERTY_USAGE_EDITOR
-				}
-			]
+		Presets.DEFAULT: pass
+#			preset_options += []
 	
 	return preset_options
 
@@ -104,28 +95,19 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	
 	error = read.get("error", FAILED)
 	if error == OK:
-		var voxelobject
-		match options.get("VoxelObject", 0):
-			_: voxelobject = VoxelMesh.new()
-		voxelobject.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["Name"].empty() else options["Name"])
-		voxelobject.set_voxel_mesh(options.get("MeshMode", VoxelMesh.MeshModes.NAIVE))
+		VoxelObject.set_voxel_mesh(options.get("MeshMode", VoxelMesh.MeshModes.NAIVE))
 		
-		if options.get("VoxelSet", true):
-			var palette := {}
-			for index in range(read["palette"].size()):
-				palette[index] = Voxel.colored(read["palette"][index])
-			var voxelset = VoxelSet.new()
-			voxelset.set_voxels(palette)
-			voxelobject.set_voxel_set(voxelset)
-			voxelobject.set_voxels(read["voxels"])
-		else:
-			for voxel_position in read["voxels"]:
-				voxelobject.set_voxel(voxel_position, Voxel.colored(read["palette"][read["voxels"][voxel_position]]))
+		VoxelObject.erase_voxels()
+		for voxel_position in read["voxels"]:
+			VoxelObject.set_voxel(
+				voxel_position,
+				Voxel.colored(read["palette"][read["voxels"][voxel_position]])
+			)
 		
-		voxelobject.update_mesh()
-		var scene = PackedScene.new()
-		error = scene.pack(voxelobject)
-		if error == OK:
-			error = ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], scene)
-		voxelobject.queue_free()
+		VoxelObject.update_mesh()
+		
+		error = ResourceSaver.save(
+			'%s.%s' % [save_path, get_save_extension()],
+			VoxelObject.mesh
+		)
 	return error
