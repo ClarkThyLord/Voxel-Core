@@ -14,10 +14,10 @@ func exit() -> void:
 
 
 func get_visible_name() -> String:
-	return "Mesh"
+	return "VoxelMesh"
 
 func get_importer_name() -> String:
-	return "VoxelCore.Mesh"
+	return "VoxelCore.VoxelMesh"
 
 func get_recognized_extensions() -> Array:
 	return [
@@ -80,8 +80,8 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	var error = FAILED
 	
 	match source_file.get_extension():
-#		"png", "jpg": read = ImageReader.read(source_file)
-		"vox": read = VoxReader.read(source_file)
+		"png", "jpg": read = ImageReader.read_file(source_file)
+		"vox": read = VoxReader.read_file(source_file)
 		"qb":
 			continue
 		"qbt":
@@ -99,7 +99,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		for voxel_position in read["voxels"]:
 			VoxelObject.set_voxel(
 				voxel_position,
-				Voxel.colored(read["palette"][read["voxels"][voxel_position]])
+				read["palette"][read["voxels"][voxel_position]]
 			)
 		
 		VoxelObject.update_mesh()

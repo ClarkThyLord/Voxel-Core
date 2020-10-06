@@ -26,54 +26,57 @@ const magicavoxel_default_palette := [
 
 
 # Core
-static func read(file_path : String) -> Dictionary:
+static func read(file : File) -> Dictionary:
 	var result := {
 		"error": OK,
 		"voxels": {},
 		"palette": [],
 	}
 	
-	var file := File.new()
-	var error = file.open(file_path, File.READ)
-	if error == OK:
-		var magic := file.get_buffer(4).get_string_from_ascii()
-		var magic_version := file.get_32()
-		if magic == "VOX " and magic_version == 150:
-			var nodes := {}
-			while file.get_position() < file.get_len():
-				var chunk_name = file.get_buffer(4).get_string_from_ascii()
-				var chunk_size = file.get_32()
-				var chunk_children = file.get_32()
-				
-				match chunk_name:
-					"XYZI":
-						for i in range(0, file.get_32()):
-							var x := file.get_8()
-							var z := -file.get_8()
-							var y := file.get_8()
-							result["voxels"][Vector3(
-								x,
-								y,
-								z
-							).floor()] = file.get_8() - 1
-					"RGBA":
-						for i in range(0,256):
-							result["palette"].append(Voxel.colored(Color(
-								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0)
-							)))
-					_: file.get_buffer(chunk_size)
-		else:
-			result["error"] = ERR_FILE_UNRECOGNIZED
+	var magic := file.get_buffer(4).get_string_from_ascii()
+	var magic_version := file.get_32()
+	if magic == "VOX " and magic_version == 150:
+		var nodes := {}
+		while file.get_position() < file.get_len():
+			var chunk_name = file.get_buffer(4).get_string_from_ascii()
+			var chunk_size = file.get_32()
+			var chunk_children = file.get_32()
+			
+			match chunk_name:
+				"XYZI":
+					for i in range(0, file.get_32()):
+						var x := file.get_8()
+						var z := -file.get_8()
+						var y := file.get_8()
+						result["voxels"][Vector3(
+							x,
+							y,
+							z
+						).floor()] = file.get_8() - 1
+				"RGBA":
+					for i in range(0,256):
+						result["palette"].append(Voxel.colored(Color(
+							float(file.get_8() / 255.0),
+							float(file.get_8() / 255.0),
+							float(file.get_8() / 255.0),
+							float(file.get_8() / 255.0)
+						)))
+				_: file.get_buffer(chunk_size)
 	else:
-		result["error"] = ERR_FILE_CANT_READ
+		result["error"] = ERR_FILE_UNRECOGNIZED
 	
-	if file.is_open():
-		file.close()
 	if result["error"] == OK:
 		if result["palette"].empty():
 			result["palette"] = magicavoxel_default_palette
 	
+	return result
+
+static func read_file(file_path : String) -> Dictionary:
+	var result := { "error": OK }
+	var file := File.new()
+	var error = file.open(file_path, File.READ)
+	if error == OK:
+		result = read(file)
+	if file.is_open():
+		file.close()
 	return result

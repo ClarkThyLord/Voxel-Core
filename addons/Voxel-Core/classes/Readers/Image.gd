@@ -17,13 +17,20 @@ static func read(image : Image) -> Dictionary:
 			if image.get_pixel(x, y).a > 0:
 				var color := image.get_pixel(x, y)
 				var index = result["palette"].find(color)
-				if index > -1:
+				if index == -1:
 					result["palette"].append(color)
 					index = result["palette"].size() - 1
 				result["voxels"][Vector3(x, -y, 0).round()] = index
 	image.unlock()
 	
-	for index in result["palette"]:
+	for index in range(result["palette"].size()):
 		result["palette"][index] = Voxel.colored(result["palette"][index])
 	
 	return result
+
+static func read_file(image_path : String) -> Dictionary:
+	var image := Image.new()
+	var err = image.load(image_path)
+	if err == OK:
+		return read(image)
+	return { "error": err }

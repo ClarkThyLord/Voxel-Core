@@ -89,8 +89,8 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	var error = FAILED
 	
 	match source_file.get_extension():
-#		"png", "jpg": read = ImageReader.read(source_file)
-		"vox": read = VoxReader.read(source_file)
+		"png", "jpg": read = ImageReader.read_file(source_file)
+		"vox": read = VoxReader.read_file(source_file)
 		"qb":
 			continue
 		"qbt":
