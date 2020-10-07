@@ -85,23 +85,8 @@ func get_option_visibility(option : String, options : Dictionary) -> bool:
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
-	var read := {}
-	var error = FAILED
-	
-	match source_file.get_extension():
-		"png", "bmp", "dds", "exr", "hdr", "jpg", "jpeg", "tga", "svg", "svgz", "webp":
-			read = ImageReader.read_file(source_file)
-		"vox": read = VoxReader.read_file(source_file)
-		"qb":
-			continue
-		"qbt":
-			continue
-		"vxm":
-			continue
-		_:
-			return ERR_FILE_UNRECOGNIZED
-	
-	error = read.get("error", FAILED)
+	var read : Dictionary = Voxel.read_file(source_file)
+	var error = read.get("error", FAILED)
 	if error == OK:
 		var voxelobject
 		match options.get("VoxelObject", 0):

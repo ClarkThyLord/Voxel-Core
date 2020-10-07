@@ -200,3 +200,15 @@ static func face_select(voxels, position : Vector3, face : Vector3, selected := 
 			for direction in Directions[face]:
 				face_select(voxels, position + direction, face, selected)
 	return selected
+
+
+static func read_file(file_path : String):
+	var result = { "error": ERR_FILE_UNRECOGNIZED }
+	match file_path.get_extension():
+		"png", "bmp", "dds", "exr", "hdr", "jpg", "jpeg", "tga", "svg", "svgz", "webp":
+			result = ImageReader.read_file(file_path)
+		"vox": result = VoxReader.read_file(file_path)
+		"qb": continue
+		"qbt": continue
+		"vxm": continue
+	return result
