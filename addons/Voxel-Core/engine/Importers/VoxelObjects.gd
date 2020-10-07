@@ -1,5 +1,5 @@
 tool
-extends EditorImportPlugin
+extends "res://addons/Voxel-Core/engine/Importers/Importer.gd"
 
 
 
@@ -85,7 +85,7 @@ func get_option_visibility(option : String, options : Dictionary) -> bool:
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
-	var read : Dictionary = Voxel.read_file(source_file)
+	var read := read_file(source_file)
 	var error = read.get("error", FAILED)
 	if error == OK:
 		var voxelobject
