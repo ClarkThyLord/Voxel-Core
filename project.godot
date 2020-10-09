@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://addons/Voxel-Core/classes/Readers/Image.gd"
 }, {
 "base": "Reference",
+"class": "Reader",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Readers/Reader.gd"
+}, {
+"base": "Reference",
 "class": "VoxReader",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/classes/Readers/Vox.gd"
@@ -41,6 +46,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "ImageReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
+"Reader": "",
 "VoxReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
 "Voxel": "res://addons/Voxel-Core/assets/classes/Voxel.png",
 "VoxelMesh": "res://addons/Voxel-Core/assets/classes/VoxelMesh.png",

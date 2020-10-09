@@ -1,5 +1,5 @@
-tool
-extends EditorImportPlugin
+extends Reference
+class_name Reader
 
 
 

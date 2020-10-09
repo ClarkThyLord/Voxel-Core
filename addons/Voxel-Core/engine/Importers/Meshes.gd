@@ -1,5 +1,5 @@
 tool
-extends "res://addons/Voxel-Core/engine/Importers/Importer.gd"
+extends EditorImportPlugin
 
 
 
@@ -76,7 +76,7 @@ func get_option_visibility(option : String, options : Dictionary) -> bool:
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
-	var read := read_file(source_file)
+	var read := Reader.read_file(source_file)
 	var error = read.get("error", FAILED)
 	if error == OK:
 		VoxelObject.set_voxel_mesh(options.get("MeshMode", VoxelMesh.MeshModes.NAIVE))
