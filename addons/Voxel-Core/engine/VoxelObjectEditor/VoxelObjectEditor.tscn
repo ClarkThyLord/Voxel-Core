@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=2]
+[gd_scene load_steps=52 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/tools.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorz.png" type="Texture" id=5]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=6]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=7]
+[ext_resource path="res://addons/Voxel-Core/assets/classes/VoxelSet.png" type="Texture" id=8]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/settings.png" type="Texture" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/info.png" type="Texture" id=10]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/lock.png" type="Texture" id=12]
@@ -341,9 +342,16 @@ margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer"]
+[node name="GenerateVoxelSet" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer"]
 margin_right = 325.0
 margin_bottom = 22.0
+text = "Generate VoxelSet"
+icon = ExtResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer"]
+margin_top = 26.0
+margin_right = 325.0
+margin_bottom = 48.0
 
 [node name="Export" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer"]
 visible = false
@@ -364,11 +372,11 @@ icon = ExtResource( 17 )
 margin_right = 400.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 400, 300 )
-window_title = "Import File"
+window_title = "Open a File"
 resizable = true
 mode = 0
 access = 2
-filters = PoolStringArray( "*.vox ; VOX Files" )
+filters = PoolStringArray( "*.vox ; VOX Files", "*.png, *.bmp, *.dds, *.exr, *.hdr, *.jpg, *.jpeg, *.tga, *.svg, *.svgz, *.webp; Image Files" )
 current_dir = "/Users/Christian Moises/Documents/GitHub/Voxel-Core"
 current_path = "/Users/Christian Moises/Documents/GitHub/Voxel-Core/"
 __meta__ = {
@@ -775,10 +783,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 116.0
-margin_top = 116.0
-margin_right = 116.0
-margin_bottom = 116.0
+margin_left = 124.0
+margin_top = 124.0
+margin_right = 124.0
+margin_bottom = 124.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -821,6 +829,8 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="_on_ColorChooser_pressed"]
 [connection signal="selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet" to="." method="_on_GenerateVoxelSet_pressed"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet" to="." method="_on_GenerateVoxelSet_toggled"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_ImportFile_file_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]

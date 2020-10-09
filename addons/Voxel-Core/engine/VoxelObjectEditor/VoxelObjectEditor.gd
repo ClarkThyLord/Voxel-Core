@@ -540,6 +540,20 @@ func _on_VoxelSetViewer_unselected(voxel_id : int) -> void:
 		set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))
 
 
+func _on_GenerateVoxelSet_pressed():
+	pass # Replace with function body.
+
+func _on_ImportFile_file_selected(path : String):
+	var result := Reader.read_file(path)
+	if result["error"] == OK:
+		var voxels = {}
+		for voxel_position in result["voxels"]:
+			voxels[voxel_position] = result["palette"][result["voxels"][voxel_position]]
+		VoxelObjectRef.set_voxels(voxels)
+		VoxelObjectRef.update_mesh()
+	else: printerr(result["error"])
+
+
 func _on_Docs_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core/wiki")
 
@@ -548,7 +562,3 @@ func _on_Issues_pressed():
 
 func _on_GitHub_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core")
-
-
-func _on_ImportFile_file_selected(path : String):
-	print(path)
