@@ -539,9 +539,8 @@ func _on_VoxelSetViewer_unselected(voxel_id : int) -> void:
 	if VoxelSetViewer.Selections.empty():
 		set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))
 
-
-func _on_GenerateVoxelSet_pressed():
-	pass # Replace with function body.
+func _on_GenerateVoxelSet_confirmed():
+	VoxelObjectRef.generate_voxel_set()
 
 func _on_ImportFile_file_selected(path : String):
 	var result := Reader.read_file(path)

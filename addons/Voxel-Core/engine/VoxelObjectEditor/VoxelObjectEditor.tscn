@@ -348,6 +348,11 @@ margin_bottom = 22.0
 text = "Generate VoxelSet"
 icon = ExtResource( 8 )
 
+[node name="GenerateVoxelSetConfirmation" type="ConfirmationDialog" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet"]
+margin_right = 200.0
+margin_bottom = 70.0
+dialog_text = "This will overwrite the current VoxelSet, continue?"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer"]
 margin_top = 26.0
 margin_right = 325.0
@@ -372,7 +377,7 @@ icon = ExtResource( 17 )
 margin_right = 400.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 400, 300 )
-window_title = "Open a File"
+window_title = "Import from file..."
 resizable = true
 mode = 0
 access = 2
@@ -783,10 +788,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 124.0
-margin_top = 124.0
-margin_right = 124.0
-margin_bottom = 124.0
+margin_left = 128.0
+margin_top = 128.0
+margin_right = 128.0
+margin_bottom = 128.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -829,8 +834,8 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="_on_ColorChooser_pressed"]
 [connection signal="selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet" to="." method="_on_GenerateVoxelSet_pressed"]
-[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet" to="." method="_on_GenerateVoxelSet_toggled"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet/GenerateVoxelSetConfirmation" method="popup_centered"]
+[connection signal="confirmed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/GenerateVoxelSet/GenerateVoxelSetConfirmation" to="." method="_on_GenerateVoxelSet_confirmed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/More/VoxelObject/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_ImportFile_file_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]

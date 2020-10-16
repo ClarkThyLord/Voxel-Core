@@ -114,7 +114,7 @@ func erase_voxels() -> void:
 		erase_voxel(grid)
 
 
-func load_file(source_file : String, voxelset := true) -> int:
+func load_file(source_file : String, voxelset := false) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)
 	if error == OK:
@@ -133,6 +133,26 @@ func load_file(source_file : String, voxelset := true) -> int:
 					read["palette"][read["voxels"][voxel_position]]
 				)
 	return error
+
+func generate_voxel_set() -> void:
+	var voxelset := VoxelSet.new()
+	var voxels := {}
+	var palette := {}
+	for voxel_grid in get_voxels():
+		var palette_id := palette.size()
+		var voxel = get_voxel(voxel_grid)
+		var voxel_color := Voxel.get_color(voxel)
+		var voxel_texture := Voxel.get_texture(voxel)
+		for index in range(palette.size()):
+			if voxel_color == Voxel.get_color(palette[index]) and voxel_texture == Voxel.get_texture(palette[index]):
+				palette_id = index
+				break
+		if palette_id == palette.size():
+			palette[palette_id] = voxel
+		voxels[voxel_grid] = palette_id
+	voxelset.set_voxels(palette)
+	set_voxel_set(voxelset)
+	set_voxels(voxels)
 
 
 func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
