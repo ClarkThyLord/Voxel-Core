@@ -114,6 +114,21 @@ func erase_voxels() -> void:
 		erase_voxel(grid)
 
 
+func face_select(position : Vector3, face : Vector3, selected := []) -> Array:
+	if selected.empty() and not typeof(get_rvoxel(position + face)) == TYPE_NIL:
+		return selected
+	
+	selected.append(position)
+	
+	for direction in Voxel.Directions[face]:
+		if not typeof(get_rvoxel(position + direction)) == TYPE_NIL:
+			if typeof(get_rvoxel(position + direction + face)) == TYPE_NIL:
+				if not selected.has(position + direction):
+					face_select(position + direction, face, selected)
+	
+	return selected
+
+
 func load_file(source_file : String, voxelset := false) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)

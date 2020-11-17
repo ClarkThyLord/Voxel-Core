@@ -192,11 +192,3 @@ static func flood_select(voxels, position : Vector3, target = null, selected = [
 				for direction in Directions:
 					flood_select(voxels, position + direction, target, selected)
 	return selected
-
-static func face_select(voxels, position : Vector3, face : Vector3, selected := []) -> Array:
-	if not typeof(voxels.get(position) if typeof(voxels) == TYPE_DICTIONARY else voxels.get_rvoxel(position)) == TYPE_NIL and typeof(voxels.get(position) if typeof(voxels) == TYPE_DICTIONARY else voxels.get_rvoxel(position + face)) == TYPE_NIL:
-		if not selected.has(position):
-			selected.append(position)
-			for direction in Directions[face]:
-				face_select(voxels, position + direction, face, selected)
-	return selected
