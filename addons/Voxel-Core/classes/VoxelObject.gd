@@ -84,7 +84,7 @@ func set_voxel(grid : Vector3, voxel) -> void:
 
 func set_rvoxel(grid : Vector3, voxel) -> void:
 	match typeof(voxel):
-		TYPE_INT, TYPE_STRING:
+		TYPE_INT:
 			voxel = Voxel_Set.get_voxel(voxel)
 	set_voxel(grid, voxel)
 
@@ -96,7 +96,7 @@ func set_voxels(voxels : Dictionary) -> void:
 func get_voxel(grid : Vector3) -> Dictionary:
 	var voxel = get_rvoxel(grid)
 	match typeof(voxel):
-		TYPE_INT, TYPE_STRING:
+		TYPE_INT:
 			voxel = Voxel_Set.get_voxel(voxel)
 	return voxel
 
