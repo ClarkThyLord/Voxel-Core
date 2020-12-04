@@ -1,20 +1,16 @@
 tool
 extends Object
 class_name Voxel, "res://addons/Voxel-Core/assets/classes/Voxel.png"
-
-
-
+# Utility class containing static methods related to voxels, such as:
+# - quick voxel data creation
+# - quick voxel data setting and getting
+# - world, snapped and grid position handeling
 #
-# Voxel, a static “helper” class, composed of everything relevant to voxels: 
-# - quick voxel creation
-# - quick voxel data retrieval
-# - world, snapped and grid position conversion
-#
-# The Voxel Schema, every voxel is defined by a dictionary that follows the 
-# schema defined below, following the schema you could create a wide variety 
-# of voxels to fit your needs. Alterations can be done to the schema, but 
-# should be done in such a way that retain the original structure so as 
-# to avoid conflicts.
+# Voxel Schema:
+# Every voxel is defined by a dictionary that follows the schema defined below, 
+# following the schema you could create a wide variety of voxels to fit all your, 
+# needs. While alterations can be performed to the schema, they should be done 
+# in such a way that retain the original structure intact so as to avoid conflicts.
 #
 # {
 # 	color		:	Color,
@@ -131,64 +127,3 @@ static func world_to_grid(world : Vector3) -> Vector3:
 
 static func grid_to_snapped(grid : Vector3) -> Vector3:
 	return grid * VoxelSize
-
-
-static func get_boundings(voxels : Array) -> Dictionary:
-	var dimensions := { "origin": Vector3.ZERO, "dimensions": Vector3.ZERO }
-	
-	if not voxels.empty():
-		dimensions["origin"] = Vector3.INF
-		dimensions["dimensions"] = -Vector3.INF
-		
-		for voxel_grid in voxels:
-			if voxel_grid.x < dimensions["origin"].x:
-				dimensions["origin"].x = voxel_grid.x
-			if voxel_grid.y < dimensions["origin"].y:
-				dimensions["origin"].y = voxel_grid.y
-			if voxel_grid.z < dimensions["origin"].z:
-				dimensions["origin"].z = voxel_grid.z
-			
-			if voxel_grid.x > dimensions["dimensions"].x:
-				dimensions["dimensions"].x = voxel_grid.x
-			if voxel_grid.y > dimensions["dimensions"].y:
-				dimensions["dimensions"].y = voxel_grid.y
-			if voxel_grid.z > dimensions["dimensions"].z:
-				dimensions["dimensions"].z = voxel_grid.z
-		
-		dimensions["dimensions"] = (dimensions["dimensions"] - dimensions["origin"]).abs()
-	
-	return dimensions
-
-static func align(voxels : Array, alignment := Vector3(0.5, 0.5, 0.5)) -> Array:
-	var aligned := []
-	if not voxels.empty():
-		var boundings := get_boundings(voxels)
-		
-		for voxel in voxels:
-			aligned.append((voxel - boundings["origin"] + boundings["dimensions"] * alignment).floor())
-	return aligned
-
-
-static func flood_select(voxels, position : Vector3, target = null, selected = []) -> Array:
-	if typeof(target) == TYPE_NIL:
-		if typeof(voxels) == TYPE_DICTIONARY:
-			target = voxels.get(position)
-		else:
-			target = voxels.get_rvoxel(position)
-		if typeof(target) == TYPE_NIL:
-			return selected
-	
-	var voxel = voxels.get(position) if typeof(voxels) == TYPE_DICTIONARY else voxels.get_rvoxel(position)
-	match typeof(target):
-		TYPE_INT, TYPE_STRING, TYPE_DICTIONARY:
-			if str(voxel) == str(target): continue
-		TYPE_COLOR:
-			if get_color(voxel) == target: continue
-		TYPE_VECTOR2:
-			if get_texture(voxel) == target: continue
-		_:
-			if not selected.has(position):
-				selected.append(position)
-				for direction in Directions:
-					flood_select(voxels, position + direction, target, selected)
-	return selected

@@ -134,6 +134,58 @@ func erase_voxels() -> void:
 		erase_voxel(grid)
 
 
+# Returns 3D axis-aligned bounding box
+# @param	volume	:	Array<Vector3>	:	Volume of grid positions from which to calculate bounds
+# @return	Dictionary	:	Contains position(Vector3) and size(Vector3)
+func get_box(volume := get_voxels()) -> Dictionary:
+	var box := { "position": Vector3.ZERO, "size": Vector3.ZERO }
+	
+	if not volume.empty():
+		box["position"] = Vector3.INF
+		box["size"] = -Vector3.INF
+		
+		for voxel_grid in volume:
+			if voxel_grid.x < box["position"].x:
+				box["position"].x = voxel_grid.x
+			if voxel_grid.y < box["position"].y:
+				box["position"].y = voxel_grid.y
+			if voxel_grid.z < box["position"].z:
+				box["position"].z = voxel_grid.z
+			
+			if voxel_grid.x > box["size"].x:
+				box["size"].x = voxel_grid.x
+			if voxel_grid.y > box["size"].y:
+				box["size"].y = voxel_grid.y
+			if voxel_grid.z > box["size"].z:
+				box["size"].z = voxel_grid.z
+		
+		box["size"] = (box["size"] - box["position"]).abs()
+	
+	return box
+
+# Moves voxels in given volume by given translation
+# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to move
+# @param	translation	:	Vector3			:	Translation to move voxels by
+func move(volume := get_voxels(), translation := Vector3()) -> void:
+	var translated := {}
+	for voxel_grid in volume:
+		translated[voxel_grid + translation] = get_voxel_id(voxel_grid)
+		erase_voxel(voxel_grid)
+	for voxel_grid in translated:
+		set_voxel(voxel_grid, translated[voxel_grid])
+
+# Alignes voxels in given volume by given alignment
+# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to align
+# @param	alignment	:	Vector3			:	Alignment to align voxels by
+func align(volume := get_voxels(), alignment := Vector3(0.5, 0.5, 0.5)) -> void:
+	var aligned := {}
+	var box := get_box(volume)
+	for voxel_grid in volume:
+		aligned[(voxel_grid - box["position"] + box["size"] * alignment).floor()] = get_voxel_id(voxel_grid)
+		erase_voxel(voxel_grid)
+	for voxel_grid in aligned:
+		set_voxel(voxel_grid, aligned[voxel_grid])
+
 # Returns Array of all voxel grid positions connected to given target
 # @param	target			:	Vector3	:	Grid position at which to start flood select
 # @param	selected		:	Array	:	Array to add selected voxel grid positions to
@@ -314,7 +366,9 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	
 	return vt.end()
 
-# Updates mesh and calls on update_static_body if needed
+
+# Updates mesh and calls on save, update_static_body if needed
+# @param	save	:	bool	:	Save voxels on update
 func update_mesh(save := true) -> void:
 	if save: _save()
 	update_static_body()
