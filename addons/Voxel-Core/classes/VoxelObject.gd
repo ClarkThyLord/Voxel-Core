@@ -1,193 +1,216 @@
 tool
 extends MeshInstance
-
-
-
-#
-# VoxelObject, makeshift abstract class for all voxel visualization objects.
-#
+# Makeshift interface class inhereted by all voxel objects.
 
 
 
 # Declarations
+# Emitted when VoxelSet is changed.
 signal set_voxel_set(voxel_set)
 
 
+# Flag indicating that the load function has been called at least once
 var loaded_hint := false
+
+# Flag indicating that edits to voxel data will be frequent
+# NOTE: When ON will only allow naive meshing
 var EditHint := false setget set_edit_hint
+# Sets the EditHint flag and calls update_mesh if needed
 func set_edit_hint(edit_hint : bool, update := loaded_hint and is_inside_tree()) -> void:
 	EditHint = edit_hint
 	
 	if update: update_mesh(false)
 
 
+# Defines the modes in which Mesh can be generated
 enum MeshModes {
+	# Naive meshing, simple culling of voxel faces; http://web.archive.org/web/20200428085802/https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/
 	NAIVE,
+	# Greedy meshing, culls and merges similar voxel faces; http://web.archive.org/web/20201112011204/https://www.gedge.ca/dev/2014/08/17/greedy-voxel-meshing
 	GREEDY
+	# Marching Cubes meshing, https://en.wikipedia.org/wiki/Marching_cubes
 #	MARCHING_CUBES
+	# Transvoxel meshing, http://web.archive.org/web/20201112033736/http://transvoxel.org/
 #	TRANSVOXEL
 }
+# The meshing mode by which Mesh is generated
 export(MeshModes) var MeshMode := MeshModes.NAIVE setget set_voxel_mesh
+# Sets the MeshMode and calls update_mesh if needed
 func set_voxel_mesh(mesh_mode : int, update := loaded_hint and is_inside_tree()) -> void:
 	MeshMode = mesh_mode
 	
 	if update and not EditHint: update_mesh(false)
 
+# Flag indicating that UV Mapping should be applied when generating meshes if applicable
 export(bool) var UVMapping := false setget set_uv_mapping
+# Sets the UVMapping and calls update_mesh if needed
 func set_uv_mapping(uv_mapping : bool, update := loaded_hint and is_inside_tree()) -> void:
 	UVMapping = uv_mapping
 	
 	if update: update_mesh(false)
 
+# Flag indicating the persitant attachment and maintenance of a StaticBody
 export(bool) var EmbedStaticBody := false setget set_embed_static_body
+# Sets EmbedStaticBody and calls update_static_body if needed
 func set_embed_static_body(embed_static_body : bool, update := loaded_hint and is_inside_tree()) -> void:
 	EmbedStaticBody = embed_static_body
 	
 	if update: update_static_body()
 
 
-export(Resource) var Voxel_Set = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
+# The VoxelSet for this VoxelObject
+export(Resource) var VoxelSetRef = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
+# Sets VoxelSetRef and calls on update_mesh if needed
 func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tree()) -> void:
 	if voxel_set is VoxelSet:
-		Voxel_Set = voxel_set
+		VoxelSetRef = voxel_set
 		
 		if update: update_mesh(false)
-		emit_signal("set_voxel_set", Voxel_Set)
+		emit_signal("set_voxel_set", VoxelSetRef)
 	elif typeof(voxel_set) == TYPE_NIL:
 		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
 
 
 
 # Core
+# Save necessary data to meta
 func _save() -> void:
 	pass
 
+# Load necessary data from meta
 func _load() -> void:
 	loaded_hint = true
 	update_mesh(false)
 
 
+# TODO Include these functions in inheriting classes uncommented
 #func _init() -> void: call_deferred("_load")
 #func _ready() -> void: call_deferred("_load")
 
 
+# Return true if no voxels are present
 func empty() -> bool:
 	return true
 
 
-func set_voxel(grid : Vector3, voxel) -> void:
-	match typeof(voxel):
-		TYPE_INT, TYPE_DICTIONARY:
-			pass
-		_:
-			printerr("invalid voxel set")
+# Sets given voxel id at the given grid position
+# @param	grid	:	Grid position to set voxel id at
+# @param	voxel	:	Voxel id to set
+func set_voxel(grid : Vector3, voxel : int) -> void:
+	pass
 
-func set_rvoxel(grid : Vector3, voxel) -> void:
-	match typeof(voxel):
-		TYPE_INT:
-			voxel = Voxel_Set.get_voxel(voxel)
-	set_voxel(grid, voxel)
-
+# Replace all voxels with given voxels
+# @param	voxels	:	Dictionary<Vector3, int>
 func set_voxels(voxels : Dictionary) -> void:
 	erase_voxels()
 	for grid in voxels:
 		set_voxel(grid, voxels[grid])
 
+# Returns voxel id at given grid position
+# @param	grid	:	Vector3	:	Grid position to get voxel id from
+# @return	int		:	Voxel's VoxelSet ID
+func get_voxel_id(grid : Vector3):
+	return -1
+
+# Returns voxel dictionary representing voxel id at given grid position
+# @param	:	grid	:	Grid position to get voxel dictionary from
+# @return	Dictionary	:	NOTE: Reference  Voxel.gd for voxel schema
 func get_voxel(grid : Vector3) -> Dictionary:
-	var voxel = get_rvoxel(grid)
-	match typeof(voxel):
-		TYPE_INT:
-			voxel = Voxel_Set.get_voxel(voxel)
-	return voxel
+	return VoxelSetRef.get_voxel(get_voxel_id(grid))
 
-func get_rvoxel(grid : Vector3):
-	return null
-
+# Returns Array of all voxel grid positions
+# @return	Array<Vector3>	:	each Vector3 represents a position of a voxel
 func get_voxels() -> Array:
 	return []
 
+# Erase voxel id at given grid position
+# @param	:	grid	:	Grid position to erase voxel id from
 func erase_voxel(grid : Vector3) -> void:
 	pass
 
+# Erase all voxels
 func erase_voxels() -> void:
 	for grid in get_voxels():
 		erase_voxel(grid)
 
 
-func face_select(position : Vector3, face : Vector3, selected := []) -> Array:
-	if selected.empty() and not typeof(get_rvoxel(position + face)) == TYPE_NIL:
-		return selected
+# Returns Array of all voxel grid positions connected to given target
+# @param	target			:	Vector3	:	Grid position at which to start flood select
+# @param	selected		:	Array	:	Array to add selected voxel grid positions to
+# @return	Array<Vector3>	:	Array of all voxel grid positions connected to given target
+func flood_select(target : Vector3, selected := []) -> Array:
+	selected.append(get_voxel_id(target))
 	
-	selected.append(position)
+	for direction in Voxel.Directions:
+		var next = target + direction
+		if get_voxel_id(next) == get_voxel_id(selected[0]):
+			if not selected.has(next):
+				flood_select(next, selected)
 	
-	for direction in Voxel.Directions[face]:
-		if not typeof(get_rvoxel(position + direction)) == TYPE_NIL:
-			if typeof(get_rvoxel(position + direction + face)) == TYPE_NIL:
-				if not selected.has(position + direction):
-					face_select(position + direction, face, selected)
+	return selected
+
+# Returns Array of all voxel grid positions connected to given target that aren't obstructed at the given face normal
+# @param	target			:	Vector3	:	Grid position at which to start flood select
+# @param	face_normal		:	Vector3	:	Normal of face to check for obstruction
+# @param	selected		:	Array	:	Array to add selected voxel grid positions to
+# @return	Array<Vector3>	:	Array of all voxel grid positions connected to given target
+func face_select(target : Vector3, face_normal : Vector3, selected := []) -> Array:
+	selected.append(get_voxel_id(target))
+	
+	for direction in Voxel.Directions[face_normal]:
+		var next = target + direction
+		if get_voxel_id(next) == get_voxel_id(selected[0]):
+			if get_voxel_id(next + face_normal) == -1:
+				if not selected.has(next):
+					face_select(next, face_normal, selected)
 	
 	return selected
 
 
-func load_file(source_file : String, voxelset := false) -> int:
+# Loads and sets voxels and replaces VoxelSet with given file
+# NOTE: Reference Reader.gd for valid file imports
+# @param	source_file	:String	:	Path to file to be imported
+# @return	int	:	Error code
+func load_file(source_file : String) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)
 	if error == OK:
-		if voxelset:
-			var palette := {}
-			for index in range(read["palette"].size()):
-				palette[index] = read["palette"][index]
-			var voxelsetref = VoxelSet.new()
-			voxelsetref.set_voxels(palette)
-			set_voxel_set(voxelsetref)
-			set_voxels(read["voxels"])
-		else:
-			for voxel_position in read["voxels"]:
-				set_voxel(
-					voxel_position,
-					read["palette"][read["voxels"][voxel_position]]
-				)
+		var palette := {}
+		for index in range(read["palette"].size()):
+			palette[index] = read["palette"][index]
+		var voxelsetref = VoxelSet.new()
+		voxelsetref.set_voxels(palette)
+		set_voxel_set(voxelsetref)
+		set_voxels(read["voxels"])
 	return error
 
-func generate_voxel_set() -> void:
-	var voxelset := VoxelSet.new()
-	var voxels := {}
-	var palette := {}
-	for voxel_grid in get_voxels():
-		var palette_id := palette.size()
-		var voxel = get_voxel(voxel_grid)
-		var voxel_color := Voxel.get_color(voxel)
-		var voxel_texture := Voxel.get_texture(voxel)
-		for index in range(palette.size()):
-			if voxel_color == Voxel.get_color(palette[index]) and voxel_texture == Voxel.get_texture(palette[index]):
-				palette_id = index
-				break
-		if palette_id == palette.size():
-			palette[palette_id] = voxel
-		voxels[voxel_grid] = palette_id
-	voxelset.set_voxels(palette)
-	set_voxel_set(voxelset)
-	set_voxels(voxels)
 
-
+# Makes a naive mesh out of volume of voxels given
+# @param	volume	:	Array<Vector3>	:	Array of grid positions representing volume of voxels from which to buid ArrayMesh
+# @param	vt		:	VoxelTool		:	VoxelTool with which ArrayMesh will be built
+# @return	ArrayMesh	:	Naive voxel mesh
 func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
-	vt.start(UVMapping, Voxel_Set)
+	vt.start(UVMapping, VoxelSetRef)
 	
 	for position in volume:
 		for direction in Voxel.Directions:
-			if typeof(get_rvoxel(position + direction)) == TYPE_NIL:
+			if get_voxel_id(position + direction) > -1:
 				vt.add_face(get_voxel(position), direction, position)
 	
 	return vt.end()
 
+# Greedy meshing
+# @param	volume	:	Array<Vector3>	:	Array of grid positions representing volume of voxels from which to buid ArrayMesh
+# @param	vt		:	VoxelTool		:	VoxelTool with which ArrayMesh will be built
+# @return	ArrayMesh	:	Greedy voxel mesh
 func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
-	vt.start(UVMapping, Voxel_Set)
+	vt.start(UVMapping, VoxelSetRef)
 	
 	var faces = Voxel.Directions.duplicate()
 	for face in faces:
 		faces[face] = []
 		for position in volume:
-			if typeof(get_rvoxel(position + face)) == TYPE_NIL:
+			if get_voxel_id(position + face) == -1:
 				faces[face].append(position)
 	
 	for face in faces:
@@ -291,10 +314,11 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	
 	return vt.end()
 
-
+# Updates mesh and calls on update_static_body if needed
 func update_mesh(save := true) -> void:
 	if save: _save()
 	update_static_body()
 
+# Sets and updates StaticMesh if demanded
 func update_static_body() -> void:
 	pass
