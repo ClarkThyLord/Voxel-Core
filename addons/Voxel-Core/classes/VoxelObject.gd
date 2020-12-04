@@ -164,9 +164,9 @@ func get_box(volume := get_voxels()) -> Dictionary:
 	return box
 
 # Moves voxels in given volume by given translation
-# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to move
 # @param	translation	:	Vector3			:	Translation to move voxels by
-func move(volume := get_voxels(), translation := Vector3()) -> void:
+# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to move
+func move(translation := Vector3(), volume := get_voxels()) -> void:
 	var translated := {}
 	for voxel_grid in volume:
 		translated[voxel_grid + translation] = get_voxel_id(voxel_grid)
@@ -174,10 +174,10 @@ func move(volume := get_voxels(), translation := Vector3()) -> void:
 	for voxel_grid in translated:
 		set_voxel(voxel_grid, translated[voxel_grid])
 
-# Alignes voxels in given volume by given alignment
-# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to align
+# Aligns voxels in given volume with respect to axis origin and given alignment
 # @param	alignment	:	Vector3			:	Alignment to align voxels by
-func align(volume := get_voxels(), alignment := Vector3(0.5, 0.5, 0.5)) -> void:
+# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to align
+func align(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void:
 	var aligned := {}
 	var box := get_box(volume)
 	for voxel_grid in volume:
