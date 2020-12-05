@@ -1,17 +1,12 @@
 tool
 extends "res://addons/Voxel-Core/classes/VoxelObject.gd"
 class_name VoxelMesh, "res://addons/Voxel-Core/assets/classes/VoxelMesh.png"
-
-
-
-#
-# VoxelMesh, the most basic VoxelObject, should be
-# used for relatively small amounts of voxels.
-#
+# Basic voxel visualization object, best used for moderate amount of voxels
 
 
 
 # Declarations
+# Used voxels, Dictionary<Vector3, int>
 var voxels := {}
 
 
@@ -34,32 +29,15 @@ func empty() -> bool:
 	return voxels.empty()
 
 
-func set_voxel(grid : Vector3, voxel) -> void:
-	match typeof(voxel):
-		TYPE_INT, TYPE_DICTIONARY:
-			voxels[grid] = voxel
-		_:
-			printerr("invalid voxel set")
-
-func set_rvoxel(grid : Vector3, voxel) -> void:
-	match typeof(voxel):
-		TYPE_INT:
-			voxel = Voxel_Set.get_voxel(voxel)
-	set_voxel(grid, voxel)
+func set_voxel(grid : Vector3, voxel : int) -> void:
+	voxels[grid] = voxel
 
 func set_voxels(_voxels : Dictionary) -> void:
 	erase_voxels()
 	voxels = _voxels
 
-func get_voxel(grid : Vector3) -> Dictionary:
-	var voxel = get_rvoxel(grid)
-	match typeof(voxel):
-		TYPE_INT:
-			voxel = Voxel_Set.get_voxel(voxel)
-	return voxel
-
-func get_rvoxel(grid : Vector3):
-	return voxels.get(grid)
+func get_voxel_id(grid : Vector3) -> int:
+	return voxels.get(grid, -1)
 
 func get_voxels() -> Array:
 	return voxels.keys()
