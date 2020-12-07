@@ -148,7 +148,6 @@ func set_grid_color(color : Color) -> void:
 
 onready var ColorMenu := get_node("ColorMenu")
 onready var ColorPickerRef := get_node("ColorMenu/VBoxContainer/ColorPicker")
-onready var ColorMenuUse := get_node("ColorMenu/VBoxContainer/HBoxContainer/Use")
 onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
 
 
@@ -214,7 +213,7 @@ var Cursors := {
 } setget set_cursors
 func set_cursors(cursors : Dictionary) -> void: pass
 
-func set_cursors_visibility(visible := not Editing.pressed) -> void:
+func set_cursors_visibility(visible := Editing.pressed) -> void:
 	Cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
 	var mirrors := get_mirrors()
 	for cursor in Cursors:
@@ -276,8 +275,8 @@ func get_rpalette(palette : int = Palette.get_selected_id()) -> Dictionary:
 	var represents = get_palette(palette)
 	match typeof(represents):
 		TYPE_INT, TYPE_STRING:
-			if is_instance_valid(VoxelObjectRef.Voxel_Set):
-				represents = VoxelObjectRef.Voxel_Set.get_voxel(represents)
+			if is_instance_valid(VoxelObjectRef.VoxelSetRef):
+				represents = VoxelObjectRef.VoxelSetRef.get_voxel(represents)
 			else: represents = Voxel.colored(Color.transparent)
 	return represents
 
@@ -435,7 +434,7 @@ func begin(voxelobject : VoxelObject) -> void:
 	VoxelObjectRef.add_child(Grid)
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
-	VoxelSetViewer.set_voxel_set(VoxelObjectRef.Voxel_Set)
+	VoxelSetViewer.set_voxel_set(VoxelObjectRef.VoxelSetRef)
 	VoxelObjectRef.connect("tree_exiting", self, "cancel", [true])
 	VoxelObjectRef.connect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 
@@ -452,7 +451,7 @@ func cancel(close := false) -> void:
 		VoxelObjectRef.disconnect("tree_exiting", self, "cancel")
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 	
-	Editing.pressed = true
+	Editing.pressed = false
 	
 	VoxelObjectRef = null
 	
@@ -465,7 +464,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			var prev_hit = last_hit
 			last_hit = raycast_for(camera, event.position, VoxelObjectRef)
 			
-			if not Editing.pressed:
+			if Editing.pressed:
 				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
 					set_cursors_visibility(false)
 					return false
@@ -485,19 +484,19 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 
 func _on_Editing_toggled(editing : bool):
 	if is_instance_valid(VoxelObjectRef):
-		VoxelObjectRef.EditHint = not editing
+		VoxelObjectRef.EditHint = editing
 	
-	if editing: set_cursors_visibility(false)
+	if not editing: set_cursors_visibility(false)
 	elif not last_hit.empty():
 		set_cursors_selections()
 		set_cursors_visibility(true)
-	emit_signal("editing", !editing)
+	emit_signal("editing", editing)
 
 
 func _on_ColorChooser_pressed():
 	ColorPickerRef.color = ColorPicked.color
 	
-	ColorMenuAdd.visible = is_instance_valid(VoxelObjectRef.Voxel_Set) and not VoxelObjectRef.Voxel_Set.Locked
+	ColorMenuAdd.visible = is_instance_valid(VoxelObjectRef.VoxelSetRef) and not VoxelObjectRef.VoxelSetRef.Locked
 	
 	ColorMenu.popup_centered()
 
@@ -506,10 +505,10 @@ func _on_ColorMenu_Use_pressed():
 	ColorMenu.hide()
 
 func _on_ColorMenu_Add_pressed():
-	var voxel_id = VoxelObjectRef.Voxel_Set.get_id()
+	var voxel_id = VoxelObjectRef.VoxelSetRef.get_id()
 	Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
-	Undo_Redo.add_do_method(VoxelObjectRef.Voxel_Set, "set_voxel", Voxel.colored(ColorPickerRef.color))
-	Undo_Redo.add_undo_method(VoxelObjectRef.Voxel_Set, "erase_voxel", voxel_id)
+	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "set_voxel", Voxel.colored(ColorPickerRef.color))
+	Undo_Redo.add_undo_method(VoxelObjectRef.VoxelSetRef, "erase_voxel", voxel_id)
 	Undo_Redo.commit_action()
 	VoxelSetViewer.select(voxel_id)
 	ColorMenu.hide()
