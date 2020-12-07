@@ -4,8 +4,15 @@ extends Button
 
 
 # Declarations
-var Represents := [{}, null] setget set_represents
-func set_represents(represents : Array) -> void: pass
+var VoxelSetID : int setget set_voxel_set_id
+func set_voxel_set_id(voxel_set_id : int) -> void:
+	VoxelSetID = voxel_set_id
+	update_preview(voxel_set_id)
+
+var VoxelSetRef : VoxelSet setget set_voxel_set_ref
+func set_voxel_set_ref(voxel_set : VoxelSet) -> void:
+	VoxelSetRef = voxel_set
+	set_voxel_set_id(VoxelSetID)
 
 
 export(Color) var VoxelColor := Color.white setget set_voxel_color
@@ -28,44 +35,29 @@ func _ready():
 	set_voxel_texture(VoxelTexture)
 
 
-func setup_voxel(voxel, voxelset : VoxelSet, face := Vector3.ZERO) -> void:
-	setup_rvoxel(
-		voxelset.get_voxel(voxel),
-		voxelset,
-		face
-	)
+func update_preview(voxel_set_id := VoxelSetID, face := Vector3.ZERO) -> void:
+	if typeof(VoxelSetRef) == TYPE_NIL:
+		printerr("VoxelSetRef is null")
+		return
 	
-	var name = ""
-	var id = voxel
-	if typeof(voxel) == TYPE_STRING:
-		name = voxel
-		id = voxelset.name_to_id(id)
-	elif typeof(voxel) == TYPE_INT:
-		name = voxelset.id_to_name(id)
-	hint_tooltip = str(id)
+	var voxel := {}
+	voxel = VoxelSetRef.get_voxel(voxel_set_id)
+	
+	hint_tooltip = str(voxel_set_id)
+	var name := VoxelSetRef.id_to_name(voxel_set_id)
 	if not name.empty():
-		hint_tooltip += " | " + name
-	Represents[0] = id
-
-func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null, face := Vector3.ZERO) -> void:
-	hint_tooltip = ""
-	Represents[0] = voxel
-	Represents[1] = voxelset
+		hint_tooltip += "|" + name
 	
-	var color : Color
-	if face == Vector3.ZERO: color = Voxel.get_color(voxel)
-	else: color = Voxel.get_color_side(voxel, face)
-	set_voxel_color(color)
+	set_voxel_color(Voxel.get_color_side(voxel, face))
 	
-	var uv := -Vector2.ONE
-	if face == Vector3.ZERO:
-		uv = Voxel.get_texture(voxel)
-	else: uv = Voxel.get_texture_side(voxel, face)
-	if not uv == -Vector2.ONE and voxelset and voxelset.Tiles:
-		var img_texture := ImageTexture.new()
-		img_texture.create_from_image(voxelset.Tiles.get_data().get_rect(Rect2(
-			Vector2.ONE * uv * voxelset.TileSize,
-			Vector2.ONE * voxelset.TileSize
-		)))
-		set_voxel_texture(img_texture)
-	else: set_voxel_texture(null)
+	if not typeof(VoxelSetRef.Tiles) == TYPE_NIL:
+		var uv := Voxel.get_texture_side(voxel, face)
+		if uv == -Vector2.ONE:
+			set_voxel_texture(null)
+		else:
+			var img_texture := ImageTexture.new()
+			img_texture.create_from_image(VoxelSetRef.Tiles.get_data().get_rect(Rect2(
+				Vector2.ONE * uv * VoxelSetRef.TileSize,
+				Vector2.ONE * VoxelSetRef.TileSize
+			)))
+			set_voxel_texture(img_texture)
