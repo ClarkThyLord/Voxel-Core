@@ -174,10 +174,10 @@ func move(translation := Vector3(), volume := get_voxels()) -> void:
 	for voxel_grid in translated:
 		set_voxel(voxel_grid, translated[voxel_grid])
 
-# Aligns voxels in given volume with respect to axis origin and given alignment
-# @param	alignment	:	Vector3			:	Alignment to align voxels by
+# Centers voxels in given volume with respect to axis origin with the given alignment
+# @param	alignment	:	Vector3			:	Alignment to center voxels by
 # @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to align
-func align(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void:
+func center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void:
 	var aligned := {}
 	var box := get_box(volume)
 	for voxel_grid in volume:

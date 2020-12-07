@@ -12,8 +12,7 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 
 # Refrences
-onready var Raw := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Raw")
-onready var Lock := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Lock")
+onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Editing")
 
 onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
 func update_tools(tools := Tools) -> void:
@@ -76,11 +75,7 @@ onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContain
 onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer")
 
 
-onready var More := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/More")
-func update_more() -> void:
-	for tab in range(More.get_tab_count()):
-		var name : String = More.get_tab_title(tab)
-		More.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
+
 
 
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
@@ -219,7 +214,7 @@ var Cursors := {
 } setget set_cursors
 func set_cursors(cursors : Dictionary) -> void: pass
 
-func set_cursors_visibility(visible := not Lock.pressed) -> void:
+func set_cursors_visibility(visible := not Editing.pressed) -> void:
 	Cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
 	var mirrors := get_mirrors()
 	for cursor in Cursors:
@@ -420,7 +415,6 @@ func _ready():
 	update_palette()
 	update_selections()
 	update_mirrors()
-	update_more()
 	update_settings()
 	update_grid_mode()
 	
@@ -458,7 +452,7 @@ func cancel(close := false) -> void:
 		VoxelObjectRef.disconnect("tree_exiting", self, "cancel")
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
 	
-	Lock.pressed = true
+	Editing.pressed = true
 	
 	VoxelObjectRef = null
 	
@@ -471,7 +465,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 			var prev_hit = last_hit
 			last_hit = raycast_for(camera, event.position, VoxelObjectRef)
 			
-			if not Lock.pressed:
+			if not Editing.pressed:
 				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
 					set_cursors_visibility(false)
 					return false
@@ -489,15 +483,15 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 	return false
 
 
-func _on_Lock_toggled(locked : bool) -> void:
+func _on_Editing_toggled(editing : bool):
 	if is_instance_valid(VoxelObjectRef):
-		VoxelObjectRef.EditHint = not locked
+		VoxelObjectRef.EditHint = not editing
 	
-	if locked: set_cursors_visibility(false)
+	if editing: set_cursors_visibility(false)
 	elif not last_hit.empty():
 		set_cursors_selections()
 		set_cursors_visibility(true)
-	emit_signal("editing", !locked)
+	emit_signal("editing", !editing)
 
 
 func _on_ColorChooser_pressed():
@@ -561,3 +555,17 @@ func _on_Issues_pressed():
 
 func _on_GitHub_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core")
+
+
+func _on_Translate_Apply_pressed():
+	pass
+#	var translated = Voxel.move(VoxelObjectRef.get_voxels(), 
+#	Vector3(
+#		TranslateX.value,
+#		TranslateY.value,
+#		TranslateZ.value
+#	))
+#	var voxels = {}
+
+func _on_Center_Apply_pressed():
+	pass

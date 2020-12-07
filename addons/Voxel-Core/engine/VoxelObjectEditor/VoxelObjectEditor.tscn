@@ -7,8 +7,8 @@
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorz.png" type="Texture" id=5]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=6]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=7]
+[ext_resource path="res://addons/Voxel-Core/assets/controls/edit.png" type="Texture" id=8]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/settings.png" type="Texture" id=9]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/lock.png" type="Texture" id=12]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/add.png" type="Texture" id=13]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/sub.png" type="Texture" id=14]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/export.png" type="Texture" id=16]
@@ -139,7 +139,7 @@ margin_right = 255.0
 margin_bottom = 24.0
 shortcut = SubResource( 2 )
 text = "Editing"
-icon = ExtResource( 12 )
+icon = ExtResource( 8 )
 flat = true
 
 [node name="HSeparator" type="HSeparator" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
@@ -331,7 +331,7 @@ margin_top = 26.0
 margin_right = 351.0
 margin_bottom = 50.0
 
-[node name="Label4" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
+[node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
 margin_top = 5.0
 margin_right = 12.0
 margin_bottom = 19.0
@@ -345,7 +345,7 @@ rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="Label5" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
+[node name="Label2" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
 margin_left = 94.0
 margin_top = 5.0
 margin_right = 105.0
@@ -360,7 +360,7 @@ rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="Label6" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
+[node name="Label3" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
 margin_left = 187.0
 margin_top = 5.0
 margin_right = 199.0
@@ -783,8 +783,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 315.0
-margin_bottom = 507.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 319.0
+margin_bottom = 511.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -810,7 +812,7 @@ margin_right = 315.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
-[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Editing" to="." method="_on_Lock_toggled"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
