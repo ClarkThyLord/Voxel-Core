@@ -7,7 +7,7 @@ extends Button
 var VoxelSetID : int setget set_voxel_set_id
 func set_voxel_set_id(voxel_set_id : int) -> void:
 	VoxelSetID = voxel_set_id
-	update_preview(voxel_set_id)
+	update_view(voxel_set_id)
 
 var VoxelSetRef : VoxelSet setget set_voxel_set_ref
 func set_voxel_set_ref(voxel_set : VoxelSet) -> void:
@@ -35,7 +35,7 @@ func _ready():
 	set_voxel_texture(VoxelTexture)
 
 
-func update_preview(voxel_set_id := VoxelSetID, face := Vector3.ZERO) -> void:
+func update_view(voxel_set_id := VoxelSetID, face := Vector3.ZERO) -> void:
 	if typeof(VoxelSetRef) == TYPE_NIL:
 		printerr("VoxelSetRef is null")
 		return
