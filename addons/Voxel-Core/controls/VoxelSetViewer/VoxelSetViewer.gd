@@ -21,8 +21,8 @@ onready var ContextMenu := get_node("ContextMenu")
 
 
 # Declarations
-signal selected(voxel_set_id)
-signal unselected(voxel_set_id)
+signal selected(voxel_id)
+signal unselected(voxel_id)
 
 var Undo_Redo : UndoRedo
 
@@ -46,22 +46,19 @@ func set_selection_max(selection_max : int) -> void:
 	selection_max = abs(selection_max)
 	if selection_max > 0 and selection_max < SelectionMax:
 		while Selections.size() > selection_max:
-			unselect(Selections.size() - 1)
+			unselect(Selections[-1])
 	
 	SelectionMax = selection_max
 
 export(bool) var AllowEdit := false setget set_edit_mode
 func set_edit_mode(edit_mode : bool, update := true) -> void:
 	AllowEdit = edit_mode
-	
-	if update: update_view()
 
-export(bool) var ShowControls := false setget show_controls
-func show_controls(show := ShowControls) -> void:
-	ShowControls = show
+export(bool) var ShowHints := false setget show_controls
+func show_controls(show := ShowHints) -> void:
+	ShowHints = show
 	
-	
-	if ShowControls and is_instance_valid(Hints):
+	if ShowHints and is_instance_valid(Hints):
 		Hints.visible = AllowEdit or AllowSelect
 		
 		HintRef.text = ""
@@ -69,21 +66,24 @@ func show_controls(show := ShowControls) -> void:
 		if AllowSelect: HintRef.text += ("   " if HintRef.text.length() > 0 else "")  + "ctrl + left click : select / unselect"
 
 
-export(Resource) var VoxelSetRef = load("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
+export(Resource) var VoxelSetRef = null setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
-	if voxel_set is VoxelSet:
-		if is_instance_valid(VoxelSetRef):
-			if VoxelSetRef.is_connected("updated_voxels", self, "update_view"):
-				VoxelSetRef.disconnect("updated_voxels", self, "update_view")
-			if VoxelSetRef.is_connected("updated_texture", self, "update_view"):
-				VoxelSetRef.disconnect("updated_texture", self, "update_view")
-		VoxelSetRef = voxel_set
+	if not typeof(voxel_set) == TYPE_NIL and not voxel_set is VoxelSet:
+		printerr("Invalid Resource given expected VoxelSet")
+		return
+	
+	if is_instance_valid(VoxelSetRef):
+		if VoxelSetRef.is_connected("updated_voxels", self, "update_view"):
+			VoxelSetRef.disconnect("updated_voxels", self, "update_view")
+		if VoxelSetRef.is_connected("updated_texture", self, "update_view"):
+			VoxelSetRef.disconnect("updated_texture", self, "update_view")
+	
+	VoxelSetRef = voxel_set
+	if is_instance_valid(VoxelSetRef) and VoxelSetRef is VoxelSet:
 		VoxelSetRef.connect("updated_voxels", self, "update_view")
 		VoxelSetRef.connect("updated_texture", self, "update_view")
 		
 		if update: update_view()
-	elif typeof(voxel_set) == TYPE_NIL:
-		set_voxel_set(load("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
 
 
 
@@ -95,40 +95,45 @@ func _ready():
 		Undo_Redo = UndoRedo.new()
 
 
-func get_voxel_button(voxel_set_id : int):
-	return Voxels.find_node(str(voxel_set_id), false, false) if Voxels else null
+func get_voxel_button(voxel_id : int):
+	return Voxels.find_node(str(voxel_id), false, false) if Voxels else null
 
 
-func select(voxel_set_id : int, emit := true) -> void:
+func select(voxel_id : int, emit := true) -> void:
 	if not AllowSelect:
 		printerr("VoxelSetViewer : Selection isn't allowed")
 		return
 	
-	var voxel_button = get_voxel_button(voxel_set_id)
+	var voxel_button = get_voxel_button(voxel_id)
 	if not is_instance_valid(voxel_button):
-		printerr("VoxelSetViewer : VoxelButton doesn't exist for " + str(voxel_set_id))
+		printerr("VoxelSetViewer : VoxelButton doesn't exist for " + str(voxel_id))
 		return
 	
 	while Selections.size() > SelectionMax:
-		unselect(Selections.size() - 1)
+		unselect(Selections[-1])
 	
 	voxel_button.pressed = true
-	Selections.append(voxel_set_id)
-	if emit: emit_signal("selected", voxel_set_id)
+	Selections.append(voxel_id)
+	if emit: emit_signal("selected", voxel_id)
 
-func unselect(voxel_set_id : int, emit := true) -> void:
-	var voxel_button = get_voxel_button(voxel_set_id)
+func unselect(voxel_id : int, emit := true) -> void:
+	var index := Selections.find(voxel_id)
+	if index == -1:
+		printerr("VoxelID " + str(voxel_id) + "isn't selected")
+		return
+	
+	var voxel_button = get_voxel_button(voxel_id)
 	if not is_instance_valid(voxel_button):
-		printerr("VoxelSetViewer : VoxelButton doesn't exist for " + str(voxel_set_id))
+		printerr("VoxelButton " + str(voxel_id) + " doesn't exist")
 		return
 	
 	voxel_button.pressed = false
-	Selections.remove(voxel_set_id)
-	if emit: emit_signal("unselected", voxel_set_id)
+	Selections.remove(index)
+	if emit: emit_signal("unselected", voxel_id)
 
 func unselect_all(emit := true) -> void:
 	while not Selections.empty():
-		unselect(Selections.size() - 1, emit)
+		unselect(Selections[-1], emit)
 
 
 func update_view() -> void:
@@ -218,21 +223,21 @@ func _on_Voxels_gui_input(event):
 			ContextMenu.rect_size
 		))
 
-func _on_VoxelButton_pressed(voxel_set_id, voxel_ref) -> void:
+func _on_VoxelButton_pressed(voxel_id, voxel_ref) -> void:
 	if AllowSelect:
 		if voxel_ref.pressed:
 			if not Input.is_key_pressed(KEY_CONTROL):
 				unselect_all()
-			select(voxel_set_id, voxel_ref)
+			select(voxel_id, voxel_ref)
 		else:
 			if Selections.size() == 1 or (Selections.size() > 0 and Input.is_key_pressed(KEY_CONTROL)):
 				for selection in range(Selections.size()):
-					if Selections[selection] == voxel_set_id:
+					if Selections[selection] == voxel_id:
 						unselect(selection)
 						break
 			else:
 				unselect_all()
-				select(voxel_set_id, voxel_ref)
+				select(voxel_id, voxel_ref)
 	else: voxel_ref.pressed = false
 
 func _on_ContextMenu_id_pressed(_id : int):
