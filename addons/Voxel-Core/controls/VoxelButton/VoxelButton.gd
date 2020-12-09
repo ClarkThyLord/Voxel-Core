@@ -4,28 +4,38 @@ extends Button
 
 
 # Declarations
-var VoxelSetID : int setget set_voxel_set_id
-func set_voxel_set_id(voxel_set_id : int) -> void:
-	VoxelSetID = voxel_set_id
-	update_view(voxel_set_id)
-
-var VoxelSetRef : VoxelSet setget set_voxel_set_ref
-func set_voxel_set_ref(voxel_set : VoxelSet) -> void:
-	VoxelSetRef = voxel_set
-	set_voxel_set_id(VoxelSetID)
-
-
-export(Color) var VoxelColor := Color.white setget set_voxel_color
+export var VoxelColor := Color.black setget set_voxel_color
 func set_voxel_color(voxel_color : Color) -> void:
 	VoxelColor = voxel_color
 	
 	$VoxelColor.color = VoxelColor
+	property_list_changed_notify()
 
-export(Texture) var VoxelTexture : Texture setget set_voxel_texture
+export var VoxelTexture : Texture = null setget set_voxel_texture
 func set_voxel_texture(voxel_texture : Texture) -> void:
 	VoxelTexture = voxel_texture
 	
 	$VoxelColor/VoxelTexture.texture = VoxelTexture
+	property_list_changed_notify()
+
+export var VoxelID : int setget set_voxel_id
+func set_voxel_id(voxel_id : int) -> void:
+	VoxelID = voxel_id
+	update_view()
+
+export var VoxelFace := Vector3.ZERO setget set_voxel_face
+func set_voxel_face(voxel_face : Vector3) -> void:
+	VoxelFace = voxel_face
+	update_view()
+
+export(Resource) var VoxelSetRef = null setget set_voxel_set
+func set_voxel_set(voxel_set : Resource, update := true) -> void:
+	if not typeof(voxel_set) == TYPE_NIL and not voxel_set is VoxelSet:
+		printerr("Invalid Resource given expected VoxelSet")
+		return
+	
+	VoxelSetRef = voxel_set
+	update_view()
 
 
 
@@ -35,16 +45,16 @@ func _ready():
 	set_voxel_texture(VoxelTexture)
 
 
-func update_view(voxel_set_id := VoxelSetID, face := Vector3.ZERO) -> void:
+func update_view(voxel_id := VoxelID, face := VoxelFace) -> void:
 	if typeof(VoxelSetRef) == TYPE_NIL:
-		printerr("VoxelSetRef is null")
+		printerr("VoxelSetRef is not set")
 		return
 	
 	var voxel := {}
-	voxel = VoxelSetRef.get_voxel(voxel_set_id)
+	voxel = VoxelSetRef.get_voxel(voxel_id)
 	
-	hint_tooltip = str(voxel_set_id)
-	var name := VoxelSetRef.id_to_name(voxel_set_id)
+	hint_tooltip = str(voxel_id)
+	var name = VoxelSetRef.id_to_name(voxel_id)
 	if not name.empty():
 		hint_tooltip += "|" + name
 	

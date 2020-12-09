@@ -21,6 +21,7 @@ margin_right = -4.0
 margin_bottom = -4.0
 focus_mode = 2
 mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
