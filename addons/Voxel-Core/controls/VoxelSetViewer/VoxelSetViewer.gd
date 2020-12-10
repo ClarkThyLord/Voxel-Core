@@ -137,7 +137,7 @@ func unselect_all(emit := true) -> void:
 
 
 func update_view() -> void:
-	if Voxels and is_instance_valid(VoxelSetRef):
+	if is_instance_valid(Voxels) and is_instance_valid(VoxelSetRef):
 		var voxels := []
 		if Search.length() == 0:
 			voxels = VoxelSetRef.Voxels.keys()
@@ -179,10 +179,6 @@ func update_view() -> void:
 
 func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
-
-func _on_Search_text_changed(new_text):
-	Search = new_text
-	update_view()
 
 func _on_Voxels_gui_input(event):
 	if AllowEdit and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:

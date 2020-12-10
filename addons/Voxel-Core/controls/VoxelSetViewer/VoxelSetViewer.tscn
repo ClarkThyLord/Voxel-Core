@@ -76,6 +76,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="resized" from="." to="." method="correct"]
-[connection signal="text_changed" from="VBoxContainer/Search" to="." method="_on_Search_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/Search" to="." method="set_search"]
 [connection signal="gui_input" from="VBoxContainer/ScrollContainer/Voxels" to="." method="_on_Voxels_gui_input"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]

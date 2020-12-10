@@ -1,37 +1,24 @@
 tool
 extends Resource
 class_name VoxelSet, "res://addons/Voxel-Core/assets/classes/VoxelSet.png"
-
-
-
-#
-# VoxelSet, 
-#
+# Library of voxels for a VoxelObject
 
 
 
 # Declarations
+# Emitted when VoxelSet has had a voxel added/ set / removed
 signal updated_voxels
+# Emitted when uv or texture is modified
 signal updated_texture
 
-
-func get_id() -> int:
-	var ids := Voxels.keys()
-	ids.sort()
-	return (ids.back() + 1) if ids.size() > 0 else 0
-
+# Names stored by their ID
+# TODO Rework naming system
 var Names := {}
-func name_to_id(name : String) -> int:
-	return Names.get(name.to_lower(), -1)
-
-func id_to_name(id : int) -> String:
-	for name in Names:
-		if Names[name] == id:
-			return name
-	return ""
-
-
+# Voxels stored by their ID
 var Voxels := {} setget set_voxels
+func get_ids() -> Array:
+	return Voxels.keys()
+
 func set_voxels(voxels : Dictionary, emit := true) -> void:
 	if Locked:
 		printerr("VoxelSet Locked")
@@ -42,8 +29,8 @@ func set_voxels(voxels : Dictionary, emit := true) -> void:
 	if emit: updated_voxels()
 
 
+# Flag indicating whether VoxelSet can be modifed
 export(bool) var Locked := false
-
 
 var UVScale := 0.0 setget set_uv_scale
 func set_uv_scale(uv_scale : float) -> void: pass
@@ -78,6 +65,24 @@ func _load() -> void:
 func _init(): call_deferred("_load")
 
 
+# Returns the next available ID
+func get_next_id() -> int:
+	var ids := Voxels.keys()
+	ids.sort()
+	return (ids.back() + 1) if ids.size() > 0 else 0
+
+# Returns ID associated to given name
+func name_to_id(name : String) -> int:
+	return Names.get(name.to_lower(), -1)
+
+# Returns name associated to given ID
+func id_to_name(id : int) -> String:
+	for name in Names:
+		if Names[name] == id:
+			return name
+	return ""
+
+
 func name_voxel(id : int, name : String) -> void:
 	if Locked:
 		printerr("VoxelSet Locked")
@@ -104,7 +109,7 @@ func unname_voxel(name : String) -> void:
 	Names.erase(name)
 
 
-func set_voxel(voxel : Dictionary, id := get_id(), name := "", update := true) -> int:
+func set_voxel(voxel : Dictionary, id := get_next_id(), name := "", update := true) -> int:
 	if Locked:
 		printerr("VoxelSet Locked")
 		return -1
