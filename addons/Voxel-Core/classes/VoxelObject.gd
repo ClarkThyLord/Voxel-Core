@@ -57,18 +57,26 @@ func set_embed_static_body(embed_static_body : bool, update := loaded_hint and i
 	
 	if update: update_static_body()
 
-
 # The VoxelSet for this VoxelObject
 export(Resource) var VoxelSetRef = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
-# Sets VoxelSetRef and calls on update_mesh if needed
+# Sets VoxelSetRef, calls update_mesh if needed and not told otherwise
+# voxel_set : bool : VoxelSet to set
+# update    : bool : if given overrides default condition to call update_mesh
 func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tree()) -> void:
-	if voxel_set is VoxelSet:
-		VoxelSetRef = voxel_set
+	if typeof(voxel_set) == TYPE_NIL or voxel_set is VoxelSet:
+		if is_instance_valid(VoxelSetRef):
+			if VoxelSetRef.is_connected("requested_refresh", self, "update_mesh"):
+				VoxelSetRef.disconnect("requested_refresh", self, "update_mesh")
 		
-		if update: update_mesh(false)
+		VoxelSetRef = voxel_set
+		if is_instance_valid(VoxelSetRef) and VoxelSetRef is VoxelSet:
+			VoxelSetRef.connect("requested_refresh", self, "update_mesh")
+			if update: update_mesh(false)
+		
 		emit_signal("set_voxel_set", VoxelSetRef)
-	elif typeof(voxel_set) == TYPE_NIL:
-		set_voxel_set(preload("res://addons/Voxel-Core/defaults/VoxelSet.tres"), update)
+	else:
+		printerr("Invalid Resource given expected VoxelSet")
+		return
 
 
 

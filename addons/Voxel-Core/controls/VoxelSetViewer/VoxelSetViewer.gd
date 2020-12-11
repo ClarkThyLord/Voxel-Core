@@ -73,17 +73,14 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 		return
 	
 	if is_instance_valid(VoxelSetRef):
-		if VoxelSetRef.is_connected("updated_voxels", self, "update_view"):
-			VoxelSetRef.disconnect("updated_voxels", self, "update_view")
-		if VoxelSetRef.is_connected("updated_texture", self, "update_view"):
-			VoxelSetRef.disconnect("updated_texture", self, "update_view")
+		if VoxelSetRef.is_connected("requested_refresh", self, "update_view"):
+			VoxelSetRef.disconnect("requested_refresh", self, "update_view") 
 	
 	VoxelSetRef = voxel_set
 	if is_instance_valid(VoxelSetRef) and VoxelSetRef is VoxelSet:
-		VoxelSetRef.connect("updated_voxels", self, "update_view")
-		VoxelSetRef.connect("updated_texture", self, "update_view")
-		
-		if update: update_view()
+		VoxelSetRef.connect("requested_refresh", self, "update_view")
+	
+	if update: update_view()
 
 
 
@@ -266,8 +263,8 @@ func _on_ContextMenu_id_pressed(_id : int):
 			for selection in range(Selections.size()):
 				Undo_Redo.add_do_method(VoxelSetRef, "set_voxel", VoxelSetRef.get_voxel(Selections[selection]).duplicate(true), id + selection, "", false)
 				Undo_Redo.add_undo_method(VoxelSetRef, "erase_voxel", id + selection, false)
-			Undo_Redo.add_do_method(VoxelSetRef, "updated_voxels")
-			Undo_Redo.add_undo_method(VoxelSetRef, "updated_voxels")
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		5: 
 			Undo_Redo.create_action("VoxelSetViewer : Remove voxels")
@@ -281,7 +278,7 @@ func _on_ContextMenu_id_pressed(_id : int):
 					VoxelSetRef.id_to_name(selection),
 					false
 				)
-			Undo_Redo.add_do_method(VoxelSetRef, "updated_voxels")
-			Undo_Redo.add_undo_method(VoxelSetRef, "updated_voxels")
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			unselect_all()
 			Undo_Redo.commit_action()
