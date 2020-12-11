@@ -7,9 +7,7 @@ class_name VoxelSet, "res://addons/Voxel-Core/assets/classes/VoxelSet.png"
 
 # Declarations
 # Emitted when VoxelSet has had a voxel added / set / removed
-signal refresh_voxels
-# Emitted when tiles data is changed
-signal refresh_tiles
+signal requested_refresh
 
 
 # Voxels stored by their ID
@@ -22,19 +20,19 @@ func set_uv_scale(uv_scale : float) -> void: pass
 
 # Uniform size of tiles in pixels
 export(float, 1, 1000000000, 1) var TileSize := 32.0 setget set_tile_size
-# Sets TileSize and calls on request_refresh_tiles by default
-func set_tile_size(tile_size : float, update := true) -> void:
+# Sets TileSize and calls on request_refresh by default
+func set_tile_size(tile_size : float, refresh := true) -> void:
 	TileSize = floor(clamp(tile_size, 1, 1000000000))
 	
-	if update: request_refresh_tiles()
+	if refresh: request_refresh()
 
 # Texture for tiles
 export(Texture) var Tiles : Texture = null setget set_tiles
-# Sets Tiles and calls on request_refresh_tiles by default
-func set_tiles(tiles : Texture, update := true) -> void:
+# Sets Tiles and calls on request_refresh by default
+func set_tiles(tiles : Texture, refresh := true) -> void:
 	Tiles = tiles
 	
-	if update: request_refresh_tiles()
+	if refresh: request_refresh()
 
 
 
@@ -47,7 +45,7 @@ func _save() -> void:
 func _load() -> void:
 	if has_meta("Voxels"):
 		Voxels = get_meta("Voxels")
-	request_refresh_voxels()
+	request_refresh()
 
 
 # Calls on _load as soon as feasible
@@ -86,17 +84,17 @@ func get_next_id() -> int:
 # @param	name	:	String	:	
 # @param	update	:	bool	:	
 func name_voxel(id : int, name : String) -> void:
-	if is_valid_id(id):
+	if not is_valid_id(id):
 		printerr("given id is out of VoxelSet range")
 		return
-	elif is_valid_name(name):
+	elif not is_valid_name(name):
 		printerr("given voxel name is invalid")
 		return
 	
 	get_voxel(id)["vsn"] = name
 
 func unname_voxel(id : int) -> void:
-	if is_valid_id(id):
+	if not is_valid_id(id):
 		printerr("given id is out of VoxelSet range")
 		return
 	
@@ -115,7 +113,7 @@ func name_to_id(name : String) -> int:
 
 
 func set_voxel(voxel : Dictionary, name := "", id := get_next_id()) -> int:
-	if is_valid_id(id):
+	if not is_valid_id(id):
 		printerr("given id is out of VoxelSet range")
 		return -1
 	
@@ -133,21 +131,13 @@ func get_voxel(id : int) -> Dictionary:
 	return Voxels.get(id, {})
 
 func erase_voxel(id : int) -> void:
-	if id < 0:
-		printerr("given id out of VoxelSet range")
-		return
+	Voxels.erase(id)
 
 func erase_voxels() -> void:
 	Voxels.clear()
 
 
-func request_refresh_voxels() -> void:
+func request_refresh() -> void:
+	UVScale = (1.0 / (Tiles.get_width() / TileSize)) if is_instance_valid(Tiles) else 0.0
 	_save()
-	emit_signal("refresh_voxels")
-
-func request_refresh_tiles() -> void:
-	if is_instance_valid(Tiles):
-		UVScale = 1.0 / (Tiles.get_width() / TileSize)
-	else: UVScale = 0.0
-	
-	emit_signal("refresh_tiles")
+	emit_signal("requested_refresh")
