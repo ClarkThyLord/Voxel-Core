@@ -19,14 +19,14 @@ func set_voxel_texture(voxel_texture : Texture) -> void:
 	property_list_changed_notify()
 
 export var VoxelID : int setget set_voxel_id
-func set_voxel_id(voxel_id : int) -> void:
+func set_voxel_id(voxel_id : int, update := true) -> void:
 	VoxelID = voxel_id
-	update_view()
+	if update: update_view()
 
 export var VoxelFace := Vector3.ZERO setget set_voxel_face
-func set_voxel_face(voxel_face : Vector3) -> void:
+func set_voxel_face(voxel_face : Vector3, update := true) -> void:
 	VoxelFace = voxel_face
-	update_view()
+	if update: update_view()
 
 export(Resource) var VoxelSetRef = null setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
@@ -35,7 +35,7 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 		return
 	
 	VoxelSetRef = voxel_set
-	update_view()
+	if update: update_view()
 
 
 

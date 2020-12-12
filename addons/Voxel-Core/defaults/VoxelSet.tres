@@ -34,6 +34,5 @@ __meta__ = {
 }
 }
 }
-Locked = false
 TileSize = 16.0
 Tiles = ExtResource( 2 )

@@ -139,5 +139,4 @@ func erase_voxels() -> void:
 
 func request_refresh() -> void:
 	UVScale = (1.0 / (Tiles.get_width() / TileSize)) if is_instance_valid(Tiles) else 0.0
-	_save()
 	emit_signal("requested_refresh")
