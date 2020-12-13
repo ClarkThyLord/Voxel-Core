@@ -49,20 +49,20 @@ export(bool) var ShowHints := false setget set_show_hints
 func set_show_hints(show := ShowHints) -> void:
 	ShowHints = show
 	
-	if ShowHints and is_instance_valid(Hints):
-		Hints.visible = AllowEdit or AllowedSelections
-		
-		HintRef.text = ""
-		if AllowEdit:
-			HintRef.text += "right click : context menu"
-		if AllowedSelections != 0 or AllowedSelections != 1:
-			HintRef.text += ", ctrl + left click : multiple select / unselect"
+	if is_instance_valid(Hints):
+		Hints.visible = ShowHints and (AllowEdit or AllowedSelections)
+		if ShowHints:
+			HintRef.text = ""
+			if AllowEdit:
+				HintRef.text += "right click : context menu"
+			if AllowedSelections != 0 or AllowedSelections != 1:
+				HintRef.text += ", ctrl + left click : multiple select / unselect"
 
 
 export(Resource) var VoxelSetRef = null setget set_voxel_set
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	if not typeof(voxel_set) == TYPE_NIL and not voxel_set is VoxelSet:
-		printerr("Invalid Resource given expected VoxelSet")
+		printerr("VoxelSetViewer : Invalid Resource given expected VoxelSet")
 		return
 	
 	if is_instance_valid(VoxelSetRef):
@@ -79,8 +79,6 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 
 # Core
 func _ready():
-	print(VoxelSetRef)
-	
 	set_show_hints(ShowHints)
 	set_voxel_set(VoxelSetRef)
 	
@@ -94,7 +92,6 @@ func get_voxel_button(voxel_id : int):
 
 func select(voxel_id : int, emit := true) -> void:
 	if AllowedSelections == 0:
-		printerr("VoxelSetViewer : Selection isn't allowed")
 		return
 	
 	var voxel_button = get_voxel_button(voxel_id)
@@ -130,19 +127,13 @@ func unselect_shrink(size := AllowedSelections, emit := true) -> void:
 
 
 func update_view(redraw := false) -> void:
-	print("update")
 	if is_instance_valid(Voxels) and is_instance_valid(VoxelSetRef):
-		print("start update")
 		if redraw:
-			print("redraw")
 			for child in Voxels.get_children():
 				Voxels.remove_child(child)
 				child.queue_free()
 			
-			print(VoxelSetRef.get_ids())
-			print(VoxelSetRef.Voxels)
 			for id in VoxelSetRef.get_ids():
-				print(id)
 				var voxel_button := VoxelButton.instance()
 				voxel_button.name = str(id)
 				voxel_button.set_voxel_id(id, false)

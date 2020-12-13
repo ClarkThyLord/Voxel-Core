@@ -85,17 +85,17 @@ func get_next_id() -> int:
 # @param	update	:	bool	:	
 func name_voxel(id : int, name : String) -> void:
 	if not is_valid_id(id):
-		printerr("given id is out of VoxelSet range")
+		printerr("VoxelSet : given id `" + str(id) + "` is out of range")
 		return
 	elif not is_valid_name(name):
-		printerr("given voxel name is invalid")
+		printerr("VoxelSet : given voxel name `" + name + "` is invalid")
 		return
 	
 	get_voxel(id)["vsn"] = name
 
 func unname_voxel(id : int) -> void:
 	if not is_valid_id(id):
-		printerr("given id is out of VoxelSet range")
+		printerr("VoxelSet : given id `" + str(id) + "` is out of range")
 		return
 	
 	get_voxel(id).erase("vsn")
@@ -114,7 +114,7 @@ func name_to_id(name : String) -> int:
 
 func set_voxel(voxel : Dictionary, name := "", id := get_next_id()) -> int:
 	if not is_valid_id(id):
-		printerr("given id is out of VoxelSet range")
+		printerr("VoxelSet : given id `" + str(id) + "` is out of range")
 		return -1
 	
 	Voxels[id] = voxel
