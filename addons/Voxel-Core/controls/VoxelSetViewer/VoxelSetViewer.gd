@@ -105,10 +105,9 @@ func select(voxel_id : int, emit := true) -> void:
 	
 	var voxel_button = get_voxel_button(voxel_id)
 	if not is_instance_valid(voxel_button):
-		printerr("VoxelSetViewer : VoxelButton doesn't exist for " + str(voxel_id))
 		return
 	
-	unselect_shrink(emit)
+	unselect_shrink(SelectionMax - 1, emit)
 	
 	voxel_button.pressed = true
 	Selections.append(voxel_id)
@@ -117,25 +116,22 @@ func select(voxel_id : int, emit := true) -> void:
 func unselect(voxel_id : int, emit := true) -> void:
 	var index := Selections.find(voxel_id)
 	if index == -1:
-		printerr("VoxelID " + str(voxel_id) + "isn't selected")
 		return
 	
-	var voxel_button = get_voxel_button(voxel_id)
-	if not is_instance_valid(voxel_button):
-		printerr("VoxelButton " + str(voxel_id) + " doesn't exist")
-		return
-	
-	voxel_button.pressed = false
 	Selections.remove(index)
+	var voxel_button = get_voxel_button(voxel_id)
+	if is_instance_valid(voxel_button):
+		voxel_button.pressed = false
+	
 	if emit: emit_signal("unselected", voxel_id)
 
 func unselect_all(emit := true) -> void:
 	while not Selections.empty():
 		unselect(Selections[-1], emit)
 
-func unselect_shrink(emit := true) -> void:
-	if SelectionMax > 0:
-		while Selections.size() > SelectionMax:
+func unselect_shrink(size := SelectionMax, emit := true) -> void:
+	if size > 0:
+		while Selections.size() > size:
 			unselect(Selections[-1], emit)
 
 
