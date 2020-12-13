@@ -118,7 +118,8 @@ func set_voxel(voxel : Dictionary, name := "", id := get_next_id()) -> int:
 		return -1
 	
 	Voxels[id] = voxel
-	name_voxel(id, name)
+	if not name.empty():
+		name_voxel(id, name)
 	
 	return id
 
