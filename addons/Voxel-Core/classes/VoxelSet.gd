@@ -57,7 +57,7 @@ func _init():
 # id      : ing  : id to validate
 # returns : bool : true if id is valid
 static func is_valid_id(id : int) -> bool:
-	return id > 0
+	return id >= 0
 
 # Returns true if given name is valid
 # name    : String : name to validate
