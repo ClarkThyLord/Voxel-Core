@@ -149,6 +149,7 @@ func update_view(redraw := false) -> void:
 			for id in VoxelSetRef.get_ids():
 				print(id)
 				var voxel_button := VoxelButton.instance()
+				voxel_button.name = str(id)
 				voxel_button.set_voxel_id(id, false)
 				voxel_button.set_voxel_set(VoxelSetRef, false)
 				voxel_button.update_view()
@@ -157,6 +158,20 @@ func update_view(redraw := false) -> void:
 				voxel_button.connect("pressed", self, "_on_VoxelButton_pressed", [voxel_button])
 				Voxels.add_child(voxel_button)
 		
+		var keys := Search.split(",", false)
+		for id in VoxelSetRef.get_ids():
+			var show = true
+			for key in keys:
+				if (key.is_valid_integer() and id == key.to_int()) or VoxelSetRef.id_to_name(id).find(key) > -1:
+					show = true
+					break
+				show = false
+			
+			if not show:
+				unselect(id)
+			get_voxel_button(id).visible = show
+	
+	
 #		var voxels := []
 #		if Search.length() == 0:
 #			voxels = VoxelSetRef.Voxels.keys()
@@ -190,6 +205,7 @@ func update_view(redraw := false) -> void:
 #			if is_instance_valid(voxel_ref):
 #				voxel_ref.pressed = true
 #			else: unselect(selection)
+	
 	
 	call_deferred("correct")
 
@@ -302,3 +318,8 @@ func _on_ContextMenu_id_pressed(_id : int):
 			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			unselect_all()
 			Undo_Redo.commit_action()
+
+
+func _on_Search_text_changed(new_text):
+	Search = new_text
+	update_view()
