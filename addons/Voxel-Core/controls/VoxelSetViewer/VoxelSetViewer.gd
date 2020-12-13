@@ -40,29 +40,23 @@ export(bool) var AllowEdit := false setget set_edit_mode
 func set_edit_mode(edit_mode : bool, update := true) -> void:
 	AllowEdit = edit_mode
 
-export(bool) var AllowSelect := false setget set_select_mode
-func set_select_mode(allow_select : bool) -> void:
-	AllowSelect = allow_select
-	if not AllowSelect: unselect_all()
-
-export(int, 0, 1000000000) var SelectionMax := 0 setget set_selection_max
-func set_selection_max(selection_max : int) -> void:
-	selection_max = abs(selection_max)
-	if selection_max > 0 and selection_max < SelectionMax:
-		unselect_shrink()
-	
-	SelectionMax = selection_max
+export(int, -1, 256) var AllowedSelections := 0 setget set_allowed_selections
+func set_allowed_selections(allowed_selections : int) -> void:
+	AllowedSelections = clamp(allowed_selections, -1, 256)
+	unselect_shrink()
 
 export(bool) var ShowHints := false setget set_show_hints
 func set_show_hints(show := ShowHints) -> void:
 	ShowHints = show
 	
 	if ShowHints and is_instance_valid(Hints):
-		Hints.visible = AllowEdit or AllowSelect
+		Hints.visible = AllowEdit or AllowedSelections
 		
 		HintRef.text = ""
-		if AllowEdit: HintRef.text += "right click : context menu"
-		if AllowSelect: HintRef.text += ("   " if HintRef.text.length() > 0 else "")  + "ctrl + left click : select / unselect"
+		if AllowEdit:
+			HintRef.text += "right click : context menu"
+		if AllowedSelections != 0 or AllowedSelections != 1:
+			HintRef.text += ", ctrl + left click : multiple select / unselect"
 
 
 export(Resource) var VoxelSetRef = null setget set_voxel_set
@@ -99,7 +93,7 @@ func get_voxel_button(voxel_id : int):
 
 
 func select(voxel_id : int, emit := true) -> void:
-	if not AllowSelect:
+	if AllowedSelections == 0:
 		printerr("VoxelSetViewer : Selection isn't allowed")
 		return
 	
@@ -107,7 +101,7 @@ func select(voxel_id : int, emit := true) -> void:
 	if not is_instance_valid(voxel_button):
 		return
 	
-	unselect_shrink(SelectionMax - 1, emit)
+	unselect_shrink(AllowedSelections - 1, emit)
 	
 	voxel_button.pressed = true
 	Selections.append(voxel_id)
@@ -129,8 +123,8 @@ func unselect_all(emit := true) -> void:
 	while not Selections.empty():
 		unselect(Selections[-1], emit)
 
-func unselect_shrink(size := SelectionMax, emit := true) -> void:
-	if size > 0:
+func unselect_shrink(size := AllowedSelections, emit := true) -> void:
+	if size >= 0:
 		while Selections.size() > size:
 			unselect(Selections[-1], emit)
 
@@ -217,7 +211,7 @@ func _on_Voxels_gui_input(event):
 		))
 
 func _on_VoxelButton_pressed(voxel_button) -> void:
-	if AllowSelect:
+	if AllowedSelections == -1 or AllowedSelections > 0:
 		if voxel_button.pressed:
 			if not Input.is_key_pressed(KEY_CONTROL):
 				unselect_all()
