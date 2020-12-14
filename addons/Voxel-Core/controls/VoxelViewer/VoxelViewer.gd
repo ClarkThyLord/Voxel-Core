@@ -10,22 +10,19 @@ onready var View3D := get_node("View3D")
 onready var CameraPivot := get_node("View3D/Viewport/CameraPivot")
 onready var CameraRef := get_node("View3D/Viewport/CameraPivot/Camera")
 
-onready var SelectPivot := get_node("View3D/Viewport/SelectPivot")
-onready var Select := get_node("View3D/Viewport/SelectPivot/Select")
-
 onready var VoxelPreview := get_node("View3D/Viewport/VoxelPreview")
-
-onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
-onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
-
+onready var Select := get_node("View3D/Viewport/Select")
 
 onready var ViewModeRef := get_node("ToolBar/ViewMode")
 onready var ViewerHint := get_node("ToolBar/Hint")
 
-
 onready var ContextMenu := get_node("ContextMenu")
+
 onready var ColorMenu := get_node("ColorMenu")
+onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
+
 onready var TextureMenu := get_node("TextureMenu")
+onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
 
 
 
@@ -40,7 +37,10 @@ var VT := VoxelTool.new()
 
 
 var is_dragging := false
-var last_hovered_face := Vector3.ZERO
+var last_hovered_face := Vector3.ZERO setget set_last_hovered_face
+func set_last_hovered_face(hovered_face : Vector3) -> void:
+	last_hovered_face = hovered_face
+	update_hint()
 
 
 var editing_action := -1
@@ -72,7 +72,7 @@ func set_view_mode(view_mode : int) -> void:
 	if is_instance_valid(View3D):
 		View3D.visible = ViewMode == ViewModes.View3D
 
-export(int, 0, 100) var ViewSpeed := 32
+export(int, 0, 100) var ViewSensitivity := 8
 
 export(Vector3) var SelectedFace := Vector3.ZERO setget set_selected_face
 func set_selected_face(selected_face : Vector3) -> void:
@@ -248,18 +248,23 @@ func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 	last_hovered_face = normal
 
 
-func _onView3D_gui_input(event : InputEvent) -> void:
+func _on_View3D_gui_input(event : InputEvent) -> void:
 	if event is InputEventMouse:
 		var from = CameraRef.project_ray_origin(event.position)
 		var to = from + CameraRef.project_ray_normal(event.position) * 1000
 		var hit = CameraRef.get_world().direct_space_state.intersect_ray(from, to)
-		
-		if hit:
+		if hit.empty():
+			last_hovered_face = Vector3.ZERO
+		else:
 			hit["normal"] = hit["normal"].round()
 			last_hovered_face = hit["normal"]
-		else: last_hovered_face = Vector3.ZERO
 		
-		if event is InputEventMouseButton:
+		if event is InputEventMouseMotion:
+			if is_dragging:
+				var motion = event.relative.normalized()
+				CameraPivot.rotation_degrees.x += -motion.y * ViewSensitivity
+				CameraPivot.rotation_degrees.y += -motion.x * ViewSensitivity
+		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT:
 				if event.doubleclick:
 					if hit and AllowedSelections > 0:
@@ -271,11 +276,6 @@ func _onView3D_gui_input(event : InputEvent) -> void:
 			elif event.button_index == BUTTON_RIGHT and not last_hovered_face == Vector3.ZERO:
 				if AllowEdit:
 					setup_context_menu(event.global_position, last_hovered_face)
-		elif event is InputEventMouseMotion:
-			if is_dragging:
-				var motion = event.relative.normalized()
-				CameraPivot.rotation_degrees.x += -motion.y * ViewSpeed
-				CameraPivot.rotation_degrees.y += -motion.x * ViewSpeed
 		
 		if is_dragging: View3D.set_default_cursor_shape(Control.CURSOR_MOVE)
 		elif hit: View3D.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
