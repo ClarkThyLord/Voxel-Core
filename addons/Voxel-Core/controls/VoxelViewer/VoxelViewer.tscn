@@ -239,6 +239,7 @@ size_flags_horizontal = 3
 text = "Confirm"
 
 [node name="TextureMenu" type="WindowDialog" parent="."]
+visible = true
 anchor_right = 0.316406
 anchor_bottom = 0.433333
 rect_min_size = Vector2( 324, 260 )
@@ -267,6 +268,7 @@ margin_right = 307.0
 margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+AllowedSelections = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
@@ -305,5 +307,6 @@ text = "Confirm"
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ColorMenu"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
 [connection signal="popup_hide" from="TextureMenu" to="." method="close_TextureMenu"]
+[connection signal="selected_uv" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_VoxelTexture_selected_uv"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_TextureMenu"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]

@@ -4,8 +4,8 @@ extends TextureRect
 
 
 # Declarations
-signal selected_tile(uv)
-signal unselected_tile(uv)
+signal selected_uv(uv)
+signal unselected_uv(uv)
 
 
 var last_uv_hovered := -Vector2.ONE
@@ -50,6 +50,7 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	VoxelSetRef = voxel_set
 	if is_instance_valid(VoxelSetRef):
 		VoxelSetRef.connect("requested_refresh", self, "update")
+		
 		if is_instance_valid(VoxelSetRef.Tiles):
 			texture = VoxelSetRef.Tiles
 	else:
