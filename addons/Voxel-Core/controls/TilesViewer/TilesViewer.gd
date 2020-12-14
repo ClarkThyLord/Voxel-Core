@@ -4,8 +4,8 @@ extends TextureRect
 
 
 # Declarations
-signal selected(uv)
-signal unselected(uv)
+signal selected_tile(uv)
+signal unselected_tile(uv)
 
 
 var last_uv_hovered := -Vector2.ONE
@@ -78,12 +78,13 @@ func select(uv : Vector2, emit := true) -> void:
 		unselect_shrink(AllowedSelections - 1)
 		Selections.append(uv)
 		if emit:
-			emit_signal("selected", uv)
+			emit_signal("selected_uv", uv)
 
 func unselect(uv : Vector2, emit := true) -> void:
-	if Selections.has(uv) and emit:
+	if Selections.has(uv):
 		Selections.erase(uv)
-		emit_signal("unselected", uv)
+		if emit:
+			emit_signal("unselected_uv", uv)
 
 func unselect_all() -> void:
 	while not Selections.empty():

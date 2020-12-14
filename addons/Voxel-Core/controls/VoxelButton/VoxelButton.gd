@@ -45,6 +45,13 @@ func _ready():
 	set_voxel_texture(VoxelTexture)
 
 
+func setup(voxel_set : VoxelSet, voxel_set_id : int, voxel_face := Vector3.ZERO) -> void:
+	VoxelSetRef = voxel_set
+	VoxelID = voxel_set_id
+	VoxelFace = voxel_face
+	update_view()
+
+
 func update_view(voxel_id := VoxelID, face := VoxelFace) -> void:
 	if typeof(VoxelSetRef) == TYPE_NIL:
 		printerr("VoxelSetRef is not set")

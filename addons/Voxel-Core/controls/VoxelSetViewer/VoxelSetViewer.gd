@@ -21,8 +21,8 @@ onready var ContextMenu := get_node("ContextMenu")
 
 
 # Declarations
-signal selected(voxel_id)
-signal unselected(voxel_id)
+signal selected_voxel(voxel_id)
+signal unselected_voxel(voxel_id)
 
 
 var Undo_Redo : UndoRedo
@@ -107,7 +107,7 @@ func select(voxel_id : int, emit := true) -> void:
 	
 	voxel_button.pressed = true
 	Selections.append(voxel_id)
-	if emit: emit_signal("selected", voxel_id)
+	if emit: emit_signal("selected_voxel", voxel_id)
 
 func unselect(voxel_id : int, emit := true) -> void:
 	var index := Selections.find(voxel_id)
@@ -119,7 +119,7 @@ func unselect(voxel_id : int, emit := true) -> void:
 	if is_instance_valid(voxel_button):
 		voxel_button.pressed = false
 	
-	if emit: emit_signal("unselected", voxel_id)
+	if emit: emit_signal("unselected_voxel", voxel_id)
 
 func unselect_all(emit := true) -> void:
 	while not Selections.empty():
