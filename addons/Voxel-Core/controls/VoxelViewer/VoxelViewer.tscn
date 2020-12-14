@@ -3,21 +3,12 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=4]
 
 [sub_resource type="ButtonGroup" id=1]
 
 [sub_resource type="Environment" id=2]
 ambient_light_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="SpatialMaterial" id=3]
-flags_transparent = true
-vertex_color_use_as_albedo = true
-albedo_color = Color( 0.7, 0.7, 0.7, 1 )
-
-[sub_resource type="PlaneMesh" id=4]
-
-[sub_resource type="SpatialMaterial" id=5]
-vertex_color_use_as_albedo = true
 
 [sub_resource type="ArrayMesh" id=6]
 surfaces/0 = {
@@ -27,13 +18,20 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97563,
 "index_count": 36,
-"material": SubResource( 5 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 24
 }
 
 [sub_resource type="BoxShape" id=7]
+
+[sub_resource type="SpatialMaterial" id=8]
+flags_transparent = true
+params_grow = true
+params_grow_amount = 0.01
+albedo_color = Color( 0, 0.25, 1, 0.607843 )
+
+[sub_resource type="CubeMesh" id=9]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
@@ -42,8 +40,12 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+AllowEdit = true
+AllowedSelections = 2
+VoxelID = 5
+VoxelSetRef = ExtResource( 4 )
 
-[node name="2DView" type="Control" parent="."]
+[node name="View2D" type="Control" parent="."]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -52,7 +54,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Left" parent="2DView" instance=ExtResource( 2 )]
+[node name="Left" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.176758
 anchor_top = 0.366667
 anchor_right = 0.34082
@@ -61,7 +63,7 @@ toggle_mode = true
 group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
-[node name="Front" parent="2DView" instance=ExtResource( 2 )]
+[node name="Front" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.34082
 anchor_top = 0.366667
 anchor_right = 0.504883
@@ -70,7 +72,7 @@ toggle_mode = true
 group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
-[node name="Right" parent="2DView" instance=ExtResource( 2 )]
+[node name="Right" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.504883
 anchor_top = 0.366666
 anchor_right = 0.668945
@@ -83,7 +85,7 @@ toggle_mode = true
 group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
-[node name="Back" parent="2DView" instance=ExtResource( 2 )]
+[node name="Back" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.668945
 anchor_top = 0.366667
 anchor_right = 0.833008
@@ -95,7 +97,7 @@ toggle_mode = true
 group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
-[node name="Top" parent="2DView" instance=ExtResource( 2 )]
+[node name="Top" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.34082
 anchor_top = 0.0866667
 anchor_right = 0.504883
@@ -104,7 +106,7 @@ toggle_mode = true
 group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
-[node name="Bottom" parent="2DView" instance=ExtResource( 2 )]
+[node name="Bottom" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.34082
 anchor_top = 0.646667
 anchor_right = 0.504883
@@ -113,7 +115,7 @@ toggle_mode = true
 group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
-[node name="3DView" type="ViewportContainer" parent="."]
+[node name="View3D" type="ViewportContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -123,7 +125,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Viewport" type="Viewport" parent="3DView"]
+[node name="Viewport" type="Viewport" parent="View3D"]
 size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
@@ -131,35 +133,30 @@ handle_input_locally = false
 render_target_update_mode = 3
 physics_object_picking = true
 
-[node name="CameraPivot" type="Spatial" parent="3DView/Viewport"]
+[node name="CameraPivot" type="Spatial" parent="View3D/Viewport"]
 
-[node name="Camera" type="Camera" parent="3DView/Viewport/CameraPivot"]
+[node name="Camera" type="Camera" parent="View3D/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
 environment = SubResource( 2 )
 
-[node name="SelectPivot" type="Spatial" parent="3DView/Viewport"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
-visible = false
-
-[node name="Select" type="MeshInstance" parent="3DView/Viewport/SelectPivot"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0 )
-material_override = SubResource( 3 )
-mesh = SubResource( 4 )
-material/0 = null
-
-[node name="VoxelPreview" type="MeshInstance" parent="3DView/Viewport"]
+[node name="VoxelPreview" type="MeshInstance" parent="View3D/Viewport"]
 mesh = SubResource( 6 )
 material/0 = null
 
-[node name="VoxelStaticBody" type="StaticBody" parent="3DView/Viewport"]
+[node name="VoxelStaticBody" type="StaticBody" parent="View3D/Viewport/VoxelPreview"]
 
-[node name="CollisionShape" type="CollisionShape" parent="3DView/Viewport/VoxelStaticBody"]
+[node name="CollisionShape" type="CollisionShape" parent="View3D/Viewport/VoxelPreview/VoxelStaticBody"]
 shape = SubResource( 7 )
+
+[node name="Select" type="MeshInstance" parent="View3D/Viewport"]
+material_override = SubResource( 8 )
+mesh = SubResource( 9 )
+material/0 = null
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
 margin_left = 12.0
 margin_top = 12.0
-margin_right = 208.0
+margin_right = 244.0
 margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -169,7 +166,7 @@ __meta__ = {
 margin_right = 64.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 64, 20 )
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 text = "3D"
 align = 1
 items = [ "2D", null, false, 0, null, "3D", null, false, 1, null ]
@@ -215,10 +212,8 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 4.0
-margin_bottom = 4.0
+margin_right = 308.0
+margin_bottom = 462.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -272,8 +267,6 @@ margin_right = 307.0
 margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-SelectMode = true
-SelectionMax = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0
@@ -292,19 +285,19 @@ margin_right = 307.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
-[connection signal="gui_input" from="2DView/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
-[connection signal="mouse_exited" from="2DView/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
-[connection signal="mouse_exited" from="2DView/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Right" to="." method="_on_Face_gui_input" binds= [ Vector3( 1, 0, 0 ) ]]
-[connection signal="mouse_exited" from="2DView/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Back" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, 1 ) ]]
-[connection signal="mouse_exited" from="2DView/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Top" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 1, 0 ) ]]
-[connection signal="mouse_exited" from="2DView/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="2DView/Bottom" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, -1, 0 ) ]]
-[connection signal="mouse_exited" from="2DView/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
-[connection signal="gui_input" from="3DView" to="." method="_on_3DView_gui_input"]
+[connection signal="gui_input" from="View2D/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="mouse_exited" from="View2D/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Right" to="." method="_on_Face_gui_input" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Back" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="mouse_exited" from="View2D/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Top" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Bottom" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View3D" to="." method="_on_View3D_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
 [connection signal="popup_hide" from="ColorMenu" to="." method="close_ColorMenu"]
@@ -312,6 +305,5 @@ text = "Confirm"
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ColorMenu"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
 [connection signal="popup_hide" from="TextureMenu" to="." method="close_TextureMenu"]
-[connection signal="selected" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_TilesViewer_select"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_TextureMenu"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]

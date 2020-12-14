@@ -27,8 +27,8 @@ onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/
 
 
 # Declarations
-signal selected_face(normal)
-signal unselected_face(normal)
+signal selected_face(face)
+signal unselected_face(face)
 
 
 var Undo_Redo : UndoRedo
@@ -73,43 +73,6 @@ func set_view_mode(view_mode : int) -> void:
 		View3D.visible = ViewMode == ViewModes.View3D
 
 export(int, 0, 100) var ViewSensitivity := 8
-
-export(Vector3) var SelectedFace := Vector3.ZERO setget set_selected_face
-func set_selected_face(selected_face : Vector3) -> void:
-	SelectedFace = selected_face
-	
-	var select_rot := Vector3.INF
-	match SelectedFace:
-		Vector3.RIGHT:select_rot = Vector3(0, 0, -90)
-		Vector3.LEFT:select_rot = Vector3(0, 0, 90)
-		Vector3.UP:select_rot = Vector3.ZERO
-		Vector3.DOWN:select_rot = Vector3(180, 0, 0)
-		Vector3.FORWARD:select_rot = Vector3(-90, 0, 0)
-		Vector3.BACK:select_rot = Vector3(90, 0, 0)
-	
-#	if View2D:
-#		for side in View2D.get_children():
-#			if side.name == normal_to_string(SelectedFace).capitalize():
-#				side.disabled = true
-#				var color = Voxel.get_color_side(get_viewing_voxel(), SelectedFace)
-#				color.a = 1
-#				side.modulate = color.darkened(0.3)
-#			else:
-#				side.disabled = false
-#				side.modulate = Color.white
-#
-#	if SelectPivot:
-#		SelectPivot.visible = not select_rot == Vector3.INF
-#		if not select_rot == Vector3.INF:
-#			SelectPivot.rotation_degrees = select_rot
-#		if Select:
-#			var color = Voxel.get_color_side(get_viewing_voxel(), SelectedFace)
-#			color.a = 1
-#			Select.material_override.albedo_color = color.darkened(0.3)
-	
-	update_hint()
-	emit_signal("selected_face", SelectedFace)
-
 
 export var VoxelID : int setget set_voxel_id
 func set_voxel_id(voxel_id : int, update := true) -> void:
@@ -156,27 +119,36 @@ func normal_to_string(normal : Vector3) -> String:
 # Core
 func _ready():
 	set_view_mode(ViewMode)
-	set_selected_face(SelectedFace)
 	
 	if not is_instance_valid(Undo_Redo):
 		Undo_Redo = UndoRedo.new()
 
 
 func get_viewing_voxel() -> Dictionary:
-	return VoxelSetRef.get_voxel(Selections[0]) if is_instance_valid(VoxelSetRef) else {}
+	return VoxelSetRef.get_voxel(VoxelID) if is_instance_valid(VoxelSetRef) else {}
+
+func get_voxle_button(face_normal : Vector3):
+	return View2D.find_node(normal_to_string(face_normal).capitalize())
 
 
-func select(normal : Vector3, emit := true) -> void:
+func select(face : Vector3, emit := true) -> void:
 	if AllowedSelections != 0:
 		unselect_shrink(AllowedSelections - 1)
-		Selections.append(normal)
+		Selections.append(face)
+		var voxel_button = get_voxle_button(face)
+		if is_instance_valid(voxel_button):
+			voxel_button.pressed = true
 		if emit:
-			emit_signal("selected_face", normal)
+			emit_signal("selected_face", face)
 
-func unselect(normal : Vector2, emit := true) -> void:
-	if Selections.has(normal) and emit:
-		Selections.erase(normal)
-		emit_signal("unselected_face", normal)
+func unselect(face : Vector3, emit := true) -> void:
+	if Selections.has(face):
+		Selections.erase(face)
+		var voxel_button = get_voxle_button(face)
+		if is_instance_valid(voxel_button):
+			voxel_button.pressed = false
+		if emit:
+			emit_signal("unselected_face", face)
 
 func unselect_all_() -> void:
 	while not Selections.empty():
@@ -189,11 +161,19 @@ func unselect_shrink(size := AllowedSelections, emit := true) -> void:
 
 
 func update_hint() -> void:
-	if ViewerHint:
-		ViewerHint.text = normal_to_string(SelectedFace).to_upper()
-		if SelectedFace != last_hovered_face and last_hovered_face != Vector3.ZERO:
-			if not ViewerHint.text.empty(): ViewerHint.text += " | "
-			ViewerHint.text += normal_to_string(last_hovered_face).to_upper()
+	if is_instance_valid(ViewerHint):
+		ViewerHint.text = ""
+		
+		if last_hovered_face != Vector3.ZERO:
+			ViewerHint.text = normal_to_string(last_hovered_face).to_upper()
+		
+		if not Selections.empty():
+			if not ViewerHint.text.empty():
+				ViewerHint.text += " | "
+			for i in range(len(Selections)):
+				if i > 0:
+					ViewerHint.text += ", "
+				ViewerHint.text += normal_to_string(Selections[i]).to_upper()
 
 func update_view() -> void:
 	if is_instance_valid(View2D):
@@ -209,6 +189,15 @@ func update_view() -> void:
 				-Vector3.ONE / 2
 			)
 		VoxelPreview.mesh = VT.end()
+		
+		VT.start(true, VoxelSetRef, 2)
+		for selection in Selections:
+			VT.add_face(
+				Voxel.colored(Color(0, 0, 0, 0.75)),
+				selection,
+				-Vector3.ONE / 2
+			)
+		Select.mesh = VT.end()
 
 
 func setup_context_menu(global_position : Vector2, face := last_hovered_face) -> void:
@@ -267,8 +256,11 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT:
 				if event.doubleclick:
-					if hit and AllowedSelections > 0:
-						set_selected_face(hit["normal"])
+					if not hit.empty() and AllowedSelections > 0:
+						if Selections.has(hit["normal"]):
+							unselect(hit["normal"])
+						else:
+							select(hit["normal"])
 				elif event.is_pressed():
 					is_dragging = true
 				else:
@@ -280,6 +272,8 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 		if is_dragging: View3D.set_default_cursor_shape(Control.CURSOR_MOVE)
 		elif hit: View3D.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 		else: View3D.set_default_cursor_shape(Control.CURSOR_ARROW)
+		update_hint()
+		update_view()
 
 
 func _on_ContextMenu_id_pressed(id : int):
