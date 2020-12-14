@@ -11,28 +11,34 @@ __meta__ = {
 },
 "Voxels": {
 0: {
-"color": Color( 0.514235, 0.0433915, 0.0433915, 1 )
+"color": Color( 0.514235, 0.0433915, 0.0433915, 1 ),
+"vsn": "a"
 },
 1: {
-"color": Color( 1, 1, 1, 1 )
+"color": Color( 1, 1, 1, 1 ),
+"vsn": "b"
 },
 2: {
-"color": Color( 0, 1, 0.0925267, 1 )
+"color": Color( 0, 1, 0.0925267, 1 ),
+"vsn": "c"
 },
 3: {
 "color": Color( 0.105314, 0.592527, 0.472891, 1 ),
 "colors": {
 
-}
+},
+"vsn": "d"
 },
 4: {
-"color": Color( 1, 1, 1, 1 )
+"color": Color( 1, 1, 1, 1 ),
+"vsn": "e"
 },
 5: {
 "color": Color( 1, 1, 1, 1 ),
-"texture": Vector2( 2, 3 )
+"texture": Vector2( 2, 3 ),
+"vsn": "tnt"
 }
 }
 }
-TileSize = 16.0
+TileSize = Vector2( 16, 16 )
 Tiles = ExtResource( 2 )

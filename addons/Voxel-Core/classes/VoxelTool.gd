@@ -14,8 +14,8 @@ func set_index(_index : int) -> void: pass
 var VoxelUV := false setget set_voxel_uv
 func set_voxel_uv(voxel_uv : bool) -> void: pass
 
-var VoxelUVScale := 1.0 setget set_uv_scale
-func set_uv_scale(voxel_uv_scale : float) -> void: pass
+var VoxelUVScale := Vector2.ONE setget set_uv_scale
+func set_uv_scale(voxel_uv_scale : Vector2) -> void: pass
 
 
 var VoxelSize := 0.5 setget set_voxel_size

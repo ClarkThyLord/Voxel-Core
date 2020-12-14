@@ -1,15 +1,12 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.gd" type="Script" id=1]
-[ext_resource path="res://assets/examples/textured/Tileset.png" type="Texture" id=2]
 
 [node name="TilesViewer" type="TextureRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-TileSize = 16.0
-[connection signal="mouse_exited" from="." to="." method="set" binds= [ "hovered", Vector2( -1, -1 ) ]]
+[connection signal="mouse_exited" from="." to="." method="set" binds= [ "last_uv_hovered", Vector2( -1, -1 ) ]]
