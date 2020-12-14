@@ -4,35 +4,34 @@ extends Control
 
 
 # Refrences
-onready var ContextMenu := get_node("ContextMenu")
-onready var ColorMenu := get_node("ColorMenu")
-onready var TextureMenu := get_node("TextureMenu")
+onready var View2D := get_node("View2D")
+onready var View3D := get_node("View3D")
+
+onready var CameraPivot := get_node("View3D/Viewport/CameraPivot")
+onready var CameraRef := get_node("View3D/Viewport/CameraPivot/Camera")
+
+onready var SelectPivot := get_node("View3D/Viewport/SelectPivot")
+onready var Select := get_node("View3D/Viewport/SelectPivot/Select")
+
+onready var VoxelPreview := get_node("View3D/Viewport/VoxelPreview")
+
+onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
+onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
 
 
 onready var ViewModeRef := get_node("ToolBar/ViewMode")
 onready var ViewerHint := get_node("ToolBar/Hint")
 
 
-onready var _2DView := get_node("2DView")
-
-
-onready var _3DView := get_node("3DView")
-
-onready var CameraPivot := get_node("3DView/Viewport/CameraPivot")
-onready var CameraRef := get_node("3DView/Viewport/CameraPivot/Camera")
-
-onready var SelectPivot := get_node("3DView/Viewport/SelectPivot")
-onready var Select := get_node("3DView/Viewport/SelectPivot/Select")
-
-onready var VoxelPreview := get_node("3DView/Viewport/VoxelPreview")
-
-onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
-onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
+onready var ContextMenu := get_node("ContextMenu")
+onready var ColorMenu := get_node("ColorMenu")
+onready var TextureMenu := get_node("TextureMenu")
 
 
 
 # Declarations
 signal selected_face(normal)
+signal unselected_face(normal)
 
 
 var Undo_Redo : UndoRedo
@@ -40,45 +39,40 @@ var Undo_Redo : UndoRedo
 var VT := VoxelTool.new()
 
 
-var dragging := false
-var edit_action := -1
-var edit_face := Vector3.ZERO
+var is_dragging := false
+var last_hovered_face := Vector3.ZERO
 
 
-var placeholder := {}
-var Represents := [{}, null] setget set_represents
-func set_represents(represents : Array) -> void: pass
+var editing_action := -1
+var editing_face := Vector3.ZERO
 
+export(bool) var AllowEdit := false setget set_allow_edit
+func set_allow_edit(allow_edit : bool) -> void:
+	AllowEdit = allow_edit
 
-export(bool) var EditMode := false setget set_edit_mode
-func set_edit_mode(edit_mode : bool) -> void:
-	EditMode = edit_mode
+var Selections := [] setget set_selections
+func set_selections(selections : Array) -> void: pass
 
-export(bool) var SelectMode := false setget set_select_mode
-func set_select_mode(select_mode : bool) -> void:
-	SelectMode = select_mode
-	
-	if not SelectMode: set_selected_face(Vector3.ZERO)
+export(int, 0, 6) var AllowedSelections := 0 setget set_allowed_selections
+func set_allowed_selections(allowed_selections : int, update := true) -> void:
+	AllowedSelections = clamp(allowed_selections, 0, 6)
+	unselect_shrink()
+	if update: self.update()
 
-
-enum ViewModes { _2D, _3D }
-export(ViewModes) var ViewMode := ViewModes._3D setget set_view_mode
+enum ViewModes { View2D, View3D }
+export(ViewModes) var ViewMode := ViewModes.View3D setget set_view_mode
 func set_view_mode(view_mode : int) -> void:
-	set_hovered_face(Vector3.ZERO)
-	ViewMode = int(clamp(view_mode, 0, 1))
+	last_hovered_face = Vector3.ZERO
+	ViewMode = int(clamp(view_mode, 0, ViewModes.size()))
 	
-	if ViewModeRef:
+	if is_instance_valid(ViewModeRef):
 		ViewModeRef.selected = ViewMode
-	if _2DView:
-		_2DView.visible = ViewMode == ViewModes._2D
-	if _3DView:
-		_3DView.visible = ViewMode == ViewModes._3D
+	if is_instance_valid(View2D):
+		View2D.visible = ViewMode == ViewModes.View2D
+	if is_instance_valid(View3D):
+		View3D.visible = ViewMode == ViewModes.View3D
 
-
-var HoveredFace := Vector3.ZERO setget set_hovered_face
-func set_hovered_face(hovered_face : Vector3) -> void:
-	HoveredFace = hovered_face
-	update_hint()
+export(int, 0, 100) var ViewSpeed := 32
 
 export(Vector3) var SelectedFace := Vector3.ZERO setget set_selected_face
 func set_selected_face(selected_face : Vector3) -> void:
@@ -93,31 +87,43 @@ func set_selected_face(selected_face : Vector3) -> void:
 		Vector3.FORWARD:select_rot = Vector3(-90, 0, 0)
 		Vector3.BACK:select_rot = Vector3(90, 0, 0)
 	
-	if _2DView:
-		for side in _2DView.get_children():
-			if side.name == normal_to_string(SelectedFace).capitalize():
-				side.disabled = true
-				var color = Voxel.get_color_side(placeholder, SelectedFace)
-				color.a = 1
-				side.modulate = color.darkened(0.3)
-			else:
-				side.disabled = false
-				side.modulate = Color.white
-	
-	if SelectPivot:
-		SelectPivot.visible = not select_rot == Vector3.INF
-		if not select_rot == Vector3.INF:
-			SelectPivot.rotation_degrees = select_rot
-		if Select:
-			var color = Voxel.get_color_side(placeholder, SelectedFace)
-			color.a = 1
-			Select.material_override.albedo_color = color.darkened(0.3)
+#	if View2D:
+#		for side in View2D.get_children():
+#			if side.name == normal_to_string(SelectedFace).capitalize():
+#				side.disabled = true
+#				var color = Voxel.get_color_side(get_viewing_voxel(), SelectedFace)
+#				color.a = 1
+#				side.modulate = color.darkened(0.3)
+#			else:
+#				side.disabled = false
+#				side.modulate = Color.white
+#
+#	if SelectPivot:
+#		SelectPivot.visible = not select_rot == Vector3.INF
+#		if not select_rot == Vector3.INF:
+#			SelectPivot.rotation_degrees = select_rot
+#		if Select:
+#			var color = Voxel.get_color_side(get_viewing_voxel(), SelectedFace)
+#			color.a = 1
+#			Select.material_override.albedo_color = color.darkened(0.3)
 	
 	update_hint()
 	emit_signal("selected_face", SelectedFace)
 
 
-export(int, 0, 100) var MouseSensitivity := 6
+export var VoxelID : int setget set_voxel_id
+func set_voxel_id(voxel_id : int, update := true) -> void:
+	VoxelID = voxel_id
+	if update: update_view()
+
+export(Resource) var VoxelSetRef = null setget set_voxel_set
+func set_voxel_set(voxel_set : Resource, update := true) -> void:
+	if not typeof(voxel_set) == TYPE_NIL and not voxel_set is VoxelSet:
+		printerr("Invalid Resource given expected VoxelSet")
+		return
+	
+	VoxelSetRef = voxel_set
+	if update: update_view()
 
 
 
@@ -151,95 +157,79 @@ func normal_to_string(normal : Vector3) -> String:
 func _ready():
 	set_view_mode(ViewMode)
 	set_selected_face(SelectedFace)
-	update_voxel_preview()
 	
 	if not is_instance_valid(Undo_Redo):
 		Undo_Redo = UndoRedo.new()
 
 
-func setup_voxel(voxel : int, voxelset : VoxelSet) -> void:
-	setup_rvoxel(
-		voxelset.get_voxel(voxel),
-		voxelset
-	)
-	Represents[0] = voxel
-
-func setup_rvoxel(voxel : Dictionary, voxelset : VoxelSet = null) -> void:
-	placeholder = voxel.duplicate(true)
-	Represents[0] = voxel
-	if is_instance_valid(Represents[1]):
-		if Represents[1].is_connected("updated_voxels", self, "update_voxel_preview"):
-			Represents[1].disconnect("updated_voxels", self, "update_voxel_preview")
-		if Represents[1].is_connected("updated_texture", self, "update_voxel_preview"):
-			Represents[1].disconnect("updated_texture", self, "update_voxel_preview")
-	Represents[1] = voxelset
-	if is_instance_valid(voxelset):
-		voxelset.connect("updated_voxels", self, "update_voxel_preview", [true])
-		voxelset.connect("updated_texture", self, "update_voxel_preview")
-	if VoxelTexture:
-		VoxelTexture.Voxel_Set = voxelset
-	update_voxel_preview()
+func get_viewing_voxel() -> Dictionary:
+	return VoxelSetRef.get_voxel(Selections[0]) if is_instance_valid(VoxelSetRef) else {}
 
 
-func get_real_voxel() -> Dictionary:
-	var voxel := {}
-	match typeof(Represents[0]):
-		TYPE_DICTIONARY: voxel = Represents[0]
-		TYPE_INT, TYPE_STRING:
-			if is_instance_valid(Represents[1]):
-				voxel = Represents[1].get_voxel(Represents[0])
-	return voxel
+func select(normal : Vector3, emit := true) -> void:
+	if AllowedSelections != 0:
+		unselect_shrink(AllowedSelections - 1)
+		Selections.append(normal)
+		if emit:
+			emit_signal("selected_face", normal)
+
+func unselect(normal : Vector2, emit := true) -> void:
+	if Selections.has(normal) and emit:
+		Selections.erase(normal)
+		emit_signal("unselected_face", normal)
+
+func unselect_all_() -> void:
+	while not Selections.empty():
+		unselect(Selections.back())
+
+func unselect_shrink(size := AllowedSelections, emit := true) -> void:
+	if size >= 0:
+		while Selections.size() > size:
+			unselect(Selections.back(), emit)
 
 
 func update_hint() -> void:
 	if ViewerHint:
 		ViewerHint.text = normal_to_string(SelectedFace).to_upper()
-		if SelectedFace != HoveredFace and HoveredFace != Vector3.ZERO:
+		if SelectedFace != last_hovered_face and last_hovered_face != Vector3.ZERO:
 			if not ViewerHint.text.empty(): ViewerHint.text += " | "
-			ViewerHint.text += normal_to_string(HoveredFace).to_upper()
+			ViewerHint.text += normal_to_string(last_hovered_face).to_upper()
 
-func update_voxel_preview(refresh := false) -> void:
-	if refresh:
-		placeholder = get_real_voxel().duplicate(true)
+func update_view() -> void:
+	if is_instance_valid(View2D):
+		for voxel_button in View2D.get_children():
+			voxel_button.setup(VoxelSetRef, VoxelID, string_to_normal(voxel_button.name))
 	
-	if _2DView:
-		for side in _2DView.get_children():
-			side.setup_rvoxel(
-				placeholder,
-				Represents[1],
-				string_to_normal(side.name)
-			)
-	
-	if VoxelPreview:
-		VT.start(
-			true,
-			Represents[1],
-			2
-		)
+	if is_instance_valid(VoxelPreview):
+		VT.start(true, VoxelSetRef, 2)
 		for direction in Voxel.Directions:
 			VT.add_face(
-				placeholder,
+				get_viewing_voxel(),
 				direction,
 				-Vector3.ONE / 2
 			)
 		VoxelPreview.mesh = VT.end()
 
 
-func setup_context_menu(global_position : Vector2, face := HoveredFace) -> void:
-	edit_face = face
+func setup_context_menu(global_position : Vector2, face := last_hovered_face) -> void:
+	editing_face = face
 	
-	if ContextMenu:
+	if is_instance_valid(ContextMenu) and is_instance_valid(VoxelSetRef):
+		var multiple =  "" if Selections.size() == 1 else "(s)"
 		ContextMenu.clear()
-		ContextMenu.add_item("Color side", 0)
-		if Voxel.has_color_side(placeholder, HoveredFace):
-			ContextMenu.add_item("Remove side color", 1)
-		ContextMenu.add_item("Texture side", 2)
-		if Voxel.has_texture_side(placeholder, HoveredFace):
-			ContextMenu.add_item("Remove side texture", 3)
+		ContextMenu.add_item("Color side" + multiple, 0)
+		if Voxel.has_color_side(get_viewing_voxel(), last_hovered_face):
+			ContextMenu.add_item("Remove side color" + multiple, 1)
+		
+		ContextMenu.add_item("Texture side" + multiple, 2)
+		if Voxel.has_texture_side(get_viewing_voxel(), last_hovered_face):
+			ContextMenu.add_item("Remove side texture" + multiple, 3)
+		
 		ContextMenu.add_separator()
 		ContextMenu.add_item("Color voxel", 4)
+		
 		ContextMenu.add_item("Texture voxel", 5)
-		if Voxel.has_texture(placeholder):
+		if Voxel.has_texture(get_viewing_voxel()):
 			ContextMenu.add_item("Remove voxel texture", 6)
 		ContextMenu.set_as_minsize()
 		
@@ -252,13 +242,13 @@ func setup_context_menu(global_position : Vector2, face := HoveredFace) -> void:
 func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
-			if SelectMode: set_selected_face(normal)
+			if AllowedSelections > 0: select(normal)
 		elif event.button_index == BUTTON_RIGHT :
-			if EditMode: setup_context_menu(event.global_position, HoveredFace)
-	set_hovered_face(normal)
+			if AllowEdit: setup_context_menu(event.global_position, last_hovered_face)
+	last_hovered_face = normal
 
 
-func _on_3DView_gui_input(event : InputEvent) -> void:
+func _onView3D_gui_input(event : InputEvent) -> void:
 	if event is InputEventMouse:
 		var from = CameraRef.project_ray_origin(event.position)
 		var to = from + CameraRef.project_ray_normal(event.position) * 1000
@@ -266,152 +256,155 @@ func _on_3DView_gui_input(event : InputEvent) -> void:
 		
 		if hit:
 			hit["normal"] = hit["normal"].round()
-			set_hovered_face(hit["normal"])
-		else: set_hovered_face(Vector3.ZERO)
+			last_hovered_face = hit["normal"]
+		else: last_hovered_face = Vector3.ZERO
 		
 		if event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT:
 				if event.doubleclick:
-					if hit and SelectMode: set_selected_face(hit["normal"])
-				elif event.is_pressed(): dragging = true
-				else: dragging = false
-			elif event.button_index == BUTTON_RIGHT and not HoveredFace == Vector3.ZERO:
-				if EditMode: setup_context_menu(event.global_position, HoveredFace)
+					if hit and AllowedSelections > 0:
+						set_selected_face(hit["normal"])
+				elif event.is_pressed():
+					is_dragging = true
+				else:
+					is_dragging = false
+			elif event.button_index == BUTTON_RIGHT and not last_hovered_face == Vector3.ZERO:
+				if AllowEdit:
+					setup_context_menu(event.global_position, last_hovered_face)
 		elif event is InputEventMouseMotion:
-			if dragging:
+			if is_dragging:
 				var motion = event.relative.normalized()
-				CameraPivot.rotation_degrees.x += -motion.y * MouseSensitivity
-				CameraPivot.rotation_degrees.y += -motion.x * MouseSensitivity
+				CameraPivot.rotation_degrees.x += -motion.y * ViewSpeed
+				CameraPivot.rotation_degrees.y += -motion.x * ViewSpeed
 		
-		if dragging: _3DView.set_default_cursor_shape(Control.CURSOR_MOVE)
-		elif hit: _3DView.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
-		else: _3DView.set_default_cursor_shape(Control.CURSOR_ARROW)
+		if is_dragging: View3D.set_default_cursor_shape(Control.CURSOR_MOVE)
+		elif hit: View3D.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
+		else: View3D.set_default_cursor_shape(Control.CURSOR_ARROW)
 
 
-func _on_ContextMenu_id_pressed(id):
-	edit_action = id
+func _on_ContextMenu_id_pressed(id : int):
+	editing_action = id
 	match id:
 		0:
-			VoxelColor.color = Voxel.get_color_side(placeholder, edit_face)
+			VoxelColor.color = Voxel.get_color_side(get_viewing_voxel(), Selections[0])
 			ColorMenu.popup_centered()
 		1:
-			var voxel = get_real_voxel()
-			Undo_Redo.create_action("VoxelViewer : Remove side color")
-			Undo_Redo.add_do_method(Voxel, "remove_color_side", voxel, edit_face)
-			Undo_Redo.add_undo_method(Voxel, "set_color_side", voxel, edit_face, Voxel.get_color_side(voxel, edit_face))
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			var voxel = get_viewing_voxel()
+			Undo_Redo.create_action("VoxelViewer : Remove side color(s)")
+			for selection in Selections:
+				Undo_Redo.add_do_method(Voxel, "remove_color_side", voxel, selection)
+				Undo_Redo.add_undo_method(Voxel, "set_color_side", voxel, selection, Voxel.get_color_side(voxel, selection))
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		2:
 			VoxelTexture.unselect_all()
-			VoxelTexture.select(Voxel.get_texture_side(placeholder, edit_face))
+			VoxelTexture.select(Voxel.get_texture_side(get_viewing_voxel(), Selections[0]))
 			TextureMenu.popup_centered()
 		3:
-			var voxel = get_real_voxel()
-			Undo_Redo.create_action("VoxelViewer : Remove side texture")
-			Undo_Redo.add_do_method(Voxel, "remove_texture_side", voxel, edit_face)
-			Undo_Redo.add_undo_method(Voxel, "set_texture_side", voxel, edit_face, Voxel.get_texture_side(voxel, edit_face))
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			var voxel := get_viewing_voxel()
+			Undo_Redo.create_action("VoxelViewer : Remove side texture(s)")
+			for selection in Selections:
+				Undo_Redo.add_do_method(Voxel, "remove_texture_side", voxel, selection)
+				Undo_Redo.add_undo_method(Voxel, "set_texture_side", voxel, selection, Voxel.get_texture_side(voxel, selection))
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		4:
-			VoxelColor.color = Voxel.get_color(placeholder)
+			VoxelColor.color = Voxel.get_color(get_viewing_voxel())
 			ColorMenu.popup_centered()
 		5:
 			VoxelTexture.unselect_all()
-			VoxelTexture.select(Voxel.get_texture(placeholder))
+			VoxelTexture.select(Voxel.get_texture(get_viewing_voxel()))
 			TextureMenu.popup_centered()
 		6:
-			var voxel = get_real_voxel()
-			Undo_Redo.create_action("VoxelViewer : Remove texture")
+			var voxel = VoxelSetRef.get_voxel(Selections[0])
+			Undo_Redo.create_action("VoxelViewer : Remove texture(s)")
 			Undo_Redo.add_do_method(Voxel, "remove_texture", voxel)
 			Undo_Redo.add_undo_method(Voxel, "set_texture", voxel, Voxel.get_texture(voxel))
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 
 
 func _on_ColorPicker_color_changed(color):
-	match edit_action:
-		0: Voxel.set_color_side(placeholder, edit_face, color)
-		4: Voxel.set_color(placeholder, color)
-	update_voxel_preview()
+	match editing_action:
+		0: Voxel.set_color_side(get_viewing_voxel(), Selections[0], color)
+		4: Voxel.set_color(get_viewing_voxel(), color)
+	update_view()
 
 func close_ColorMenu():
+	# TODO return to original
 	if ColorMenu: ColorMenu.hide()
-	update_voxel_preview(true)
+	update_view()
 
 func _on_ColorMenu_Confirm_pressed():
-	match edit_action:
+	match editing_action:
 		0:
-			var voxel = get_real_voxel()
-			var color = Voxel.get_color_side(voxel, edit_face)
-			Undo_Redo.create_action("VoxelViewer : Set side color")
-			Undo_Redo.add_do_method(Voxel, "set_color_side", voxel, edit_face, Voxel.get_color_side(placeholder, edit_face))
-			if color.a == 0:
-				Undo_Redo.add_undo_method(Voxel, "remove_color_side", voxel, edit_face)
-			else:
-				Undo_Redo.add_undo_method(Voxel, "set_color_side", voxel, edit_face, color)
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			var voxel = get_viewing_voxel()
+			Undo_Redo.create_action("VoxelViewer : Set side color(s)")
+			for selection in Selections:
+				var color = Voxel.get_color_side(voxel, selection)
+				Undo_Redo.add_do_method(Voxel, "set_color_side", voxel, selection, Voxel.get_color_side(get_viewing_voxel(), Selections[0]))
+				if color == Color.transparent:
+					Undo_Redo.add_undo_method(Voxel, "remove_color_side", voxel, selection)
+				else:
+					Undo_Redo.add_undo_method(Voxel, "set_color_side", voxel, selection, color)
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		4:
-			var voxel = get_real_voxel()
+			var voxel = get_viewing_voxel()
 			var color = Voxel.get_color(voxel)
 			Undo_Redo.create_action("VoxelViewer : Set color")
-			Undo_Redo.add_do_method(Voxel, "set_color", voxel, Voxel.get_color(placeholder))
+			Undo_Redo.add_do_method(Voxel, "set_color", voxel, Voxel.get_color(get_viewing_voxel()))
 			if color.a == 0:
 				Undo_Redo.add_undo_method(Voxel, "remove_color", voxel)
 			else:
 				Undo_Redo.add_undo_method(Voxel, "set_color", voxel, color)
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 	close_ColorMenu()
 
 
 func _on_TilesViewer_select(index : int):
 	var uv = VoxelTexture.Selections[index]
-	match edit_action:
-		2: Voxel.set_texture_side(placeholder, edit_face, uv)
-		5: Voxel.set_texture(placeholder, uv)
-	update_voxel_preview()
+	match editing_action:
+		2: Voxel.set_texture_side(get_viewing_voxel(), Selections[0], uv)
+		5: Voxel.set_texture(get_viewing_voxel(), uv)
+	update_view()
 
 func close_TextureMenu():
+	# TODO return to original
 	if TextureMenu: TextureMenu.hide()
-	update_voxel_preview(true)
+	update_view()
 
 func _on_TextureMenu_Confirm_pressed():
-	match edit_action:
+	match editing_action:
 		2:
-			var voxel = get_real_voxel()
-			var texture = Voxel.get_texture_side(voxel, edit_face)
-			Undo_Redo.create_action("VoxelViewer : Set side texture")
-			Undo_Redo.add_do_method(Voxel, "set_texture_side", voxel, edit_face, Voxel.get_texture_side(placeholder, edit_face))
-			if texture == -Vector2.ONE:
-				Undo_Redo.add_undo_method(Voxel, "remove_texture_side", voxel, edit_face)
-			else:
-				Undo_Redo.add_undo_method(Voxel, "set_texture_side", voxel, edit_face, texture)
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			var voxel = get_viewing_voxel()
+			Undo_Redo.create_action("VoxelViewer : Set side texture(s)")
+			for selection in Selections:
+				var texture = Voxel.get_texture_side(voxel, selection)
+				Undo_Redo.add_do_method(Voxel, "set_texture_side", voxel, selection, Voxel.get_texture_side(voxel, Selections[0]))
+				if texture == -Vector2.ONE:
+					Undo_Redo.add_undo_method(Voxel, "remove_texture_side", voxel, selection)
+				else:
+					Undo_Redo.add_undo_method(Voxel, "set_texture_side", voxel, selection, texture)
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		5:
-			var voxel = get_real_voxel()
+			var voxel = get_viewing_voxel()
 			var texture = Voxel.get_texture(voxel)
 			Undo_Redo.create_action("VoxelViewer : Set texture")
-			Undo_Redo.add_do_method(Voxel, "set_texture", voxel, Voxel.get_texture(placeholder))
+			Undo_Redo.add_do_method(Voxel, "set_texture", voxel, Voxel.get_texture(voxel))
 			if texture == -Vector2.ONE:
 				Undo_Redo.add_undo_method(Voxel, "remove_texture", voxel)
 			else:
 				Undo_Redo.add_undo_method(Voxel, "set_texture", voxel, texture)
-			if is_instance_valid(Represents[1]):
-				Undo_Redo.add_do_method(Represents[1], "updated_voxels")
-				Undo_Redo.add_undo_method(Represents[1], "updated_voxels")
+			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
+			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 	close_TextureMenu()
