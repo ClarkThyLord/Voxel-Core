@@ -24,6 +24,7 @@ onready var ContextMenu := get_node("ContextMenu")
 signal selected(voxel_id)
 signal unselected(voxel_id)
 
+
 var Undo_Redo : UndoRedo
 
 var Selections := [] setget set_selections
@@ -70,8 +71,12 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 			VoxelSetRef.disconnect("requested_refresh", self, "update_view") 
 	
 	VoxelSetRef = voxel_set
-	if is_instance_valid(VoxelSetRef) and VoxelSetRef is VoxelSet:
+	if is_instance_valid(VoxelSetRef):
 		VoxelSetRef.connect("requested_refresh", self, "update_view", [true])
+	elif is_instance_valid(Voxels):
+		for child in Voxels.get_children():
+			Voxels.remove_child(child)
+			child.queue_free()
 	
 	if update: update_view(true)
 
