@@ -164,16 +164,16 @@ func update_hint() -> void:
 	if is_instance_valid(ViewerHint):
 		ViewerHint.text = ""
 		
-		if last_hovered_face != Vector3.ZERO:
-			ViewerHint.text = normal_to_string(last_hovered_face).to_upper()
-		
 		if not Selections.empty():
-			if not ViewerHint.text.empty():
-				ViewerHint.text += " | "
 			for i in range(len(Selections)):
 				if i > 0:
 					ViewerHint.text += ", "
 				ViewerHint.text += normal_to_string(Selections[i]).to_upper()
+		
+		if last_hovered_face != Vector3.ZERO:
+			if not ViewerHint.text.empty():
+				ViewerHint.text += " | "
+			ViewerHint.text += normal_to_string(last_hovered_face).to_upper()
 
 func update_view() -> void:
 	if is_instance_valid(View2D):
