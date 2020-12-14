@@ -13,16 +13,24 @@ signal requested_refresh
 # Voxels stored by their ID
 var Voxels := {} setget set_voxels
 
+# Flag indicating whether TileSize and Tiles texture has been setup
+var UVReady := false setget set_uv_ready
+# Prevent external modificaciones to UV Ready
+func set_uv_ready(uv_ready : bool) -> void: pass
+
 # Calculated once per TileSize or Tiles change
-var UVScale := 0.0 setget set_uv_scale
+var UVScale := Vector2.ONE setget set_uv_scale
 # Prevent external modificaciones to UV Scale
-func set_uv_scale(uv_scale : float) -> void: pass
+func set_uv_scale(uv_scale : Vector2) -> void: pass
 
 # Uniform size of tiles in pixels
-export(float, 1, 1000000000, 1) var TileSize := 32.0 setget set_tile_size
+export(Vector2) var TileSize := Vector2(32.0, 32.0) setget set_tile_size
 # Sets TileSize and calls on request_refresh by default
-func set_tile_size(tile_size : float, refresh := true) -> void:
-	TileSize = floor(clamp(tile_size, 1, 1000000000))
+func set_tile_size(tile_size : Vector2, refresh := true) -> void:
+	TileSize = Vector2(
+		floor(clamp(tile_size.x, 1, 256)),
+		floor(clamp(tile_size.y, 1, 256))
+	)
 	
 	if refresh: request_refresh()
 
@@ -32,7 +40,8 @@ export(Texture) var Tiles : Texture = null setget set_tiles
 func set_tiles(tiles : Texture, refresh := true) -> void:
 	Tiles = tiles
 	
-	if refresh: request_refresh()
+	if refresh:
+		request_refresh()
 
 
 
@@ -139,5 +148,10 @@ func erase_voxels() -> void:
 
 
 func request_refresh() -> void:
-	UVScale = (1.0 / (Tiles.get_width() / TileSize)) if is_instance_valid(Tiles) else 0.0
+	UVReady = is_instance_valid(Tiles)
+	if UVReady:
+		# (1.0 / (Tiles.get_width() / TileSize))
+		UVScale = Vector2.ONE / (Tiles.get_size() / TileSize)
+	else:
+		UVScale = Vector2.ONE
 	emit_signal("requested_refresh")

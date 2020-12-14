@@ -1,13 +1,8 @@
 tool
 extends SurfaceTool
 class_name VoxelTool, "res://addons/Voxel-Core/assets/classes/VoxelTool.png"
-
-
-
-#
 # VoxelTool, used to construct a Mesh with specified voxel data.
 # It can be used to construct a Mesh from a script.
-#
 
 
 
@@ -29,7 +24,7 @@ func set_voxel_size(voxel_size : float) -> void: pass
 
 var VoxelMaterial := SpatialMaterial.new()
 
-var Voxel_Set : VoxelSet = null setget set_voxel_set
+var VoxelSetRef : VoxelSet = null setget set_voxel_set
 func set_voxel_set(voxel_set : VoxelSet) -> void: pass
 
 
@@ -41,7 +36,7 @@ func _init():
 
 func start(
 	voxel_uv := false,
-	voxel_set := Voxel_Set,
+	voxel_set := VoxelSetRef,
 	voxel_size := Voxel.VoxelSize
 	) -> void:
 	_index = 0
@@ -49,11 +44,11 @@ func start(
 	VoxelSize = voxel_size
 	
 	VoxelUV = voxel_uv
-	Voxel_Set = voxel_set
-	VoxelUVScale = Voxel_Set.UVScale if is_instance_valid(Voxel_Set) else 1
+	VoxelSetRef = voxel_set
+	VoxelUVScale = VoxelSetRef.UVScale
 	
-	if VoxelUV and is_instance_valid(Voxel_Set):
-		VoxelMaterial.albedo_texture = Voxel_Set.Tiles
+	if VoxelUV and is_instance_valid(VoxelSetRef):
+		VoxelMaterial.albedo_texture = VoxelSetRef.Tiles
 	
 	begin(Mesh.PRIMITIVE_TRIANGLES)
 
