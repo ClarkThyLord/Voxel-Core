@@ -188,6 +188,7 @@ __meta__ = {
 anchor_right = 0.316406
 anchor_bottom = 0.836667
 rect_min_size = Vector2( 324, 502 )
+popup_exclusive = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -234,6 +235,7 @@ text = "Confirm"
 anchor_right = 0.316406
 anchor_bottom = 0.433333
 rect_min_size = Vector2( 324, 260 )
+popup_exclusive = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
 anchor_right = 1.0
@@ -295,9 +297,9 @@ text = "Confirm"
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
 [connection signal="popup_hide" from="ColorMenu" to="." method="close_ColorMenu"]
 [connection signal="color_changed" from="ColorMenu/VBoxContainer/VoxelColor" to="." method="_on_ColorPicker_color_changed"]
-[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ColorMenu"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_ColorMenu_Cancel_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
 [connection signal="popup_hide" from="TextureMenu" to="." method="close_TextureMenu"]
 [connection signal="selected_uv" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_VoxelTexture_selected_uv"]
-[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="close_TextureMenu"]
+[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_TextureMenu_Cancel_pressed"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]

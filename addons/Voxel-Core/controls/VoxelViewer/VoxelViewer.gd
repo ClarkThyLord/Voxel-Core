@@ -43,9 +43,11 @@ func set_last_hovered_face(hovered_face : Vector3) -> void:
 	update_hint()
 
 
+var unedited_voxel := {}
 var editing_action := -1
 var editing_face := Vector3.ZERO
 var editing_multiple := false
+
 
 export(bool) var AllowEdit := false setget set_allow_edit
 func set_allow_edit(allow_edit : bool) -> void:
@@ -313,6 +315,7 @@ func _on_ContextMenu_id_pressed(id : int):
 	editing_multiple = false
 	match id:
 		0: # Color editing face
+			unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelColor.color = Voxel.get_color_side(get_viewing_voxel(), editing_face)
 			ColorMenu.popup_centered()
 		1: # Remove editing face color
@@ -324,6 +327,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		2: # Texture editing face
+			unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_texture_side(get_viewing_voxel(), editing_face))
 			TextureMenu.popup_centered()
@@ -337,6 +341,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			Undo_Redo.commit_action()
 		7: # Color selected faces
 			editing_multiple = true
+			unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelColor.color = Voxel.get_color_side(get_viewing_voxel(), editing_face)
 			ColorMenu.popup_centered()
 		8: # Remove selected faces color
@@ -351,6 +356,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			Undo_Redo.commit_action()
 		9: # Texture selected face
 			editing_multiple = true
+			unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_texture_side(get_viewing_voxel(), editing_face))
 			TextureMenu.popup_centered()
@@ -365,9 +371,11 @@ func _on_ContextMenu_id_pressed(id : int):
 			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
 		4: # Set voxel color
+			unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelColor.color = Voxel.get_color(get_viewing_voxel())
 			ColorMenu.popup_centered()
 		5: # Set voxel texture
+			unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_texture(get_viewing_voxel()))
 			TextureMenu.popup_centered()
@@ -391,16 +399,21 @@ func _on_ColorPicker_color_changed(color : Color):
 	update_view()
 
 func close_ColorMenu():
-	# TODO return to original
-	if ColorMenu: ColorMenu.hide()
+	if is_instance_valid(ColorMenu):
+		ColorMenu.hide()
 	update_view()
+
+func _on_ColorMenu_Cancel_pressed():
+	VoxelSetRef.Voxels[VoxelID] = unedited_voxel
+	
+	close_ColorMenu()
 
 func _on_ColorMenu_Confirm_pressed():
 	match editing_action:
-		0:
+		0, 7:
 			var voxel = get_viewing_voxel()
 			Undo_Redo.create_action("VoxelViewer : Set side color(s)")
-			for selection in Selections:
+			for selection in (Selections if editing_multiple else [editing_face]):
 				var color = Voxel.get_color_side(voxel, selection)
 				Undo_Redo.add_do_method(Voxel, "set_color_side", voxel, selection, Voxel.get_color_side(get_viewing_voxel(), Selections[0]))
 				if color == Color.transparent:
@@ -434,16 +447,21 @@ func _on_VoxelTexture_selected_uv(uv : Vector2):
 	update_view()
 
 func close_TextureMenu():
-	# TODO return to original
-	if TextureMenu: TextureMenu.hide()
+	if is_instance_valid(TextureMenu):
+		TextureMenu.hide()
 	update_view()
+
+func _on_TextureMenu_Cancel_pressed():
+	VoxelSetRef.Voxels[VoxelID] = unedited_voxel
+	
+	close_TextureMenu()
 
 func _on_TextureMenu_Confirm_pressed():
 	match editing_action:
-		2:
+		2, 9:
 			var voxel = get_viewing_voxel()
 			Undo_Redo.create_action("VoxelViewer : Set side texture(s)")
-			for selection in Selections:
+			for selection in (Selections if editing_multiple else [editing_face]):
 				var texture = Voxel.get_texture_side(voxel, selection)
 				Undo_Redo.add_do_method(Voxel, "set_texture_side", voxel, selection, Voxel.get_texture_side(voxel, Selections[0]))
 				if texture == -Vector2.ONE:
