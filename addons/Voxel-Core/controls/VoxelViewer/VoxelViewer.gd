@@ -138,6 +138,13 @@ func _ready():
 		Undo_Redo = UndoRedo.new()
 
 
+func setup(voxel_set : VoxelSet, voxel_set_id : int) -> void:
+	set_voxel_set(voxel_set, false)
+	set_voxel_id(voxel_set_id, false)
+	update_view()
+	update_hint()
+
+
 func get_viewing_voxel() -> Dictionary:
 	return VoxelSetRef.get_voxel(VoxelID) if is_instance_valid(VoxelSetRef) else {}
 
