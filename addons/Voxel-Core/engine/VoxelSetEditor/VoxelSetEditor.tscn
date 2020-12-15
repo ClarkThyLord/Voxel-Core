@@ -11,9 +11,6 @@
 [ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/cancel.png" type="Texture" id=10]
 
-
-
-
 [node name="VoxelSetEditor" type="ScrollContainer"]
 anchor_right = 1.0
 margin_bottom = 200.0
@@ -24,7 +21,7 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-Voxel_Set = ExtResource( 9 )
+VoxelSetRef = ExtResource( 9 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1024.0
@@ -82,7 +79,7 @@ margin_top = 28.0
 margin_right = 300.0
 margin_bottom = 200.0
 size_flags_vertical = 3
-text = "Voxels: 4
+text = "Voxels: 6
 Tiled: True
 Tile Size: (16, 16)"
 
@@ -104,7 +101,8 @@ margin_bottom = 19.0
 text = "ID:"
 
 [node name="VoxelID" type="LineEdit" parent="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer"]
-margin_right = 58.0
+margin_left = 23.0
+margin_right = 81.0
 margin_bottom = 24.0
 
 [node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer"]
@@ -152,8 +150,8 @@ icon = ExtResource( 7 )
 
 [node name="Duplicate" type="Button" parent="HBoxContainer/VBoxContainer2/ToolBar"]
 visible = false
-margin_left = 238.0
-margin_right = 472.0
+margin_left = 358.0
+margin_right = 712.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Duplicate"
@@ -161,7 +159,7 @@ icon = ExtResource( 5 )
 
 [node name="Remove" type="Button" parent="HBoxContainer/VBoxContainer2/ToolBar"]
 visible = false
-margin_left = 476.0
+margin_left = 358.0
 margin_right = 712.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
@@ -176,9 +174,10 @@ margin_right = 712.0
 margin_bottom = 200.0
 size_flags_horizontal = 7
 size_flags_vertical = 3
-EditMode = true
-SelectMode = true
-ShowControls = true
+AllowEdit = true
+AllowedSelections = -1
+ShowHints = true
+VoxelSetRef = ExtResource( 9 )
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false
@@ -199,11 +198,8 @@ margin_bottom = 200.0
 rect_min_size = Vector2( 332, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
-EditMode = true
-SelectMode = false
-ViewMode = 1
-SelectedFace = Vector3( 0, 0, 0 )
-MouseSensitivity = 6
+AllowEdit = true
+AllowedSelections = 6
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Close" to="." method="_on_Close_pressed"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID" to="." method="_on_VoxelID_text_entered"]
@@ -211,5 +207,5 @@ MouseSensitivity = 6
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Duplicate" to="." method="_on_Duplicate_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer2/ToolBar/Remove" to="." method="_on_Remove_pressed"]
-[connection signal="selected" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
-[connection signal="unselected" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
+[connection signal="selected_voxel" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
+[connection signal="unselected_voxel" from="HBoxContainer/VBoxContainer2/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]

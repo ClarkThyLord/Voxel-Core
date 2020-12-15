@@ -4,10 +4,10 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="ArrayMesh" id=6]
+[sub_resource type="ArrayMesh" id=2]
 surfaces/0 = {
 "aabb": AABB( -1, -1, -1, 2.00001, 2, 2 ),
 "array_data": PoolByteArray( 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 127, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 127, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 129, 0, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 129, 0, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 127, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 129, 0, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 129, 0, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 129, 0, 255, 255, 255, 0, 0, 188, 0, 188, 0, 0, 128, 63, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 128, 191, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 188, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 0, 0, 188, 0, 0, 128, 191, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 127, 0, 255, 255, 255, 0, 0, 188, 0, 188 ),
@@ -20,15 +20,15 @@ surfaces/0 = {
 "vertex_count": 24
 }
 
-[sub_resource type="BoxShape" id=7]
+[sub_resource type="BoxShape" id=3]
 
-[sub_resource type="SpatialMaterial" id=8]
+[sub_resource type="SpatialMaterial" id=4]
 flags_transparent = true
 params_grow = true
 params_grow_amount = 0.01
 albedo_color = Color( 0, 0.25, 1, 0.607843 )
 
-[sub_resource type="CubeMesh" id=9]
+[sub_resource type="CubeMesh" id=5]
 
 [node name="VoxelViewer" type="Control"]
 anchor_right = 1.0
@@ -39,6 +39,7 @@ __meta__ = {
 }
 
 [node name="View2D" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -102,7 +103,6 @@ toggle_mode = true
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="View3D" type="ViewportContainer" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -117,27 +117,27 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="View3D/Viewport"]
 
 [node name="Camera" type="Camera" parent="View3D/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
-environment = SubResource( 2 )
+environment = SubResource( 1 )
 
 [node name="VoxelPreview" type="MeshInstance" parent="View3D/Viewport"]
-mesh = SubResource( 6 )
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="View3D/Viewport/VoxelPreview"]
 
 [node name="CollisionShape" type="CollisionShape" parent="View3D/Viewport/VoxelPreview/VoxelStaticBody"]
-shape = SubResource( 7 )
+shape = SubResource( 3 )
 
 [node name="Select" type="MeshInstance" parent="View3D/Viewport"]
-material_override = SubResource( 8 )
-mesh = SubResource( 9 )
+material_override = SubResource( 4 )
+mesh = SubResource( 5 )
 material/0 = null
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
@@ -200,8 +200,10 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 308.0
-margin_bottom = 462.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 316.0
+margin_bottom = 470.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
