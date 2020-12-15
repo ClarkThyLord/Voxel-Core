@@ -11,12 +11,7 @@ onready var VoxelID := get_node("HBoxContainer/VBoxContainer/VoxelInfo/HBoxConta
 onready var VoxelName := get_node("HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName")
 onready var VoxelData := get_node("HBoxContainer/VBoxContainer/VoxelInfo/VoxelData")
 
-
-onready var Duplicate := get_node("HBoxContainer/VBoxContainer2/ToolBar/Duplicate")
-onready var Remove := get_node("HBoxContainer/VBoxContainer2/ToolBar/Remove")
-
 onready var VoxelSetViewer := get_node("HBoxContainer/VBoxContainer2/VoxelSetViewer")
-
 
 onready var VoxelInspector := get_node("HBoxContainer/VoxelInspector")
 onready var VoxelViewer := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
@@ -63,33 +58,22 @@ func _ready():
 func update_view() -> void:
 	if is_instance_valid(VoxelSetRef):
 		if is_instance_valid(VoxelSetInfo):
-			VoxelSetInfo.text = "Voxels: " + str(VoxelSetRef.Voxels.size())
-			VoxelSetInfo.text += "\nTiled: " + str(is_instance_valid(VoxelSetRef.Tiles))
-			VoxelSetInfo.text += "\nTile Size: " + str(Vector2.ONE * VoxelSetRef.TileSize)
+			VoxelSetInfo.text = "Voxels:\t\t" + str(VoxelSetRef.Voxels.size())
+			VoxelSetInfo.text += "\nUV Ready:\t" + str(VoxelSetRef.UVReady)
 		
-		if VoxelSetViewer:
-			if VoxelSetViewer.Selections.size() == 1:
+		if is_instance_valid(VoxelSetViewer):
+			var editing_single : bool = VoxelSetViewer.Selections.size() == 1
+			VoxelInfo.visible = editing_single
+			VoxelInspector.visible = editing_single
+			
+			if editing_single:
 				var id = VoxelSetViewer.Selections[0]
-				if Duplicate: Duplicate.visible = true
-				if Remove: Remove.visible = true
 				
-				VoxelInfo.visible = true
 				VoxelID.text = str(id)
 				VoxelName.text = VoxelSetRef.id_to_name(id)
 				VoxelData.text = var2str(VoxelSetRef.get_voxel(id))
 				
-				if VoxelInspector:
-					VoxelInspector.visible = true
-					VoxelViewer.setup(VoxelSetRef, id)
-			else:
-				if Duplicate: Duplicate.visible = false
-				if Remove: Remove.visible = false
-				
-				if VoxelInfo:
-					VoxelInfo.visible = false
-				
-				if VoxelInspector:
-					VoxelInspector.visible = false
+				VoxelViewer.setup(VoxelSetRef, id)
 
 
 func _on_Save_pressed():
@@ -147,30 +131,6 @@ func _on_VoxelName_text_entered(new_name : String):
 		Undo_Redo.add_undo_method(VoxelSetRef, "updated_voxels")
 		Undo_Redo.commit_action()
 
-
-func _on_Add_pressed():
-	Undo_Redo.create_action("VoxelSetEditor : Add voxel")
-	Undo_Redo.add_do_method(VoxelSetRef, "set_voxel", Voxel.colored(Color.white))
-	Undo_Redo.add_undo_method(VoxelSetRef, "erase_voxel", VoxelSetRef.get_next_id())
-	Undo_Redo.commit_action()
-
-func _on_Duplicate_pressed():
-	Undo_Redo.create_action("VoxelSetEditor : Duplicate voxel")
-	Undo_Redo.add_do_method(VoxelSetRef, "set_voxel", VoxelSetRef.get_voxel(VoxelSetViewer.Selections[0]).duplicate(true))
-	Undo_Redo.add_undo_method(VoxelSetRef, "erase_voxel", VoxelSetRef.get_next_id())
-	Undo_Redo.commit_action()
-
-func _on_Remove_pressed():
-	Undo_Redo.create_action("VoxelSetEditor : Remove voxel")
-	Undo_Redo.add_do_method(VoxelSetRef, "erase_voxel", VoxelSetViewer.Selections[0])
-	Undo_Redo.add_undo_method(
-		VoxelSetRef,
-		"set_voxel",
-		VoxelSetRef.get_voxel(VoxelSetViewer.Selections[0]),
-		VoxelSetRef.id_to_name(VoxelSetViewer.Selections[0]),
-		VoxelSetViewer.Selections[0]
-	)
-	Undo_Redo.commit_action()
 
 func _on_VoxelSetViewer_selected(voxel_id : int): update_view()
 func _on_VoxelSetViewer_unselected(voxel_id : int): update_view()
