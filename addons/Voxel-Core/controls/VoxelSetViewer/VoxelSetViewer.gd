@@ -118,8 +118,8 @@ func unselect(voxel_id : int, emit := true) -> void:
 	var voxel_button = get_voxel_button(voxel_id)
 	if is_instance_valid(voxel_button):
 		voxel_button.pressed = false
-	
-	if emit: emit_signal("unselected_voxel", voxel_id)
+	if emit:
+		emit_signal("unselected_voxel", voxel_id)
 
 func unselect_all(emit := true) -> void:
 	while not Selections.empty():
@@ -207,20 +207,17 @@ func _on_Voxels_gui_input(event):
 		))
 
 func _on_VoxelButton_pressed(voxel_button) -> void:
-	if AllowedSelections == -1 or AllowedSelections > 0:
+	if AllowedSelections != 0:
 		if voxel_button.pressed:
 			if not Input.is_key_pressed(KEY_CONTROL):
 				unselect_all()
 			select(voxel_button.VoxelID)
 		else:
-			if Selections.size() == 1 or (Selections.size() > 0 and Input.is_key_pressed(KEY_CONTROL)):
-				for selection in range(Selections.size()):
-					if Selections[selection] == voxel_button.VoxelID:
-						unselect(selection)
-						break
-			else:
+			if Selections.has(voxel_button.VoxelID):
 				unselect_all()
 				select(voxel_button.VoxelID)
+			else:
+				unselect(voxel_button.VoxelID)
 	else: voxel_button.pressed = false
 
 func _on_ContextMenu_id_pressed(_id : int):
