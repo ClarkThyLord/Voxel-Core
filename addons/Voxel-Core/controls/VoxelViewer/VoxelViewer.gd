@@ -95,9 +95,8 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	VoxelSetRef = voxel_set
 	if is_instance_valid(VoxelSetRef):
 		VoxelSetRef.connect("requested_refresh", self, "update_view")
-		
-		if is_instance_valid(VoxelTexture):
-			VoxelTexture.VoxelSetRef = VoxelSetRef
+	if is_instance_valid(VoxelTexture):
+		VoxelTexture.VoxelSetRef = VoxelSetRef
 	
 	if update: update_view()
 

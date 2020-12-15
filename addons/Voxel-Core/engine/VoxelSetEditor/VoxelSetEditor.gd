@@ -38,8 +38,8 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	VoxelSetRef = voxel_set
 	if is_instance_valid(VoxelSetRef):
 		VoxelSetRef.connect("requested_refresh", self, "update_view")
-		if is_instance_valid(VoxelSetViewer):
-			VoxelSetViewer.VoxelSetRef = VoxelSetRef
+	if is_instance_valid(VoxelSetViewer):
+		VoxelSetViewer.VoxelSetRef = VoxelSetRef
 	
 	if update: update_view()
 
@@ -74,6 +74,10 @@ func update_view() -> void:
 				VoxelData.text = var2str(VoxelSetRef.get_voxel(id))
 				
 				VoxelViewer.setup(VoxelSetRef, id)
+	else:
+		if not is_instance_valid(VoxelSetInfo):
+			return
+		VoxelSetInfo.text = ""
 
 
 func _on_Save_pressed():

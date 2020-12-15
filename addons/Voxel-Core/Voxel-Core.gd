@@ -68,7 +68,7 @@ func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 		VoxelSetEditorRef.Undo_Redo = get_undo_redo()
 		VoxelSetEditorRef.connect("close", self, "close_voxel_set_editor")
 		add_control_to_bottom_panel(VoxelSetEditorRef, "VoxelSet")
-	VoxelSetEditorRef.Voxel_Set = voxel_set
+	VoxelSetEditorRef.VoxelSetRef = voxel_set
 	make_bottom_panel_item_visible(VoxelSetEditorRef)
 
 func close_voxel_set_editor() -> void:
