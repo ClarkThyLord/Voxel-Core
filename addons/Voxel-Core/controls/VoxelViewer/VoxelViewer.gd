@@ -162,7 +162,7 @@ func unselect(face : Vector3, emit := true) -> void:
 		if emit:
 			emit_signal("unselected_face", face)
 
-func unselect_all_() -> void:
+func unselect_all() -> void:
 	while not Selections.empty():
 		unselect(Selections.back())
 
@@ -283,6 +283,8 @@ func setup_context_menu(global_position : Vector2, face := last_hovered_face) ->
 			ContextMenu.add_item("Texture sides", 9)
 			if Voxel.has_texture_side(get_viewing_voxel(), editing_face):
 				ContextMenu.add_item("Remove side textures", 10)
+			
+			ContextMenu.add_item("Unselect all", 11)
 		
 		ContextMenu.add_separator()
 		ContextMenu.add_item("Color voxel", 4)
@@ -299,6 +301,7 @@ func setup_context_menu(global_position : Vector2, face := last_hovered_face) ->
 
 func _on_ContextMenu_id_pressed(id : int):
 	editing_action = id
+	editing_multiple = false
 	match id:
 		0: # Color editing face
 			VoxelColor.color = Voxel.get_color_side(get_viewing_voxel(), editing_face)
@@ -367,6 +370,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
 			Undo_Redo.commit_action()
+		11: unselect_all()
 
 
 func _on_ColorPicker_color_changed(color : Color):
