@@ -190,6 +190,9 @@ func update_hint() -> void:
 			ViewerHint.text += normal_to_string(last_hovered_face).to_upper()
 
 func update_view() -> void:
+	if not is_instance_valid(VoxelSetRef):
+		return
+	
 	if is_instance_valid(View2D):
 		for voxel_button in View2D.get_children():
 			voxel_button.setup(VoxelSetRef, VoxelID, string_to_normal(voxel_button.name))

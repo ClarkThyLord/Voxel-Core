@@ -1,9 +1,8 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=4]
 
 [sub_resource type="Environment" id=2]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -38,10 +37,6 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-AllowEdit = true
-AllowedSelections = 2
-VoxelID = 5
-VoxelSetRef = ExtResource( 4 )
 
 [node name="View2D" type="Control" parent="."]
 anchor_right = 1.0
