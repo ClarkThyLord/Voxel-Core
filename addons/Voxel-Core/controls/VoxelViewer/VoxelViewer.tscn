@@ -1,11 +1,9 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=4]
-
-[sub_resource type="ButtonGroup" id=1]
 
 [sub_resource type="Environment" id=2]
 ambient_light_color = Color( 1, 1, 1, 1 )
@@ -46,7 +44,6 @@ VoxelID = 5
 VoxelSetRef = ExtResource( 4 )
 
 [node name="View2D" type="Control" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
@@ -60,7 +57,6 @@ anchor_top = 0.366667
 anchor_right = 0.34082
 anchor_bottom = 0.646667
 toggle_mode = true
-group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Front" parent="View2D" instance=ExtResource( 2 )]
@@ -69,7 +65,6 @@ anchor_top = 0.366667
 anchor_right = 0.504883
 anchor_bottom = 0.646667
 toggle_mode = true
-group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Right" parent="View2D" instance=ExtResource( 2 )]
@@ -82,7 +77,6 @@ margin_top = 0.000335693
 margin_right = -1.0
 margin_bottom = 0.000335693
 toggle_mode = true
-group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Back" parent="View2D" instance=ExtResource( 2 )]
@@ -94,7 +88,6 @@ margin_left = -0.999939
 margin_top = 1.52588e-05
 margin_right = -0.999939
 toggle_mode = true
-group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Top" parent="View2D" instance=ExtResource( 2 )]
@@ -103,7 +96,6 @@ anchor_top = 0.0866667
 anchor_right = 0.504883
 anchor_bottom = 0.366666
 toggle_mode = true
-group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="Bottom" parent="View2D" instance=ExtResource( 2 )]
@@ -112,10 +104,10 @@ anchor_top = 0.646667
 anchor_right = 0.504883
 anchor_bottom = 0.926667
 toggle_mode = true
-group = SubResource( 1 )
 VoxelColor = Color( 1, 1, 1, 0 )
 
 [node name="View3D" type="ViewportContainer" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -130,7 +122,7 @@ size = Vector2( 1024, 600 )
 own_world = true
 transparent_bg = true
 handle_input_locally = false
-render_target_update_mode = 3
+render_target_update_mode = 0
 physics_object_picking = true
 
 [node name="CameraPivot" type="Spatial" parent="View3D/Viewport"]
@@ -239,7 +231,6 @@ size_flags_horizontal = 3
 text = "Confirm"
 
 [node name="TextureMenu" type="WindowDialog" parent="."]
-visible = true
 anchor_right = 0.316406
 anchor_bottom = 0.433333
 rect_min_size = Vector2( 324, 260 )
@@ -288,17 +279,17 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
 [connection signal="gui_input" from="View2D/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
-[connection signal="mouse_exited" from="View2D/Left" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Left" to="." method="set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
-[connection signal="mouse_exited" from="View2D/Front" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Front" to="." method="set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Right" to="." method="_on_Face_gui_input" binds= [ Vector3( 1, 0, 0 ) ]]
-[connection signal="mouse_exited" from="View2D/Right" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Right" to="." method="set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Back" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, 1 ) ]]
-[connection signal="mouse_exited" from="View2D/Back" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Back" to="." method="set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Top" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 1, 0 ) ]]
-[connection signal="mouse_exited" from="View2D/Top" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Top" to="." method="set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Bottom" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, -1, 0 ) ]]
-[connection signal="mouse_exited" from="View2D/Bottom" to="." method="set_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Bottom" to="." method="set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View3D" to="." method="_on_View3D_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]

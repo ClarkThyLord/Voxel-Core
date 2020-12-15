@@ -191,6 +191,7 @@ func update_view() -> void:
 	if is_instance_valid(View2D):
 		for voxel_button in View2D.get_children():
 			voxel_button.setup(VoxelSetRef, VoxelID, string_to_normal(voxel_button.name))
+			voxel_button.hint_tooltip = voxel_button.name
 	
 	if is_instance_valid(VoxelPreview):
 		VT.start(true, VoxelSetRef, 2)
@@ -213,12 +214,21 @@ func update_view() -> void:
 
 
 func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.is_pressed() and event.doubleclick:
-			if AllowedSelections > 0: select(normal)
-		elif event.button_index == BUTTON_RIGHT :
-			if AllowEdit: setup_context_menu(event.global_position, last_hovered_face)
 	last_hovered_face = normal
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == BUTTON_LEFT:
+			if AllowedSelections > 0:
+				if Selections.has(normal):
+					unselect(normal)
+				else:
+					select(normal)
+				accept_event()
+			else:
+				get_voxle_button(normal).pressed = false
+		elif event.button_index == BUTTON_RIGHT:
+			if AllowEdit:
+				setup_context_menu(event.global_position, last_hovered_face)
+	update_hint()
 
 
 func _on_View3D_gui_input(event : InputEvent) -> void:
@@ -263,7 +273,6 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 func setup_context_menu(global_position : Vector2, face := last_hovered_face) -> void:
 	editing_face = face
 	editing_multiple = false
-	
 	if is_instance_valid(ContextMenu) and is_instance_valid(VoxelSetRef):
 		ContextMenu.clear()
 		ContextMenu.add_item("Color side", 0)
@@ -363,7 +372,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			VoxelTexture.select(Voxel.get_texture(get_viewing_voxel()))
 			TextureMenu.popup_centered()
 		6: # Remove voxel texture
-			var voxel = VoxelSetRef.get_voxel(Selections[0])
+			var voxel = VoxelSetRef.get_voxel(VoxelID)
 			Undo_Redo.create_action("VoxelViewer : Remove texture")
 			Undo_Redo.add_do_method(Voxel, "remove_texture", voxel)
 			Undo_Redo.add_undo_method(Voxel, "set_texture", voxel, Voxel.get_texture(voxel))
