@@ -415,7 +415,7 @@ func _on_ColorMenu_Confirm_pressed():
 			Undo_Redo.create_action("VoxelViewer : Set side color(s)")
 			for selection in (Selections if editing_multiple else [editing_face]):
 				var color = Voxel.get_color_side(voxel, selection)
-				Undo_Redo.add_do_method(Voxel, "set_color_side", voxel, selection, Voxel.get_color_side(get_viewing_voxel(), Selections[0]))
+				Undo_Redo.add_do_method(Voxel, "set_color_side", voxel, selection, Voxel.get_color_side(get_viewing_voxel(), selection))
 				if color == Color.transparent:
 					Undo_Redo.add_undo_method(Voxel, "remove_color_side", voxel, selection)
 				else:
@@ -463,7 +463,7 @@ func _on_TextureMenu_Confirm_pressed():
 			Undo_Redo.create_action("VoxelViewer : Set side texture(s)")
 			for selection in (Selections if editing_multiple else [editing_face]):
 				var texture = Voxel.get_texture_side(voxel, selection)
-				Undo_Redo.add_do_method(Voxel, "set_texture_side", voxel, selection, Voxel.get_texture_side(voxel, Selections[0]))
+				Undo_Redo.add_do_method(Voxel, "set_texture_side", voxel, selection, Voxel.get_texture_side(voxel, selection))
 				if texture == -Vector2.ONE:
 					Undo_Redo.add_undo_method(Voxel, "remove_texture_side", voxel, selection)
 				else:
