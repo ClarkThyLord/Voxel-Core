@@ -12,7 +12,7 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 
 # Refrences
-onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Editing")
+onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing")
 
 onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
 func update_tools(tools := Tools) -> void:
@@ -24,7 +24,6 @@ func update_tools(tools := Tools) -> void:
 			tool_index
 		)
 
-
 onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette")
 func update_palette(palettes := Palettes.keys()) -> void:
 	Palette.clear()
@@ -34,7 +33,6 @@ func update_palette(palettes := Palettes.keys()) -> void:
 			palette.capitalize(),
 			Palettes[palette.to_upper()]
 		)
-
 
 onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode")
 func update_selections(selection_modes := [
@@ -55,7 +53,6 @@ func update_selections(selection_modes := [
 		SelectionMode.select(SelectionMode.get_item_index(prev))
 	else: _on_SelectionMode_selected(SelectionMode.get_selected_id())
 
-
 onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX")
 onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY")
 onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ")
@@ -68,14 +65,10 @@ func update_mirrors(mirror := Vector3.ONE) -> void:
 	MirrorZ.pressed = MirrorZ.pressed if mirror.z == 1 else false
 	set_cursors_visibility()
 
-
 onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser")
 onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser/ColorPicked")
 
 onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer")
-
-
-
 
 
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
@@ -91,6 +84,7 @@ func set_cursor_visible(visible : bool) -> void:
 	if not visible:
 		set_cursors_visibility(visible)
 	save_config()
+
 onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 func set_cursor_dynamic(dynamic : bool) -> void:
 	Config["cursor.dynamic"] = dynamic
@@ -103,6 +97,7 @@ func set_cursor_dynamic(dynamic : bool) -> void:
 	else:
 		set_cursor_color(Config["cursor.color"])
 	save_config()
+
 onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
 func set_cursor_color(color : Color) -> void:
 	Config["cursor.color"] = color
@@ -118,12 +113,14 @@ func set_grid_visible(visible : bool) -> void:
 	GridConstant.disabled = not visible
 	Grid.Disabled = (not GridConstant.pressed and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())) or not visible
 	save_config()
+
 onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
 func set_grid_constant(constant : bool) -> void:
 	Config["grid.constant"] = constant
 	GridConstant.pressed = constant
 	Grid.Disabled = (not constant and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())) or not GridVisible.pressed
 	save_config()
+
 onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 func update_grid_mode() -> void:
 	GridMode.clear()
@@ -133,11 +130,13 @@ func update_grid_mode() -> void:
 			VoxelGrid.GridModes.keys()[mode_index].capitalize(),
 			mode_index
 		)
+
 func set_grid_mode(mode : int) -> void:
 	Config["grid.mode"] = mode
 	GridMode.selected = mode
 	Grid.GridMode = mode
 	save_config()
+
 onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
 func set_grid_color(color : Color) -> void:
 	Config["grid.color"] = color
@@ -147,7 +146,7 @@ func set_grid_color(color : Color) -> void:
 
 
 onready var ColorMenu := get_node("ColorMenu")
-onready var ColorPickerRef := get_node("ColorMenu/VBoxContainer/ColorPicker")
+onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
 onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
 
 
@@ -158,6 +157,9 @@ signal close
 
 
 var Undo_Redo : UndoRedo
+
+var VoxelObjectRef : VoxelObject setget start_editing
+
 
 func get_mirrors() -> Array:
 	var mirrors := []
@@ -250,38 +252,23 @@ var Tools := [
 
 
 enum Palettes { PRIMARY, SECONDARY }
-var PaletteRepresents := [
-	Voxel.colored(Color.white),
-	Voxel.colored(Color.black)
-]
+var PaletteRepresents := [ -1, -1 ]
 
-func set_palette(palette : int, voxel) -> void:
-	PaletteRepresents[palette] = voxel
+func set_palette(palette : int, voxel_id : int) -> void:
+	PaletteRepresents[palette] = voxel_id
 	if palette == Palette.get_selected_id():
-		ColorPicked.color = Voxel.get_color(get_rpalette(palette))
+		ColorPicked.color = Voxel.get_color(get_rpalette())
 		if CursorDynamic.pressed:
 			var color = ColorPicked.color
 			color.a = 0.5
 			set_cursor_color(color)
-		match typeof(voxel):
-			TYPE_INT, TYPE_STRING:
-				VoxelSetViewer.select(voxel, null, false)
-			_: VoxelSetViewer.unselect_all(false)
+		VoxelSetViewer.select(voxel_id)
 
-func get_palette(palette : int = Palette.get_selected_id()):
+func get_palette(palette : int = Palette.get_selected_id()) -> int:
 	return PaletteRepresents[palette]
 
 func get_rpalette(palette : int = Palette.get_selected_id()) -> Dictionary:
-	var represents = get_palette(palette)
-	match typeof(represents):
-		TYPE_INT, TYPE_STRING:
-			if is_instance_valid(VoxelObjectRef.VoxelSetRef):
-				represents = VoxelObjectRef.VoxelSetRef.get_voxel(represents)
-			else: represents = Voxel.colored(Color.transparent)
-	return represents
-
-
-var VoxelObjectRef : VoxelObject setget begin
+	return VoxelObjectRef.VoxelSetRef.get_voxel(palette)
 
 const DefaultConfig := {
 	"cursor.visible": true,
@@ -346,7 +333,6 @@ func reset_config() -> void:
 	Config = DefaultConfig.duplicate()
 	save_config()
 	load_config()
-
 
 
 
@@ -427,32 +413,31 @@ func _exit_tree():
 			Cursors[cursor].queue_free()
 
 
-func begin(voxelobject : VoxelObject) -> void:
-	cancel()
+func start_editing(voxel_object : VoxelObject) -> void:
+	stop_editing()
 	
-	VoxelObjectRef = voxelobject
+	VoxelObjectRef = voxel_object
+	
 	VoxelObjectRef.add_child(Grid)
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
+	
 	VoxelSetViewer.set_voxel_set(VoxelObjectRef.VoxelSetRef)
-	VoxelObjectRef.connect("tree_exiting", self, "cancel", [true])
 	VoxelObjectRef.connect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
+	VoxelObjectRef.connect("tree_exiting", self, "stop_editing", [true])
 
-func commit() -> void:
-	cancel()
-
-func cancel(close := false) -> void:
+func stop_editing(close := false) -> void:
 	if is_instance_valid(VoxelObjectRef):
-		if VoxelObjectRef.EditHint:
-			VoxelObjectRef.EditHint = false
+		VoxelObjectRef.EditHint = false
+		
 		VoxelObjectRef.remove_child(Grid)
 		for cursor in Cursors.values():
 			VoxelObjectRef.remove_child(cursor)
-		VoxelObjectRef.disconnect("tree_exiting", self, "cancel")
+		
 		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
+		VoxelObjectRef.disconnect("tree_exiting", self, "stop_editing")
 	
 	Editing.pressed = false
-	
 	VoxelObjectRef = null
 	
 	if close: emit_signal("close")
@@ -493,21 +478,17 @@ func _on_Editing_toggled(editing : bool):
 	emit_signal("editing", editing)
 
 
-func _on_ColorChooser_pressed():
-	ColorPickerRef.color = ColorPicked.color
+func show_color_menu():
+	ColorMenuColor.color = ColorPicked.color
 	
 	ColorMenuAdd.visible = is_instance_valid(VoxelObjectRef.VoxelSetRef) and not VoxelObjectRef.VoxelSetRef.Locked
 	
 	ColorMenu.popup_centered()
 
-func _on_ColorMenu_Use_pressed():
-	set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))
-	ColorMenu.hide()
-
 func _on_ColorMenu_Add_pressed():
-	var voxel_id = VoxelObjectRef.VoxelSetRef.get_id()
-	Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
-	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "set_voxel", Voxel.colored(ColorPickerRef.color))
+	var voxel_id = VoxelObjectRef.VoxelSetRef.get_next_id()
+	Undo_Redo.create_action("VoxelObjectEditor : Add voxel to used VoxeSet")
+	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "set_voxel", Voxel.colored(ColorMenuColor.color))
 	Undo_Redo.add_undo_method(VoxelObjectRef.VoxelSetRef, "erase_voxel", voxel_id)
 	Undo_Redo.commit_action()
 	VoxelSetViewer.select(voxel_id)
@@ -529,8 +510,7 @@ func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 	set_palette(Palette.get_selected_id(), voxel_id)
 
 func _on_VoxelSetViewer_unselected(voxel_id : int) -> void:
-	if VoxelSetViewer.Selections.empty():
-		set_palette(Palette.get_selected_id(), Voxel.colored(ColorPickerRef.color))
+	VoxelSetViewer.select(voxel_id)
 
 func _on_GenerateVoxelSet_confirmed():
 	VoxelObjectRef.generate_voxel_set()

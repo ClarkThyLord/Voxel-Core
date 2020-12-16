@@ -245,6 +245,7 @@ margin_top = 106.0
 margin_right = 324.0
 margin_bottom = 200.0
 size_flags_vertical = 3
+AllowedSelections = 1
 
 [node name="VSeparator" type="VSeparator" parent="VoxelObjectEditor/HBoxContainer"]
 margin_left = 328.0
@@ -722,11 +723,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorPicker" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 12.0
-margin_top = 12.0
-margin_right = 327.0
-margin_bottom = 519.0
+[node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
+margin_right = 315.0
+margin_bottom = 507.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -759,7 +758,7 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="update_cursors"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="update_cursors"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="update_cursors"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="_on_ColorChooser_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="show_color_menu"]
 [connection signal="selected_voxel" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="unselected_voxel" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Apply" to="." method="_on_Center_Apply_pressed"]
