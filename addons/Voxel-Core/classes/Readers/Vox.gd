@@ -55,19 +55,23 @@ static func read(file : File) -> Dictionary:
 						).floor()] = file.get_8() - 1
 				"RGBA":
 					for i in range(0,256):
-						result["palette"].append(Voxel.colored(Color(
+						result["palette"].append(Color(
 							float(file.get_8() / 255.0),
 							float(file.get_8() / 255.0),
 							float(file.get_8() / 255.0),
 							float(file.get_8() / 255.0)
-						)))
+						))
 				_: file.get_buffer(chunk_size)
-	else:
-		result["error"] = ERR_FILE_UNRECOGNIZED
-	
-	if result["error"] == OK:
+		
 		if result["palette"].empty():
 			result["palette"] = magicavoxel_default_palette
+		
+		var palette = {}
+		for index in range(result["palette"].size()):
+			palette[index] = Voxel.colored(result["palette"][index])
+		result["palette"] = palette
+	else:
+		result["error"] = ERR_FILE_UNRECOGNIZED
 	
 	return result
 
