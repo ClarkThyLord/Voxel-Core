@@ -250,6 +250,9 @@ func load_file(source_file : String) -> int:
 # @param	vt		:	VoxelTool		:	VoxelTool with which ArrayMesh will be built
 # @return	ArrayMesh	:	Naive voxel mesh
 func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
+	if not is_instance_valid(VoxelSetRef):
+		return null
+	
 	vt.start(UVMapping, VoxelSetRef)
 	
 	for position in volume:
@@ -264,6 +267,9 @@ func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 # @param	vt		:	VoxelTool		:	VoxelTool with which ArrayMesh will be built
 # @return	ArrayMesh	:	Greedy voxel mesh
 func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
+	if not is_instance_valid(VoxelSetRef):
+		return null
+	
 	vt.start(UVMapping, VoxelSetRef)
 	
 	var faces = Voxel.Directions.duplicate()

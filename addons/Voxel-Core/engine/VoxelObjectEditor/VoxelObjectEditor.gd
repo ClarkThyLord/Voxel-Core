@@ -430,6 +430,7 @@ func _exit_tree():
 func setup_voxel_set(voxel_set : VoxelSet) -> void:
 	VoxelSetViewer.VoxelSetRef = voxel_set
 	
+	Editing.pressed = false
 	Editing.disabled = not is_instance_valid(voxel_set)
 	Options.visible = is_instance_valid(voxel_set)
 	Notice.visible = not is_instance_valid(voxel_set)
@@ -443,7 +444,7 @@ func start_editing(voxel_object : VoxelObject) -> void:
 	for cursor in Cursors.values():
 		VoxelObjectRef.add_child(cursor)
 	
-	VoxelSetViewer.set_voxel_set(VoxelObjectRef.VoxelSetRef)
+	setup_voxel_set(VoxelObjectRef.VoxelSetRef)
 	VoxelObjectRef.connect("set_voxel_set", self, "setup_voxel_set")
 	VoxelObjectRef.connect("tree_exiting", self, "stop_editing", [true])
 

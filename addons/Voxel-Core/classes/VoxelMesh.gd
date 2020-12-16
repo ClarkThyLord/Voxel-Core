@@ -60,8 +60,9 @@ func update_mesh(save := true) -> void:
 			_:
 				mesh = naive_volume(voxels.keys(), vt)
 		
-		mesh.surface_set_name(0, "voxels")
-		set_surface_material(0, material)
+		if is_instance_valid(mesh):
+			mesh.surface_set_name(0, "voxels")
+			set_surface_material(0, material)
 	else: mesh = null
 	.update_mesh(save)
 
