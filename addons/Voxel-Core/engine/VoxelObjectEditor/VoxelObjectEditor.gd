@@ -543,7 +543,7 @@ func _on_Import_Overwrite_pressed():
 		VoxelObjectRef.set_voxels(result["voxels"])
 		
 		VoxelObjectRef.VoxelSetRef.Voxels = result["palette"]
-		VoxelObjectRef.update_mesh(false)
+		VoxelObjectRef.VoxelSetRef.request_refresh()
 	else: printerr(result["error"])
 	ImportHow.hide()
 

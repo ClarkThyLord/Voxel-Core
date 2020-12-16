@@ -8,7 +8,7 @@ static func read(image : Image) -> Dictionary:
 	var result := {
 		"error": OK,
 		"voxels": {},
-		"palette": [],
+		"palette": []
 	}
 	
 	image.lock()
@@ -16,15 +16,18 @@ static func read(image : Image) -> Dictionary:
 		for y in range(image.get_height()):
 			if image.get_pixel(x, y).a > 0:
 				var color := image.get_pixel(x, y)
+				color.a = 1
 				var index = result["palette"].find(color)
 				if index == -1:
+					index = result["palette"].size()
 					result["palette"].append(color)
-					index = result["palette"].size() - 1
 				result["voxels"][Vector3(x, -y, 0).round()] = index
 	image.unlock()
 	
+	var palette = {}
 	for index in range(result["palette"].size()):
-		result["palette"][index] = Voxel.colored(result["palette"][index])
+		palette[index] = Voxel.colored(result["palette"][index])
+	result["palette"] = palette
 	
 	return result
 
