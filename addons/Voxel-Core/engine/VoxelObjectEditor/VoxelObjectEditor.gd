@@ -83,6 +83,8 @@ onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/
 onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
 onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
 
+onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow")
+
 
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
 func update_settings() -> void:
@@ -526,22 +528,38 @@ func _on_Palette_selected(id : int) -> void:
 func _on_SelectionMode_selected(id : int):
 	set_cursors_selections()
 
-
 func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 	set_palette(Palette.get_selected_id(), voxel_id)
 
-func _on_GenerateVoxelSet_confirmed():
-	VoxelObjectRef.generate_voxel_set()
 
+var import_file_path := ""
 func _on_ImportFile_file_selected(path : String):
-	var result := Reader.read_file(path)
+	import_file_path = path
+	ImportHow.popup_centered()
+
+func _on_Import_Overwrite_pressed():
+	var result := Reader.read_file(import_file_path)
 	if result["error"] == OK:
-		var voxels = {}
-		for voxel_position in result["voxels"]:
-			voxels[voxel_position] = result["palette"][result["voxels"][voxel_position]]
-		VoxelObjectRef.set_voxels(voxels)
-		VoxelObjectRef.update_mesh()
+		VoxelObjectRef.set_voxels(result["voxels"])
+		
+		VoxelObjectRef.VoxelSetRef.Voxels = result["palette"]
+		VoxelObjectRef.update_mesh(false)
 	else: printerr(result["error"])
+	ImportHow.hide()
+
+func _on_Import_Replace_pressed():
+	var result := Reader.read_file(import_file_path)
+	if result["error"] == OK:
+		VoxelObjectRef.set_voxels(result["voxels"])
+		
+		var voxel_set := VoxelSet.new()
+		voxel_set.Voxels = result["palette"]
+		VoxelObjectRef.VoxelSetRef = voxel_set
+	else: printerr(result["error"])
+	ImportHow.hide()
+
+func _on_Import_Cancel_pressed():
+	ImportHow.hide()
 
 
 func _on_Docs_pressed():

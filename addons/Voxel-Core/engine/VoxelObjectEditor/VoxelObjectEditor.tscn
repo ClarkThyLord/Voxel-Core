@@ -468,6 +468,70 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ImportHow" type="PopupDialog" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import"]
+visible = true
+margin_right = 256.0
+margin_bottom = 128.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer"]
+margin_right = 256.0
+margin_bottom = 62.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "How to import voxel data to VoxelSet?"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer"]
+margin_top = 66.0
+margin_right = 256.0
+margin_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Overwrite" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 28.0
+margin_top = 21.0
+margin_right = 103.0
+margin_bottom = 41.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Overwrite"
+
+[node name="Replace" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 107.0
+margin_top = 21.0
+margin_right = 169.0
+margin_bottom = 41.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Replace"
+
+[node name="Cancel" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 173.0
+margin_top = 21.0
+margin_right = 227.0
+margin_bottom = 41.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Cancel"
+
 [node name="VSeparator2" type="VSeparator" parent="VoxelObjectEditor/HBoxContainer"]
 margin_left = 691.0
 margin_right = 695.0
@@ -738,10 +802,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 319.0
-margin_bottom = 511.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 331.0
+margin_bottom = 523.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -780,6 +844,9 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Apply" to="." method="_on_Center_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_ImportFile_file_selected"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Overwrite" to="." method="_on_Import_Overwrite_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Replace" to="." method="_on_Import_Replace_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_Import_Cancel_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Issues" to="." method="_on_Issues_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
