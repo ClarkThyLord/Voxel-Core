@@ -71,6 +71,15 @@ onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContain
 onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer")
 
 
+onready var MoveX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/X")
+onready var MoveY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Y")
+onready var MoveZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Z")
+
+onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/X")
+onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
+onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
+
+
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
 func update_settings() -> void:
 	for tab in range(Settings.get_tab_count()):
@@ -535,14 +544,17 @@ func _on_GitHub_pressed():
 
 
 func _on_Translate_Apply_pressed():
-	pass
-#	var translated = Voxel.move(VoxelObjectRef.get_voxels(), 
-#	Vector3(
-#		TranslateX.value,
-#		TranslateY.value,
-#		TranslateZ.value
-#	))
-#	var voxels = {}
+	VoxelObjectRef.move(Vector3(
+		MoveX.value,
+		MoveY.value,
+		MoveZ.value
+	))
+	VoxelObjectRef.update_mesh()
 
 func _on_Center_Apply_pressed():
-	pass
+	VoxelObjectRef.center(Vector3(
+		CenterX.value - 0.5,
+		CenterY.value - 0.5,
+		CenterZ.value - 0.5
+	))
+	VoxelObjectRef.update_mesh()
