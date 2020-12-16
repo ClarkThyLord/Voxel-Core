@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelSetViewer/VoxelSetViewer.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/engine/VoxelSetEditor/VoxelSetEditor.gd" type="Script" id=3]
 [ext_resource path="res://addons/Voxel-Core/assets/classes/VoxelSet.png" type="Texture" id=4]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/commit.png" type="Texture" id=8]
-[ext_resource path="res://addons/Voxel-Core/defaults/VoxelSet.tres" type="Resource" id=9]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/cancel.png" type="Texture" id=10]
 
 [node name="VoxelSetEditor" type="ScrollContainer"]
@@ -18,7 +17,6 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-VoxelSetRef = ExtResource( 9 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1024.0
@@ -76,8 +74,6 @@ margin_top = 28.0
 margin_right = 300.0
 margin_bottom = 200.0
 size_flags_vertical = 3
-text = "Voxels:		6
-UV Ready:	True"
 
 [node name="VoxelInfo" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
 visible = false
@@ -143,7 +139,6 @@ size_flags_vertical = 3
 AllowEdit = true
 AllowedSelections = -1
 ShowHints = true
-VoxelSetRef = ExtResource( 9 )
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false
