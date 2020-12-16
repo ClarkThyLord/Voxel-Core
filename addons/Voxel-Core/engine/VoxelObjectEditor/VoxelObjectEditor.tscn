@@ -139,16 +139,22 @@ text = "Editing"
 icon = ExtResource( 8 )
 flat = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
+[node name="Options" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 margin_top = 28.0
 margin_right = 324.0
-margin_bottom = 102.0
+margin_bottom = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options"]
+margin_right = 324.0
+margin_bottom = 74.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer"]
 margin_right = 324.0
 margin_bottom = 22.0
 
-[node name="Tool" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Tool" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer"]
 margin_right = 103.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
@@ -158,7 +164,7 @@ icon = ExtResource( 13 )
 items = [ "Add", ExtResource( 13 ), false, 0, null, "Sub", ExtResource( 14 ), false, 1, null, "Swap", ExtResource( 28 ), false, 2, null, "Fill", ExtResource( 29 ), false, 3, null, "Pick", ExtResource( 30 ), false, 4, null ]
 selected = 0
 
-[node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer"]
 margin_left = 107.0
 margin_right = 210.0
 margin_bottom = 22.0
@@ -169,7 +175,7 @@ icon = ExtResource( 23 )
 items = [ "Primary", ExtResource( 23 ), false, 0, null, "Secondary", ExtResource( 26 ), false, 1, null ]
 selected = 0
 
-[node name="SelectionMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="SelectionMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer"]
 margin_left = 214.0
 margin_right = 324.0
 margin_bottom = 22.0
@@ -180,13 +186,13 @@ icon = ExtResource( 27 )
 items = [ "Individual", ExtResource( 27 ), false, 0, null, "Area", ExtResource( 24 ), false, 1, null, "Extrude", ExtResource( 25 ), false, 2, null ]
 selected = 0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer"]
 margin_top = 26.0
 margin_right = 324.0
 margin_bottom = 50.0
 alignment = 1
 
-[node name="MirrorX" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="MirrorX" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2"]
 margin_right = 105.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
@@ -194,7 +200,7 @@ shortcut = SubResource( 10 )
 text = "Mirror X"
 icon = ExtResource( 6 )
 
-[node name="MirrorY" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="MirrorY" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2"]
 margin_left = 109.0
 margin_right = 214.0
 margin_bottom = 24.0
@@ -203,7 +209,7 @@ shortcut = SubResource( 12 )
 text = "Mirror Y"
 icon = ExtResource( 7 )
 
-[node name="MirrorZ" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
+[node name="MirrorZ" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2"]
 margin_left = 218.0
 margin_right = 324.0
 margin_bottom = 24.0
@@ -212,18 +218,14 @@ shortcut = SubResource( 14 )
 text = "Mirror Z"
 icon = ExtResource( 5 )
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="ColorChooser" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer"]
 margin_top = 54.0
 margin_right = 324.0
 margin_bottom = 74.0
-
-[node name="ColorChooser" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3"]
-margin_right = 324.0
-margin_bottom = 20.0
 size_flags_horizontal = 3
 shortcut = SubResource( 16 )
 
-[node name="ColorPicked" type="ColorRect" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser"]
+[node name="ColorPicked" type="ColorRect" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -238,14 +240,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VoxelSetViewer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer" instance=ExtResource( 3 )]
+[node name="VoxelSetViewer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 106.0
+margin_top = 78.0
 margin_right = 324.0
-margin_bottom = 200.0
+margin_bottom = 172.0
 size_flags_vertical = 3
 AllowedSelections = 1
+
+[node name="Notice" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
+visible = false
+margin_left = 60.0
+margin_top = 151.0
+margin_right = 264.0
+margin_bottom = 165.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+text = "No VoxelSet set for VoxelObject"
+align = 1
+valign = 1
 
 [node name="VSeparator" type="VSeparator" parent="VoxelObjectEditor/HBoxContainer"]
 margin_left = 328.0
@@ -754,14 +768,14 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
-[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
-[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
-[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX" to="." method="update_cursors"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY" to="." method="update_cursors"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="update_cursors"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="show_color_menu"]
-[connection signal="selected_voxel" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
+[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
+[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
+[connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorX" to="." method="update_cursors"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorY" to="." method="update_cursors"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="update_cursors"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser" to="." method="show_color_menu"]
+[connection signal="selected_voxel" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Apply" to="." method="_on_Translate_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Apply" to="." method="_on_Center_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" method="popup_centered"]

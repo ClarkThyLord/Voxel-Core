@@ -14,7 +14,9 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 # Refrences
 onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing")
 
-onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Tool")
+onready var Options := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options")
+
+onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool")
 func update_tools(tools := Tools) -> void:
 	Tool.clear()
 	for tool_index in range(tools.size()):
@@ -24,7 +26,7 @@ func update_tools(tools := Tools) -> void:
 			tool_index
 		)
 
-onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/Palette")
+onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette")
 func update_palette(palettes := Palettes.keys()) -> void:
 	Palette.clear()
 	for palette in palettes:
@@ -34,7 +36,7 @@ func update_palette(palettes := Palettes.keys()) -> void:
 			Palettes[palette.to_upper()]
 		)
 
-onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/SelectionMode")
+onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode")
 func update_selections(selection_modes := [
 		"individual",
 		"area",
@@ -53,9 +55,9 @@ func update_selections(selection_modes := [
 		SelectionMode.select(SelectionMode.get_item_index(prev))
 	else: _on_SelectionMode_selected(SelectionMode.get_selected_id())
 
-onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorX")
-onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorY")
-onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ")
+onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorX")
+onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorY")
+onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ")
 func update_mirrors(mirror := Vector3.ONE) -> void:
 	MirrorX.visible = mirror.x == 1
 	MirrorX.pressed = MirrorX.pressed if mirror.x == 1 else false
@@ -65,10 +67,12 @@ func update_mirrors(mirror := Vector3.ONE) -> void:
 	MirrorZ.pressed = MirrorZ.pressed if mirror.z == 1 else false
 	set_cursors_visibility()
 
-onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser")
-onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser/ColorPicked")
+onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser")
+onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser/ColorPicked")
 
-onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer")
+onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VoxelSetViewer")
+
+onready var Notice := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice")
 
 
 onready var MoveX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/X")
@@ -423,6 +427,13 @@ func _exit_tree():
 			Cursors[cursor].queue_free()
 
 
+func setup_voxel_set(voxel_set : VoxelSet) -> void:
+	VoxelSetViewer.VoxelSetRef = voxel_set
+	
+	Editing.disabled = not is_instance_valid(voxel_set)
+	Options.visible = is_instance_valid(voxel_set)
+	Notice.visible = not is_instance_valid(voxel_set)
+
 func start_editing(voxel_object : VoxelObject) -> void:
 	stop_editing()
 	
@@ -433,7 +444,7 @@ func start_editing(voxel_object : VoxelObject) -> void:
 		VoxelObjectRef.add_child(cursor)
 	
 	VoxelSetViewer.set_voxel_set(VoxelObjectRef.VoxelSetRef)
-	VoxelObjectRef.connect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
+	VoxelObjectRef.connect("set_voxel_set", self, "setup_voxel_set")
 	VoxelObjectRef.connect("tree_exiting", self, "stop_editing", [true])
 
 func stop_editing(close := false) -> void:
@@ -444,7 +455,7 @@ func stop_editing(close := false) -> void:
 		for cursor in Cursors.values():
 			VoxelObjectRef.remove_child(cursor)
 		
-		VoxelObjectRef.disconnect("set_voxel_set", VoxelSetViewer, "set_voxel_set")
+		VoxelObjectRef.disconnect("set_voxel_set", self, "setup_voxel_set")
 		VoxelObjectRef.disconnect("tree_exiting", self, "stop_editing")
 	
 	Editing.pressed = false
