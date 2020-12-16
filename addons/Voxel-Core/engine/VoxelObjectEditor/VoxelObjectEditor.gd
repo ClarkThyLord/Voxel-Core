@@ -262,12 +262,13 @@ func set_palette(palette : int, voxel_id : int) -> void:
 			var color = ColorPicked.color
 			color.a = 0.5
 			set_cursor_color(color)
-		VoxelSetViewer.select(voxel_id)
+		if not VoxelSetViewer.Selections.has(voxel_id):
+			VoxelSetViewer.select(voxel_id)
 
 func get_palette(palette : int = Palette.get_selected_id()) -> int:
 	return PaletteRepresents[palette]
 
-func get_rpalette(palette : int = Palette.get_selected_id()) -> Dictionary:
+func get_rpalette(palette : int = get_palette()) -> Dictionary:
 	return VoxelObjectRef.VoxelSetRef.get_voxel(palette)
 
 const DefaultConfig := {
@@ -508,9 +509,6 @@ func _on_SelectionMode_selected(id : int):
 
 func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 	set_palette(Palette.get_selected_id(), voxel_id)
-
-func _on_VoxelSetViewer_unselected(voxel_id : int) -> void:
-	VoxelSetViewer.select(voxel_id)
 
 func _on_GenerateVoxelSet_confirmed():
 	VoxelObjectRef.generate_voxel_set()

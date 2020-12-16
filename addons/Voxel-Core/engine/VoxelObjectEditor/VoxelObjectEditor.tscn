@@ -724,8 +724,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 315.0
-margin_bottom = 507.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 319.0
+margin_bottom = 511.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -760,7 +762,6 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2/MirrorZ" to="." method="update_cursors"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer3/ColorChooser" to="." method="show_color_menu"]
 [connection signal="selected_voxel" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_selected"]
-[connection signal="unselected_voxel" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/VoxelSetViewer" to="." method="_on_VoxelSetViewer_unselected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Apply" to="." method="_on_Center_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Translate/Apply" to="." method="_on_Translate_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" method="popup_centered"]

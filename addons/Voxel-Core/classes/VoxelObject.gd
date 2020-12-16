@@ -71,8 +71,8 @@ func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tre
 		VoxelSetRef = voxel_set
 		if is_instance_valid(VoxelSetRef) and VoxelSetRef is VoxelSet:
 			VoxelSetRef.connect("requested_refresh", self, "update_mesh")
-			if update: update_mesh(false)
 		
+		if update: update_mesh(false)
 		emit_signal("set_voxel_set", VoxelSetRef)
 	else:
 		printerr("Invalid Resource given expected VoxelSet")
