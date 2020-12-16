@@ -490,9 +490,6 @@ func _on_Editing_toggled(editing : bool):
 
 func show_color_menu():
 	ColorMenuColor.color = ColorPicked.color
-	
-	ColorMenuAdd.visible = is_instance_valid(VoxelObjectRef.VoxelSetRef) and not VoxelObjectRef.VoxelSetRef.Locked
-	
 	ColorMenu.popup_centered()
 
 func _on_ColorMenu_Add_pressed():
@@ -500,6 +497,8 @@ func _on_ColorMenu_Add_pressed():
 	Undo_Redo.create_action("VoxelObjectEditor : Add voxel to used VoxeSet")
 	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "set_voxel", Voxel.colored(ColorMenuColor.color))
 	Undo_Redo.add_undo_method(VoxelObjectRef.VoxelSetRef, "erase_voxel", voxel_id)
+	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "request_refresh")
+	Undo_Redo.add_undo_method(VoxelObjectRef.VoxelSetRef, "request_refresh")
 	Undo_Redo.commit_action()
 	VoxelSetViewer.select(voxel_id)
 	ColorMenu.hide()
