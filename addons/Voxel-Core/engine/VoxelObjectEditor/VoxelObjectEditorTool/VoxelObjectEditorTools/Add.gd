@@ -11,7 +11,7 @@ func _init():
 
 func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
 	undo_redo.add_do_method(voxel_object, "set_voxel", position, voxel)
-	voxel = voxel_object.get_rvoxel(position)
+	voxel = voxel_object.get_voxel(position)
 	if typeof(voxel) == TYPE_NIL:
 		undo_redo.add_undo_method(voxel_object, "erase_voxel", position)
 	else:
@@ -19,7 +19,7 @@ func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
 
 
 func work(editor) -> void:
-	var voxel = editor.get_rpalette() if editor.Raw.pressed else editor.get_palette()
+	var voxel = editor.get_palette()
 	editor.Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
 	for cursor_selection in editor.get_selections():
 		for selection in cursor_selection:

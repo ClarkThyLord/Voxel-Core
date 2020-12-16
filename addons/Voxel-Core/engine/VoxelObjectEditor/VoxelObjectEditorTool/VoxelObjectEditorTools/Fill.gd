@@ -12,7 +12,7 @@ func _init():
 
 
 func fill(voxel_object, position : Vector3, target, replacement, undo_redo : UndoRedo, filled := []) -> void:
-	var voxel = voxel_object.get_rvoxel(position)
+	var voxel = voxel_object.get_voxel(position)
 	var compare = voxel
 	if not typeof(voxel) == TYPE_NIL:
 		match typeof(voxel):
@@ -30,7 +30,7 @@ func work(editor) -> void:
 	editor.Undo_Redo.create_action("VoxelObjectEditor : Fill voxel(s)")
 	for selection in editor.get_selections():
 		for position in selection:
-			var target = editor.VoxelObjectRef.get_rvoxel(position)
+			var target = editor.VoxelObjectRef.get_voxel(position)
 			if not typeof(target) == TYPE_NIL:
 				match typeof(target):
 					TYPE_DICTIONARY:
@@ -39,7 +39,7 @@ func work(editor) -> void:
 					editor.VoxelObjectRef,
 					position,
 					target,
-					editor.get_rpalette() if editor.Raw.pressed else editor.get_palette(),
+					editor.get_palette(),
 					editor.Undo_Redo
 				)
 	editor.Undo_Redo.add_do_method(editor.VoxelObjectRef, "update_mesh")

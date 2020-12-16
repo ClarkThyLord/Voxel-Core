@@ -254,7 +254,7 @@ func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	
 	for position in volume:
 		for direction in Voxel.Directions:
-			if get_voxel_id(position + direction) > -1:
+			if get_voxel_id(position + direction) == -1:
 				vt.add_face(get_voxel(position), direction, position)
 	
 	return vt.end()

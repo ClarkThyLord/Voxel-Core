@@ -13,7 +13,7 @@ func _init():
 
 
 func work(editor) -> void:
-	var voxel = editor.VoxelObjectRef.get_rvoxel(editor.Cursors[Vector3.ZERO].Selections[0])
+	var voxel = editor.VoxelObjectRef.get_voxel(editor.Cursors[Vector3.ZERO].Selections[0])
 	match typeof(voxel):
 		TYPE_DICTIONARY:
 			editor.set_palette(editor.Palette.get_selected_id(), voxel.duplicate(true))

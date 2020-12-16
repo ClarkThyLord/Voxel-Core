@@ -45,9 +45,8 @@ func start(
 	
 	VoxelUV = voxel_uv
 	VoxelSetRef = voxel_set
-	VoxelUVScale = VoxelSetRef.UVScale
-	
-	if VoxelUV and is_instance_valid(VoxelSetRef):
+	if is_instance_valid(VoxelSetRef) and VoxelSetRef.UVReady:
+		VoxelUVScale = VoxelSetRef.UVScale
 		VoxelMaterial.albedo_texture = VoxelSetRef.Tiles
 	
 	begin(Mesh.PRIMITIVE_TRIANGLES)

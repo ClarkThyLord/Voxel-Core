@@ -9,14 +9,14 @@ func _init():
 
 
 func swap(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
-	var prev_voxel = voxel_object.get_rvoxel(position)
+	var prev_voxel = voxel_object.get_voxel(position)
 	if not typeof(prev_voxel) == TYPE_NIL:
 		undo_redo.add_do_method(voxel_object, 'set_voxel', position, voxel)
 		undo_redo.add_undo_method(voxel_object, 'set_voxel', position, prev_voxel)
 
 
 func work(editor) -> void:
-	var voxel = editor.get_rpalette() if editor.Raw.pressed else editor.get_palette()
+	var voxel = editor.get_palette()
 	editor.Undo_Redo.create_action("VoxelObjectEditor : Swap voxel")
 	for cursor_selection in editor.get_selections():
 		for selection in cursor_selection:
