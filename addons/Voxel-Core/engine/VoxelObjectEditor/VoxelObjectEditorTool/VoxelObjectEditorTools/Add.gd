@@ -9,10 +9,10 @@ func _init():
 	tool_normal = 1
 
 
-func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
+func add(voxel_object, position : Vector3, voxel : int, undo_redo : UndoRedo) -> void:
 	undo_redo.add_do_method(voxel_object, "set_voxel", position, voxel)
-	voxel = voxel_object.get_voxel(position)
-	if typeof(voxel) == TYPE_NIL:
+	voxel = voxel_object.get_voxel_id(position)
+	if voxel == -1:
 		undo_redo.add_undo_method(voxel_object, "erase_voxel", position)
 	else:
 		undo_redo.add_undo_method(voxel_object, "set_voxel", position, voxel)

@@ -9,8 +9,8 @@ func _init():
 
 
 func sub(voxel_object, position : Vector3, undo_redo : UndoRedo) -> void:
-	var voxel = voxel_object.get_voxel(position)
-	if not typeof(voxel) == TYPE_NIL:
+	var voxel = voxel_object.get_voxel_id(position)
+	if voxel > -1:
 		undo_redo.add_do_method(voxel_object, 'erase_voxel', position)
 		undo_redo.add_undo_method(voxel_object, 'set_voxel', position, voxel)
 
