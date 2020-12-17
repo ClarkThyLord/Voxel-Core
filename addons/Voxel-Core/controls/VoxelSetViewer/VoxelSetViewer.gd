@@ -1,14 +1,15 @@
 tool
 extends Control
+# Listing of voxels in VoxelSet, with the ability to search, select and edit voxels.
 
 
 
-# Imports
+## Imports
 const VoxelButton := preload("res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn")
 
 
 
-# Refrences
+## Refrences
 onready var SearchRef := get_node("VBoxContainer/Search")
 
 onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
@@ -20,33 +21,46 @@ onready var ContextMenu := get_node("ContextMenu")
 
 
 
-# Declarations
+## Declarations
+# Emitted when voxel has been selected
 signal selected_voxel(voxel_id)
+# Emitted when voxel has been unselected
 signal unselected_voxel(voxel_id)
 
 
+# UndoRedo used to commit operations
 var Undo_Redo : UndoRedo
 
+# Selected voxel ids
 var Selections := [] setget set_selections
+# Prevent external modifications of selections
 func set_selections(selections : Array) -> void: pass
 
+# Search being done
 export(String) var Search := "" setget set_search
+# Sets Search, and calls on update_view by default
 func set_search(search : String, update := true) -> void:
 	Search = search
 	
 	if SearchRef: SearchRef.text = search
 	if update: update_view()
 
+# Flag indicating whether edits are allowed
 export(bool) var AllowEdit := false setget set_edit_mode
+# Sets AllowEdit
 func set_edit_mode(edit_mode : bool, update := true) -> void:
 	AllowEdit = edit_mode
 
+# Number of uv positions that can be selected at any one time
 export(int, -1, 256) var AllowedSelections := 0 setget set_allowed_selections
+# Sets AllowedSelections, and shrinks Selections to new maximum if needed
 func set_allowed_selections(allowed_selections : int) -> void:
 	AllowedSelections = clamp(allowed_selections, -1, 256)
 	unselect_shrink()
 
+# Flag indicating whether Hints is visible
 export(bool) var ShowHints := false setget set_show_hints
+# Setter for ShowHints
 func set_show_hints(show := ShowHints) -> void:
 	ShowHints = show
 	
@@ -60,7 +74,9 @@ func set_show_hints(show := ShowHints) -> void:
 				HintRef.text += ", ctrl + left click : multiple select / unselect"
 
 
+# VoxelSet being used
 export(Resource) var VoxelSetRef = null setget set_voxel_set
+# Setter for VoxelSetRef
 func set_voxel_set(voxel_set : Resource, update := true) -> void:
 	if not typeof(voxel_set) == TYPE_NIL and not voxel_set is VoxelSet:
 		printerr("VoxelSetViewer : Invalid Resource given expected VoxelSet")
@@ -91,10 +107,12 @@ func _ready():
 		Undo_Redo = UndoRedo.new()
 
 
+# Returns VoxelButton with given voxel_id if found, else returns null
 func get_voxel_button(voxel_id : int):
 	return Voxels.find_node(str(voxel_id), false, false) if Voxels else null
 
 
+# Selects voxel with given voxel_id if found, and emits selected_voxel
 func select(voxel_id : int, emit := true) -> void:
 	if AllowedSelections == 0:
 		return
@@ -109,6 +127,7 @@ func select(voxel_id : int, emit := true) -> void:
 	Selections.append(voxel_id)
 	if emit: emit_signal("selected_voxel", voxel_id)
 
+# Unselects voxel with given voxel_id if found, and emits unselected_voxel
 func unselect(voxel_id : int, emit := true) -> void:
 	var index := Selections.find(voxel_id)
 	if index == -1:
@@ -121,16 +140,20 @@ func unselect(voxel_id : int, emit := true) -> void:
 	if emit:
 		emit_signal("unselected_voxel", voxel_id)
 
+# Unselects all selected voxel ids
 func unselect_all(emit := true) -> void:
 	while not Selections.empty():
 		unselect(Selections[-1], emit)
 
+# Unselects all voxels ids until given size is met
 func unselect_shrink(size := AllowedSelections, emit := true) -> void:
 	if size >= 0:
 		while Selections.size() > size:
 			unselect(Selections[-1], emit)
 
 
+# Updates the listing of voxels
+# redraw   :   bool   :   if true will repopulate listing with new Voxel Buttons
 func update_view(redraw := false) -> void:
 	if is_instance_valid(Voxels) and is_instance_valid(VoxelSetRef):
 		if redraw:
@@ -163,7 +186,7 @@ func update_view(redraw := false) -> void:
 			get_voxel_button(id).visible = show
 		call_deferred("correct")
 
-
+# Corrects the columns of listing to fit as many voxels horizonataly
 func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
 
