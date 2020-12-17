@@ -4,23 +4,21 @@ extends MeshInstance
 
 
 
-# Declarations
-# Emitted when VoxelSet is changed.
+## Declarations
+# Emitted when VoxelSet is changed
 signal set_voxel_set(voxel_set)
-
 
 # Flag indicating that the load function has been called at least once
 var loaded_hint := false
 
 # Flag indicating that edits to voxel data will be frequent
-# NOTE: When ON will only allow naive meshing
+# NOTE: When true will only allow naive meshing
 var EditHint := false setget set_edit_hint
-# Sets the EditHint flag and calls update_mesh if needed
+# Sets the EditHint flag, calls update_mesh if needed and not told otherwise
 func set_edit_hint(edit_hint : bool, update := loaded_hint and is_inside_tree()) -> void:
 	EditHint = edit_hint
 	
 	if update: update_mesh(false)
-
 
 # Defines the modes in which Mesh can be generated
 enum MeshModes {
@@ -35,7 +33,7 @@ enum MeshModes {
 }
 # The meshing mode by which Mesh is generated
 export(MeshModes) var MeshMode := MeshModes.NAIVE setget set_voxel_mesh
-# Sets the MeshMode and calls update_mesh if needed
+# Sets the MeshMode, calls update_mesh if needed and not told otherwise
 func set_voxel_mesh(mesh_mode : int, update := loaded_hint and is_inside_tree()) -> void:
 	MeshMode = mesh_mode
 	
@@ -43,7 +41,7 @@ func set_voxel_mesh(mesh_mode : int, update := loaded_hint and is_inside_tree())
 
 # Flag indicating that UV Mapping should be applied when generating meshes if applicable
 export(bool) var UVMapping := false setget set_uv_mapping
-# Sets the UVMapping and calls update_mesh if needed
+# Sets the UVMapping, calls update_mesh if needed and not told otherwise
 func set_uv_mapping(uv_mapping : bool, update := loaded_hint and is_inside_tree()) -> void:
 	UVMapping = uv_mapping
 	
@@ -51,7 +49,7 @@ func set_uv_mapping(uv_mapping : bool, update := loaded_hint and is_inside_tree(
 
 # Flag indicating the persitant attachment and maintenance of a StaticBody
 export(bool) var EmbedStaticBody := false setget set_embed_static_body
-# Sets EmbedStaticBody and calls update_static_body if needed
+# Sets EmbedStaticBody, calls update_static_body if needed and not told otherwise
 func set_embed_static_body(embed_static_body : bool, update := loaded_hint and is_inside_tree()) -> void:
 	EmbedStaticBody = embed_static_body
 	
@@ -60,8 +58,6 @@ func set_embed_static_body(embed_static_body : bool, update := loaded_hint and i
 # The VoxelSet for this VoxelObject
 export(Resource) var VoxelSetRef = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
 # Sets VoxelSetRef, calls update_mesh if needed and not told otherwise
-# voxel_set : bool : VoxelSet to set
-# update    : bool : if given overrides default condition to call update_mesh
 func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tree()) -> void:
 	if typeof(voxel_set) == TYPE_NIL or voxel_set is VoxelSet:
 		if is_instance_valid(VoxelSetRef):
@@ -102,37 +98,30 @@ func empty() -> bool:
 
 
 # Sets given voxel id at the given grid position
-# @param	grid	:	Grid position to set voxel id at
-# @param	voxel	:	Voxel id to set
-func set_voxel(grid : Vector3, voxel : int) -> void:
+func set_voxel(grid : Vector3, voxel_id : int) -> void:
 	pass
 
-# Replace all voxels with given voxels
-# @param	voxels	:	Dictionary<Vector3, int>
+# Replace current voxel data with given voxel data
+# voxels : Dictionary<Vector3, int> : voxels to set
 func set_voxels(voxels : Dictionary) -> void:
 	erase_voxels()
 	for grid in voxels:
 		set_voxel(grid, voxels[grid])
 
-# Returns voxel id at given grid position
-# @param	grid	:	Vector3	:	Grid position to get voxel id from
-# @return	int		:	Voxel's VoxelSet ID
-func get_voxel_id(grid : Vector3):
+# Returns voxel id at given grid position if present; otherwise returns -1
+func get_voxel_id(grid : Vector3) -> int:
 	return -1
 
-# Returns voxel dictionary representing voxel id at given grid position
-# @param	:	grid	:	Grid position to get voxel dictionary from
-# @return	Dictionary	:	NOTE: Reference  Voxel.gd for voxel schema
+# Returns voxel Dictionary representing voxel id at given grid position
 func get_voxel(grid : Vector3) -> Dictionary:
 	return VoxelSetRef.get_voxel(get_voxel_id(grid))
 
 # Returns Array of all voxel grid positions
-# @return	Array<Vector3>	:	each Vector3 represents a position of a voxel
+# return   :   Array<Vector3>   :   Array of Vector3 each represents a grid position of a voxel
 func get_voxels() -> Array:
 	return []
 
 # Erase voxel id at given grid position
-# @param	:	grid	:	Grid position to erase voxel id from
 func erase_voxel(grid : Vector3) -> void:
 	pass
 
@@ -143,8 +132,8 @@ func erase_voxels() -> void:
 
 
 # Returns 3D axis-aligned bounding box
-# @param	volume	:	Array<Vector3>	:	Volume of grid positions from which to calculate bounds
-# @return	Dictionary	:	Contains position(Vector3) and size(Vector3)
+# volume   :   Array<Vector3>   :   Array of grid positions from which to calculate bounds
+# return   :   Dictionary       :   bounding box, contains: { position : Vector3, size: Vector3 }
 func get_box(volume := get_voxels()) -> Dictionary:
 	var box := { "position": Vector3.ZERO, "size": Vector3.ZERO }
 	
@@ -172,8 +161,8 @@ func get_box(volume := get_voxels()) -> Dictionary:
 	return box
 
 # Moves voxels in given volume by given translation
-# @param	translation	:	Vector3			:	Translation to move voxels by
-# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to move
+# translation   :   Vector3          :   translation to move voxels by
+# volume        :   Array<Vector3>   :   Array of grid positions representing voxels to move
 func move(translation := Vector3(), volume := get_voxels()) -> void:
 	var translated := {}
 	for voxel_grid in volume:
@@ -183,19 +172,23 @@ func move(translation := Vector3(), volume := get_voxels()) -> void:
 		set_voxel(voxel_grid, translated[voxel_grid])
 
 # Centers voxels in given volume with respect to axis origin with the given alignment
-# @param	alignment	:	Vector3			:	Alignment to center voxels by
-# @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to align
+# alignment   :   Vector3          :   Alignment to center voxels by
+# volume      :   Array<Vector3>   :   Array of grid positions representing voxels to center
 func center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void:
 	move(vec_to_center(alignment, volume), volume)
 
+# Returns the translation necessary to center given volume by
+# alignment   :   Vector3          :   Alignment to center voxels by
+# volume      :   Array<Vector3>   :   Array of grid positions representing voxels to center
+# return      :   Vector3          :   Translation necessary to center
 func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> Vector3:
 	var box := get_box(volume)
 	return (-box["position"] + box["size"] * alignment).floor()
 
 # Returns Array of all voxel grid positions connected to given target
-# @param	target			:	Vector3	:	Grid position at which to start flood select
-# @param	selected		:	Array	:	Array to add selected voxel grid positions to
-# @return	Array<Vector3>	:	Array of all voxel grid positions connected to given target
+# target     :   Vector3          :   Grid position at which to start flood select
+# selected   :   Array            :   Array to add selected voxel grid positions to
+# return     :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
 func flood_select(target : Vector3, selected := []) -> Array:
 	selected.append(get_voxel_id(target))
 	
@@ -208,10 +201,10 @@ func flood_select(target : Vector3, selected := []) -> Array:
 	return selected
 
 # Returns Array of all voxel grid positions connected to given target that aren't obstructed at the given face normal
-# @param	target			:	Vector3	:	Grid position at which to start flood select
-# @param	face_normal		:	Vector3	:	Normal of face to check for obstruction
-# @param	selected		:	Array	:	Array to add selected voxel grid positions to
-# @return	Array<Vector3>	:	Array of all voxel grid positions connected to given target
+# target        :   Vector3          :   Grid position at which to start flood select
+# face_normal   :   Vector3          :   Normal of face to check for obstruction
+# selected      :   Array            :   Array to add selected voxel grid positions to
+# return        :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
 func face_select(target : Vector3, face_normal : Vector3, selected := []) -> Array:
 	selected.append(get_voxel_id(target))
 	
@@ -227,8 +220,8 @@ func face_select(target : Vector3, face_normal : Vector3, selected := []) -> Arr
 
 # Loads and sets voxels and replaces VoxelSet with given file
 # NOTE: Reference Reader.gd for valid file imports
-# @param	source_file	:String	:	Path to file to be imported
-# @return	int	:	Error code
+# source_file   :   String   :   Path to file to be imported
+# return int    :   int      :   Error code
 func load_file(source_file : String) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)
@@ -244,9 +237,9 @@ func load_file(source_file : String) -> int:
 
 
 # Makes a naive mesh out of volume of voxels given
-# @param	volume	:	Array<Vector3>	:	Array of grid positions representing volume of voxels from which to buid ArrayMesh
-# @param	vt		:	VoxelTool		:	VoxelTool with which ArrayMesh will be built
-# @return	ArrayMesh	:	Naive voxel mesh
+# volume   :   Array<Vector3>    :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
+# vt       :   VoxelTool         :   VoxelTool with which ArrayMesh will be built
+# return   :   ArrayMesh         :   Naive voxel mesh
 func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	if not is_instance_valid(VoxelSetRef):
 		return null
@@ -261,9 +254,9 @@ func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	return vt.end()
 
 # Greedy meshing
-# @param	volume	:	Array<Vector3>	:	Array of grid positions representing volume of voxels from which to buid ArrayMesh
-# @param	vt		:	VoxelTool		:	VoxelTool with which ArrayMesh will be built
-# @return	ArrayMesh	:	Greedy voxel mesh
+# volume   :   Array<Vector3>   :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
+# vt       :   VoxelTool        :   VoxelTool with which ArrayMesh will be built
+# return   :   ArrayMesh        :   Greedy voxel mesh
 func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	if not is_instance_valid(VoxelSetRef):
 		return null
@@ -286,14 +279,14 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 			var voxel : Dictionary = get_voxel(bottom_right)
 			
 			
-			if not UVMapping or Voxel.get_texture_side(voxel, face) == -Vector2.ONE:
+			if not UVMapping or Voxel.get_face_texture(voxel, face) == -Vector2.ONE:
 				var width := 1
 				
 				while true:
 					var index = faces[face].find(top_right + Voxel.Directions[face][1])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not UVMapping or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
 							width += 1
 							faces[face].remove(index)
 							top_right += Voxel.Directions[face][1]
@@ -305,7 +298,7 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					var index = faces[face].find(top_left + Voxel.Directions[face][0])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not UVMapping or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
 							width += 1
 							faces[face].remove(index)
 							top_left += Voxel.Directions[face][0]
@@ -319,14 +312,14 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					var index = faces[face].find(current + Voxel.Directions[face][3])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not UVMapping or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
 							current += Voxel.Directions[face][3]
 							used.append(current)
 							while true:
 								index = faces[face].find(current + Voxel.Directions[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
-									if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(_voxel, face) == -Vector2.ONE):
+									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not UVMapping or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
 										current += Voxel.Directions[face][0]
 										used.append(current)
 									else: break
@@ -346,14 +339,14 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					var index = faces[face].find(current + Voxel.Directions[face][2])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not UVMapping or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
 							current += Voxel.Directions[face][2]
 							used.append(current)
 							while true:
 								index = faces[face].find(current + Voxel.Directions[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
-									if Voxel.get_color_side(_voxel, face) == Voxel.get_color_side(voxel, face) and (not UVMapping or Voxel.get_texture_side(_voxel, face) == -Vector2.ONE):
+									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not UVMapping or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
 										current += Voxel.Directions[face][0]
 										used.append(current)
 									else: break
@@ -379,8 +372,8 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	return vt.end()
 
 
-# Updates mesh and calls on save, update_static_body if needed
-# @param	save	:	bool	:	Save voxels on update
+# Updates Mesh and calls on save and update_static_body if needed
+# save   :   bool   :   Save voxels on update
 func update_mesh(save := true) -> void:
 	if save: _save()
 	update_static_body()
