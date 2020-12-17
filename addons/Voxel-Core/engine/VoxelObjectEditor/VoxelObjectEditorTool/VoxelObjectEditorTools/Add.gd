@@ -20,6 +20,9 @@ func add(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
 
 func work(editor) -> void:
 	var voxel = editor.get_palette()
+	if voxel == -1:
+		return
+	
 	editor.Undo_Redo.create_action("VoxelObjectEditor : Add voxel")
 	for cursor_selection in editor.get_selections():
 		for selection in cursor_selection:

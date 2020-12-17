@@ -33,14 +33,16 @@ func work(editor) -> void:
 	for selection in editor.get_selections():
 		for position in selection:
 			var target = editor.VoxelObjectRef.get_voxel_id(position)
-			if target > -1:
-				fill(
-					editor.VoxelObjectRef,
-					position,
-					target,
-					editor.get_palette(),
-					editor.Undo_Redo
-				)
+			if target == -1:
+				continue
+			
+			fill(
+				editor.VoxelObjectRef,
+				position,
+				target,
+				editor.get_palette(),
+				editor.Undo_Redo
+			)
 	editor.Undo_Redo.add_do_method(editor.VoxelObjectRef, "update_mesh")
 	editor.Undo_Redo.add_undo_method(editor.VoxelObjectRef, "update_mesh")
 	editor.Undo_Redo.commit_action()

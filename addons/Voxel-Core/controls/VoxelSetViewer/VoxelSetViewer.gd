@@ -168,6 +168,7 @@ func update_view(redraw := false) -> void:
 				voxel_button.set_voxel_set(VoxelSetRef, false)
 				voxel_button.update_view()
 				voxel_button.toggle_mode = true
+				voxel_button.pressed = Selections.has(id)
 				voxel_button.mouse_filter = Control.MOUSE_FILTER_PASS
 				voxel_button.connect("pressed", self, "_on_VoxelButton_pressed", [voxel_button])
 				Voxels.add_child(voxel_button)
