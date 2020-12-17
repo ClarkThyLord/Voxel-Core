@@ -570,7 +570,7 @@ func _on_Import_Overwrite_pressed():
 	else: printerr(result["error"])
 	ImportHow.hide()
 
-func _on_Import_Replace_pressed():
+func _on_Import_New_pressed():
 	var result := Reader.read_file(import_file_path)
 	if result["error"] == OK:
 		VoxelObjectRef.set_voxels(result["voxels"])

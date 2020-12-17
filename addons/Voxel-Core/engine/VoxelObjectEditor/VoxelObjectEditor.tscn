@@ -469,8 +469,9 @@ __meta__ = {
 }
 
 [node name="ImportHow" type="PopupDialog" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import"]
-margin_right = 256.0
-margin_bottom = 128.0
+margin_right = 322.0
+margin_bottom = 97.0
+rect_min_size = Vector2( 325, 100 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -485,8 +486,8 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer"]
-margin_right = 256.0
-margin_bottom = 62.0
+margin_right = 325.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "How to import voxel data to VoxelSet?"
@@ -497,36 +498,36 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer"]
-margin_top = 66.0
-margin_right = 256.0
-margin_bottom = 128.0
+margin_top = 52.0
+margin_right = 325.0
+margin_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="Overwrite" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
-margin_left = 28.0
-margin_top = 21.0
-margin_right = 103.0
-margin_bottom = 41.0
+margin_left = 15.0
+margin_top = 14.0
+margin_right = 149.0
+margin_bottom = 34.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "Overwrite"
+text = "Overwrite VoxelSet"
 
-[node name="Replace" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
-margin_left = 107.0
-margin_top = 21.0
-margin_right = 169.0
-margin_bottom = 41.0
+[node name="New" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 153.0
+margin_top = 14.0
+margin_right = 252.0
+margin_bottom = 34.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "Replace"
+text = "New VoxelSet"
 
 [node name="Cancel" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
-margin_left = 173.0
-margin_top = 21.0
-margin_right = 227.0
-margin_bottom = 41.0
+margin_left = 256.0
+margin_top = 14.0
+margin_right = 310.0
+margin_bottom = 34.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Cancel"
@@ -844,7 +845,7 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_ImportFile_file_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Overwrite" to="." method="_on_Import_Overwrite_pressed"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Replace" to="." method="_on_Import_Replace_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/New" to="." method="_on_Import_New_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_Import_Cancel_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Docs" to="." method="_on_Docs_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/Issues" to="." method="_on_Issues_pressed"]
