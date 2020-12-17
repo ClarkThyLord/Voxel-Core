@@ -532,6 +532,29 @@ func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 	set_palette(Palette.get_selected_id(), voxel_id)
 
 
+func _on_Translate_Apply_pressed():
+	var translation := Vector3(MoveX.value, MoveY.value, MoveZ.value)
+	Undo_Redo.create_action("VoxelObjectEditor : Moved voxels")
+	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
+	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
+	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.commit_action()
+
+func _on_Center_Apply_pressed():
+	var translation = VoxelObjectRef.vec_to_center(Vector3(
+		CenterX.value - 0.5,
+		CenterY.value - 0.5,
+		CenterZ.value - 0.5
+	))
+	Undo_Redo.create_action("VoxelObjectEditor : Align voxels")
+	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
+	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
+	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.commit_action()
+
+
 var import_file_path := ""
 func _on_ImportFile_file_selected(path : String):
 	import_file_path = path
@@ -570,26 +593,3 @@ func _on_Issues_pressed():
 
 func _on_GitHub_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core")
-
-
-func _on_Translate_Apply_pressed():
-	var translation := Vector3(MoveX.value, MoveY.value, MoveZ.value)
-	Undo_Redo.create_action("VoxelObjectEditor : Moved voxels")
-	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
-	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
-	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.commit_action()
-
-func _on_Center_Apply_pressed():
-	var translation = VoxelObjectRef.vec_to_center(Vector3(
-		CenterX.value - 0.5,
-		CenterY.value - 0.5,
-		CenterZ.value - 0.5
-	))
-	Undo_Redo.create_action("VoxelObjectEditor : Align voxels")
-	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
-	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
-	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.commit_action()
