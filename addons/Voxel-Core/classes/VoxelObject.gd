@@ -1,6 +1,6 @@
 tool
 extends MeshInstance
-# Makeshift interface class inhereted by all voxel visualization objects
+# Makeshift interface class inhereted by all voxel visualization objects.
 
 
 

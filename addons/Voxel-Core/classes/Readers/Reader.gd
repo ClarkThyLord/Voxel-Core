@@ -1,9 +1,13 @@
 extends Reference
 class_name Reader
+# Makeshift interface class inhereted by all file readers.
 
 
 
-# Core
+## Core
+# Calls on appropriate file reader according to file_path's extension.
+# file_path   :   String       :   path to file to be read
+# return      :   Dictionary   :   read results, contains: { error : int, voxels : Dictionary<Vec3, int>, palette : Dictionary<int, Dictionary<String, Variant> }
 static func read_file(file_path : String) -> Dictionary:
 	var result = { "error": ERR_FILE_UNRECOGNIZED }
 	match file_path.get_extension():
