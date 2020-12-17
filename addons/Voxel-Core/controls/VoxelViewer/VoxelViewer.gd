@@ -126,7 +126,7 @@ func set_voxel_set(voxel_set : Resource, update := true) -> void:
 
 
 
-# Helpers
+## Helpers
 # Return normal associated with given name
 func string_to_normal(string : String) -> Vector3:
 	string = string.to_lower()
@@ -154,7 +154,7 @@ func normal_to_string(normal : Vector3) -> String:
 
 
 
-# Core
+## Core
 func _ready():
 	set_view_mode(ViewMode)
 	set_voxel_set(VoxelSetRef)
