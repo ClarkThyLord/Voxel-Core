@@ -573,17 +573,23 @@ func _on_GitHub_pressed():
 
 
 func _on_Translate_Apply_pressed():
-	VoxelObjectRef.move(Vector3(
-		MoveX.value,
-		MoveY.value,
-		MoveZ.value
-	))
-	VoxelObjectRef.update_mesh()
+	var translation := Vector3(MoveX.value, MoveY.value, MoveZ.value)
+	Undo_Redo.create_action("VoxelObjectEditor : Moved voxels")
+	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
+	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
+	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.commit_action()
 
 func _on_Center_Apply_pressed():
-	VoxelObjectRef.center(Vector3(
+	var translation = VoxelObjectRef.vec_to_center(Vector3(
 		CenterX.value - 0.5,
 		CenterY.value - 0.5,
 		CenterZ.value - 0.5
 	))
-	VoxelObjectRef.update_mesh()
+	Undo_Redo.create_action("VoxelObjectEditor : Align voxels")
+	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
+	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
+	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.commit_action()

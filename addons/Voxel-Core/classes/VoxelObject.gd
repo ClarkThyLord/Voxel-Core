@@ -186,13 +186,11 @@ func move(translation := Vector3(), volume := get_voxels()) -> void:
 # @param	alignment	:	Vector3			:	Alignment to center voxels by
 # @param	volume		:	Array<Vector3>	:	Array of grid positions representing volume of voxels to align
 func center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void:
-	var aligned := {}
+	move(vec_to_center(alignment, volume), volume)
+
+func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> Vector3:
 	var box := get_box(volume)
-	for voxel_grid in volume:
-		aligned[(voxel_grid - box["position"] + box["size"] * alignment).floor()] = get_voxel_id(voxel_grid)
-		erase_voxel(voxel_grid)
-	for voxel_grid in aligned:
-		set_voxel(voxel_grid, aligned[voxel_grid])
+	return (-box["position"] + box["size"] * alignment).floor()
 
 # Returns Array of all voxel grid positions connected to given target
 # @param	target			:	Vector3	:	Grid position at which to start flood select
