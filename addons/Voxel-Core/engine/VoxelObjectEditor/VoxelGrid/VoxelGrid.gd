@@ -86,3 +86,4 @@ func update() -> void:
 		remove_child(child)
 		child.queue_free()
 	create_convex_collision()
+	set_disabled(Disabled)
