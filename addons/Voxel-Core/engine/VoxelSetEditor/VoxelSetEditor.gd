@@ -81,7 +81,7 @@ func update_view() -> void:
 
 
 func _on_Save_pressed():
-	ResourceSaver.save(VoxelSetRef.resource_path, VoxelSetRef.duplicate())
+	VoxelSetRef._save()
 
 func _on_Close_pressed():
 	emit_signal("close")
