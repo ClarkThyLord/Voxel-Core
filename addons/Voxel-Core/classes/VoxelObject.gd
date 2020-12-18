@@ -56,7 +56,7 @@ func set_embed_static_body(embed_static_body : bool, update := loaded_hint and i
 	if update: update_static_body()
 
 # The VoxelSet for this VoxelObject
-export(Resource) var VoxelSetRef = preload("res://addons/Voxel-Core/defaults/VoxelSet.tres") setget set_voxel_set
+export(Resource) var VoxelSetRef = null setget set_voxel_set
 # Sets VoxelSetRef, calls update_mesh if needed and not told otherwise
 func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tree()) -> void:
 	if typeof(voxel_set) == TYPE_NIL or voxel_set is VoxelSet:
@@ -206,7 +206,7 @@ func flood_select(target : Vector3, selected := []) -> Array:
 # selected      :   Array            :   Array to add selected voxel grid positions to
 # return        :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
 func face_select(target : Vector3, face_normal : Vector3, selected := []) -> Array:
-	selected.append(get_voxel_id(target))
+	selected.append(target)
 	
 	for direction in Voxel.Directions[face_normal]:
 		var next = target + direction

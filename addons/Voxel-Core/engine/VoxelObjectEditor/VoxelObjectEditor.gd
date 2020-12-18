@@ -472,6 +472,8 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 		if event is InputEventMouse:
 			var prev_hit = last_hit
 			last_hit = raycast_for(camera, event.position, VoxelObjectRef)
+			if not last_hit.empty():
+				last_hit["normal"] = last_hit["normal"].round()
 			
 			if Editing.pressed:
 				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
