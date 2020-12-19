@@ -83,7 +83,7 @@ onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/
 onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
 onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
 
-onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Import/ImportHow")
+onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow")
 
 
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
@@ -533,6 +533,11 @@ func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 	set_palette(Palette.get_selected_id(), voxel_id)
 
 
+func _on_NewVoxelSet_pressed():
+	VoxelObjectRef.VoxelSetRef = VoxelSet.new()
+	VoxelObjectRef.property_list_changed_notify()
+
+
 func _on_Translate_Apply_pressed():
 	var translation := Vector3(MoveX.value, MoveY.value, MoveZ.value)
 	Undo_Redo.create_action("VoxelObjectEditor : Moved voxels")
@@ -551,6 +556,17 @@ func _on_Center_Apply_pressed():
 	Undo_Redo.create_action("VoxelObjectEditor : Align voxels")
 	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
 	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
+	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
+	Undo_Redo.commit_action()
+
+func _on_Clear_pressed():
+	var voxels = {}
+	for voxel in VoxelObjectRef.get_voxels():
+		voxels[voxel] = VoxelObjectRef.get_voxel_id(voxel)
+	Undo_Redo.create_action("VoxelObjectEditor : Clear voxels")
+	Undo_Redo.add_do_method(VoxelObjectRef, "erase_voxels")
+	Undo_Redo.add_undo_method(VoxelObjectRef, "set_voxels", voxels)
 	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
 	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
 	Undo_Redo.commit_action()
