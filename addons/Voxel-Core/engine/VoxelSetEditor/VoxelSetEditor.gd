@@ -80,9 +80,6 @@ func update_view() -> void:
 		VoxelSetInfo.text = ""
 
 
-func _on_Save_pressed():
-	VoxelSetRef._save()
-
 func _on_Close_pressed():
 	emit_signal("close")
 

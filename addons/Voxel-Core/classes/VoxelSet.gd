@@ -46,20 +46,25 @@ func set_tiles(tiles : Texture, refresh := true) -> void:
 
 
 ## Core
-# Saves necessary data to meta
-func _save() -> void:
-	set_meta("Voxels", Voxels)
+func _get(property):
+	if property == "VOXELS":
+		return Voxels
 
-# Loads necessary data from meta
-func _load() -> void:
-	if has_meta("Voxels"):
-		Voxels = get_meta("Voxels")
-	request_refresh()
+func _set(property, value):
+	if property == "VOXELS":
+		Voxels = value
 
-
-# Calls on _load as soon as feasible
-func _init():
-	call_deferred("_load")
+func _get_property_list():
+	var properties = []
+	
+	properties.append({
+		"name": "VOXELS",
+		"type": TYPE_DICTIONARY,
+		"hint": PROPERTY_HINT_NONE,
+		"usage": PROPERTY_USAGE_STORAGE
+	})
+	
+	return properties
 
 
 # Returns true if given id is valid
@@ -144,7 +149,6 @@ func erase_voxels() -> void:
 
 # Emits requested_refresh, calculates UVScale and updates UVReady
 func request_refresh() -> void:
-	_save()
 	UVReady = is_instance_valid(Tiles)
 	if UVReady:
 		# (1.0 / (Tiles.get_width() / TileSize))

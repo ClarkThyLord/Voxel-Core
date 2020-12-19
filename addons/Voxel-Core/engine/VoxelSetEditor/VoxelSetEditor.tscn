@@ -53,12 +53,6 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="Save" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
-margin_left = 129.0
-margin_right = 170.0
-margin_bottom = 20.0
-text = "Save"
-
 [node name="Close" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 margin_left = 174.0
 margin_right = 221.0
@@ -163,7 +157,6 @@ ViewMode = 1
 ViewSensitivity = 8
 VoxelID = 0
 VoxelSetRef = null
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Close" to="." method="_on_Close_pressed"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID" to="." method="_on_VoxelID_text_entered"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName" to="." method="_on_VoxelName_text_entered"]
