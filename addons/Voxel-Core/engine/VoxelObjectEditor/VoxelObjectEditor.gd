@@ -575,7 +575,10 @@ func _on_Clear_pressed():
 var import_file_path := ""
 func _on_ImportFile_file_selected(path : String):
 	import_file_path = path
-	ImportHow.popup_centered()
+	if is_instance_valid(VoxelObjectRef.VoxelSetRef):
+		ImportHow.popup_centered()
+	else:
+		_on_Import_New_pressed()
 
 func _on_Import_Overwrite_pressed():
 	var result := Reader.read_file(import_file_path)
