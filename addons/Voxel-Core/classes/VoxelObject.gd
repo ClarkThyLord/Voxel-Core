@@ -8,17 +8,14 @@ extends MeshInstance
 # Emitted when VoxelSet is changed
 signal set_voxel_set(voxel_set)
 
-# Flag indicating that the load function has been called at least once
-var loaded_hint := false
-
 # Flag indicating that edits to voxel data will be frequent
 # NOTE: When true will only allow naive meshing
 var EditHint := false setget set_edit_hint
 # Sets the EditHint flag, calls update_mesh if needed and not told otherwise
-func set_edit_hint(edit_hint : bool, update := loaded_hint and is_inside_tree()) -> void:
+func set_edit_hint(edit_hint : bool, update := is_inside_tree()) -> void:
 	EditHint = edit_hint
 	
-	if update: update_mesh(false)
+	if update: update_mesh()
 
 # Defines the modes in which Mesh can be generated
 enum MeshModes {
@@ -32,25 +29,25 @@ enum MeshModes {
 #	TRANSVOXEL
 }
 # The meshing mode by which Mesh is generated
-export(MeshModes) var MeshMode := MeshModes.NAIVE setget set_voxel_mesh
+export(MeshModes) var MeshMode := MeshModes.NAIVE setget set_mesh_mode
 # Sets the MeshMode, calls update_mesh if needed and not told otherwise
-func set_voxel_mesh(mesh_mode : int, update := loaded_hint and is_inside_tree()) -> void:
+func set_mesh_mode(mesh_mode : int, update := is_inside_tree()) -> void:
 	MeshMode = mesh_mode
 	
-	if update and not EditHint: update_mesh(false)
+	if update: update_mesh()
 
 # Flag indicating that UV Mapping should be applied when generating meshes if applicable
 export(bool) var UVMapping := false setget set_uv_mapping
 # Sets the UVMapping, calls update_mesh if needed and not told otherwise
-func set_uv_mapping(uv_mapping : bool, update := loaded_hint and is_inside_tree()) -> void:
+func set_uv_mapping(uv_mapping : bool, update := is_inside_tree()) -> void:
 	UVMapping = uv_mapping
 	
-	if update: update_mesh(false)
+	if update: update_mesh()
 
 # Flag indicating the persitant attachment and maintenance of a StaticBody
 export(bool) var EmbedStaticBody := false setget set_embed_static_body
 # Sets EmbedStaticBody, calls update_static_body if needed and not told otherwise
-func set_embed_static_body(embed_static_body : bool, update := loaded_hint and is_inside_tree()) -> void:
+func set_embed_static_body(embed_static_body : bool, update := is_inside_tree()) -> void:
 	EmbedStaticBody = embed_static_body
 	
 	if update: update_static_body()
@@ -58,7 +55,7 @@ func set_embed_static_body(embed_static_body : bool, update := loaded_hint and i
 # The VoxelSet for this VoxelObject
 export(Resource) var VoxelSetRef = null setget set_voxel_set
 # Sets VoxelSetRef, calls update_mesh if needed and not told otherwise
-func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tree()) -> void:
+func set_voxel_set(voxel_set : Resource, update := is_inside_tree()) -> void:
 	if typeof(voxel_set) == TYPE_NIL or voxel_set is VoxelSet:
 		if is_instance_valid(VoxelSetRef):
 			if VoxelSetRef.is_connected("requested_refresh", self, "update_mesh"):
@@ -68,7 +65,7 @@ func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tre
 		if is_instance_valid(VoxelSetRef) and VoxelSetRef is VoxelSet:
 			VoxelSetRef.connect("requested_refresh", self, "update_mesh")
 		
-		if update: update_mesh(false)
+		if update: update_mesh()
 		emit_signal("set_voxel_set", VoxelSetRef)
 	else:
 		printerr("Invalid Resource given expected VoxelSet")
@@ -77,21 +74,6 @@ func set_voxel_set(voxel_set : Resource, update := loaded_hint and is_inside_tre
 
 
 # Core
-# Save necessary data to meta
-func _save() -> void:
-	pass
-
-# Load necessary data from meta
-func _load() -> void:
-	loaded_hint = true
-	update_mesh(false)
-
-
-# TODO Include these functions in inheriting classes uncommented
-#func _init() -> void: call_deferred("_load")
-#func _ready() -> void: call_deferred("_load")
-
-
 # Return true if no voxels are present
 func empty() -> bool:
 	return true
@@ -374,8 +356,7 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 
 # Updates Mesh and calls on save and update_static_body if needed
 # save   :   bool   :   Save voxels on update
-func update_mesh(save := true) -> void:
-	if save: _save()
+func update_mesh() -> void:
 	update_static_body()
 
 # Sets and updates StaticMesh if demanded

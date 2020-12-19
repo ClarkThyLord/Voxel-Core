@@ -12,17 +12,25 @@ var voxels := {}
 
 
 # Core
-func _save() -> void:
-	set_meta("voxels", voxels)
+func _get(property):
+	if property == "VOXELS":
+		return voxels
 
-func _load() -> void:
-	if has_meta("voxels"):
-		voxels = get_meta("voxels")
-	._load()
+func _set(property, value):
+	if property == "VOXELS":
+		voxels = value
 
-
-func _init() -> void: call_deferred("_load")
-func _ready() -> void: call_deferred("_load")
+func _get_property_list():
+	var properties = []
+	
+	properties.append({
+		"name": "VOXELS",
+		"type": TYPE_DICTIONARY,
+		"hint": PROPERTY_HINT_NONE,
+		"usage": PROPERTY_USAGE_STORAGE
+	})
+	
+	return properties
 
 
 func empty() -> bool:
@@ -49,7 +57,7 @@ func erase_voxels() -> void:
 	voxels.clear()
 
 
-func update_mesh(save := true) -> void:
+func update_mesh() -> void:
 	if voxels.size() > 0:
 		var vt := VoxelTool.new()
 		var material = get_surface_material(0) if get_surface_material_count() > 0 else null
@@ -64,7 +72,7 @@ func update_mesh(save := true) -> void:
 			mesh.surface_set_name(0, "voxels")
 			set_surface_material(0, material)
 	else: mesh = null
-	.update_mesh(save)
+	.update_mesh()
 
 func update_static_body() -> void:
 	var staticbody = get_node_or_null("StaticBody")
