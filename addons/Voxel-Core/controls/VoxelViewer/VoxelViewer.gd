@@ -325,7 +325,8 @@ func setup_context_menu(global_position : Vector2, face := last_hovered_face) ->
 		if Voxel.has_face_color(get_viewing_voxel(), editing_face):
 			ContextMenu.add_item("Remove side color", 1)
 		
-		ContextMenu.add_item("Texture side", 2)
+		if VoxelSetRef.UVReady:
+			ContextMenu.add_item("Texture side", 2)
 		if Voxel.has_face_texture(get_viewing_voxel(), editing_face):
 			ContextMenu.add_item("Remove side texture", 3)
 		
@@ -335,7 +336,9 @@ func setup_context_menu(global_position : Vector2, face := last_hovered_face) ->
 			if Voxel.has_face_color(get_viewing_voxel(), editing_face):
 				ContextMenu.add_item("Remove side colors", 8)
 			
-			ContextMenu.add_item("Texture sides", 9)
+			
+			if VoxelSetRef.UVReady:
+				ContextMenu.add_item("Texture sides", 9)
 			if Voxel.has_face_texture(get_viewing_voxel(), editing_face):
 				ContextMenu.add_item("Remove side textures", 10)
 			
@@ -344,7 +347,8 @@ func setup_context_menu(global_position : Vector2, face := last_hovered_face) ->
 		ContextMenu.add_separator()
 		ContextMenu.add_item("Color voxel", 4)
 		
-		ContextMenu.add_item("Texture voxel", 5)
+		if VoxelSetRef.UVReady:
+			ContextMenu.add_item("Texture voxel", 5)
 		if Voxel.has_texture(get_viewing_voxel()):
 			ContextMenu.add_item("Remove voxel texture", 6)
 		ContextMenu.set_as_minsize()
