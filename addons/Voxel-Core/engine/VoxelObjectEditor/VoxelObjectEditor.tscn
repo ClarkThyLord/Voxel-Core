@@ -265,7 +265,7 @@ size_flags_vertical = 6
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice"]
 margin_right = 101.0
 margin_bottom = 48.0
-text = "No VoxelSet set
+text = "No set VoxelSet
 set / load one
 or"
 align = 1

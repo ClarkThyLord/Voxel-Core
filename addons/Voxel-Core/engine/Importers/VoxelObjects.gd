@@ -91,7 +91,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	var error = voxelobject.load_file(source_file)
 	if error == OK:
 		voxelobject.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["Name"].empty() else options["Name"])
-		voxelobject.set_voxel_mesh(options.get("MeshMode", VoxelMesh.MeshModes.NAIVE))
+		voxelobject.set_mesh_mode(options.get("MeshMode", VoxelMesh.MeshModes.NAIVE))
 		voxelobject.update_mesh()
 		var scene = PackedScene.new()
 		error = scene.pack(voxelobject)
