@@ -35,7 +35,7 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	elif event is InputEventMouseMotion:
 		if extruding:
 			var extrude := []
-			extrude_amount = clamp(extrude_amount + event.relative.normalized().x, 1, 100)
+			extrude_amount = clamp(extrude_amount + clamp(event.relative.normalized().x, -1, 1), 1, 100)
 			var extrude_direction := 1 if editor.Tools[editor.Tool.get_selected_id()].tool_normal > 0 else -1
 			for e in range(extrude_amount):
 				for position in face:
