@@ -42,7 +42,7 @@ Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made wi
 	- Much more...
 - Import Textures and Vox(MagicaVoxel) files as Meshes or VoxelObjects
 
-## [Feature Video](https://youtu.be/CLgzs6Z6BhA)
+## [Feature Video](https://youtu.be/d85DMiwnIFI)
 
 # [Usage / Docs](https://github.com/ClarkThyLord/Voxel-Core/wiki)
 
