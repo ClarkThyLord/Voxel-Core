@@ -113,7 +113,7 @@ func handles(object : Object) -> bool:
 				show_voxel_object_editor(object)
 			else: close_voxel_object_editor()
 			return true
-	if is_instance_valid(handling_voxel_object):
+	if not get_editor_interface().get_selection().get_selected_nodes().has(handling_voxel_object):
 		handling_voxel_object = null
 		close_voxel_object_editor()
 	return false
