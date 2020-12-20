@@ -171,14 +171,14 @@ func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) 
 # target     :   Vector3          :   Grid position at which to start flood select
 # selected   :   Array            :   Array to add selected voxel grid positions to
 # return     :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
-func flood_select(target : Vector3, selected := []) -> Array:
+func select_floot(target : Vector3, selected := []) -> Array:
 	selected.append(get_voxel_id(target))
 	
 	for direction in Voxel.Directions:
 		var next = target + direction
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if not selected.has(next):
-				flood_select(next, selected)
+				select_floot(next, selected)
 	
 	return selected
 
@@ -187,7 +187,24 @@ func flood_select(target : Vector3, selected := []) -> Array:
 # face_normal   :   Vector3          :   Normal of face to check for obstruction
 # selected      :   Array            :   Array to add selected voxel grid positions to
 # return        :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
-func face_select(target : Vector3, face_normal : Vector3, selected := []) -> Array:
+func select_face(target : Vector3, face_normal : Vector3, selected := []) -> Array:
+	selected.append(target)
+	
+	for direction in Voxel.Directions[face_normal]:
+		var next = target + direction
+		if get_voxel_id(next) > -1:
+			if get_voxel_id(next + face_normal) == -1:
+				if not selected.has(next):
+					select_face(next, face_normal, selected)
+	
+	return selected
+
+# Returns Array of all voxel grid positions connected to given target that are similar and aren't obstructed at the given face normal
+# target        :   Vector3          :   Grid position at which to start flood select
+# face_normal   :   Vector3          :   Normal of face to check for obstruction
+# selected      :   Array            :   Array to add selected voxel grid positions to
+# return        :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
+func select_face_similar(target : Vector3, face_normal : Vector3, selected := []) -> Array:
 	selected.append(target)
 	
 	for direction in Voxel.Directions[face_normal]:
@@ -195,7 +212,7 @@ func face_select(target : Vector3, face_normal : Vector3, selected := []) -> Arr
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if get_voxel_id(next + face_normal) == -1:
 				if not selected.has(next):
-					face_select(next, face_normal, selected)
+					select_face_similar(next, face_normal, selected)
 	
 	return selected
 

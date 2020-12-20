@@ -45,7 +45,10 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 			if not editor.last_hit.empty():
 				if editor.VoxelObjectRef.get_voxel_id(editor.last_hit["position"]) > -1:
 					if editor.last_hit.empty() or not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):
-						face = editor.VoxelObjectRef.face_select(editor.last_hit["position"], editor.last_hit["normal"])
+						if Input.is_key_pressed(KEY_SHIFT):
+							face = editor.VoxelObjectRef.select_face_similar(editor.last_hit["position"], editor.last_hit["normal"])
+						else:
+							face = editor.VoxelObjectRef.select_face(editor.last_hit["position"], editor.last_hit["normal"])
 						if editor.Tools[editor.Tool.get_selected_id()].tool_normal > 0:
 							for i in range(face.size()):
 								face[i] += editor.last_hit["normal"]
