@@ -17,7 +17,7 @@ func set_selections(selections : Array, update := true) -> void:
 export(Color) var Modulate := Color(1, 1, 1, 0.5) setget set_modulate
 func set_modulate(modulate : Color) -> void:
 	Modulate = modulate
-	
+	Modulate.a = 0.75
 	material_override.albedo_color = Modulate
 
 
@@ -27,7 +27,7 @@ func setup() -> void:
 	if not is_instance_valid(material_override):
 		material_override = SpatialMaterial.new()
 	material_override.flags_transparent = true
-	material_override.params_blend_mode = SpatialMaterial.BLEND_MODE_ADD
+	material_override.flags_unshaded = true
 	material_override.params_grow = true
 	material_override.params_grow_amount = 0.001
 	material_override.albedo_color = Modulate
