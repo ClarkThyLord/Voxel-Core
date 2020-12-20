@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tileset.png-a22c28f13a5961bba41d59a8f50f9fb3.stex"
+path="res://.import/kenney_voxels.jpg-0f9d9b01eb7900624ab7a6b56b601646.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/examples/textured/Tileset.png"
-dest_files=[ "res://.import/Tileset.png-a22c28f13a5961bba41d59a8f50f9fb3.stex" ]
+source_file="res://examples/Textured/kenney_voxels.jpg"
+dest_files=[ "res://.import/kenney_voxels.jpg-0f9d9b01eb7900624ab7a6b56b601646.stex" ]
 
 [params]
 
