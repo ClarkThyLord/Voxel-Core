@@ -4,8 +4,7 @@
 
 [resource]
 script = ExtResource( 1 )
-__meta__ = {
-"Voxels": {
+VOXELS = {
 1: {
 "vsn": "aliceblue",
 "color": Color( 0.94, 0.97, 1, 1 )
@@ -581,6 +580,5 @@ __meta__ = {
 144: {
 "vsn": "yellowgreen",
 "color": Color( 0.6, 0.8, 0.2, 1 )
-}
 }
 }
