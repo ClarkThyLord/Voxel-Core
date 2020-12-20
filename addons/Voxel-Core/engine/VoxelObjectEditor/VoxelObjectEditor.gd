@@ -430,6 +430,13 @@ func _exit_tree():
 
 func setup_voxel_set(voxel_set : VoxelSet) -> void:
 	VoxelSetViewer.VoxelSetRef = voxel_set
+	VoxelSetViewer.unselect_all()
+	if is_instance_valid(voxel_set) and not voxel_set.empty():
+		var first_voxel_id = voxel_set.get_ids()[0]
+		PaletteRepresents.clear()
+		PaletteRepresents.append(first_voxel_id)
+		PaletteRepresents.append(first_voxel_id)
+		VoxelSetViewer.select(first_voxel_id)
 	
 	Editing.pressed = false
 	Editing.disabled = not is_instance_valid(voxel_set)
@@ -437,6 +444,9 @@ func setup_voxel_set(voxel_set : VoxelSet) -> void:
 	Notice.visible = not is_instance_valid(voxel_set)
 
 func start_editing(voxel_object : VoxelObject) -> void:
+	if voxel_object == VoxelObjectRef:
+		return
+	
 	stop_editing()
 	
 	VoxelObjectRef = voxel_object

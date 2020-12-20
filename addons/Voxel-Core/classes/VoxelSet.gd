@@ -76,6 +76,11 @@ static func is_valid_name(name : String) -> bool:
 	return not name.empty()
 
 
+# Return true if no voxels are present
+func empty() -> bool:
+	return Voxels.empty()
+
+
 # Returns list of all the registered voxel ids
 # returns   :   Array<int>   :   list of registered voxel ids
 func get_ids() -> Array:
