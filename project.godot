@@ -9,12 +9,12 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Reference",
+"base": "Reader",
 "class": "GPLReader",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/classes/Readers/GPL.gd"
 }, {
-"base": "Reference",
+"base": "Reader",
 "class": "ImageReader",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/classes/Readers/Image.gd"
@@ -22,9 +22,9 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Reader",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/Readers/Reader.gd"
+"path": "res://addons/Voxel-Core/classes/Reader.gd"
 }, {
-"base": "Reference",
+"base": "Reader",
 "class": "VoxReader",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/classes/Readers/Vox.gd"

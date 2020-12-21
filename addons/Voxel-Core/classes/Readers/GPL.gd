@@ -1,4 +1,4 @@
-extends Reference
+extends Reader
 class_name GPLReader
 # GIMP Palette
 
