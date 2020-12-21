@@ -1,0 +1,13 @@
+[remap]
+
+importer="VoxelCore.VoxelSet"
+type="Resource"
+path="res://.import/Paint.jpg-6b057797e019e69bd2c81e8afa4c8a45.tres"
+
+[deps]
+
+source_file="res://examples/Imports/VoxelSets/Paint.jpg"
+dest_files=[ "res://.import/Paint.jpg-6b057797e019e69bd2c81e8afa4c8a45.tres" ]
+
+[params]
+

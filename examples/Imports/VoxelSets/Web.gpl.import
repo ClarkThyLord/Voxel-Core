@@ -1,0 +1,13 @@
+[remap]
+
+importer="VoxelCore.VoxelSet"
+type="Resource"
+path="res://.import/Web.gpl-2ca1439ae7f0281eb6807724489c9bfe.tres"
+
+[deps]
+
+source_file="res://examples/Imports/VoxelSets/Web.gpl"
+dest_files=[ "res://.import/Web.gpl-2ca1439ae7f0281eb6807724489c9bfe.tres" ]
+
+[params]
+

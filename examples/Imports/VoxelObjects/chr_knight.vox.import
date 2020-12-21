@@ -1,0 +1,18 @@
+[remap]
+
+importer="VoxelCore.VoxelObject"
+type="PackedScene"
+path="res://.import/chr_knight.vox-430247a744ff01e260b172f53a60dcce.tscn"
+
+[deps]
+
+source_file="res://examples/Imports/VoxelObjects/chr_knight.vox"
+dest_files=[ "res://.import/chr_knight.vox-430247a744ff01e260b172f53a60dcce.tscn" ]
+
+[params]
+
+Name=""
+VoxelSet=true
+MeshMode=0
+Center=0
+VoxelObject=0

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/kenney_voxels.jpg-0f9d9b01eb7900624ab7a6b56b601646.stex"
+path="res://.import/kenney_voxels.jpg-1f6de84f0675c221b2cc21248f146608.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://examples/Textured/kenney_voxels.jpg"
-dest_files=[ "res://.import/kenney_voxels.jpg-0f9d9b01eb7900624ab7a6b56b601646.stex" ]
+source_file="res://examples/VoxelSets/Textured/kenney_voxels.jpg"
+dest_files=[ "res://.import/kenney_voxels.jpg-1f6de84f0675c221b2cc21248f146608.stex" ]
 
 [params]
 
@@ -20,15 +20,15 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
-flags/srgb=1
+flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
 stream=false
 size_limit=0
-detect_3d=false
+detect_3d=true
 svg/scale=1.0
