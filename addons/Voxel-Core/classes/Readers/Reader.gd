@@ -17,4 +17,5 @@ static func read_file(file_path : String) -> Dictionary:
 		"qb": continue
 		"qbt": continue
 		"vxm": continue
+		"gpl": result = GPLReader.read_file(file_path)
 	return result

@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "GPLReader",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Readers/GPL.gd"
+}, {
+"base": "Reference",
 "class": "ImageReader",
 "language": "GDScript",
 "path": "res://addons/Voxel-Core/classes/Readers/Image.gd"
@@ -45,6 +50,7 @@ _global_script_classes=[ {
 "path": "res://addons/Voxel-Core/classes/VoxelTool.gd"
 } ]
 _global_script_class_icons={
+"GPLReader": "",
 "ImageReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
 "Reader": "",
 "VoxReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
