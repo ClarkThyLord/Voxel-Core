@@ -75,10 +75,10 @@ static func read(file : File) -> Dictionary:
 	
 	return result
 
-static func read_file(file_path : String) -> Dictionary:
+static func read_file(vox_path : String) -> Dictionary:
 	var result := { "error": OK }
 	var file := File.new()
-	var error = file.open(file_path, File.READ)
+	var error = file.open(vox_path, File.READ)
 	if error == OK:
 		result = read(file)
 	if file.is_open():

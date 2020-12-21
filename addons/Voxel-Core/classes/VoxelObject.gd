@@ -219,7 +219,7 @@ func select_face_similar(target : Vector3, face_normal : Vector3, selected := []
 
 # Loads and sets voxels and replaces VoxelSet with given file
 # NOTE: Reference Reader.gd for valid file imports
-# source_file   :   String   :   Path to file to be imported
+# source_file   :   String   :   Path to file to be loaded
 # return int    :   int      :   Error code
 func load_file(source_file : String) -> int:
 	var read := Reader.read_file(source_file)
