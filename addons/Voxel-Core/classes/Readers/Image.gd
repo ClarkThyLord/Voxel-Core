@@ -1,4 +1,4 @@
-extends Reader
+extends Reference
 class_name ImageReader, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
 
 
