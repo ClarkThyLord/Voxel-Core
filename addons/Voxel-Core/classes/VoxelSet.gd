@@ -152,6 +152,7 @@ func erase_voxel(id : int) -> void:
 func erase_voxels() -> void:
 	Voxels.clear()
 
+
 # Emits requested_refresh, calculates UVScale and updates UVReady
 func request_refresh() -> void:
 	UVReady = is_instance_valid(Tiles)
@@ -161,3 +162,18 @@ func request_refresh() -> void:
 	else:
 		UVScale = Vector2.ONE
 	emit_signal("requested_refresh")
+
+
+# Loads and sets voxels
+# NOTE: Reference Reader.gd for valid file imports
+# source_file   :   String   :   Path to file to be loaded
+# return int    :   int      :   Error code
+func load_file(source_file : String) -> int:
+	var read := Reader.read_file(source_file)
+	var error : int = read.get("error", FAILED)
+	if error == OK:
+		var palette := {}
+		for index in range(read["palette"].size()):
+			palette[index] = read["palette"][index]
+		set_voxels(palette)
+	return error
