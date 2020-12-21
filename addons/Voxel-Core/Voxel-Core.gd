@@ -8,6 +8,7 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
 var Meshes := preload("res://addons/Voxel-Core/engine/Importers/Meshes.gd").new()
 var VoxelObjects := preload("res://addons/Voxel-Core/engine/Importers/VoxelObjects.gd").new()
+var VoxelSets := preload("res://addons/Voxel-Core/engine/Importers/VoxelSets.gd").new()
 
 const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/VoxelSetEditor.tscn")
 const VoxelObjectEditor := preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.tscn")
@@ -45,6 +46,7 @@ static func typeof_voxel_core(object : Object) -> int:
 func _enter_tree():
 	add_import_plugin(Meshes)
 	add_import_plugin(VoxelObjects)
+	add_import_plugin(VoxelSets)
 	
 	connect("scene_closed", self, "on_scene_closed")
 	connect("main_screen_changed", self, "on_main_screen_changed")
@@ -55,6 +57,7 @@ func _exit_tree():
 	remove_import_plugin(Meshes)
 	Meshes.exit()
 	remove_import_plugin(VoxelObjects)
+	remove_import_plugin(VoxelSets)
 	
 	close_voxel_set_editor()
 	close_voxel_object_editor()
