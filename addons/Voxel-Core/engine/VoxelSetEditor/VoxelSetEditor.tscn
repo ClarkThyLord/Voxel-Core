@@ -53,6 +53,80 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 alignment = 2
 
+[node name="Import" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+margin_left = 114.0
+margin_right = 170.0
+margin_bottom = 20.0
+text = "Import"
+
+[node name="ImportFile" type="FileDialog" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import"]
+margin_right = 315.0
+margin_bottom = 130.0
+rect_min_size = Vector2( 400, 300 )
+window_title = "Import File"
+resizable = true
+mode = 0
+filters = PoolStringArray( "*.vox ; VOX Files", "*.png, *.bmp, *.dds, *.exr, *.hdr, *.jpg, *.jpeg, *.tga, *.svg, *.svgz, *.webp; Image Files", "*.gpl; GIMP Palette" )
+
+[node name="ImportHow" type="PopupDialog" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import"]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 325, 100 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer"]
+margin_top = 17.0
+margin_right = 325.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "How to import voxels to VoxelSet?"
+align = 1
+valign = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer"]
+margin_top = 52.0
+margin_right = 325.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Append" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 70.0
+margin_top = 14.0
+margin_right = 131.0
+margin_bottom = 34.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Append"
+
+[node name="Replace" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 135.0
+margin_top = 14.0
+margin_right = 197.0
+margin_bottom = 34.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Replace"
+
+[node name="Cancel" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer"]
+margin_left = 201.0
+margin_top = 14.0
+margin_right = 255.0
+margin_bottom = 34.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Cancel"
+
 [node name="Close" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 margin_left = 174.0
 margin_right = 221.0
@@ -157,6 +231,11 @@ ViewMode = 1
 ViewSensitivity = 8
 VoxelID = 0
 VoxelSetRef = null
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import" to="." method="open_ImportFile"]
+[connection signal="file_selected" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_Import_file_selected"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Append" to="." method="_on_Import_Append_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Replace" to="." method="_on_Import_Replace_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ImportHow"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Close" to="." method="_on_Close_pressed"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID" to="." method="_on_VoxelID_text_entered"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName" to="." method="_on_VoxelName_text_entered"]

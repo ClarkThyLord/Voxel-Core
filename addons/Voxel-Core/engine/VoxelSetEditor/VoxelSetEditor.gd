@@ -4,6 +4,9 @@ extends ScrollContainer
 
 
 # Refrences
+onready var ImportFile := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile")
+onready var ImportHow := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow")
+
 onready var VoxelSetInfo := get_node("HBoxContainer/VBoxContainer/VoxelSetInfo")
 
 onready var VoxelInfo := get_node("HBoxContainer/VBoxContainer/VoxelInfo")
@@ -137,3 +140,37 @@ func _on_VoxelName_text_entered(new_name : String):
 
 func _on_VoxelSetViewer_selected(voxel_id : int): update_view()
 func _on_VoxelSetViewer_unselected(voxel_id : int): update_view()
+
+
+func open_ImportFile():
+	ImportFile.popup_centered()
+
+func open_ImportHow():
+	ImportHow.popup_centered()
+
+func close_ImportHow():
+	ImportHow.hide()
+
+var import_file_path := ""
+func _on_Import_file_selected(path):
+	import_file_path = path
+	open_ImportHow()
+
+func _on_Import_Append_pressed():
+	var result := Reader.read_file(import_file_path)
+	if result["error"] == OK:
+		for voxel in result["palette"]:
+			VoxelSetRef.set_voxel(result["palette"][voxel])
+		
+		VoxelSetRef.request_refresh()
+	else: printerr(result["error"])
+	close_ImportHow()
+
+func _on_Import_Replace_pressed():
+	var result := Reader.read_file(import_file_path)
+	if result["error"] == OK:
+		VoxelSetRef.Voxels = result["palette"]
+		
+		VoxelSetRef.request_refresh()
+	else: printerr(result["error"])
+	close_ImportHow()

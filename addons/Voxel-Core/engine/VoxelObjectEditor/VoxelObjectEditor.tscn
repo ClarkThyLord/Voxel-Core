@@ -478,7 +478,7 @@ icon = ExtResource( 17 )
 margin_right = 400.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 400, 300 )
-window_title = "Open a File"
+window_title = "Import File"
 resizable = true
 mode = 0
 access = 2
@@ -823,10 +823,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 28.0
-margin_top = 28.0
-margin_right = 343.0
-margin_bottom = 535.0
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 347.0
+margin_bottom = 539.0
 size_flags_vertical = 3
 edit_alpha = false
 
