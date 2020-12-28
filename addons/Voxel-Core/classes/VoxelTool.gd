@@ -107,7 +107,7 @@ func add_face(
 		surface = Surface.new()
 		var material := SpatialMaterial.new()
 		
-		material.albedo_color = color
+		material.vertex_color_use_as_albedo = true
 		if _uv_voxels:
 			material.albedo_texture = _voxel_set.Tiles
 		
