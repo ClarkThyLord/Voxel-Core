@@ -96,10 +96,10 @@ func add_face(
 	var color := Voxel.get_face_color(voxel, face)
 	var uv := Voxel.get_face_texture(voxel, face) if _uv_voxels else -Vector2.ONE
 	
-	var metal : float = 0
-	var specular : float = 0.5
-	var rough : float = 1
-	var energy : float = 10
+	var metal : float = Voxel.get_metallic(voxel)
+	var specular : float = Voxel.get_specular(voxel)
+	var rough : float = Voxel.get_roughness(voxel)
+	var energy : float = Voxel.get_energy(voxel)
 	
 	var surface_id := str(metal) + "," + str(specular) + "," + str(rough) + "," + str(energy)
 	var surface : Surface = _surfaces.get(surface_id)

@@ -11,25 +11,29 @@ class_name Voxel, "res://addons/Voxel-Core/assets/classes/Voxel.png"
 # be done in such a way that retains the original structure so as to avoid conflicts.
 #
 # {
-#   vsn                  :   null || String,          ~   Stands for VoxelSetName, and is present when name is assigned to voxel in VoxelSet
-#   color                :   Color,                   ~   Main and default color, Color, used by voxel for all faces
-#   colors               :   null || Dictionary = {   ~   Colors used by voxel on a per face bases
-#      Vector3.UP        :   null || Color,           ~   If present color will be used for voxel's UP face, otherwise fallbacks to color
-#      Vector3.DOWN      :   null || Color,           ~   If present color will be used for voxel's DOWN face, otherwise fallbacks to color
-#      Vector3.RIGHT     :   null || Color,           ~   If present color will be used for voxel's RIGHT face, otherwise fallbacks to color
-#      Vector3.LEFT      :   null || Color,           ~   If present color will be used for voxel's LEFT face, otherwise fallbacks to color
-#      Vector3.FORWARD   :   null || Color,           ~   If present color will be used for voxel's FORWARD face, otherwise fallbacks to color
-#      Vector3.BACK      :   null || Color            ~   If present color will be used for voxel's BACK face, otherwise fallbacks to color
+#   vsn                  :   String,          ~   VoxelSetName, used by VoxelSet to associate name with voxel
+#   color                :   Color,           ~   Default color used for all voxel faces
+#   colors               :   Dictionary = {   ~   Color used by the given voxel face, if not present uses voxel color
+#      Vector3.UP        :   Color,
+#      Vector3.DOWN      :   Color,
+#      Vector3.RIGHT     :   Color,
+#      Vector3.LEFT      :   Color,
+#      Vector3.FORWARD   :   Color,
+#      Vector3.BACK      :   Color
 #   },
-#   texture              :   null || Vector2,         ~   Main and default texture, Vector3, defining UV used by voxel for all faces
-#   textures             :   null || Dictionary = {   ~   UVs used by voxel on a per face bases
-#      Vector3.UP        :   null || Vector2,         ~   If present texture will be used for voxel's UP face, otherwise fallbacks to texture
-#      Vector3.DOWN      :   null || Vector2,         ~   If present texture will be used for voxel's DOWN face, otherwise fallbacks to texture
-#      Vector3.RIGHT     :   null || Vector2,         ~   If present texture will be used for voxel's RIGHT face, otherwise fallbacks to texture
-#      Vector3.LEFT      :   null || Vector2,         ~   If present texture will be used for voxel's LEFT face, otherwise fallbacks to texture
-#      Vector3.FORWARD   :   null || Vector2,         ~   If present texture will be used for voxel's FORWARD face, otherwise fallbacks to texture
-#      Vector3.BACK      :   null || Vector2          ~   If present texture will be used for voxel's BACK face, otherwise fallbacks to texture
-# 	}
+#   texture              :   Vector2,         ~   Default texture used for all voxel faces
+#   textures             :   Dictionary = {   ~   Texture used by the given voxel face, if not present uses voxel texture
+#      Vector3.UP        :   Vector2,
+#      Vector3.DOWN      :   Vector2,
+#      Vector3.RIGHT     :   Vector2,
+#      Vector3.LEFT      :   Vector2,
+#      Vector3.FORWARD   :   Vector2,
+#      Vector3.BACK      :   Vector2
+#   },
+#   metallic             :   float,           ~   Metallic material value used for all voxel faces
+#   specular             :   float,           ~   Specular material value used for all voxel faces
+#   roughness            :   float,           ~   Roughness material value used for all voxel faces
+#   energy               :   float            ~   Emission energy material value used for all voxel faces
 # }
 #
 
@@ -140,6 +144,55 @@ static func remove_face_texture(voxel : Dictionary, face : Vector3) -> void:
 	if voxel.has("textures"):
 		voxel["textures"].erase(face)
 		if voxel["textures"].empty(): voxel.erase("textures")
+
+
+# Returns the defined metallic within given voxel if present, otherwise returns 0
+static func get_metallic(voxel : Dictionary) -> float:
+	return voxel.get("metallic", 0)
+
+# Sets the given metallic in the given voxel
+static func set_metallic(voxel : Dictionary, metallic : float) -> void:
+	voxel["metallic"] = metallic
+
+# Removes metallic from given voxel
+static func remove_metallic(voxel : Dictionary) -> void:
+	voxel.erase("metallic")
+
+# Returns the defined specular within given voxel if present, otherwise returns 0.5
+static func get_specular(voxel : Dictionary) -> float:
+	return voxel.get("specular", 0.5)
+
+# Sets the given specular in the given voxel
+static func set_specular(voxel : Dictionary, specular : float) -> void:
+	voxel["specular"] = specular
+
+# Removes specular from given voxel
+static func remove_specular(voxel : Dictionary) -> void:
+	voxel.erase("specular")
+
+# Returns the defined roughness within given voxel if present, otherwise returns 1
+static func get_roughness(voxel : Dictionary) -> float:
+	return voxel.get("roughness", 1)
+
+# Sets the given roughness in the given voxel
+static func set_roughness(voxel : Dictionary, roughness : float) -> void:
+	voxel["roughness"] = roughness
+
+# Removes roughness from given voxel
+static func remove_roughness(voxel : Dictionary) -> void:
+	voxel.erase("roughness")
+
+# Returns the defined energy within given voxel if present, otherwise returns 0
+static func get_energy(voxel : Dictionary) -> float:
+	return voxel.get("energy", 0)
+
+# Sets the given energy in the given voxel
+static func set_energy(voxel : Dictionary, energy : float) -> void:
+	voxel["energy"] = energy
+
+# Removes energy from given voxel
+static func remove_energy(voxel : Dictionary) -> void:
+	voxel.erase("energy")
 
 
 # Returns a world position snapped to voxel grid
