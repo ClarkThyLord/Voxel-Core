@@ -40,7 +40,7 @@ func _ready() -> void: setup()
 
 func update() -> void:
 	if not Selections.empty():
-		vt.start()
+		vt.begin()
 		var voxel := Voxel.colored(Modulate)
 		for selection in Selections:
 			match typeof(selection):
@@ -92,5 +92,5 @@ func update() -> void:
 						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
 						Vector3(origin.x, origin.y + dimensions.y, origin.z)
 					)
-		mesh = vt.end()
+		mesh = vt.commit()
 	else: mesh = null

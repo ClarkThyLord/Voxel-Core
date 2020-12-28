@@ -243,14 +243,14 @@ func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	if not is_instance_valid(VoxelSetRef):
 		return null
 	
-	vt.start(UVMapping, VoxelSetRef)
+	vt.begin(VoxelSetRef, UVMapping)
 	
 	for position in volume:
 		for direction in Voxel.Directions:
 			if get_voxel_id(position + direction) == -1:
 				vt.add_face(get_voxel(position), direction, position)
 	
-	return vt.end()
+	return vt.commit()
 
 # Greedy meshing
 # volume   :   Array<Vector3>   :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
@@ -260,7 +260,7 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	if not is_instance_valid(VoxelSetRef):
 		return null
 	
-	vt.start(UVMapping, VoxelSetRef)
+	vt.begin(VoxelSetRef, UVMapping)
 	
 	var faces = Voxel.Directions.duplicate()
 	for face in faces:
@@ -368,7 +368,7 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 				top_left
 			)
 	
-	return vt.end()
+	return vt.commit()
 
 
 # Updates Mesh and calls on save and update_static_body if needed
