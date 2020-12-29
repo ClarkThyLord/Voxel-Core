@@ -1,9 +1,10 @@
-extends Reference
 class_name ImageReader, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
+extends Reference
+# Image file reader
 
 
 
-# Core
+## Public Methods
 static func read(image : Image) -> Dictionary:
 	var result := {
 		"error": OK,
@@ -30,6 +31,7 @@ static func read(image : Image) -> Dictionary:
 	result["palette"] = palette
 	
 	return result
+
 
 static func read_file(image_path : String) -> Dictionary:
 	var image := Image.new()

@@ -1,19 +1,16 @@
-extends Reference
 class_name GPLReader
-# GIMP Palette
+extends Reference
+# GIMP palette file reader
 
 
 
-# Core
+# Public Methods
 static func read(image : File) -> Dictionary:
 	var result := {
 		"error": OK,
 		"voxels": {},
 		"palette": {}
 	}
-	
-#	while not image.eof_reached():
-#		print(image.get_line())
 	
 	if image.get_line() == "GIMP Palette":
 		while not image.eof_reached():
@@ -27,7 +24,7 @@ static func read(image : File) -> Dictionary:
 					name = tokens[1]
 					var end = name.find("(")
 					name = name.substr(0, end)
-
+				
 				result["palette"][result["palette"].size()] = Voxel.colored(color)
 				if not name.empty():
 					result["palette"][result["palette"].size() - 1]["vsn"] = name.strip_edges()
@@ -35,6 +32,7 @@ static func read(image : File) -> Dictionary:
 		result["error"] = ERR_FILE_UNRECOGNIZED
 	
 	return result
+
 
 static func read_file(gpl_path : String) -> Dictionary:
 	var result := { "error": OK }

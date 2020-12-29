@@ -1,9 +1,10 @@
 extends Reference
 class_name VoxReader, "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
+# MagicaVoxel file reader
 
 
 
-# Declarations
+# Constants
 const magicavoxel_default_palette := [
 	Color("00000000"), Color("ffffffff"), Color("ffccffff"), Color("ff99ffff"), Color("ff66ffff"), Color("ff33ffff"), Color("ff00ffff"), Color("ffffccff"), Color("ffccccff"), Color("ff99ccff"), Color("ff66ccff"), Color("ff33ccff"), Color("ff00ccff"), Color("ffff99ff"), Color("ffcc99ff"), Color("ff9999ff"),
 	Color("ff6699ff"), Color("ff3399ff"), Color("ff0099ff"), Color("ffff66ff"), Color("ffcc66ff"), Color("ff9966ff"), Color("ff6666ff"), Color("ff3366ff"), Color("ff0066ff"), Color("ffff33ff"), Color("ffcc33ff"), Color("ff9933ff"), Color("ff6633ff"), Color("ff3333ff"), Color("ff0033ff"), Color("ffff00ff"),
@@ -25,7 +26,7 @@ const magicavoxel_default_palette := [
 
 
 
-# Core
+# Public Methods
 static func read(file : File) -> Dictionary:
 	var result := {
 		"error": OK,
@@ -74,6 +75,7 @@ static func read(file : File) -> Dictionary:
 		result["error"] = ERR_FILE_UNRECOGNIZED
 	
 	return result
+
 
 static func read_file(vox_path : String) -> Dictionary:
 	var result := { "error": OK }

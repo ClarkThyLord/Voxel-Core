@@ -1,10 +1,10 @@
-extends Reference
 class_name Reader
+extends Reference
 # Makeshift interface class inhereted by all file readers.
 
 
 
-## Core
+## Public Methods
 # Calls on appropriate file reader according to file_path's extension.
 # file_path   :   String       :   path to file to be read
 # return      :   Dictionary   :   read results, contains: { error : int, voxels : Dictionary<Vec3, int>, palette : Dictionary<int, Dictionary<String, Variant> }
