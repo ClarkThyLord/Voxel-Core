@@ -45,14 +45,14 @@ const Directions := {
 	Vector3.FORWARD: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
 	Vector3.LEFT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
 	Vector3.DOWN: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
-	Vector3.BACK: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ]
+	Vector3.BACK: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
 }
 
 # 0.5 means that voxels will have the dimensions of 0.5 x 0.5 x 0.5
 const VoxelWorldSize := 0.5
 
 
-## Methods
+## Public Methods
 # Returns Dictionary representation of a colored voxel
 # color    :   Color                        :   color to set
 # colors   :   Dictionary<Vector3, Color>   :   face colors to set
