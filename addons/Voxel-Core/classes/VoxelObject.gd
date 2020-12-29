@@ -40,7 +40,7 @@ export(Resource) var voxel_set = null setget set_voxel_set
 
 
 
-# Public Variables
+## Public Variables
 # Flag indicating that edits to voxel data will be frequent
 # NOTE: When true will only allow naive meshing
 var edit_hint := false setget set_edit_hint

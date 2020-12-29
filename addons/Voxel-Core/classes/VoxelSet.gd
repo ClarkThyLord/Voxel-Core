@@ -181,6 +181,7 @@ func erase_voxels() -> void:
 	_voxels.clear()
 
 
+# Should be called when noticable changes have been committed to voxels.
 # Emits requested_refresh, calculates _uv_scale and updates _uv_ready
 func request_refresh() -> void:
 	_uv_ready = is_instance_valid(Tiles)
