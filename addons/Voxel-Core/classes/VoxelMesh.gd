@@ -20,6 +20,8 @@ func _get(property : String):
 func _set(property : String, value):
 	if property == "VOXELS":
 		_voxels = value
+		return true
+	return false
 
 
 func _get_property_list():
@@ -69,6 +71,7 @@ func erase_voxels() -> void:
 func update_mesh() -> void:
 	if not _voxels.empty():
 		var vt := VoxelTool.new()
+		# TODO Retain multiple materials
 		var material = get_surface_material(0) if get_surface_material_count() > 0 else null
 		
 		match MeshModes.NAIVE if edit_hint else mesh_mode:
@@ -107,7 +110,6 @@ func update_static_body() -> void:
 			staticBody.set_owner(get_tree().get_edited_scene_root())
 		elif not static_body and staticBody.owner:
 			staticBody.set_owner(null)
-		
 		if static_body and not collisionShape.owner:
 			collisionShape.set_owner(get_tree().get_edited_scene_root())
 		elif not static_body and staticBody.owner:
