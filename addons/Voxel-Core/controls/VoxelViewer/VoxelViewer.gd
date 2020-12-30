@@ -14,7 +14,7 @@ signal unselected_face(face)
 
 ## Enums
 # View modes available
-enum ViewModes { View2D, View3D }
+enum ViewModes { VIEW_2D, VIEW_3D }
 
 
 
@@ -26,7 +26,7 @@ export(int, 0, 6) var selection_max := 0 setget set_selection_max
 export var allow_edit := false setget set_allow_edit
 
 # Current view being shown
-export(ViewModes) var view_mode := ViewModes.View3D setget set_view_mode
+export(ViewModes) var view_mode := ViewModes.VIEW_3D setget set_view_mode
 
 # View sensitivity for the 3D view
 export(int, 0, 100) var camera_sensitivity := 8
@@ -126,9 +126,9 @@ func set_view_mode(value : int) -> void:
 	if is_instance_valid(view_modeRef):
 		view_modeRef.selected = view_mode
 	if is_instance_valid(View2D):
-		View2D.visible = view_mode == ViewModes.View2D
+		View2D.visible = view_mode == ViewModes.VIEW_2D
 	if is_instance_valid(View3D):
-		View3D.visible = view_mode == ViewModes.View3D
+		View3D.visible = view_mode == ViewModes.VIEW_2D
 
 
 # Sets voxel_id, calls on update_view by defalut

@@ -3,12 +3,19 @@ extends EditorImportPlugin
 
 
 
-# Core
+## Enums
+enum Presets { DEFAULT }
+
+
+
+## Built-In Virtual Methods
 func get_visible_name() -> String:
 	return "VoxelSet"
 
+
 func get_importer_name() -> String:
 	return "VoxelCore.VoxelSet"
+
 
 func get_recognized_extensions() -> Array:
 	return [
@@ -17,17 +24,18 @@ func get_recognized_extensions() -> Array:
 		"gpl",
 	]
 
+
 func get_resource_type() -> String:
 	return "Resource"
+
 
 func get_save_extension() -> String:
 	return "tres"
 
 
-enum Presets { DEFAULT }
-
 func get_preset_count() -> int:
 	return Presets.size()
+
 
 func get_preset_name(preset : int) -> String:
 	match preset:
@@ -36,11 +44,14 @@ func get_preset_name(preset : int) -> String:
 		_:
 			return "Unknown"
 
+
 func get_import_options(preset : int) -> Array:
 	var preset_options = [
+		
 	]
 	
 	return preset_options
+
 
 func get_option_visibility(option : String, options : Dictionary) -> bool:
 	return true
