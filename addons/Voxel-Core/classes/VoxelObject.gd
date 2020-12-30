@@ -209,7 +209,7 @@ func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) 
 func select_floot(target : Vector3, selected := []) -> Array:
 	selected.append(get_voxel_id(target))
 	
-	for direction in Voxel.Directions:
+	for direction in Voxel.Faces:
 		var next = target + direction
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if not selected.has(next):
@@ -226,7 +226,7 @@ func select_floot(target : Vector3, selected := []) -> Array:
 func select_face(target : Vector3, face_normal : Vector3, selected := []) -> Array:
 	selected.append(target)
 	
-	for direction in Voxel.Directions[face_normal]:
+	for direction in Voxel.Faces[face_normal]:
 		var next = target + direction
 		if get_voxel_id(next) > -1:
 			if get_voxel_id(next + face_normal) == -1:
@@ -244,7 +244,7 @@ func select_face(target : Vector3, face_normal : Vector3, selected := []) -> Arr
 func select_face_similar(target : Vector3, face_normal : Vector3, selected := []) -> Array:
 	selected.append(target)
 	
-	for direction in Voxel.Directions[face_normal]:
+	for direction in Voxel.Faces[face_normal]:
 		var next = target + direction
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if get_voxel_id(next + face_normal) == -1:
@@ -283,7 +283,7 @@ func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	vt.begin(voxel_set, uv_map)
 	
 	for position in volume:
-		for direction in Voxel.Directions:
+		for direction in Voxel.Faces:
 			if get_voxel_id(position + direction) == -1:
 				vt.add_face(get_voxel(position), direction, position)
 	
@@ -300,7 +300,7 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 	
 	vt.begin(voxel_set, uv_map)
 	
-	var faces = Voxel.Directions.duplicate()
+	var faces = Voxel.Faces.duplicate()
 	for face in faces:
 		faces[face] = []
 		for position in volume:
@@ -320,28 +320,28 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 				var width := 1
 				
 				while true:
-					var index = faces[face].find(top_right + Voxel.Directions[face][1])
+					var index = faces[face].find(top_right + Voxel.Faces[face][1])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							width += 1
 							faces[face].remove(index)
-							top_right += Voxel.Directions[face][1]
-							bottom_right += Voxel.Directions[face][1]
+							top_right += Voxel.Faces[face][1]
+							bottom_right += Voxel.Faces[face][1]
 						else:
 							break
 					else:
 						break
 				
 				while true:
-					var index = faces[face].find(top_left + Voxel.Directions[face][0])
+					var index = faces[face].find(top_left + Voxel.Faces[face][0])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							width += 1
 							faces[face].remove(index)
-							top_left += Voxel.Directions[face][0]
-							bottom_left += Voxel.Directions[face][0]
+							top_left += Voxel.Faces[face][0]
+							bottom_left += Voxel.Faces[face][0]
 						else:
 							break
 					else:
@@ -350,26 +350,26 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 				while true:
 					var used := []
 					var current := top_right
-					var index = faces[face].find(current + Voxel.Directions[face][3])
+					var index = faces[face].find(current + Voxel.Faces[face][3])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-							current += Voxel.Directions[face][3]
+							current += Voxel.Faces[face][3]
 							used.append(current)
 							while true:
-								index = faces[face].find(current + Voxel.Directions[face][0])
+								index = faces[face].find(current + Voxel.Faces[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
 									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-										current += Voxel.Directions[face][0]
+										current += Voxel.Faces[face][0]
 										used.append(current)
 									else:
 										break
 								else:
 									break
 							if used.size() == width:
-								top_right += Voxel.Directions[face][3]
-								top_left += Voxel.Directions[face][3]
+								top_right += Voxel.Faces[face][3]
+								top_left += Voxel.Faces[face][3]
 								for use in used:
 									faces[face].erase(use)
 							else:
@@ -382,26 +382,26 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 				while true:
 					var used := []
 					var current := bottom_right
-					var index = faces[face].find(current + Voxel.Directions[face][2])
+					var index = faces[face].find(current + Voxel.Faces[face][2])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-							current += Voxel.Directions[face][2]
+							current += Voxel.Faces[face][2]
 							used.append(current)
 							while true:
-								index = faces[face].find(current + Voxel.Directions[face][0])
+								index = faces[face].find(current + Voxel.Faces[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
 									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-										current += Voxel.Directions[face][0]
+										current += Voxel.Faces[face][0]
 										used.append(current)
 									else:
 										break
 								else:
 									break
 							if used.size() == width:
-								bottom_right += Voxel.Directions[face][2]
-								bottom_left += Voxel.Directions[face][2]
+								bottom_right += Voxel.Faces[face][2]
+								bottom_left += Voxel.Faces[face][2]
 								for use in used:
 									faces[face].erase(use)
 							else:

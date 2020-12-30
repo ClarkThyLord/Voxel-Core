@@ -38,8 +38,8 @@ extends Object
 
 
 ## Constants
-# Lists of all possible 3D directions, and the adjacent directions pertaining to them
-const Directions := {
+# Lists of all voxel faces, and their adjacent directions
+const Faces := {
 	Vector3.RIGHT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
 	Vector3.UP: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
 	Vector3.FORWARD: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
