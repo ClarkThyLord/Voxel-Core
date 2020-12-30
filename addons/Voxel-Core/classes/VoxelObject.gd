@@ -82,21 +82,21 @@ func set_static_body(value : bool, update := is_inside_tree()) -> void:
 
 # Sets voxel_set, calls update_mesh if needed and not told otherwise
 func set_voxel_set(value : Resource, update := is_inside_tree()) -> void:
-	if typeof(value) == TYPE_NIL or value is VoxelSet:
-		if is_instance_valid(voxel_set):
-			if voxel_set.is_connected("requested_refresh", self, "update_mesh"):
-				voxel_set.disconnect("requested_refresh", self, "update_mesh")
-		
-		voxel_set = value
-		if is_instance_valid(voxel_set) and voxel_set is VoxelSet:
-			voxel_set.connect("requested_refresh", self, "update_mesh")
-		
-		if update:
-			update_mesh()
-		emit_signal("set_voxel_set", voxel_set)
-	else:
+	if not (typeof(value) == TYPE_NIL or value is VoxelSet):
 		printerr("Invalid Resource given expected VoxelSet")
 		return
+	
+	if is_instance_valid(voxel_set):
+		if voxel_set.is_connected("requested_refresh", self, "update_mesh"):
+			voxel_set.disconnect("requested_refresh", self, "update_mesh")
+	
+	voxel_set = value
+	if is_instance_valid(voxel_set):
+		voxel_set.connect("requested_refresh", self, "update_mesh")
+	
+	if update:
+		update_mesh()
+	emit_signal("set_voxel_set", voxel_set)
 
 
 # Return true if no voxels are present

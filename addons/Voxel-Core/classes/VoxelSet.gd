@@ -13,10 +13,10 @@ signal requested_refresh
 
 ## Exported Variables
 # Size of each tile in tiles in pixels
-export(Vector2) var TileSize := Vector2(32.0, 32.0) setget set_tile_size
+export(Vector2) var tile_size := Vector2(32.0, 32.0) setget set_tile_size
 
 # Texture used for tiles / uv mapping
-export(Texture) var Tiles : Texture = null setget set_tiles
+export(Texture) var tiles : Texture = null setget set_tiles
 
 
 
@@ -24,7 +24,7 @@ export(Texture) var Tiles : Texture = null setget set_tiles
 # Voxels stored by their id
 var _voxels := {}
 
-# Flag indicating whether _uv_scale, TileSize and Tiles texture is set
+# Flag indicating whether _uv_scale, tile_size and tiles texture is set
 var _uv_ready := false
 
 # World UV Scale, calculated on request_refresh
@@ -58,20 +58,20 @@ func _get_property_list():
 
 
 ## Public Methods
-# Sets TileSize, calls on request_refresh by default
-func set_tile_size(tile_size : Vector2, refresh := true) -> void:
-	TileSize = Vector2(
-		floor(clamp(tile_size.x, 1, 256)),
-		floor(clamp(tile_size.y, 1, 256))
+# Sets tile_size, calls on request_refresh by default
+func set_tile_size(value : Vector2, refresh := true) -> void:
+	tile_size = Vector2(
+		floor(clamp(value.x, 1, 256)),
+		floor(clamp(value.y, 1, 256))
 	)
 	
 	if refresh:
 		request_refresh()
 
 
-# Sets Tiles, calls on request_refresh by default
-func set_tiles(tiles : Texture, refresh := true) -> void:
-	Tiles = tiles
+# Sets tiles, calls on request_refresh by default
+func set_tiles(value : Texture, refresh := true) -> void:
+	tiles = value
 	
 	if refresh:
 		request_refresh()
@@ -184,9 +184,9 @@ func erase_voxels() -> void:
 # Should be called when noticable changes have been committed to voxels.
 # Emits requested_refresh, calculates _uv_scale and updates _uv_ready
 func request_refresh() -> void:
-	_uv_ready = is_instance_valid(Tiles)
+	_uv_ready = is_instance_valid(tiles)
 	if _uv_ready:
-		_uv_scale = Vector2.ONE / (Tiles.get_size() / TileSize)
+		_uv_scale = Vector2.ONE / (tiles.get_size() / tile_size)
 	else:
 		_uv_scale = Vector2.ONE
 	emit_signal("requested_refresh")
