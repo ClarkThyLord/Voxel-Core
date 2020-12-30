@@ -33,7 +33,7 @@ export(MeshModes) var mesh_mode := MeshModes.NAIVE setget set_mesh_mode
 export var uv_map := false setget set_uv_map
 
 # Flag indicating the persitant attachment and maintenance of a StaticBody
-export(bool) var static_body := false setget set_static_body
+export var static_body := false setget set_static_body
 
 # The VoxelSet for this VoxelObject
 export(Resource) var voxel_set = null setget set_voxel_set

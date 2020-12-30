@@ -56,19 +56,16 @@ func _draw():
 	if is_instance_valid(voxel_set) and voxel_set.is_uv_ready():
 		if selection_max != 0:
 			for selection in _selections:
-				draw_rect(Rect2(
-								selection * voxel_set.tile_size,
-								voxel_set.tile_size
-						), selected_color, false, 3)
+				draw_rect(Rect2(selection * voxel_set.tile_size,
+								voxel_set.tile_size),
+						selected_color, false, 3)
 		
 		if _last_uv_hovered == -Vector2.ONE:
 			hint_tooltip = ""
 		else:
 			hint_tooltip = str(_last_uv_hovered)
-			draw_rect(Rect2(
-							_last_uv_hovered * voxel_set.tile_size,
-							voxel_set.tile_size
-					),
+			draw_rect(Rect2(_last_uv_hovered * voxel_set.tile_size,
+							voxel_set.tile_size),
 					hovered_color if is_valid_uv(_last_uv_hovered) else invalid_color
 					, false, 3)
 

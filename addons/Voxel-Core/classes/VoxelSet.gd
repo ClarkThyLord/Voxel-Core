@@ -13,10 +13,10 @@ signal requested_refresh
 
 ## Exported Variables
 # Size of each tile in tiles in pixels
-export(Vector2) var tile_size := Vector2(32.0, 32.0) setget set_tile_size
+export var tile_size := Vector2(32.0, 32.0) setget set_tile_size
 
 # Texture used for tiles / uv mapping
-export(Texture) var tiles : Texture = null setget set_tiles
+export var tiles : Texture = null setget set_tiles
 
 
 
