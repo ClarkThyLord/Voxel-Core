@@ -15,7 +15,7 @@ signal requested_refresh
 # Size of each tile in tiles in pixels
 export(Vector2) var TileSize := Vector2(32.0, 32.0) setget set_tile_size
 
-# Texture used for tiles
+# Texture used for tiles / uv mapping
 export(Texture) var Tiles : Texture = null setget set_tiles
 
 

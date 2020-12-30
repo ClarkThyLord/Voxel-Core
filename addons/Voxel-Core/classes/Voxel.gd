@@ -12,7 +12,7 @@ extends Object
 # {
 #   vsn                  :   String,          ~   VoxelSetName, used by VoxelSet to associate name with voxel
 #   color                :   Color,           ~   Default color used for all voxel faces
-#   colors               :   Dictionary = {   ~   Color used by the given voxel face, if not present uses voxel color
+#   colors               :   Dictionary = {   ~   Color used on a per face bases, if not present uses voxel color
 #      Vector3.UP        :   Color,
 #      Vector3.DOWN      :   Color,
 #      Vector3.RIGHT     :   Color,
@@ -20,8 +20,8 @@ extends Object
 #      Vector3.FORWARD   :   Color,
 #      Vector3.BACK      :   Color
 #   },
-#   texture              :   Vector2,         ~   Default texture used for all voxel faces
-#   textures             :   Dictionary = {   ~   Texture used by the given voxel face, if not present uses voxel texture
+#   uv                   :   Vector2,         ~   Default uv position used for all voxel faces
+#   uvs                  :   Dictionary = {   ~   uv position used on a per face bases, if not present uses voxel uv
 #      Vector3.UP        :   Vector2,
 #      Vector3.DOWN      :   Vector2,
 #      Vector3.RIGHT     :   Vector2,
@@ -104,63 +104,63 @@ static func remove_face_color(voxel : Dictionary, face : Vector3) -> void:
 			voxel.erase("colors")
 
 
-# Returns Dictionary representation of a textured voxel
-# texture    :   Vector2                        :   texture to set
-# textures   :   Dictionary<Vector3, Vector2>   :   face texture to set
+# Returns Dictionary representation of a uvd voxel
+# uv         :   Vector2                        :   uv to set
+# uvs        :   Dictionary<Vector3, Vector2>   :   face uv to set
 # color      :   Color                          :   color to set
 # colors     :   Dictionary<Vector3, Color>     :   face colors to set
 # return     :   Dictionary<String, Variant>    :   Dictionary representing voxel
-static func textured(texture : Vector2, textures := {}, color := Color.white, colors := {}) -> Dictionary:
+static func uvd(uv : Vector2, uvs := {}, color := Color.white, colors := {}) -> Dictionary:
 	var voxel = colored(color, colors)
-	voxel["texture"] = texture
-	if textures.size() > 0:
-		voxel["textures"] = textures
+	voxel["uv"] = uv
+	if uvs.size() > 0:
+		voxel["uvs"] = uvs
 	return voxel
 
 
-# Returns true if voxel has texture defined
-static func has_texture(voxel : Dictionary) -> bool:
-	return voxel.has("texture")
+# Returns true if voxel has uv defined
+static func has_uv(voxel : Dictionary) -> bool:
+	return voxel.has("uv")
 
 
-# Returns the defined texture within given voxel if present, otherwise returns a negative vector
-static func get_texture(voxel : Dictionary) -> Vector2:
-	return voxel.get("texture", -Vector2.ONE)
+# Returns the defined uv within given voxel if present, otherwise returns a negative vector
+static func get_uv(voxel : Dictionary) -> Vector2:
+	return voxel.get("uv", -Vector2.ONE)
 
 
-# Sets the given texture to the given voxel
-static func set_texture(voxel : Dictionary, texture : Vector2) -> void:
-	voxel["texture"] = texture
+# Sets the given uv to the given voxel
+static func set_uv(voxel : Dictionary, uv : Vector2) -> void:
+	voxel["uv"] = uv
 
 
-# Removes texture from given voxel
-static func remove_texture(voxel : Dictionary) -> void:
-	voxel.erase("texture")
+# Removes uv from given voxel
+static func remove_uv(voxel : Dictionary) -> void:
+	voxel.erase("uv")
 
 
-# Returns true if voxel has specified texture at given face
-static func has_face_texture(voxel : Dictionary, face : Vector3) -> bool:
-	return voxel.has("textures") and voxel["textures"].has(face)
+# Returns true if voxel has specified uv at given face
+static func has_face_uv(voxel : Dictionary, face : Vector3) -> bool:
+	return voxel.has("uvs") and voxel["uvs"].has(face)
 
 
-# Returns the defined texture at given face if present, otherwise returns texture
-static func get_face_texture(voxel : Dictionary, face : Vector3) -> Vector2:
-	return voxel["textures"].get(face, get_texture(voxel)) if voxel.has("textures") else get_texture(voxel)
+# Returns the defined uv at given face if present, otherwise returns uv
+static func get_face_uv(voxel : Dictionary, face : Vector3) -> Vector2:
+	return voxel["uvs"].get(face, get_uv(voxel)) if voxel.has("uvs") else get_uv(voxel)
 
 
-# Sets the given texture at the given face to the given voxel
-static func set_face_texture(voxel : Dictionary, face : Vector3, texture : Vector2) -> void:
-	if not voxel.has("textures"):
-		voxel["textures"] = {}
-	voxel["textures"][face] = texture
+# Sets the given uv at the given face to the given voxel
+static func set_face_uv(voxel : Dictionary, face : Vector3, uv : Vector2) -> void:
+	if not voxel.has("uvs"):
+		voxel["uvs"] = {}
+	voxel["uvs"][face] = uv
 
 
-# Removes texture at given face from given voxel
-static func remove_face_texture(voxel : Dictionary, face : Vector3) -> void:
-	if voxel.has("textures"):
-		voxel["textures"].erase(face)
-		if voxel["textures"].empty():
-			voxel.erase("textures")
+# Removes uv at given face from given voxel
+static func remove_face_uv(voxel : Dictionary, face : Vector3) -> void:
+	if voxel.has("uvs"):
+		voxel["uvs"].erase(face)
+		if voxel["uvs"].empty():
+			voxel.erase("uvs")
 
 
 # Returns the defined metallic within given voxel if present, otherwise returns 0

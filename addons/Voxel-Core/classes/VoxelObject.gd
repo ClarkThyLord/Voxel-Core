@@ -316,14 +316,14 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 			var voxel : Dictionary = get_voxel(bottom_right)
 			
 			
-			if not uv_map or Voxel.get_face_texture(voxel, face) == -Vector2.ONE:
+			if not uv_map or Voxel.get_face_uv(voxel, face) == -Vector2.ONE:
 				var width := 1
 				
 				while true:
 					var index = faces[face].find(top_right + Voxel.Directions[face][1])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							width += 1
 							faces[face].remove(index)
 							top_right += Voxel.Directions[face][1]
@@ -337,7 +337,7 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					var index = faces[face].find(top_left + Voxel.Directions[face][0])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							width += 1
 							faces[face].remove(index)
 							top_left += Voxel.Directions[face][0]
@@ -353,14 +353,14 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					var index = faces[face].find(current + Voxel.Directions[face][3])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							current += Voxel.Directions[face][3]
 							used.append(current)
 							while true:
 								index = faces[face].find(current + Voxel.Directions[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
-									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
+									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 										current += Voxel.Directions[face][0]
 										used.append(current)
 									else:
@@ -385,14 +385,14 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					var index = faces[face].find(current + Voxel.Directions[face][2])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
-						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
+						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							current += Voxel.Directions[face][2]
 							used.append(current)
 							while true:
 								index = faces[face].find(current + Voxel.Directions[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
-									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_texture(_voxel, face) == -Vector2.ONE):
+									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 										current += Voxel.Directions[face][0]
 										used.append(current)
 									else:

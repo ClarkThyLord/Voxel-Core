@@ -8,12 +8,12 @@ extends Reference
 
 class Surface:
 	## Public Variables
-	# Last vertex index of Mesh being constructed
+	# Index of the last vertex in Mesh being constructed
 	var index : int
 	
 	var material : SpatialMaterial
 	
-	# SurfaceTool used when constructing Surface
+	# SurfaceTool used to construct Mesh
 	var surface_tool : SurfaceTool
 	
 	
@@ -90,7 +90,7 @@ func add_face(
 	if top_left == Vector3.INF: top_left = bottom_right
 	
 	var color := Voxel.get_face_color(voxel, face)
-	var uv := Voxel.get_face_texture(voxel, face) if _uv_voxels else -Vector2.ONE
+	var uv := Voxel.get_face_uv(voxel, face) if _uv_voxels else -Vector2.ONE
 	
 	var metal : float = Voxel.get_metallic(voxel)
 	var specular : float = Voxel.get_specular(voxel)
