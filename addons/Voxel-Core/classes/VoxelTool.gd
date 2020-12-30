@@ -69,7 +69,7 @@ func commit() -> ArrayMesh:
 	return mesh
 
 
-# Adds a voxel face to Mesh with given position, dimensions and voxel data
+# Adds a voxel face to Mesh with given vertex positions and voxel data
 # voxel          :   Dictioanry<String, Variant>   :   voxel data to use
 # face           :   Vector3                       :   face of voxel to generate
 # bottom_right   :   Vector3                       :   grid position of bottom right vertex pertaining to face
@@ -208,3 +208,11 @@ func add_face(
 	surface.surface_tool.add_index(surface.index - 3)
 	surface.surface_tool.add_index(surface.index - 1)
 	surface.surface_tool.add_index(surface.index - 2)
+
+
+# Adds all the faces of a voxel to Mesh at given position and with voxel data
+# voxel   :   Dictioanry<String, Variant>   :   voxel data to use
+# grid    :   Vector3                       :   voxel grid position of voxel
+func add_faces(voxel : Dictionary, grid : Vector3) -> void:
+	for face in Voxel.Faces:
+		add_face(voxel, face, grid)
