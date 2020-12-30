@@ -4,107 +4,127 @@ extends Control
 
 
 
-## Imports
-const VoxelButton := preload("res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn")
-
-
-
-## Refrences
-onready var SearchRef := get_node("VBoxContainer/Search")
-
-onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
-
-onready var Hints := get_node("VBoxContainer/Hints")
-onready var HintRef := get_node("VBoxContainer/Hints/Hint")
-
-onready var ContextMenu := get_node("ContextMenu")
-
-
-
-## Declarations
+## Signals
 # Emitted when voxel has been selected
 signal selected_voxel(voxel_id)
 # Emitted when voxel has been unselected
 signal unselected_voxel(voxel_id)
 
 
-# UndoRedo used to commit operations
-var Undo_Redo : UndoRedo
 
-# Selected voxel ids
-var Selections := [] setget set_selections
-# Prevent external modifications of selections
-func set_selections(selections : Array) -> void: pass
+## Constants
+const VoxelButton := preload("res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn")
 
+
+
+## Exported Variables
 # Search being done
-export(String) var Search := "" setget set_search
-# Sets Search, and calls on update_view by default
-func set_search(search : String, update := true) -> void:
-	Search = search
-	
-	if SearchRef: SearchRef.text = search
-	if update: update_view()
+export var search := "" setget set_search
 
 # Flag indicating whether edits are allowed
-export(bool) var AllowEdit := false setget set_edit_mode
-# Sets AllowEdit
-func set_edit_mode(edit_mode : bool, update := true) -> void:
-	AllowEdit = edit_mode
+export var allow_edit := false setget set_edit_mode
 
 # Number of uv positions that can be selected at any one time
-export(int, -1, 256) var AllowedSelections := 0 setget set_allowed_selections
-# Sets AllowedSelections, and shrinks Selections to new maximum if needed
-func set_allowed_selections(allowed_selections : int) -> void:
-	AllowedSelections = clamp(allowed_selections, -1, 256)
-	unselect_shrink()
+export(int, -1, 256) var selection_max := 0 setget set_selection_max
 
 # Flag indicating whether Hints is visible
-export(bool) var ShowHints := false setget set_show_hints
-# Setter for ShowHints
-func set_show_hints(show := ShowHints) -> void:
-	ShowHints = show
-	
-	if is_instance_valid(Hints):
-		Hints.visible = ShowHints and (AllowEdit or AllowedSelections)
-		if ShowHints:
-			HintRef.text = ""
-			if AllowEdit:
-				HintRef.text += "right click : context menu"
-			if AllowedSelections != 0 or AllowedSelections != 1:
-				HintRef.text += ", ctrl + left click : multiple select / unselect"
-
+export var show_hints := false setget set_show_hints
 
 # VoxelSet being used
-export(Resource) var VoxelSetRef = null setget set_voxel_set
-# Setter for VoxelSetRef
-func set_voxel_set(voxel_set : Resource, update := true) -> void:
-	if not typeof(voxel_set) == TYPE_NIL and not voxel_set is VoxelSet:
-		printerr("VoxelSetViewer : Invalid Resource given expected VoxelSet")
+export(Resource) var voxel_set = null setget set_voxel_set
+
+
+
+## Public Variables
+# UndoRedo used to commit operations
+var undo_redo : UndoRedo
+
+
+
+## Private Variables
+# Selected voxel ids
+var _selections := []
+
+
+
+## OnReady Variables
+onready var Search := get_node("VBoxContainer/search")
+
+onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
+
+onready var Hints := get_node("VBoxContainer/Hints")
+onready var Hint := get_node("VBoxContainer/Hints/Hint")
+
+onready var ContextMenu := get_node("ContextMenu")
+
+
+
+## Built-In Virtual Methods
+func _ready():
+	set_show_hints(show_hints)
+	set_voxel_set(voxel_set)
+	
+	if not is_instance_valid(undo_redo):
+		undo_redo = UndoRedo.new()
+
+
+
+## Public Methods
+# Sets search, and calls on update_view by default
+func set_search(value : String, update := true) -> void:
+	search = value
+	
+	if is_instance_valid(Search):
+		Search.text = search
+	if update:
+		update_view()
+
+
+# Sets allow_edit
+func set_edit_mode(value : bool, update := true) -> void:
+	allow_edit = value
+
+
+# Sets selection_max, and shrinks _selections to new maximum if needed
+func set_selection_max(value : int) -> void:
+	selection_max = clamp(value, -1, 256)
+	unselect_shrink()
+
+
+# Setter for show_hints
+func set_show_hints(value := show_hints) -> void:
+	show_hints = value
+	
+	if is_instance_valid(Hints):
+		Hints.visible = show_hints and (allow_edit or selection_max)
+		if show_hints:
+			Hint.text = ""
+			if allow_edit:
+				Hint.text += "right click : context menu"
+			if selection_max == -1 or selection_max > 1:
+				Hint.text += ", ctrl + left click : multiple select / unselect"
+
+
+# Setter for voxel_set
+func set_voxel_set(value : Resource, update := true) -> void:
+	if not (typeof(value) == TYPE_NIL or value is VoxelSet):
+		printerr("Invalid Resource given expected VoxelSet")
 		return
 	
-	if is_instance_valid(VoxelSetRef):
-		if VoxelSetRef.is_connected("requested_refresh", self, "update_view"):
-			VoxelSetRef.disconnect("requested_refresh", self, "update_view") 
+	if is_instance_valid(voxel_set):
+		if voxel_set.is_connected("requested_refresh", self, "update_view"):
+			voxel_set.disconnect("requested_refresh", self, "update_view") 
 	
-	VoxelSetRef = voxel_set
-	if is_instance_valid(VoxelSetRef):
-		VoxelSetRef.connect("requested_refresh", self, "update_view", [true])
+	voxel_set = value
+	if is_instance_valid(voxel_set):
+		voxel_set.connect("requested_refresh", self, "update_view", [true])
 	elif is_instance_valid(Voxels):
 		for child in Voxels.get_children():
 			Voxels.remove_child(child)
 			child.queue_free()
 	
-	if update: update_view(true)
-
-
-
-# Core
-func _ready():
-	set_show_hints(ShowHints)
-	set_voxel_set(VoxelSetRef)
-	
-	if not is_instance_valid(Undo_Redo):
-		Undo_Redo = UndoRedo.new()
+	if update:
+		update_view(true)
 
 
 # Returns VoxelButton with given voxel_id if found, else returns null
@@ -114,70 +134,74 @@ func get_voxel_button(voxel_id : int):
 
 # Selects voxel with given voxel_id if found, and emits selected_voxel
 func select(voxel_id : int, emit := true) -> void:
-	if AllowedSelections == 0:
+	if selection_max == 0:
 		return
 	
 	var voxel_button = get_voxel_button(voxel_id)
 	if not is_instance_valid(voxel_button):
 		return
 	
-	unselect_shrink(AllowedSelections - 1, emit)
+	unselect_shrink(selection_max - 1, emit)
 	
 	voxel_button.pressed = true
-	Selections.append(voxel_id)
-	if emit: emit_signal("selected_voxel", voxel_id)
+	_selections.append(voxel_id)
+	if emit:
+		emit_signal("selected_voxel", voxel_id)
+
 
 # Unselects voxel with given voxel_id if found, and emits unselected_voxel
 func unselect(voxel_id : int, emit := true) -> void:
-	var index := Selections.find(voxel_id)
+	var index := _selections.find(voxel_id)
 	if index == -1:
 		return
 	
-	Selections.remove(index)
+	_selections.remove(index)
 	var voxel_button = get_voxel_button(voxel_id)
 	if is_instance_valid(voxel_button):
 		voxel_button.pressed = false
 	if emit:
 		emit_signal("unselected_voxel", voxel_id)
 
+
 # Unselects all selected voxel ids
 func unselect_all(emit := true) -> void:
-	while not Selections.empty():
-		unselect(Selections[-1], emit)
+	while not _selections.empty():
+		unselect(_selections[-1], emit)
+
 
 # Unselects all voxels ids until given size is met
-func unselect_shrink(size := AllowedSelections, emit := true) -> void:
+func unselect_shrink(size := selection_max, emit := true) -> void:
 	if size >= 0:
-		while Selections.size() > size:
-			unselect(Selections[-1], emit)
+		while _selections.size() > size:
+			unselect(_selections[-1], emit)
 
 
 # Updates the listing of voxels
 # redraw   :   bool   :   if true will repopulate listing with new Voxel Buttons
 func update_view(redraw := false) -> void:
-	if is_instance_valid(Voxels) and is_instance_valid(VoxelSetRef):
+	if is_instance_valid(Voxels) and is_instance_valid(voxel_set):
 		if redraw:
 			for child in Voxels.get_children():
 				Voxels.remove_child(child)
 				child.queue_free()
 			
-			for id in VoxelSetRef.get_ids():
+			for id in voxel_set.get_ids():
 				var voxel_button := VoxelButton.instance()
 				voxel_button.name = str(id)
 				voxel_button.set_voxel_id(id, false)
-				voxel_button.set_voxel_set(VoxelSetRef, false)
+				voxel_button.set_voxel_set(voxel_set, false)
 				voxel_button.update_view()
 				voxel_button.toggle_mode = true
-				voxel_button.pressed = Selections.has(id)
+				voxel_button.pressed = _selections.has(id)
 				voxel_button.mouse_filter = Control.MOUSE_FILTER_PASS
 				voxel_button.connect("pressed", self, "_on_VoxelButton_pressed", [voxel_button])
 				Voxels.add_child(voxel_button)
 		
-		var keys := Search.split(",", false)
-		for id in VoxelSetRef.get_ids():
+		var keys := search.split(",", false)
+		for id in voxel_set.get_ids():
 			var show = true
 			for key in keys:
-				if (key.is_valid_integer() and id == key.to_int()) or VoxelSetRef.id_to_name(id).find(key) > -1:
+				if (key.is_valid_integer() and id == key.to_int()) or voxel_set.id_to_name(id).find(key) > -1:
 					show = true
 					break
 				show = false
@@ -187,131 +211,124 @@ func update_view(redraw := false) -> void:
 			get_voxel_button(id).visible = show
 		call_deferred("correct")
 
+
 # Corrects the columns of listing to fit as many voxels horizonataly
 func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
 
+
 func _on_Voxels_gui_input(event):
-	if AllowEdit and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
+	if allow_edit and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
 		ContextMenu.clear()
-		if Selections.size() > 1:
+		if _selections.size() > 1:
 			ContextMenu.add_icon_item(
-				preload("res://addons/Voxel-Core/assets/controls/cancel.png"),
-				"Deselect voxels", 3
-			)
+					preload("res://addons/Voxel-Core/assets/controls/cancel.png"),
+					"Deselect voxels", 3)
 			ContextMenu.add_separator()
 		ContextMenu.add_icon_item(
-			preload("res://addons/Voxel-Core/assets/controls/add.png"),
-			"Add voxel", 0
-		)
-		if Selections.size() == 1:
+					preload("res://addons/Voxel-Core/assets/controls/add.png"),
+					"Add voxel", 0)
+		if _selections.size() == 1:
 			ContextMenu.add_icon_item(
-				preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
-				"Duplicate voxel", 1
-			)
+					preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
+					"Duplicate voxel", 1)
 			ContextMenu.add_icon_item(
-				preload("res://addons/Voxel-Core/assets/controls/sub.png"),
-				"Remove voxel", 2
-			)
-		elif Selections.size() > 1:
+					preload("res://addons/Voxel-Core/assets/controls/sub.png"),
+					"Remove voxel", 2)
+		elif _selections.size() > 1:
 			ContextMenu.add_separator()
 			ContextMenu.add_icon_item(
-				preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
-				"Duplicate voxels", 4
-			)
+					preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
+					"Duplicate voxels", 4)
 			ContextMenu.add_icon_item(
-				preload("res://addons/Voxel-Core/assets/controls/sub.png"),
-				"Remove voxels", 5
-			)
+					preload("res://addons/Voxel-Core/assets/controls/sub.png"),
+					"Remove voxels", 5)
 		ContextMenu.set_as_minsize()
 		
-		ContextMenu.popup(Rect2(
-			event.global_position,
-			ContextMenu.rect_size
-		))
+		ContextMenu.popup(Rect2(event.global_position, ContextMenu.rect_size))
+
 
 func _on_VoxelButton_pressed(voxel_button) -> void:
-	if AllowedSelections != 0:
+	if selection_max != 0:
 		if voxel_button.pressed:
 			if not Input.is_key_pressed(KEY_CONTROL):
 				unselect_all()
 			select(voxel_button.VoxelID)
 		else:
-			if Selections.has(voxel_button.VoxelID):
+			if _selections.has(voxel_button.VoxelID):
 				unselect_all()
 				select(voxel_button.VoxelID)
 			else:
 				unselect(voxel_button.VoxelID)
 	else: voxel_button.pressed = false
 
+
 func _on_ContextMenu_id_pressed(_id : int):
 	match _id:
 		0:
-			var id = VoxelSetRef.get_next_id()
-			Undo_Redo.create_action("VoxelSetViewer : Add voxel")
-			Undo_Redo.add_do_method(VoxelSetRef, "set_voxel", Voxel.colored(Color.white))
-			Undo_Redo.add_undo_method(VoxelSetRef, "erase_voxel", id)
-			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.commit_action()
+			var id = voxel_set.get_next_id()
+			undo_redo.create_action("VoxelSetViewer : Add voxel")
+			undo_redo.add_do_method(voxel_set, "set_voxel", Voxel.colored(Color.white))
+			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
+			undo_redo.add_do_method(voxel_set, "request_refresh")
+			undo_redo.add_undo_method(voxel_set, "request_refresh")
+			undo_redo.commit_action()
 			unselect_all()
 			select(id)
 		1:
-			var id = VoxelSetRef.get_next_id()
-			Undo_Redo.create_action("VoxelSetViewer : Duplicate voxel")
-			Undo_Redo.add_do_method(VoxelSetRef, "set_voxel", VoxelSetRef.get_voxel(Selections[0]).duplicate(true))
-			Undo_Redo.add_undo_method(VoxelSetRef, "erase_voxel", id)
-			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.commit_action()
+			var id = voxel_set.get_next_id()
+			undo_redo.create_action("VoxelSetViewer : Duplicate voxel")
+			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_set.get_voxel(_selections[0]).duplicate(true))
+			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
+			undo_redo.add_do_method(voxel_set, "request_refresh")
+			undo_redo.add_undo_method(voxel_set, "request_refresh")
+			undo_redo.commit_action()
 			unselect_all()
 			select(id)
 		2:
-			Undo_Redo.create_action("VoxelSetViewer : Remove voxel")
-			Undo_Redo.add_do_method(VoxelSetRef, "erase_voxel", Selections[0])
-			Undo_Redo.add_undo_method(
-				VoxelSetRef,
-				"set_voxel",
-				VoxelSetRef.get_voxel(Selections[0]),
-				Selections[0],
-				VoxelSetRef.id_to_name(Selections[0])
-			)
-			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.commit_action()
-			unselect(Selections[0])
+			undo_redo.create_action("VoxelSetViewer : Remove voxel")
+			undo_redo.add_do_method(voxel_set, "erase_voxel", _selections[0])
+			undo_redo.add_undo_method(
+					voxel_set,
+					"set_voxel",
+					voxel_set.get_voxel(_selections[0]),
+					_selections[0],
+					voxel_set.id_to_name(_selections[0]))
+			undo_redo.add_do_method(voxel_set, "request_refresh")
+			undo_redo.add_undo_method(voxel_set, "request_refresh")
+			undo_redo.commit_action()
+			unselect(_selections[0])
 		3: unselect_all()
 		4:
-			Undo_Redo.create_action("VoxelSetViewer : Duplicate voxels")
-			var id = VoxelSetRef.get_next_id()
+			undo_redo.create_action("VoxelSetViewer : Duplicate voxels")
+			var id = voxel_set.get_next_id()
 			var ids = []
-			for selection in range(Selections.size()):
+			for selection in range(_selections.size()):
 				ids.append(id + selection)
-				Undo_Redo.add_do_method(VoxelSetRef, "set_voxel", VoxelSetRef.get_voxel(Selections[selection]).duplicate(true), "", ids.back())
-				Undo_Redo.add_undo_method(VoxelSetRef, "erase_voxel", ids.back())
-			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.commit_action()
+				undo_redo.add_do_method(voxel_set, "set_voxel", voxel_set.get_voxel(_selections[selection]).duplicate(true), "", ids.back())
+				undo_redo.add_undo_method(voxel_set, "erase_voxel", ids.back())
+			undo_redo.add_do_method(voxel_set, "request_refresh")
+			undo_redo.add_undo_method(voxel_set, "request_refresh")
+			undo_redo.commit_action()
 			unselect_all()
 			for _id in ids:
 				select(_id)
 		5: 
-			Undo_Redo.create_action("VoxelSetViewer : Remove voxels")
-			for selection in Selections:
-				Undo_Redo.add_do_method(VoxelSetRef, "erase_voxel", selection)
-				Undo_Redo.add_undo_method(
-					VoxelSetRef,
-					"set_voxel",
-					VoxelSetRef.get_voxel(selection),
-					VoxelSetRef.id_to_name(selection),
-					selection
-				)
-			Undo_Redo.add_do_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.add_undo_method(VoxelSetRef, "request_refresh")
-			Undo_Redo.commit_action()
+			undo_redo.create_action("VoxelSetViewer : Remove voxels")
+			for selection in _selections:
+				undo_redo.add_do_method(voxel_set, "erase_voxel", selection)
+				undo_redo.add_undo_method(
+						voxel_set,
+						"set_voxel",
+						voxel_set.get_voxel(selection),
+						voxel_set.id_to_name(selection),
+						selection)
+			undo_redo.add_do_method(voxel_set, "request_refresh")
+			undo_redo.add_undo_method(voxel_set, "request_refresh")
+			undo_redo.commit_action()
 			unselect_all()
 
 
 func _on_Search_text_changed(new_text):
-	Search = new_text
+	search = new_text
 	update_view()

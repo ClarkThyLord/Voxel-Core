@@ -81,7 +81,6 @@ func setup(voxel_set : VoxelSet, voxel_set_id : int, voxel_face := Vector3.ZERO)
 # Sets up the voxel to visualize the face of the voxel id given
 func update_view(voxel_id := voxel_id, face := voxel_face) -> void:
 	if typeof(voxel_set) == TYPE_NIL:
-		printerr("VoxelSet is not set")
 		return
 	
 	var voxel : Dictionary = voxel_set.get_voxel(voxel_id)
@@ -99,7 +98,8 @@ func update_view(voxel_id := voxel_id, face := voxel_face) -> void:
 			set_voxel_texture(null)
 		else:
 			var img_texture := ImageTexture.new()
-			img_texture.create_from_image(voxel_set.Tiles.get_data().get_rect(Rect2(
-					Vector2.ONE * uv * voxel_set.TileSize,
-					Vector2.ONE * voxel_set.TileSize)))
+			img_texture.create_from_image(
+					voxel_set.Tiles.get_data().get_rect(Rect2(
+							Vector2.ONE * uv * voxel_set.TileSize,
+							Vector2.ONE * voxel_set.TileSize)))
 			set_voxel_texture(img_texture)

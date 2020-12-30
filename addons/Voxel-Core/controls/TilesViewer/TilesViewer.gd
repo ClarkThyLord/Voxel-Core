@@ -12,15 +12,6 @@ signal unselected_uv(uv)
 
 
 
-## Private Variables
-# Stores last uv position hovered
-var _last_uv_hovered := -Vector2.ONE
-
-# Selected uv positions
-var _selections := []
-
-
-
 ## Exported Variables
 # Maximum number of uv positions that can be selected at any one time
 export(int, -1, 256) var selection_max := 0 setget set_selection_max
@@ -36,6 +27,15 @@ export var invalid_color := Color.red setget set_invalid_color
 
 # VoxelSet being used
 export(Resource) var voxel_set = null setget set_voxel_set
+
+
+
+## Private Variables
+# Stores last uv position hovered
+var _last_uv_hovered := -Vector2.ONE
+
+# Selected uv positions
+var _selections := []
 
 
 
@@ -56,7 +56,8 @@ func _draw():
 	if is_instance_valid(voxel_set) and voxel_set.is_uv_ready():
 		if selection_max != 0:
 			for selection in _selections:
-				draw_rect(Rect2(selection * voxel_set.tile_size,
+				draw_rect(Rect2(
+								selection * voxel_set.tile_size,
 								voxel_set.tile_size),
 						selected_color, false, 3)
 		
@@ -64,7 +65,8 @@ func _draw():
 			hint_tooltip = ""
 		else:
 			hint_tooltip = str(_last_uv_hovered)
-			draw_rect(Rect2(_last_uv_hovered * voxel_set.tile_size,
+			draw_rect(Rect2(
+							_last_uv_hovered * voxel_set.tile_size,
 							voxel_set.tile_size),
 					hovered_color if is_valid_uv(_last_uv_hovered) else invalid_color
 					, false, 3)
