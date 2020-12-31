@@ -1,28 +1,50 @@
 tool
 extends MeshInstance
+# Mesh used to highlight voxel grid selections
 
 
 
-# Declarations
-var vt := VoxelTool.new()
+## Exported Variables
+# Highlight color
+export var color := Color(1, 1, 1, 0.75) setget set_color
+func set_color(color : Color) -> void:
+	color = color
+	color.a = 0.75
+	if is_instance_valid(material_override):
+		material_override.albedo_color = color
 
 
-var Selections := [] setget set_selections
-func set_selections(selections : Array, update := true) -> void:
-	Selections = selections
+
+## Public Variables
+# Grid positions and areas to highlight
+# A Vector3 highlights a single grid position
+# [Vector3, Vector3] highlights the area between two grid positions
+# Many type of selections can be mixed and selected at a time
+var selections := [] setget set_selections
+func set_selections(value : Array, update := true) -> void:
+	selections = value
 	
-	if update: self.update()
-
-
-export(Color) var Modulate := Color(1, 1, 1, 0.5) setget set_modulate
-func set_modulate(modulate : Color) -> void:
-	Modulate = modulate
-	Modulate.a = 0.75
-	material_override.albedo_color = Modulate
+	if update:
+		self.update()
 
 
 
-# Core
+## Private Variables
+# VoxelTool used to construct mesh
+var _voxel_tool := VoxelTool.new()
+
+
+
+## Built-In Virtual Methods
+func _init():
+	setup()
+func _ready() -> void:
+	setup()
+
+
+
+## Public Methods
+# Setup the material if not already done
 func setup() -> void:
 	if not is_instance_valid(material_override):
 		material_override = SpatialMaterial.new()
@@ -30,67 +52,58 @@ func setup() -> void:
 	material_override.flags_unshaded = true
 	material_override.params_grow = true
 	material_override.params_grow_amount = 0.001
-	material_override.albedo_color = Modulate
+	material_override.albedo_color = color
 	update()
 
 
-func _init(): setup()
-func _ready() -> void: setup()
-
-
+# Update highlighted position(s) / area(s)
 func update() -> void:
-	if not Selections.empty():
-		vt.begin()
-		var voxel := Voxel.colored(Modulate)
-		for selection in Selections:
+	if not selections.empty():
+		_voxel_tool.begin()
+		var voxel := Voxel.colored(color)
+		for selection in selections:
 			match typeof(selection):
 				TYPE_VECTOR3:
 					for direction in Voxel.Directions:
-						if not Selections.has(selection + direction):
-							vt.add_face(voxel, direction, selection)
+						if not selections.has(selection + direction):
+							_voxel_tool.add_face(voxel, direction, selection)
 				TYPE_ARRAY:
 					var origin := Vector3(
-						selection[0 if selection[0].x < selection[1].x else 1].x,
-						selection[0 if selection[0].y < selection[1].y else 1].y,
-						selection[0 if selection[0].z < selection[1].z else 1].z
-					)
+							selection[0 if selection[0].x < selection[1].x else 1].x,
+							selection[0 if selection[0].y < selection[1].y else 1].y,
+							selection[0 if selection[0].z < selection[1].z else 1].z)
 					var dimensions : Vector3 = (selection[0] - selection[1]).abs()
 					
-					vt.add_face(voxel, Vector3.RIGHT,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z)
-					)
-					vt.add_face(voxel, Vector3.LEFT,
-						Vector3(origin.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y, origin.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z)
-					)
-					vt.add_face(voxel, Vector3.UP,
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z)
-					)
-					vt.add_face(voxel, Vector3.DOWN,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z),
-						Vector3(origin.x, origin.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y, origin.z + dimensions.z)
-					)
-					vt.add_face(voxel, Vector3.BACK,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y, origin.z + dimensions.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z)
-					)
-					vt.add_face(voxel, Vector3.FORWARD,
-						Vector3(origin.x + dimensions.x, origin.y, origin.z),
-						Vector3(origin.x, origin.y, origin.z),
-						Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
-						Vector3(origin.x, origin.y + dimensions.y, origin.z)
-					)
-		mesh = vt.commit()
-	else: mesh = null
+					_voxel_tool.add_face(voxel, Vector3.RIGHT,
+							Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+							Vector3(origin.x + dimensions.x, origin.y, origin.z),
+							Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+							Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z))
+					_voxel_tool.add_face(voxel, Vector3.LEFT,
+							Vector3(origin.x, origin.y, origin.z + dimensions.z),
+							Vector3(origin.x, origin.y, origin.z),
+							Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z),
+							Vector3(origin.x, origin.y + dimensions.y, origin.z))
+					_voxel_tool.add_face(voxel, Vector3.UP,
+							Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
+							Vector3(origin.x, origin.y + dimensions.y, origin.z),
+							Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+							Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z))
+					_voxel_tool.add_face(voxel, Vector3.DOWN,
+							Vector3(origin.x + dimensions.x, origin.y, origin.z),
+							Vector3(origin.x, origin.y, origin.z),
+							Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+							Vector3(origin.x, origin.y, origin.z + dimensions.z))
+					_voxel_tool.add_face(voxel, Vector3.BACK,
+							Vector3(origin.x + dimensions.x, origin.y, origin.z + dimensions.z),
+							Vector3(origin.x, origin.y, origin.z + dimensions.z),
+							Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z),
+							Vector3(origin.x, origin.y + dimensions.y, origin.z + dimensions.z))
+					_voxel_tool.add_face(voxel, Vector3.FORWARD,
+							Vector3(origin.x + dimensions.x, origin.y, origin.z),
+							Vector3(origin.x, origin.y, origin.z),
+							Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z),
+							Vector3(origin.x, origin.y + dimensions.y, origin.z))
+		mesh = _voxel_tool.commit()
+	else:
+		mesh = null
