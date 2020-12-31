@@ -3,11 +3,13 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelec
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "individual"
 
 
+
+## Public Methods
 func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	editor.set_cursors_visibility(true)
 	

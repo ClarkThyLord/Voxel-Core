@@ -3,35 +3,37 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelec
 
 
 
-# Declarations
-var selection := []
+## Private Variables
+var _selection := []
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "area"
 
 
+
+## Public Methods
 func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	editor.set_cursors_visibility(true)
 	
 	if event is InputEventMouseButton and not editor.last_hit.empty():
 		if event.pressed:
-			selection.clear()
-			selection.append(editor.get_selection())
-			selection.append(editor.get_selection())
+			_selection.clear()
+			_selection.append(editor.get_selection())
+			_selection.append(editor.get_selection())
 		else:
-			if not selection.empty():
+			if not _selection.empty():
 				editor.Tools[editor.Tool.get_selected_id()].work(editor)
-				selection.clear()
+				_selection.clear()
 	elif event is InputEventMouseMotion:
 		if not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):
 			if not editor.last_hit.empty():
-				if selection.empty():
+				if _selection.empty():
 					editor.set_cursors_selections([editor.get_selection()])
 				else:
-					selection[1] = editor.get_selection()
-					editor.set_cursors_selections([selection])
+					_selection[1] = editor.get_selection()
+					editor.set_cursors_selections([_selection])
 	
 	return true
