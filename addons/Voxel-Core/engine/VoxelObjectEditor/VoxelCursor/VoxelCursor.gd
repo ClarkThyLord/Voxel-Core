@@ -7,11 +7,6 @@ extends MeshInstance
 ## Exported Variables
 # Highlight color
 export var color := Color(1, 1, 1, 0.75) setget set_color
-func set_color(color : Color) -> void:
-	color = color
-	color.a = 0.75
-	if is_instance_valid(material_override):
-		material_override.albedo_color = color
 
 
 
@@ -21,11 +16,6 @@ func set_color(color : Color) -> void:
 # [Vector3, Vector3] highlights the area between two grid positions
 # Many type of selections can be mixed and selected at a time
 var selections := [] setget set_selections
-func set_selections(value : Array, update := true) -> void:
-	selections = value
-	
-	if update:
-		self.update()
 
 
 
@@ -44,6 +34,20 @@ func _ready() -> void:
 
 
 ## Public Methods
+func set_color(value : Color) -> void:
+	color = value
+	color.a = 0.75
+	if is_instance_valid(material_override):
+		material_override.albedo_color = color
+
+
+func set_selections(value : Array, update := true) -> void:
+	selections = value
+	
+	if update:
+		self.update()
+
+
 # Setup the material if not already done
 func setup() -> void:
 	if not is_instance_valid(material_override):

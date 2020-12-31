@@ -1,89 +1,107 @@
 tool
 extends MeshInstance
+# Grid Mesh used by VoxelObjectEditor
 
 
 
-# Declarations
-var st := SurfaceTool.new()
+## Enums
+enum GridModes { SOLID, WIRED }
 
 
-export(bool) var Disabled := false setget set_disabled
-func set_disabled(disabled : bool) -> void:
-	Disabled = disabled
+
+## Exported Variables
+export var disabled := false setget set_disabled
+
+export(Color, RGB) var color := Color.white setget set_modulate
+
+export(GridModes) var grid_mode := GridModes.WIRED setget set_grid_mode
+
+export var grid_size := Vector3(16, 16, 16) setget set_grid_size
+
+
+
+## Private Variables
+var _surface_tool := SurfaceTool.new()
+
+
+
+## Built-In Virtual Methods
+func _init():
+	setup()
+func _ready() -> void:
+	setup()
+
+
+
+## Public Methods
+func set_disabled(value : bool) -> void:
+	disabled = value
 	visible = not disabled
 	find_node("CollisionShape", true, false).disabled = disabled
 
 
-export(Color) var Modulate := Color.white setget set_modulate
-func set_modulate(modulate : Color) -> void:
-	Modulate = modulate
+func set_modulate(value : Color) -> void:
+	color = value
 	
-	material_override.albedo_color = Modulate
+	material_override.albedo_color = color
 
-enum GridModes { SOLID, WIRED }
-export(GridModes) var GridMode := GridModes.WIRED setget set_grid_mode
-func set_grid_mode(grid_mode : int, update := true) -> void:
-	GridMode = grid_mode
+
+func set_grid_mode(value : int, update := true) -> void:
+	grid_mode = value
 	
-	if update: self.update()
+	if update:
+		self.update()
 
-export(Vector3) var GridDimensions := Vector3(16, 16, 16) setget set_grid_dimensions
-func set_grid_dimensions(grid_dimensions : Vector3, update := true) -> void:
-	GridDimensions = Vector3(
-		clamp(grid_dimensions.x, 1, 100),
-		clamp(grid_dimensions.y, 1, 100),
-		clamp(grid_dimensions.z, 1, 100)
-	)
+
+func set_grid_size(value : Vector3, update := true) -> void:
+	grid_size = Vector3(
+			clamp(value.x, 1, 100),
+			clamp(value.y, 1, 100),
+			clamp(value.z, 1, 100))
 	
-	if update: self.update()
+	if update:
+		self.update()
 
 
-
-# Core
 func setup() -> void:
 	if not is_instance_valid(material_override):
 		material_override = SpatialMaterial.new()
-	material_override.albedo_color = Modulate
+	material_override.albedo_color = color
 	material_override.set_cull_mode(2)
 	update()
 
 
-func _init(): setup()
-func _ready() -> void: setup()
-
-
 func update() -> void:
-	match GridMode:
+	match grid_mode:
 		GridModes.SOLID:
 			mesh = PlaneMesh.new()
 			scale = Vector3(
-				GridDimensions.x * Voxel.VoxelSize,
-				1,
-				GridDimensions.z * Voxel.VoxelSize
-			)
+					grid_size.x * Voxel.VoxelSize,
+					1,
+					grid_size.z * Voxel.VoxelSize)
 		GridModes.WIRED:
 			scale = Vector3.ONE
-			st.begin(Mesh.PRIMITIVE_LINES)
+			_surface_tool.begin(Mesh.PRIMITIVE_LINES)
 			
-			var x : int = -GridDimensions.x
-			while x <= GridDimensions.x:
-				st.add_normal(Vector3.UP)
-				st.add_vertex(Voxel.grid_to_snapped(Vector3(x, 0, -abs(GridDimensions.z))))
-				st.add_vertex(Voxel.grid_to_snapped(Vector3(x, 0, abs(GridDimensions.z))))
+			var x : int = -grid_size.x
+			while x <= grid_size.x:
+				_surface_tool.add_normal(Vector3.UP)
+				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(x, 0, -abs(grid_size.z))))
+				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(x, 0, abs(grid_size.z))))
 				
 				x += 1
 			
-			var z : int = -GridDimensions.z
-			while z <= GridDimensions.z:
-				st.add_normal(Vector3.UP)
-				st.add_vertex(Voxel.grid_to_snapped(Vector3(-abs(GridDimensions.x), 0, z)))
-				st.add_vertex(Voxel.grid_to_snapped(Vector3(abs(GridDimensions.x), 0, z)))
+			var z : int = -grid_size.z
+			while z <= grid_size.z:
+				_surface_tool.add_normal(Vector3.UP)
+				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(-abs(grid_size.x), 0, z)))
+				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(abs(grid_size.x), 0, z)))
 				
 				z += 1
 			
-			mesh = st.commit()
+			mesh = _surface_tool.commit()
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
 	create_convex_collision()
-	set_disabled(Disabled)
+	set_disabled(disabled)
