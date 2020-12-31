@@ -3,61 +3,224 @@ extends Control
 
 
 
-# Imports
+## Signals
+# Emited when editing state changed
+signal editing(state)
+
+# Emited when editor needs to be closed
+signal close
+
+
+
+## Enums
+# The possible palettes
+enum Palettes { PRIMARY, SECONDARY }
+
+
+
+## Constants
 const VoxelGrid := preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelGrid/VoxelGrid.gd")
+
 const VoxelCursor := preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelCursor/VoxelCursor.gd")
 
 const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 
+# Default editor config
+const ConfigDefault := {
+	"cursor.visible": true,
+	"cursor.dynamic": true,
+	"cursor.color": Color.white,
+	"grid.visible": true,
+	"grid.mode": VoxelGrid.GridModes.WIRED,
+	"grid.color": Color.white,
+	"grid.constant": true
+}
 
 
-# Refrences
+
+## Public Variables
+# UndoRedo used to commit operations
+var undo_redo : UndoRedo
+
+# Last registered raycast hit
+var last_hit := {}
+
+# Editor's current config
+var config := {}
+
+# Reference to VoxelObject being edited
+var voxel_object : VoxelObject setget start_editing
+
+
+
+## Private Variables
+# Refrence to editor's grid
+var _grid := VoxelGrid.new()
+
+# Colletions of loaded editor selection modes
+var _selection_modes := [
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Individual.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Area.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Extrude.gd").new(),
+]
+
+# Refrence to editor's voxel cursors
+var _cursors := {
+	Vector3(0, 0, 0): VoxelCursor.new(),
+	Vector3(1, 0, 0): VoxelCursor.new(),
+	Vector3(1, 1, 0): VoxelCursor.new(),
+	Vector3(1, 1, 1): VoxelCursor.new(),
+	Vector3(0, 1, 1): VoxelCursor.new(),
+	Vector3(0, 1, 0): VoxelCursor.new(),
+	Vector3(0, 0, 1): VoxelCursor.new(),
+	Vector3(1, 0, 1): VoxelCursor.new(),
+}
+
+# Collection of loaded editor tools
+var _tools := [
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Add.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Sub.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Swap.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Fill.gd").new(),
+	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Pick.gd").new(),
+]
+
+# Voxel id of each palette
+var _palette := [ -1, -1 ]
+
+# Path to file going to imported
+var import_file_path := ""
+
+
+
+## OnReady Variables
 onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing")
 
 onready var Options := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options")
 
 onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool")
-func update_tools(tools := Tools) -> void:
+
+onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette")
+
+onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode")
+
+onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorX")
+
+onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorY")
+
+onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ")
+
+onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser")
+
+onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser/ColorPicked")
+
+onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VoxelSetViewer")
+
+onready var Notice := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice")
+
+onready var MoveX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/X")
+
+onready var MoveY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Y")
+
+onready var MoveZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Z")
+
+onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/X")
+
+onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
+
+onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
+
+onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow")
+
+onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
+
+onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible")
+
+onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
+
+onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
+
+onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/_grid/ScrollContainer/VBoxContainer/GridVisible")
+
+onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/_grid/ScrollContainer/VBoxContainer/GridConstant")
+
+onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/_grid/ScrollContainer/VBoxContainer/GridMode")
+
+onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/_grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
+
+onready var ColorMenu := get_node("ColorMenu")
+
+onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
+
+onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
+
+
+
+## Built-In Virtual Methods
+func _ready():
+	if not is_instance_valid(undo_redo):
+		undo_redo = UndoRedo.new()
+	
+	update_tools()
+	update_palette()
+	update_selections()
+	update_mirrors()
+	update_settings()
+	update_grid_mode()
+	
+	load_config()
+
+
+func _exit_tree():
+	if is_instance_valid(_grid):
+		_grid.queue_free()
+	for cursor in _cursors:
+		if is_instance_valid(_cursors[cursor]):
+			_cursors[cursor].queue_free()
+
+
+
+## Public Methods
+# Updates the drop down ui menu in editor with all loaded tools
+func update_tools(tools := _tools) -> void:
 	Tool.clear()
 	for tool_index in range(tools.size()):
 		Tool.add_icon_item(
 			load("res://addons/Voxel-Core/assets/controls/" + tools[tool_index].name.to_lower() + ".png"),
 			tools[tool_index].name.capitalize(),
-			tool_index
-		)
+			tool_index)
 
-onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette")
+
+# Updates the drop down ui menu in editor with palettes
 func update_palette(palettes := Palettes.keys()) -> void:
 	Palette.clear()
 	for palette in palettes:
 		Palette.add_icon_item(
 			load("res://addons/Voxel-Core/assets/controls/" + palette.to_lower() + ".png"),
 			palette.capitalize(),
-			Palettes[palette.to_upper()]
-		)
+			Palettes[palette.to_upper()])
 
-onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode")
+# Updates the drop down ui menu in editor with all loaded selection modes
 func update_selections(selection_modes := [
-		"individual",
-		"area",
-		"extrude"
-	]) -> void:
+			"individual",
+			"area",
+			"extrude"
+		]) -> void:
 	var prev = SelectionMode.get_selected_id()
 	SelectionMode.clear()
-	for select_mode in range(SelectionModes.size()):
-		if selection_modes.find(SelectionModes[select_mode].name.to_lower()) > -1:
+	for select_mode in range(_selection_modes.size()):
+		if selection_modes.find(_selection_modes[select_mode].name.to_lower()) > -1:
 			SelectionMode.add_icon_item(
-				load("res://addons/Voxel-Core/assets/controls/" + SelectionModes[select_mode].name.to_lower() + ".png"),
-				SelectionModes[select_mode].name.capitalize(),
+				load("res://addons/Voxel-Core/assets/controls/" + _selection_modes[select_mode].name.to_lower() + ".png"),
+				_selection_modes[select_mode].name.capitalize(),
 				select_mode
 			)
 	if SelectionMode.get_item_index(prev) > -1:
 		SelectionMode.select(SelectionMode.get_item_index(prev))
 	else: _on_SelectionMode_selected(SelectionMode.get_selected_id())
 
-onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorX")
-onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorY")
-onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ")
+
+# Disables and enables possible selection mirror(s) possible with current tool
 func update_mirrors(mirror := Vector3.ONE) -> void:
 	MirrorX.visible = mirror.x == 1
 	MirrorX.pressed = MirrorX.pressed if mirror.x == 1 else false
@@ -67,42 +230,27 @@ func update_mirrors(mirror := Vector3.ONE) -> void:
 	MirrorZ.pressed = MirrorZ.pressed if mirror.z == 1 else false
 	set_cursors_visibility()
 
-onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser")
-onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser/ColorPicked")
 
-onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VoxelSetViewer")
-
-onready var Notice := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice")
-
-
-onready var MoveX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/X")
-onready var MoveY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Y")
-onready var MoveZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Z")
-
-onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/X")
-onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
-onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
-
-onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow")
-
-
-onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
+# Updates the setting tabs
 func update_settings() -> void:
 	for tab in range(Settings.get_tab_count()):
 		var name : String = Settings.get_tab_title(tab)
 		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
 
-onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible")
+
+# Sets the cursor visibility
 func set_cursor_visible(visible : bool) -> void:
-	Config["cursor.visible"] = visible
+	config["cursor.visible"] = visible
 	CursorVisible.pressed = visible
 	if not visible:
 		set_cursors_visibility(visible)
 	save_config()
 
-onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
+
+# Sets the cursor's dynamic option
+# Enabling would change cursor color based on selected palette
 func set_cursor_dynamic(dynamic : bool) -> void:
-	Config["cursor.dynamic"] = dynamic
+	config["cursor.dynamic"] = dynamic
 	CursorDynamic.pressed = dynamic
 	CursorColor.disabled = dynamic
 	if dynamic:
@@ -110,32 +258,37 @@ func set_cursor_dynamic(dynamic : bool) -> void:
 		color.a = 0.5
 		set_cursor_color(color)
 	else:
-		set_cursor_color(Config["cursor.color"])
+		set_cursor_color(config["cursor.color"])
 	save_config()
 
-onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
+
+# Sets the cursor color
 func set_cursor_color(color : Color) -> void:
-	Config["cursor.color"] = color
+	config["cursor.color"] = color
 	CursorColor.color = color
-	for cursor in Cursors.values():
+	for cursor in _cursors.values():
 		cursor.Modulate = color
 	save_config()
 
-onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
+
+# Sets the grid visibility
 func set_grid_visible(visible : bool) -> void:
-	Config["grid.visible"] = visible
+	config["grid.visible"] = visible
 	GridVisible.pressed = visible
-	Grid.Disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())))
+	_grid.Disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))
 	save_config()
 
-onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
+
+# Sets the grid constant option
+# Disabling would mean grid would not be visible once voxels are present
 func set_grid_constant(constant : bool) -> void:
-	Config["grid.constant"] = constant
+	config["grid.constant"] = constant
 	GridConstant.pressed = constant
-	Grid.Disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())))
+	_grid.Disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))
 	save_config()
 
-onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
+
+# Updates the grid ui options
 func update_grid_mode() -> void:
 	GridMode.clear()
 	for mode_index in range(VoxelGrid.GridModes.size()):
@@ -145,36 +298,24 @@ func update_grid_mode() -> void:
 			mode_index
 		)
 
+
+# Sets the grid mode
 func set_grid_mode(mode : int) -> void:
-	Config["grid.mode"] = mode
+	config["grid.mode"] = mode
 	GridMode.selected = mode
-	Grid.GridMode = mode
+	_grid.GridMode = mode
 	save_config()
 
-onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
+
+# Sets the grid color
 func set_grid_color(color : Color) -> void:
-	Config["grid.color"] = color
+	config["grid.color"] = color
 	GridColor.color = color
-	Grid.Modulate = color
+	_grid.Modulate = color
 	save_config()
 
 
-onready var ColorMenu := get_node("ColorMenu")
-onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
-onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
-
-
-
-# Declarations
-signal editing(state)
-signal close
-
-
-var Undo_Redo : UndoRedo
-
-var VoxelObjectRef : VoxelObject setget start_editing
-
-
+# Gets the user selected mirror(s)
 func get_mirrors() -> Array:
 	var mirrors := []
 	
@@ -196,80 +337,54 @@ func get_mirrors() -> Array:
 	return mirrors
 
 
-var Grid := VoxelGrid.new() setget set_grid
-func set_grid(grid : VoxelGrid) -> void: pass
-
-
-var SelectionModes := [
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Individual.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Area.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorSelection/VoxelObjectEditorSelections/Extrude.gd").new()
-]
-
-var last_hit := {}
-
+# Gets the user's current voxel grid selection
 func get_selection() -> Vector3:
-	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].tool_normal)
+	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * _tools[Tool.get_selected_id()].tool_normal)
 
+
+# Gets each of the user's voxel grid selection with mirror applied
 func get_selections() -> Array:
-	var selections := [Cursors[Vector3.ZERO].Selections]
+	var selections := [_cursors[Vector3.ZERO].Selections]
 	for mirror in get_mirrors():
-		selections.append(Cursors[mirror].Selections)
+		selections.append(_cursors[mirror].Selections)
 	return selections
 
-var Cursors := {
-	Vector3(0, 0, 0): VoxelCursor.new(),
-	Vector3(1, 0, 0): VoxelCursor.new(),
-	Vector3(1, 1, 0): VoxelCursor.new(),
-	Vector3(1, 1, 1): VoxelCursor.new(),
-	Vector3(0, 1, 1): VoxelCursor.new(),
-	Vector3(0, 1, 0): VoxelCursor.new(),
-	Vector3(0, 0, 1): VoxelCursor.new(),
-	Vector3(1, 0, 1): VoxelCursor.new()
-} setget set_cursors
-func set_cursors(cursors : Dictionary) -> void: pass
 
+# Sets the cursor's visiblity
 func set_cursors_visibility(visible := Editing.pressed) -> void:
-	Cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
+	_cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
 	var mirrors := get_mirrors()
-	for cursor in Cursors:
+	for cursor in _cursors:
 		if not cursor == Vector3.ZERO:
-			Cursors[cursor].visible = Cursors[Vector3.ZERO].visible and mirrors.has(cursor)
+			_cursors[cursor].visible = _cursors[Vector3.ZERO].visible and mirrors.has(cursor)
 
+
+# Sets the cursors selection
 func set_cursors_selections(
-		selections := [last_hit["position"] + last_hit["normal"] * Tools[Tool.get_selected_id()].tool_normal] if not last_hit.empty() else []
+		selections := [last_hit["position"] + last_hit["normal"] * _tools[Tool.get_selected_id()].tool_normal] if not last_hit.empty() else []
 	) -> void:
-	Cursors[Vector3.ZERO].Selections = selections
+	_cursors[Vector3.ZERO].Selections = selections
 	var mirrors := get_mirrors()
 	for mirror in mirrors:
-		Cursors[mirror].Selections = mirror_positions(selections, mirror)
+		_cursors[mirror].Selections = mirror_positions(selections, mirror)
 
+
+# Updats the cursor visuals
 func update_cursors() -> void:
 	var mirrors := get_mirrors()
-	for cursor in Cursors:
+	for cursor in _cursors:
 		if not cursor == Vector3.ZERO:
-			Cursors[cursor].visible = Cursors[Vector3.ZERO].visible and mirrors.has(cursor)
+			_cursors[cursor].visible = _cursors[Vector3.ZERO].visible and mirrors.has(cursor)
 			if mirrors.has(cursor):
-				Cursors[cursor].Selections = mirror_positions(
-					Cursors[Vector3.ZERO].Selections,
+				_cursors[cursor].Selections = mirror_positions(
+					_cursors[Vector3.ZERO].Selections,
 					cursor
 				)
 
 
-var Tools := [
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Add.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Sub.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Swap.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Fill.gd").new(),
-	preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/VoxelObjectEditorTools/Pick.gd").new()
-]
-
-
-enum Palettes { PRIMARY, SECONDARY }
-var PaletteRepresents := [ -1, -1 ]
-
+# Sets the palette
 func set_palette(palette : int, voxel_id : int) -> void:
-	PaletteRepresents[palette] = voxel_id
+	_palette[palette] = voxel_id
 	if palette == Palette.get_selected_id():
 		ColorPicked.color = Voxel.get_color(get_rpalette())
 		if CursorDynamic.pressed:
@@ -279,22 +394,18 @@ func set_palette(palette : int, voxel_id : int) -> void:
 		if not VoxelSetViewer.Selections.has(voxel_id):
 			VoxelSetViewer.select(voxel_id)
 
+
+# Returns the voxel id of palette
 func get_palette(palette : int = Palette.get_selected_id()) -> int:
-	return PaletteRepresents[palette]
+	return _palette[palette]
 
+
+# Returns the voxel dictionary of palette
 func get_rpalette(palette : int = get_palette()) -> Dictionary:
-	return VoxelObjectRef.VoxelSetRef.get_voxel(palette)
+	return voxel_object.VoxelSetRef.get_voxel(palette)
 
-const DefaultConfig := {
-	"cursor.visible": true,
-	"cursor.dynamic": true,
-	"cursor.color": Color.white,
-	"grid.visible": true,
-	"grid.mode": VoxelGrid.GridModes.WIRED,
-	"grid.color": Color.white,
-	"grid.constant": true
-}
-var Config := {}
+
+# Saves the current editor config to file
 func save_config() -> void:
 	var config = File.new()
 	var opened = config.open(
@@ -302,9 +413,11 @@ func save_config() -> void:
 		File.WRITE
 	)
 	if opened == OK:
-		config.store_string(JSON.print(Config))
+		config.store_string(JSON.print(config))
 		config.close()
 
+
+# Loads and sets the config file
 func load_config() -> void:
 	var config = File.new()
 	var opened = config.open(
@@ -314,44 +427,45 @@ func load_config() -> void:
 	if opened == OK:
 		var config_ = JSON.parse(config.get_as_text())
 		if config_.error == OK and typeof(config_.result) == TYPE_DICTIONARY:
-			Config = config_.result
+			config = config_.result
 			
-			Config["cursor.color"] = Config["cursor.color"].split_floats(",")
-			Config["cursor.color"] = Color(
-				Config["cursor.color"][0],
-				Config["cursor.color"][1],
-				Config["cursor.color"][2],
-				Config["cursor.color"][3]
+			config["cursor.color"] = config["cursor.color"].split_floats(",")
+			config["cursor.color"] = Color(
+				config["cursor.color"][0],
+				config["cursor.color"][1],
+				config["cursor.color"][2],
+				config["cursor.color"][3]
 			)
 			
-			Config["grid.color"] = Config["grid.color"].split_floats(",")
-			Config["grid.color"] = Color(
-				Config["grid.color"][0],
-				Config["grid.color"][1],
-				Config["grid.color"][2],
-				Config["grid.color"][3]
+			config["grid.color"] = config["grid.color"].split_floats(",")
+			config["grid.color"] = Color(
+				config["grid.color"][0],
+				config["grid.color"][1],
+				config["grid.color"][2],
+				config["grid.color"][3]
 			)
-		else: Config = DefaultConfig.duplicate()
+		else: config = ConfigDefault.duplicate()
 		config.close()
-	else: Config = DefaultConfig.duplicate()
+	else: config = ConfigDefault.duplicate()
 	
-	set_cursor_visible(Config["cursor.visible"])
-	set_cursor_dynamic(Config["cursor.dynamic"])
-	set_cursor_color(Config["cursor.color"])
+	set_cursor_visible(config["cursor.visible"])
+	set_cursor_dynamic(config["cursor.dynamic"])
+	set_cursor_color(config["cursor.color"])
 	
-	set_grid_visible(Config["grid.visible"])
-	set_grid_mode(Config["grid.mode"])
-	set_grid_color(Config["grid.color"])
-	set_grid_constant(Config["grid.constant"])
+	set_grid_visible(config["grid.visible"])
+	set_grid_mode(config["grid.mode"])
+	set_grid_color(config["grid.color"])
+	set_grid_constant(config["grid.constant"])
 
+
+# Sets the current editor config to default
 func reset_config() -> void:
-	Config = DefaultConfig.duplicate()
+	config = ConfigDefault.duplicate()
 	save_config()
 	load_config()
 
 
-
-# Utilities
+# Attempts to raycast for the VoxelObject
 func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> Dictionary:
 	var hit := {}
 	var exclude := []
@@ -361,10 +475,10 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 		hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
 		if not hit.empty():
 			if target.is_a_parent_of(hit.collider):
-				if Grid.is_a_parent_of(hit.collider):
+				if _grid.is_a_parent_of(hit.collider):
 					hit["normal"] = Vector3.ZERO
 				hit["position"] = Voxel.world_to_grid(
-					VoxelObjectRef.to_local(
+					voxel_object.to_local(
 						hit.position + -hit.normal * (Voxel.VoxelSize / 2)
 					)
 				)
@@ -373,6 +487,8 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 		else: break
 	return hit
 
+
+# Returns given grid position mirrored in accordance to mirror
 func mirror_position(position : Vector3, mirror : Vector3) -> Vector3:
 	match mirror:
 		Vector3(1, 0, 0):
@@ -391,6 +507,7 @@ func mirror_position(position : Vector3, mirror : Vector3) -> Vector3:
 			return Vector3((position.x + 1) * -1, position.y, position.z)
 	return position
 
+# Mirrors and returns given grid positions in accordance to mirror
 func mirror_positions(positions : Array, mirror : Vector3) -> Array:
 	var mirrored := []
 	for position in positions:
@@ -405,37 +522,15 @@ func mirror_positions(positions : Array, mirror : Vector3) -> Array:
 	return mirrored
 
 
-
-# Core
-func _ready():
-	if not is_instance_valid(Undo_Redo):
-		Undo_Redo = UndoRedo.new()
-	
-	update_tools()
-	update_palette()
-	update_selections()
-	update_mirrors()
-	update_settings()
-	update_grid_mode()
-	
-	load_config()
-
-func _exit_tree():
-	if is_instance_valid(Grid):
-		Grid.queue_free()
-	for cursor in Cursors:
-		if is_instance_valid(Cursors[cursor]):
-			Cursors[cursor].queue_free()
-
-
+# Disconnects the previous VoxelSet and connects the given VoxelSet
 func setup_voxel_set(voxel_set : VoxelSet) -> void:
 	VoxelSetViewer.VoxelSetRef = voxel_set
 	VoxelSetViewer.unselect_all()
 	if is_instance_valid(voxel_set) and not voxel_set.empty():
 		var first_voxel_id = voxel_set.get_ids()[0]
-		PaletteRepresents.clear()
-		PaletteRepresents.append(first_voxel_id)
-		PaletteRepresents.append(first_voxel_id)
+		_palette.clear()
+		_palette.append(first_voxel_id)
+		_palette.append(first_voxel_id)
 		VoxelSetViewer.select(first_voxel_id)
 	
 	Editing.pressed = false
@@ -443,44 +538,48 @@ func setup_voxel_set(voxel_set : VoxelSet) -> void:
 	Options.visible = is_instance_valid(voxel_set)
 	Notice.visible = not is_instance_valid(voxel_set)
 
+
+# Disconnect previous edited VoxelObject and starts editing the new one
 func start_editing(voxel_object : VoxelObject) -> void:
-	if voxel_object == VoxelObjectRef:
+	if voxel_object == voxel_object:
 		return
 	
 	stop_editing()
 	
-	VoxelObjectRef = voxel_object
+	voxel_object = voxel_object
 	
-	VoxelObjectRef.add_child(Grid)
-	for cursor in Cursors.values():
-		VoxelObjectRef.add_child(cursor)
+	voxel_object.add_child(_grid)
+	for cursor in _cursors.values():
+		voxel_object.add_child(cursor)
 	
-	setup_voxel_set(VoxelObjectRef.VoxelSetRef)
-	VoxelObjectRef.connect("set_voxel_set", self, "setup_voxel_set")
-	VoxelObjectRef.connect("tree_exiting", self, "stop_editing", [true])
+	setup_voxel_set(voxel_object.VoxelSetRef)
+	voxel_object.connect("set_voxel_set", self, "setup_voxel_set")
+	voxel_object.connect("tree_exiting", self, "stop_editing", [true])
 
+# Disconnect currently edited VoxelObject
 func stop_editing(close := false) -> void:
-	if is_instance_valid(VoxelObjectRef):
-		VoxelObjectRef.EditHint = false
+	if is_instance_valid(voxel_object):
+		voxel_object.EditHint = false
 		
-		VoxelObjectRef.remove_child(Grid)
-		for cursor in Cursors.values():
-			VoxelObjectRef.remove_child(cursor)
+		voxel_object.remove_child(_grid)
+		for cursor in _cursors.values():
+			voxel_object.remove_child(cursor)
 		
-		VoxelObjectRef.disconnect("set_voxel_set", self, "setup_voxel_set")
-		VoxelObjectRef.disconnect("tree_exiting", self, "stop_editing")
+		voxel_object.disconnect("set_voxel_set", self, "setup_voxel_set")
+		voxel_object.disconnect("tree_exiting", self, "stop_editing")
 	
 	Editing.pressed = false
-	VoxelObjectRef = null
+	voxel_object = null
 	
 	if close: emit_signal("close")
 
 
+# Handles editor input
 func handle_input(camera : Camera, event : InputEvent) -> bool:
-	if is_instance_valid(VoxelObjectRef):
+	if is_instance_valid(voxel_object):
 		if event is InputEventMouse:
 			var prev_hit = last_hit
-			last_hit = raycast_for(camera, event.position, VoxelObjectRef)
+			last_hit = raycast_for(camera, event.position, voxel_object)
 			if not last_hit.empty():
 				last_hit["normal"] = last_hit["normal"].round()
 			
@@ -489,22 +588,22 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					set_cursors_visibility(false)
 					return false
 				
-				var handle_result = SelectionModes[SelectionMode.get_selected_id()].select(
+				var handle_result = _selection_modes[SelectionMode.get_selected_id()].select(
 					self,
 					event,
 					prev_hit
 				)
 				
 				if not GridConstant.pressed:
-					Grid.Disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(VoxelObjectRef) and not VoxelObjectRef.empty())))
+					_grid.Disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))
 				
 				return handle_result
 	return false
 
 
 func _on_Editing_toggled(editing : bool):
-	if is_instance_valid(VoxelObjectRef):
-		VoxelObjectRef.EditHint = editing
+	if is_instance_valid(voxel_object):
+		voxel_object.EditHint = editing
 	
 	if not editing: set_cursors_visibility(false)
 	elif not last_hit.empty():
@@ -513,103 +612,112 @@ func _on_Editing_toggled(editing : bool):
 	emit_signal("editing", editing)
 
 
+# Shows color menu centered
 func show_color_menu():
 	ColorMenuColor.color = ColorPicked.color
 	ColorMenu.popup_centered()
 
+
 func _on_ColorMenu_Add_pressed():
-	var voxel_id = VoxelObjectRef.VoxelSetRef.get_next_id()
-	Undo_Redo.create_action("VoxelObjectEditor : Add voxel to used VoxeSet")
-	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "set_voxel", Voxel.colored(ColorMenuColor.color))
-	Undo_Redo.add_undo_method(VoxelObjectRef.VoxelSetRef, "erase_voxel", voxel_id)
-	Undo_Redo.add_do_method(VoxelObjectRef.VoxelSetRef, "request_refresh")
-	Undo_Redo.add_undo_method(VoxelObjectRef.VoxelSetRef, "request_refresh")
-	Undo_Redo.commit_action()
+	var voxel_id = voxel_object.VoxelSetRef.get_next_id()
+	undo_redo.create_action("VoxelObjectEditor : Add voxel to used VoxeSet")
+	undo_redo.add_do_method(voxel_object.VoxelSetRef, "set_voxel", Voxel.colored(ColorMenuColor.color))
+	undo_redo.add_undo_method(voxel_object.VoxelSetRef, "erase_voxel", voxel_id)
+	undo_redo.add_do_method(voxel_object.VoxelSetRef, "request_refresh")
+	undo_redo.add_undo_method(voxel_object.VoxelSetRef, "request_refresh")
+	undo_redo.commit_action()
 	VoxelSetViewer.select(voxel_id)
 	ColorMenu.hide()
 
 
 func _on_Tool_selected(id : int):
-	update_mirrors(Tools[id].mirror_modes)
-	update_selections(Tools[id].selection_modes)
+	update_mirrors(_tools[id].mirror_modes)
+	update_selections(_tools[id].selection_modes)
+
 
 func _on_Palette_selected(id : int) -> void:
-	set_palette(Palette.get_selected_id(), PaletteRepresents[Palette.get_selected_id()])
+	set_palette(Palette.get_selected_id(), _palette[Palette.get_selected_id()])
+
 
 func _on_SelectionMode_selected(id : int):
 	set_cursors_selections()
+
 
 func _on_VoxelSetViewer_selected(voxel_id : int) -> void:
 	set_palette(Palette.get_selected_id(), voxel_id)
 
 
 func _on_NewVoxelSet_pressed():
-	VoxelObjectRef.VoxelSetRef = VoxelSet.new()
-	VoxelObjectRef.property_list_changed_notify()
+	voxel_object.VoxelSetRef = VoxelSet.new()
+	voxel_object.property_list_changed_notify()
 
 
 func _on_Translate_Apply_pressed():
 	var translation := Vector3(MoveX.value, MoveY.value, MoveZ.value)
-	Undo_Redo.create_action("VoxelObjectEditor : Moved voxels")
-	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
-	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
-	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.commit_action()
+	undo_redo.create_action("VoxelObjectEditor : Moved voxels")
+	undo_redo.add_do_method(voxel_object, "move", translation)
+	undo_redo.add_undo_method(voxel_object, "move", -translation)
+	undo_redo.add_do_method(voxel_object, "update_mesh")
+	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
+
 
 func _on_Center_Apply_pressed():
-	var translation = VoxelObjectRef.vec_to_center(Vector3(
+	var translation = voxel_object.vec_to_center(Vector3(
 		CenterX.value - 0.5,
 		CenterY.value - 0.5,
 		CenterZ.value - 0.5
 	))
-	Undo_Redo.create_action("VoxelObjectEditor : Align voxels")
-	Undo_Redo.add_do_method(VoxelObjectRef, "move", translation)
-	Undo_Redo.add_undo_method(VoxelObjectRef, "move", -translation)
-	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.commit_action()
+	undo_redo.create_action("VoxelObjectEditor : Align voxels")
+	undo_redo.add_do_method(voxel_object, "move", translation)
+	undo_redo.add_undo_method(voxel_object, "move", -translation)
+	undo_redo.add_do_method(voxel_object, "update_mesh")
+	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
+
 
 func _on_Clear_pressed():
 	var voxels = {}
-	for voxel in VoxelObjectRef.get_voxels():
-		voxels[voxel] = VoxelObjectRef.get_voxel_id(voxel)
-	Undo_Redo.create_action("VoxelObjectEditor : Clear voxels")
-	Undo_Redo.add_do_method(VoxelObjectRef, "erase_voxels")
-	Undo_Redo.add_undo_method(VoxelObjectRef, "set_voxels", voxels)
-	Undo_Redo.add_do_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.add_undo_method(VoxelObjectRef, "update_mesh")
-	Undo_Redo.commit_action()
+	for voxel in voxel_object.get_voxels():
+		voxels[voxel] = voxel_object.get_voxel_id(voxel)
+	undo_redo.create_action("VoxelObjectEditor : Clear voxels")
+	undo_redo.add_do_method(voxel_object, "erase_voxels")
+	undo_redo.add_undo_method(voxel_object, "set_voxels", voxels)
+	undo_redo.add_do_method(voxel_object, "update_mesh")
+	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
 
 
-var import_file_path := ""
 func _on_ImportFile_file_selected(path : String):
 	import_file_path = path
-	if is_instance_valid(VoxelObjectRef.VoxelSetRef):
+	if is_instance_valid(voxel_object.VoxelSetRef):
 		ImportHow.popup_centered()
 	else:
 		_on_Import_New_pressed()
 
+
 func _on_Import_Overwrite_pressed():
 	var result := Reader.read_file(import_file_path)
 	if result["error"] == OK:
-		VoxelObjectRef.set_voxels(result["voxels"])
+		voxel_object.set_voxels(result["voxels"])
 		
-		VoxelObjectRef.VoxelSetRef.Voxels = result["palette"]
-		VoxelObjectRef.VoxelSetRef.request_refresh()
+		voxel_object.VoxelSetRef.Voxels = result["palette"]
+		voxel_object.VoxelSetRef.request_refresh()
 	else: printerr(result["error"])
 	ImportHow.hide()
+
 
 func _on_Import_New_pressed():
 	var result := Reader.read_file(import_file_path)
 	if result["error"] == OK:
-		VoxelObjectRef.set_voxels(result["voxels"])
+		voxel_object.set_voxels(result["voxels"])
 		
 		var voxel_set := VoxelSet.new()
 		voxel_set.Voxels = result["palette"]
-		VoxelObjectRef.VoxelSetRef = voxel_set
+		voxel_object.VoxelSetRef = voxel_set
 	else: printerr(result["error"])
 	ImportHow.hide()
+
 
 func _on_Import_Cancel_pressed():
 	ImportHow.hide()
@@ -618,8 +726,10 @@ func _on_Import_Cancel_pressed():
 func _on_Docs_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core/wiki")
 
+
 func _on_Issues_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core/issues")
+
 
 func _on_GitHub_pressed():
 	OS.shell_open("https://github.com/ClarkThyLord/Voxel-Core")
