@@ -3,12 +3,15 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "add"
 	tool_normal = 1
 
 
+
+## Public Methods
+# Sets voxel id at given grid position in given VoxelObject and commits it to provided UndoRedo
 func add(voxel_object, position : Vector3, voxel : int, undo_redo : UndoRedo) -> void:
 	undo_redo.add_do_method(voxel_object, "set_voxel", position, voxel)
 	voxel = voxel_object.get_voxel_id(position)

@@ -3,11 +3,13 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "swap"
 
 
+## Public Methods
+# Swaps voxel at given grid position in given VoxelObject with given id and commits it to provided UndoRedo
 func swap(voxel_object, position : Vector3, voxel, undo_redo : UndoRedo) -> void:
 	var prev_voxel = voxel_object.get_voxel_id(position)
 	if prev_voxel > -1:

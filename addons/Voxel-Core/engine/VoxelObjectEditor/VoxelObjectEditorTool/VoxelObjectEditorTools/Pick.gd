@@ -3,7 +3,7 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "pick"
 	selection_modes = PoolStringArray([
@@ -12,6 +12,8 @@ func _init():
 	mirror_modes = Vector3.ZERO
 
 
+
+## Public Methods
 func work(editor) -> void:
 	var voxel = editor.VoxelObjectRef.get_voxel_id(editor.Cursors[Vector3.ZERO].Selections[0])
 	if voxel > -1:

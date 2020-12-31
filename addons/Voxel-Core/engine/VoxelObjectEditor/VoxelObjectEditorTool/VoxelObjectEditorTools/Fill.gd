@@ -3,7 +3,7 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "fill"
 	selection_modes = PoolStringArray([
@@ -11,6 +11,9 @@ func _init():
 	])
 
 
+
+## Public Methods
+# Replaces all matching connected voxels in VoxelObject starting at given position and commits it to provided UndoRedo
 func fill(voxel_object, position : Vector3, target : int, replacement : int, undo_redo : UndoRedo, filled := []) -> void:
 	var voxel = voxel_object.get_voxel_id(position)
 	if voxel > -1 and voxel == target and not filled.has(position):

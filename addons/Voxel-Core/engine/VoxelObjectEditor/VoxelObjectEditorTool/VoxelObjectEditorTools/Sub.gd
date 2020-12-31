@@ -3,11 +3,14 @@ extends "res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditorTool/
 
 
 
-# Core
+## Built-In Virtual Methods
 func _init():
 	name = "sub"
 
 
+
+## Public Methods
+# Removes voxel id at given grid position in given VoxelObject and commits it to provided UndoRedo
 func sub(voxel_object, position : Vector3, undo_redo : UndoRedo) -> void:
 	var voxel = voxel_object.get_voxel_id(position)
 	if voxel > -1:
