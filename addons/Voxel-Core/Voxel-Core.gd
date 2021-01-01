@@ -55,7 +55,6 @@ func _enter_tree():
 
 func _exit_tree():
 	remove_import_plugin(Meshes)
-	Meshes.exit()
 	remove_import_plugin(VoxelObjects)
 	remove_import_plugin(VoxelSets)
 	
