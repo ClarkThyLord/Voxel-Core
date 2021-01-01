@@ -169,7 +169,7 @@ func get_box(volume := get_voxels()) -> Dictionary:
 			if voxel_grid.z > box["size"].z:
 				box["size"].z = voxel_grid.z
 		
-		box["size"] = (box["size"] - box["position"]).abs()
+		box["size"] = (box["size"] - box["position"]).abs() + Vector3.ONE
 	
 	return box
 
@@ -199,7 +199,11 @@ func center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void
 # return      :   Vector3          :   Translation necessary to center
 func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> Vector3:
 	var box := get_box(volume)
-	return (-box["position"] + box["size"] * alignment).floor()
+	alignment = Vector3.ONE - Vector3(
+			clamp(alignment.x, 0.0, 1.0),
+			clamp(alignment.y, 0.0, 1.0),
+			clamp(alignment.z, 0.0, 1.0))
+	return -box["position"] - (box["size"] * alignment).floor()
 
 
 # Returns Array of all voxel grid positions connected to given target

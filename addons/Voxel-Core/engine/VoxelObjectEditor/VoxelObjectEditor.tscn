@@ -391,9 +391,9 @@ text = "X:"
 margin_left = 16.0
 margin_right = 90.0
 margin_bottom = 24.0
-min_value = -0.5
-max_value = 0.5
+max_value = 1.0
 step = 0.1
+value = 0.5
 
 [node name="Label2" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
 margin_left = 94.0
@@ -406,9 +406,9 @@ text = "Y:"
 margin_left = 109.0
 margin_right = 183.0
 margin_bottom = 24.0
-min_value = -0.5
-max_value = 0.5
+max_value = 1.0
 step = 0.1
+value = 0.5
 
 [node name="Label3" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
 margin_left = 187.0
@@ -421,9 +421,9 @@ text = "Z:"
 margin_left = 203.0
 margin_right = 277.0
 margin_bottom = 24.0
-min_value = -0.5
-max_value = 0.5
+max_value = 1.0
 step = 0.1
+value = 0.5
 
 [node name="Apply" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center"]
 margin_left = 281.0
@@ -823,10 +823,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 40.0
-margin_top = 40.0
-margin_right = 355.0
-margin_bottom = 547.0
+margin_left = 44.0
+margin_top = 44.0
+margin_right = 359.0
+margin_bottom = 551.0
 size_flags_vertical = 3
 edit_alpha = false
 

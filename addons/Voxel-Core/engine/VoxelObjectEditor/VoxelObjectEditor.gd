@@ -671,10 +671,9 @@ func _on_Translate_Apply_pressed():
 
 func _on_Center_Apply_pressed():
 	var translation = voxel_object.vec_to_center(Vector3(
-		CenterX.value - 0.5,
-		CenterY.value - 0.5,
-		CenterZ.value - 0.5
-	))
+			CenterX.value,
+			CenterY.value,
+			CenterZ.value))
 	undo_redo.create_action("VoxelObjectEditor : Align voxels")
 	undo_redo.add_do_method(voxel_object, "move", translation)
 	undo_redo.add_undo_method(voxel_object, "move", -translation)
