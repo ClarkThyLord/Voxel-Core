@@ -1,0 +1,129 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://addons/Voxel-Core/classes/VoxelSet.gd" type="Script" id=1]
+[ext_resource path="res://examples/VoxelWorld/kenney_voxels.jpg" type="Texture" id=2]
+
+[resource]
+script = ExtResource( 1 )
+tile_size = Vector2( 128, 128 )
+tiles = ExtResource( 2 )
+VOXELS = {
+0: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 0, 0 )
+},
+1: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 1, 0 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 1, 1 ),
+Vector3( 0, 1, 0 ): Vector2( 0, 0 )
+}
+},
+2: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 2, 0 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 2, 1 ),
+Vector3( 0, 1, 0 ): Vector2( 0, 0 )
+}
+},
+3: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 2, 1 )
+},
+4: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 3, 1 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 3, 0 ),
+Vector3( 0, 1, 0 ): Vector2( 3, 0 )
+}
+},
+5: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 4, 1 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 4, 0 ),
+Vector3( 0, 1, 0 ): Vector2( 4, 0 )
+}
+},
+6: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 6, 0 ),
+"uvs": {
+Vector3( -1, 0, 0 ): Vector2( 7, 0 ),
+Vector3( 0, -1, 0 ): Vector2( 7, 0 ),
+Vector3( 0, 0, 1 ): Vector2( 7, 0 ),
+Vector3( 0, 1, 0 ): Vector2( 7, 0 ),
+Vector3( 1, 0, 0 ): Vector2( 7, 0 )
+}
+},
+7: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 6, 1 ),
+"uvs": {
+Vector3( -1, 0, 0 ): Vector2( 5, 0 ),
+Vector3( 0, -1, 0 ): Vector2( 5, 0 ),
+Vector3( 0, 0, -1 ): Vector2( 5, 0 ),
+Vector3( 0, 0, 1 ): Vector2( 5, 0 ),
+Vector3( 1, 0, 0 ): Vector2( 5, 0 )
+}
+},
+8: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 7, 0 )
+},
+9: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 7, 1 )
+},
+10: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 0, 1 )
+},
+11: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 1, 1 )
+},
+12: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 0, 2 )
+},
+13: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 1, 2 )
+},
+14: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 2, 2 )
+},
+15: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 3, 2 )
+},
+16: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 4, 2 )
+},
+17: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 5, 2 )
+},
+18: {
+"color": Color( 1, 0.396768, 0.396768, 1 ),
+"energy": 0.3,
+"metallic": 0.0,
+"roughness": 1.0,
+"specular": 0.5,
+"uv": Vector2( 6, 2 )
+},
+19: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 5, 0 )
+},
+20: {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 5, 1 )
+}
+}

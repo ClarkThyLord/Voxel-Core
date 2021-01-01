@@ -482,8 +482,10 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 						voxel_object.to_local(
 								hit.position + -hit.normal * (Voxel.VoxelWorldSize / 2)))
 				break
-			else: exclude.append(hit.collider)
-		else: break
+			else:
+				exclude.append(hit.collider)
+		else:
+			break
 	return hit
 
 
@@ -505,6 +507,7 @@ func mirror_position(position : Vector3, mirror : Vector3) -> Vector3:
 		Vector3(0, 0, 1):
 			return Vector3((position.x + 1) * -1, position.y, position.z)
 	return position
+
 
 # Mirrors and returns given grid positions in accordance to mirror
 func mirror_positions(positions : Array, mirror : Vector3) -> Array:
@@ -596,10 +599,9 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 					return false
 				
 				var handle_result = _selection_modes[SelectionMode.get_selected_id()].select(
-					self,
-					event,
-					prev_hit
-				)
+						self,
+						event,
+						prev_hit)
 				
 				if not GridConstant.pressed:
 					_grid.disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))

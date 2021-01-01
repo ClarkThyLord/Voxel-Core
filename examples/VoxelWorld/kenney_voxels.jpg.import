@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/kenney_voxels.jpg-1f6de84f0675c221b2cc21248f146608.stex"
+path="res://.import/kenney_voxels.jpg-3d3039f8785266207e0fce77640e865a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://examples/VoxelSets/Textured/kenney_voxels.jpg"
-dest_files=[ "res://.import/kenney_voxels.jpg-1f6de84f0675c221b2cc21248f146608.stex" ]
+source_file="res://examples/VoxelWorld/kenney_voxels.jpg"
+dest_files=[ "res://.import/kenney_voxels.jpg-3d3039f8785266207e0fce77640e865a.stex" ]
 
 [params]
 

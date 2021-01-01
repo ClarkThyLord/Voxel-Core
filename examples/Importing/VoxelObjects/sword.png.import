@@ -1,0 +1,17 @@
+[remap]
+
+importer="VoxelCore.VoxelObject"
+type="PackedScene"
+path="res://.import/sword.png-41213686bd3f19fe91126c7c9b1f077e.tscn"
+
+[deps]
+
+source_file="res://examples/Importing/VoxelObjects/sword.png"
+dest_files=[ "res://.import/sword.png-41213686bd3f19fe91126c7c9b1f077e.tscn" ]
+
+[params]
+
+name=""
+voxel_object=0
+mesh_mode=0
+center=2

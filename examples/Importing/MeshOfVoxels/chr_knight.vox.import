@@ -1,0 +1,15 @@
+[remap]
+
+importer="VoxelCore.MeshOfVoxels"
+type="Mesh"
+path="res://.import/chr_knight.vox-9ecfe1f935c0befeef21e71c4b021771.mesh"
+
+[deps]
+
+source_file="res://examples/Importing/MeshOfVoxels/chr_knight.vox"
+dest_files=[ "res://.import/chr_knight.vox-9ecfe1f935c0befeef21e71c4b021771.mesh" ]
+
+[params]
+
+mesh_mode=1
+center=2
