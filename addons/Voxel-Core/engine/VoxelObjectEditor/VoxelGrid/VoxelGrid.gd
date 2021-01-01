@@ -76,9 +76,9 @@ func update() -> void:
 		GridModes.SOLID:
 			mesh = PlaneMesh.new()
 			scale = Vector3(
-					grid_size.x * Voxel.VoxelSize,
+					grid_size.x * Voxel.VoxelWorldSize,
 					1,
-					grid_size.z * Voxel.VoxelSize)
+					grid_size.z * Voxel.VoxelWorldSize)
 		GridModes.WIRED:
 			scale = Vector3.ONE
 			_surface_tool.begin(Mesh.PRIMITIVE_LINES)

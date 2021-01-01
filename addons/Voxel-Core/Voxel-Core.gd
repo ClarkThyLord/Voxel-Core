@@ -83,7 +83,7 @@ static func typeof_voxel_core(object : Object) -> int:
 func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 	if not is_instance_valid(voxel_set_editor):
 		voxel_set_editor = VoxelSetEditor.instance()
-		voxel_set_editor.Undo_Redo = get_undo_redo()
+		voxel_set_editor.undo_redo = get_undo_redo()
 		voxel_set_editor.connect("close", self, "close_voxel_set_editor")
 		add_control_to_bottom_panel(voxel_set_editor, "VoxelSet")
 	voxel_set_editor.VoxelSetRef = voxel_set
@@ -100,7 +100,7 @@ func close_voxel_set_editor() -> void:
 func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
 	if not is_instance_valid(voxel_object_editor):
 		voxel_object_editor = VoxelObjectEditor.instance()
-		voxel_object_editor.Undo_Redo = get_undo_redo()
+		voxel_object_editor.undo_redo = get_undo_redo()
 		voxel_object_editor.connect("editing", self, "on_voxel_object_editor_editing_toggled")
 		voxel_object_editor.connect("close", self, "close_voxel_object_editor")
 		add_control_to_bottom_panel(voxel_object_editor, "VoxelObject")
@@ -117,7 +117,7 @@ func close_voxel_object_editor() -> void:
 
 
 func on_voxel_object_editor_editing_toggled(toggled : bool) -> void:
-	if is_instance_valid(voxel_object_editor) and voxel_object_editor.VoxelObjectRef == _handling_voxel_object:
+	if is_instance_valid(voxel_object_editor) and voxel_object_editor.voxel_object == _handling_voxel_object:
 		if toggled:
 			get_editor_interface().get_selection().clear()
 		else:

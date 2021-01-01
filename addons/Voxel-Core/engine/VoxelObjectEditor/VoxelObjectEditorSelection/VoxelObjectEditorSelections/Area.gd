@@ -25,7 +25,7 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 			_selection.append(editor.get_selection())
 		else:
 			if not _selection.empty():
-				editor.Tools[editor.Tool.get_selected_id()].work(editor)
+				editor.work_tool()
 				_selection.clear()
 	elif event is InputEventMouseMotion:
 		if not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):

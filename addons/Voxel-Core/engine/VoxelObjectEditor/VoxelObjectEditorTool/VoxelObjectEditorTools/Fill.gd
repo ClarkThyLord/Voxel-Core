@@ -20,10 +20,10 @@ func fill(voxel_object, position : Vector3, target : int, replacement : int, und
 		filled.append(position)
 		undo_redo.add_do_method(voxel_object, 'set_voxel', position, replacement)
 		undo_redo.add_undo_method(voxel_object, 'set_voxel', position, target)
-		for direction in Voxel.Directions:
+		for face in Voxel.Faces:
 			fill(
 				voxel_object,
-				position + direction,
+				position + face,
 				target,
 				replacement,
 				undo_redo,
@@ -32,20 +32,20 @@ func fill(voxel_object, position : Vector3, target : int, replacement : int, und
 
 
 func work(editor) -> void:
-	editor.Undo_Redo.create_action("VoxelObjectEditor : Fill voxel(s)")
+	editor.undo_redo.create_action("VoxelObjectEditor : Fill voxel(s)")
 	for selection in editor.get_selections():
 		for position in selection:
-			var target = editor.VoxelObjectRef.get_voxel_id(position)
+			var target = editor.voxel_object.get_voxel_id(position)
 			if target == -1:
 				continue
 			
 			fill(
-				editor.VoxelObjectRef,
+				editor.voxel_object,
 				position,
 				target,
 				editor.get_palette(),
-				editor.Undo_Redo
+				editor.undo_redo
 			)
-	editor.Undo_Redo.add_do_method(editor.VoxelObjectRef, "update_mesh")
-	editor.Undo_Redo.add_undo_method(editor.VoxelObjectRef, "update_mesh")
-	editor.Undo_Redo.commit_action()
+	editor.undo_redo.add_do_method(editor.voxel_object, "update_mesh")
+	editor.undo_redo.add_undo_method(editor.voxel_object, "update_mesh")
+	editor.undo_redo.commit_action()

@@ -247,18 +247,18 @@ margin_top = 78.0
 margin_right = 332.0
 margin_bottom = 172.0
 size_flags_vertical = 3
-Search = ""
-AllowEdit = false
-AllowedSelections = 1
-ShowHints = false
-VoxelSetRef = null
+search = ""
+allow_edit = false
+selection_max = 1
+show_hints = false
+voxel_set = null
 
 [node name="Notice" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 visible = false
 margin_left = 115.0
-margin_top = 78.0
+margin_top = 122.0
 margin_right = 216.0
-margin_bottom = 150.0
+margin_bottom = 194.0
 size_flags_horizontal = 6
 size_flags_vertical = 6
 
@@ -478,7 +478,7 @@ icon = ExtResource( 17 )
 margin_right = 400.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 400, 300 )
-window_title = "Import File"
+window_title = "Open a File"
 resizable = true
 mode = 0
 access = 2
@@ -823,10 +823,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 32.0
-margin_top = 32.0
-margin_right = 347.0
-margin_bottom = 539.0
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 355.0
+margin_bottom = 547.0
 size_flags_vertical = 3
 edit_alpha = false
 

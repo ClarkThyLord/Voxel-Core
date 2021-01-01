@@ -34,7 +34,7 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 				_extrude_normal = editor.last_hit["normal"]
 		else:
 			if _extruding:
-				editor.Tools[editor.Tool.get_selected_id()].work(editor)
+				editor.work_tool()
 				_face.clear()
 				_extrude_amount = 1
 				_extrude_normal = Vector3.ZERO
@@ -44,20 +44,20 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 		if _extruding:
 			var extrude := []
 			_extrude_amount = clamp(_extrude_amount + clamp(event.relative.normalized().x, -1, 1), 1, 100)
-			var extrude_direction := 1 if editor.Tools[editor.Tool.get_selected_id()].tool_normal > 0 else -1
+			var extrude_direction := 1 if editor.get_tool_normal() > 0 else -1
 			for e in range(_extrude_amount):
 				for position in _face:
 					extrude.append(position + _extrude_normal * extrude_direction * e)
 			editor.set_cursors_selections(extrude)
 		else:
 			if not editor.last_hit.empty():
-				if editor.VoxelObjectRef.get_voxel_id(editor.last_hit["position"]) > -1:
+				if editor.voxel_object.get_voxel_id(editor.last_hit["position"]) > -1:
 					if editor.last_hit.empty() or not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):
 						if Input.is_key_pressed(KEY_SHIFT):
-							_face = editor.VoxelObjectRef.select_face_similar(editor.last_hit["position"], editor.last_hit["normal"])
+							_face = editor.voxel_object.select_face_similar(editor.last_hit["position"], editor.last_hit["normal"])
 						else:
-							_face = editor.VoxelObjectRef.select_face(editor.last_hit["position"], editor.last_hit["normal"])
-						if editor.Tools[editor.Tool.get_selected_id()].tool_normal > 0:
+							_face = editor.voxel_object.select_face(editor.last_hit["position"], editor.last_hit["normal"])
+						if editor.get_tool_normal() > 0:
 							for i in range(_face.size()):
 								_face[i] += editor.last_hit["normal"]
 				else: _face.clear()

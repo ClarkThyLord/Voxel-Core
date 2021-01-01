@@ -15,7 +15,7 @@ func _init():
 
 ## Public Methods
 func work(editor) -> void:
-	var voxel = editor.VoxelObjectRef.get_voxel_id(editor.Cursors[Vector3.ZERO].Selections[0])
+	var voxel = editor.voxel_object.get_voxel_id(editor.get_selection())
 	if voxel > -1:
 		editor.VoxelSetViewer.unselect_all()
 		editor.VoxelSetViewer.select(voxel)

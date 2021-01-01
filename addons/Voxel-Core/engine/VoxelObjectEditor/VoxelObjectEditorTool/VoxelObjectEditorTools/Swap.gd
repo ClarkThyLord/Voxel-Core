@@ -22,12 +22,12 @@ func work(editor) -> void:
 	if voxel == -1:
 		return
 	
-	editor.Undo_Redo.create_action("VoxelObjectEditor : Swap voxel")
+	editor.undo_redo.create_action("VoxelObjectEditor : Swap voxel")
 	for cursor_selection in editor.get_selections():
 		for selection in cursor_selection:
 			match typeof(selection):
 				TYPE_VECTOR3:
-					swap(editor.VoxelObjectRef, selection, voxel, editor.Undo_Redo)
+					swap(editor.voxel_object, selection, voxel, editor.undo_redo)
 				TYPE_ARRAY:
 					var origin := Vector3(
 						selection[0 if selection[0].x < selection[1].x else 1].x,
@@ -38,7 +38,7 @@ func work(editor) -> void:
 					for x in range(origin.x, origin.x + dimensions.x + 1):
 						for y in range(origin.y, origin.y + dimensions.y + 1):
 							for z in range(origin.z, origin.z + dimensions.z + 1):
-								swap(editor.VoxelObjectRef, Vector3(x, y, z), voxel, editor.Undo_Redo)
-	editor.Undo_Redo.add_do_method(editor.VoxelObjectRef, "update_mesh")
-	editor.Undo_Redo.add_undo_method(editor.VoxelObjectRef, "update_mesh")
-	editor.Undo_Redo.commit_action()
+								swap(editor.voxel_object, Vector3(x, y, z), voxel, editor.undo_redo)
+	editor.undo_redo.add_do_method(editor.voxel_object, "update_mesh")
+	editor.undo_redo.add_undo_method(editor.voxel_object, "update_mesh")
+	editor.undo_redo.commit_action()

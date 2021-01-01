@@ -162,8 +162,8 @@ func set_voxel(voxel : Dictionary, name := "", id := get_next_id()) -> int:
 	return id
 
 # Replaces all _voxels
-func set_voxels(_voxels : Dictionary) -> void:
-	_voxels = _voxels
+func set_voxels(voxels : Dictionary) -> void:
+	_voxels = voxels
 
 
 # Gets voxel Dictionary by their id, returns an empty Dictionary if not found

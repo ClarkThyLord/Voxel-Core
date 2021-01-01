@@ -12,7 +12,7 @@ export var voxel_color := Color.black setget set_voxel_color
 export var voxel_texture : Texture = null setget set_voxel_texture
 
 # ID of voxel to represented
-export var voxel_id : int setget set_voxel_id
+export(int, -1, 100000) var voxel_id := -1 setget set_voxel_id
 
 # Voxel's face to represent
 export var voxel_face := Vector3.ZERO setget set_voxel_face
@@ -48,8 +48,13 @@ func set_voxel_texture(value : Texture) -> void:
 
 # Sets voxel_id, and calls on update_view by default
 func set_voxel_id(value : int, update := true) -> void:
+	if value < -1:
+		return
+	
 	voxel_id = value
-	if update: update_view()
+	
+	if update:
+		update_view()
 
 
 # Sets voxel_face, and calls on update_view by default
@@ -79,7 +84,7 @@ func setup(voxel_set : VoxelSet, voxel_set_id : int, voxel_face := Vector3.ZERO)
 
 
 # Sets up the voxel to visualize the face of the voxel id given
-func update_view(voxel_id := voxel_id, face := voxel_face) -> void:
+func update_view() -> void:
 	if typeof(voxel_set) == TYPE_NIL:
 		return
 	
@@ -90,16 +95,16 @@ func update_view(voxel_id := voxel_id, face := voxel_face) -> void:
 	if not name.empty():
 		hint_tooltip += "|" + name
 	
-	set_voxel_color(Voxel.get_face_color(voxel, face))
+	set_voxel_color(Voxel.get_face_color(voxel, voxel_face))
 	
-	if not typeof(voxel_set.Tiles) == TYPE_NIL:
-		var uv := Voxel.get_face_uv(voxel, face)
+	if not typeof(voxel_set.tiles) == TYPE_NIL:
+		var uv := Voxel.get_face_uv(voxel, voxel_face)
 		if uv == -Vector2.ONE:
 			set_voxel_texture(null)
 		else:
 			var img_texture := ImageTexture.new()
 			img_texture.create_from_image(
-					voxel_set.Tiles.get_data().get_rect(Rect2(
-							Vector2.ONE * uv * voxel_set.TileSize,
-							Vector2.ONE * voxel_set.TileSize)))
+					voxel_set.tiles.get_data().get_rect(Rect2(
+							Vector2.ONE * uv * voxel_set.tilesize,
+							Vector2.ONE * voxel_set.tilesize)))
 			set_voxel_texture(img_texture)

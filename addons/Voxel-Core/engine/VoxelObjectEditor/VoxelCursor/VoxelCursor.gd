@@ -68,9 +68,9 @@ func update() -> void:
 		for selection in selections:
 			match typeof(selection):
 				TYPE_VECTOR3:
-					for direction in Voxel.Directions:
-						if not selections.has(selection + direction):
-							_voxel_tool.add_face(voxel, direction, selection)
+					for face in Voxel.Faces:
+						if not selections.has(selection + face):
+							_voxel_tool.add_face(voxel, face, selection)
 				TYPE_ARRAY:
 					var origin := Vector3(
 							selection[0 if selection[0].x < selection[1].x else 1].x,

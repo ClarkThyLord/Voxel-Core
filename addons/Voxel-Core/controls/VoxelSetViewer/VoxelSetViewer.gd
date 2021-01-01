@@ -48,7 +48,7 @@ var _selections := []
 
 
 ## OnReady Variables
-onready var Search := get_node("VBoxContainer/search")
+onready var Search := get_node("VBoxContainer/Search")
 
 onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
 
@@ -125,6 +125,11 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	if update:
 		update_view(true)
+
+
+# Returns true if voxel set id is selected
+func has_selected(voxel_id : int) -> bool:
+	return _selections.has(voxel_id)
 
 
 # Returns VoxelButton with given voxel_id if found, else returns null
@@ -253,13 +258,13 @@ func _on_VoxelButton_pressed(voxel_button) -> void:
 		if voxel_button.pressed:
 			if not Input.is_key_pressed(KEY_CONTROL):
 				unselect_all()
-			select(voxel_button.VoxelID)
+			select(voxel_button.voxel_id)
 		else:
-			if _selections.has(voxel_button.VoxelID):
+			if _selections.has(voxel_button.voxel_id):
 				unselect_all()
-				select(voxel_button.VoxelID)
+				select(voxel_button.voxel_id)
 			else:
-				unselect(voxel_button.VoxelID)
+				unselect(voxel_button.voxel_id)
 	else: voxel_button.pressed = false
 
 
