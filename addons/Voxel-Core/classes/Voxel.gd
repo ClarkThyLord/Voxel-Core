@@ -11,8 +11,8 @@ extends Object
 #
 # {
 #   vsn                  :   String,          ~   VoxelSetName, used by VoxelSet to associate name with voxel
-#   color                :   Color,           ~   Default color used for all voxel faces
-#   colors               :   Dictionary = {   ~   Color used on a per face bases, if not present uses voxel color
+#   color                :   Color,           ~   Default color used for all voxel faces, if not present fallback is Transparent color
+#   colors               :   Dictionary = {   ~   Color used on a per face bases, if not present fallback is voxel color
 #      Vector3.UP        :   Color,
 #      Vector3.DOWN      :   Color,
 #      Vector3.RIGHT     :   Color,
@@ -20,8 +20,8 @@ extends Object
 #      Vector3.FORWARD   :   Color,
 #      Vector3.BACK      :   Color
 #   },
-#   uv                   :   Vector2,         ~   Default uv position used for all voxel faces
-#   uvs                  :   Dictionary = {   ~   uv position used on a per face bases, if not present uses voxel uv
+#   uv                   :   Vector2,         ~   Default uv position used for all voxel faces, if not present fallback is (-1.0, -1.0)
+#   uvs                  :   Dictionary = {   ~   uv position used on a per face bases, if not present fallback to voxel uv
 #      Vector3.UP        :   Vector2,
 #      Vector3.DOWN      :   Vector2,
 #      Vector3.RIGHT     :   Vector2,
@@ -29,10 +29,10 @@ extends Object
 #      Vector3.FORWARD   :   Vector2,
 #      Vector3.BACK      :   Vector2
 #   },
-#   metallic             :   float,           ~   Metallic material value used for all voxel faces
-#   specular             :   float,           ~   Specular material value used for all voxel faces
-#   roughness            :   float,           ~   Roughness material value used for all voxel faces
-#   energy               :   float            ~   Emission energy material value used for all voxel faces
+#   metallic             :   float,           ~   Metallic material value used for all voxel faces, value must be between 0.0 and 1.0 and if not present fallback is 0.0
+#   specular             :   float,           ~   Specular material value used for all voxel faces, value must be between 0.0 and 1.0 and if not present fallback is 0.5
+#   roughness            :   float,           ~   Roughness material value used for all voxel faces, value must be between 0.0 and 1.0 and if not present fallback is 1.0
+#   energy               :   float            ~   Emission energy material value used for all voxel faces, value must be between 0.0 and 16.0 and if not present fallback is 0.0
 # }
 #
 

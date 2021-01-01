@@ -99,6 +99,16 @@ onready var TextureMenu := get_node("TextureMenu")
 
 onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
 
+onready var MaterialMenu := get_node("MaterialMenu")
+
+onready var Metallic := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic")
+
+onready var Specular := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular")
+
+onready var Roughness := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3/Roughness")
+
+onready var Energy := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4/Energy")
+
 
 
 ## Built-In Virtual Methods
@@ -398,6 +408,8 @@ func setup_context_menu(global_position : Vector2, face := _last_hovered_face) -
 		ContextMenu.add_separator()
 		ContextMenu.add_item("Color voxel", 4)
 		
+		ContextMenu.add_item("Modify material", 12)
+		
 		if voxel_set.is_uv_ready():
 			ContextMenu.add_item("Texture voxel", 5)
 		if Voxel.has_uv(get_viewing_voxel()):
@@ -413,9 +425,9 @@ func setup_context_menu(global_position : Vector2, face := _last_hovered_face) -
 func _on_ContextMenu_id_pressed(id : int):
 	_editing_action = id
 	_editing_multiple = false
+	_unedited_voxel = get_viewing_voxel().duplicate(true)
 	match id:
 		0: # Color editing face
-			_unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelColor.color = Voxel.get_face_color(get_viewing_voxel(), _editing_face)
 			ColorMenu.popup_centered()
 		1: # Remove editing face color
@@ -427,7 +439,6 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 		2: # Texture editing face
-			_unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
 			TextureMenu.popup_centered()
@@ -441,7 +452,6 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.commit_action()
 		7: # Color selected faces
 			_editing_multiple = true
-			_unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelColor.color = Voxel.get_face_color(get_viewing_voxel(), _editing_face)
 			ColorMenu.popup_centered()
 		8: # Remove selected faces color
@@ -456,7 +466,6 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.commit_action()
 		9: # Texture selected face
 			_editing_multiple = true
-			_unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
 			TextureMenu.popup_centered()
@@ -471,11 +480,9 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 		4: # Set voxel color
-			_unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelColor.color = Voxel.get_color(get_viewing_voxel())
 			ColorMenu.popup_centered()
 		5: # Set voxel uv
-			_unedited_voxel = get_viewing_voxel().duplicate(true)
 			VoxelTexture.unselect_all()
 			VoxelTexture.select(Voxel.get_uv(get_viewing_voxel()))
 			TextureMenu.popup_centered()
@@ -487,7 +494,10 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-		11: unselect_all()
+		11: # Unselect all
+			unselect_all()
+		12: # Modify material
+			show_MaterialMenu()
 
 
 func _on_ColorPicker_color_changed(color : Color):
@@ -590,3 +600,61 @@ func _on_TextureMenu_Confirm_pressed():
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 	close_TextureMenu()
+
+
+func show_MaterialMenu():
+	if is_instance_valid(MaterialMenu):
+		Metallic.value = Voxel.get_metallic(get_viewing_voxel())
+		Specular.value = Voxel.get_specular(get_viewing_voxel())
+		Roughness.value = Voxel.get_roughness(get_viewing_voxel())
+		Energy.value = Voxel.get_energy(get_viewing_voxel())
+		MaterialMenu.popup_centered()
+
+func close_MaterialMenu():
+	if is_instance_valid(MaterialMenu):
+		MaterialMenu.hide()
+	update_view()
+
+
+func _on_Metallic_value_changed(metallic : float):
+	Voxel.set_metallic(get_viewing_voxel(), metallic)
+	update_view()
+
+
+func _on_Specular_value_changed(specular : float):
+	Voxel.set_specular(get_viewing_voxel(), specular)
+	update_view()
+
+
+func _on_Roughness_value_changed(roughness : float):
+	Voxel.set_roughness(get_viewing_voxel(), roughness)
+	update_view()
+
+
+func _on_Energy_value_changed(emergy : float):
+	Voxel.set_energy(get_viewing_voxel(), emergy)
+	update_view()
+
+
+func _on_MaterialMenu_Cancel_pressed():
+	voxel_set.set_voxel(_unedited_voxel, "", voxel_id)
+	
+	close_MaterialMenu()
+
+
+func _on_MaterialMenu_Confirm_pressed():
+	var voxel = get_viewing_voxel()
+	undo_redo.create_action("VoxelViewer : Set material")
+	undo_redo.add_do_method(Voxel, "set_metallic", voxel, Voxel.get_metallic(voxel))
+	undo_redo.add_undo_method(Voxel, "set_metallic", voxel, Voxel.get_metallic(_unedited_voxel))
+	undo_redo.add_do_method(Voxel, "set_specular", voxel, Voxel.get_specular(voxel))
+	undo_redo.add_undo_method(Voxel, "set_specular", voxel, Voxel.get_specular(_unedited_voxel))
+	undo_redo.add_do_method(Voxel, "set_roughness", voxel, Voxel.get_roughness(voxel))
+	undo_redo.add_undo_method(Voxel, "set_roughness", voxel, Voxel.get_roughness(_unedited_voxel))
+	undo_redo.add_do_method(Voxel, "set_energy", voxel, Voxel.get_energy(voxel))
+	undo_redo.add_undo_method(Voxel, "set_energy", voxel, Voxel.get_energy(_unedited_voxel))
+	undo_redo.add_do_method(voxel_set, "request_refresh")
+	undo_redo.add_undo_method(voxel_set, "request_refresh")
+	undo_redo.commit_action()
+	
+	close_MaterialMenu()
