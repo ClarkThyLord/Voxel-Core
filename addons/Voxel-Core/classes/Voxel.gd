@@ -37,6 +37,7 @@ extends Object
 #
 
 
+
 ## Constants
 # Lists of all voxel faces, and their adjacent directions
 const Faces := {
@@ -50,6 +51,7 @@ const Faces := {
 
 # 0.5 means that voxels will have the dimensions of 0.5 x 0.5 x 0.5
 const VoxelWorldSize := 0.5
+
 
 
 ## Public Methods

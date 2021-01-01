@@ -1,6 +1,6 @@
 [remap]
 
-importer="VoxelCore.VoxelMesh"
+importer="VoxelCore.MeshOfVoxels"
 type="Mesh"
 path="res://.import/chr_knight.vox-b3f20ca3ff1dfc2bb0fedf9c5200915d.mesh"
 
@@ -11,5 +11,5 @@ dest_files=[ "res://.import/chr_knight.vox-b3f20ca3ff1dfc2bb0fedf9c5200915d.mesh
 
 [params]
 
-MeshMode=0
-Center=0
+MeshMode=1
+center=2

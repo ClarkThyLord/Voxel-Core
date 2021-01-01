@@ -51,19 +51,19 @@ func get_preset_name(preset : int) -> String:
 func get_import_options(preset : int) -> Array:
 	var preset_options = [
 		{
-			"name": "MeshMode",
+			"name": "mesh_mode",
 			"default_value": VoxelMesh.MeshModes.GREEDY,
 			"property_hint": PROPERTY_HINT_ENUM,
 			"hint_string": PoolStringArray(VoxelMesh.MeshModes.keys()).join(","),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
-			"name": "Center",
+			"name": "center",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
 			"hint_string": "NONE,CENTER,CENTER_ABOVE_AXIS",
 			"usage": PROPERTY_USAGE_EDITOR,
-		}
+		},
 	]
 	
 	match preset:
@@ -81,18 +81,28 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	var read := Reader.read_file(source_file)
 	var error = read.get("error", FAILED)
 	if error == OK:
-		var voxel_obj = VoxelMesh.new()
-		voxel_obj.voxel_set = VoxelSet.new()
+		var voxel_mesh = VoxelMesh.new()
+		voxel_mesh.voxel_set = VoxelSet.new()
 		
-		voxel_obj.set_mesh_mode(options.get("MeshMode", VoxelMesh.MeshModes.GREEDY))
-		voxel_obj.voxel_set.set_voxels(read["palette"])
+		voxel_mesh.set_mesh_mode(options.get("MeshMode", VoxelMesh.MeshModes.GREEDY))
+		voxel_mesh.voxel_set.set_voxels(read["palette"])
 		for voxel_position in read["voxels"]:
-			voxel_obj.set_voxel(voxel_position, read["voxels"][voxel_position])
-		voxel_obj.update_mesh()
+			voxel_mesh.set_voxel(voxel_position, read["voxels"][voxel_position])
+		
+		var center = options.get("center", 0)
+		if center > 0:
+			match center:
+				1:
+					center = Vector3(0.5, 0.5, 0.5)
+				2:
+					center = Vector3(0.5, 1.0, 0.5)
+			voxel_mesh.center(center)
+		
+		voxel_mesh.update_mesh()
 		
 		error = ResourceSaver.save(
 			'%s.%s' % [save_path, get_save_extension()],
-			voxel_obj.mesh)
+			voxel_mesh.mesh)
 		
-		voxel_obj.free()
+		voxel_mesh.free()
 	return error

@@ -1,6 +1,6 @@
 [remap]
 
-importer="VoxelCore.VoxelMesh"
+importer="VoxelCore.MeshOfVoxels"
 type="Mesh"
 path="res://.import/Sword.png-b5aab5ef883e13c3b9af050407dd7444.mesh"
 
@@ -11,5 +11,5 @@ dest_files=[ "res://.import/Sword.png-b5aab5ef883e13c3b9af050407dd7444.mesh" ]
 
 [params]
 
-MeshMode=0
-Center=0
+MeshMode=1
+center=1

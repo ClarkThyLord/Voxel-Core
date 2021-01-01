@@ -11,8 +11,7 @@ dest_files=[ "res://.import/chr_knight.vox-430247a744ff01e260b172f53a60dcce.tscn
 
 [params]
 
-Name=""
-VoxelSet=true
-MeshMode=0
-Center=0
-VoxelObject=0
+name=""
+voxel_object=0
+mesh_mode=1
+center=1
