@@ -1,598 +1,584 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/classes/VoxelSet.gd" type="Script" id=1]
-[ext_resource path="res://examples/VoxelSets/Textured/kenney_voxels.jpg" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
-tile_size = Vector2( 126, 126 )
-tiles = ExtResource( 2 )
 VOXELS = {
 1: {
-"color": Color( 0.94, 0.97, 1, 1 ),
-"uvs": {
-Vector3( -1, 0, 0 ): Vector2( 7, 2 )
-},
-"vsn": "aliceblue"
+"vsn": "aliceblue",
+"color": Color( 0.94, 0.97, 1, 1 )
 },
 2: {
-"color": Color( 0.98, 0.92, 0.84, 1 ),
-"vsn": "antiquewhite"
+"vsn": "antiquewhite",
+"color": Color( 0.98, 0.92, 0.84, 1 )
 },
 3: {
-"color": Color( 0, 1, 1, 1 ),
-"vsn": "aqua"
+"vsn": "aqua",
+"color": Color( 0, 1, 1, 1 )
 },
 4: {
-"color": Color( 0.5, 1, 0.83, 1 ),
-"vsn": "aquamarine"
+"vsn": "aquamarine",
+"color": Color( 0.5, 1, 0.83, 1 )
 },
 5: {
-"color": Color( 0.94, 1, 1, 1 ),
-"vsn": "azure"
+"vsn": "azure",
+"color": Color( 0.94, 1, 1, 1 )
 },
 6: {
-"color": Color( 0.96, 0.96, 0.86, 1 ),
-"vsn": "beige"
+"vsn": "beige",
+"color": Color( 0.96, 0.96, 0.86, 1 )
 },
 7: {
-"color": Color( 1, 0.89, 0.77, 1 ),
-"vsn": "bisque"
+"vsn": "bisque",
+"color": Color( 1, 0.89, 0.77, 1 )
 },
 8: {
-"color": Color( 0, 0, 0, 1 ),
-"vsn": "black"
+"vsn": "black",
+"color": Color( 0, 0, 0, 1 )
 },
 9: {
-"color": Color( 1, 0.92, 0.8, 1 ),
-"vsn": "blanchedalmond"
+"vsn": "blanchedalmond",
+"color": Color( 1, 0.92, 0.8, 1 )
 },
 10: {
-"color": Color( 0, 0, 1, 1 ),
-"vsn": "blue"
+"vsn": "blue",
+"color": Color( 0, 0, 1, 1 )
 },
 11: {
-"color": Color( 0.54, 0.17, 0.89, 1 ),
-"vsn": "blueviolet"
+"vsn": "blueviolet",
+"color": Color( 0.54, 0.17, 0.89, 1 )
 },
 12: {
-"color": Color( 0.65, 0.16, 0.16, 1 ),
-"vsn": "brown"
+"vsn": "brown",
+"color": Color( 0.65, 0.16, 0.16, 1 )
 },
 13: {
-"color": Color( 0.87, 0.72, 0.53, 1 ),
-"vsn": "burlywood"
+"vsn": "burlywood",
+"color": Color( 0.87, 0.72, 0.53, 1 )
 },
 14: {
-"color": Color( 0.37, 0.62, 0.63, 1 ),
-"vsn": "cadetblue"
+"vsn": "cadetblue",
+"color": Color( 0.37, 0.62, 0.63, 1 )
 },
 15: {
-"color": Color( 0.5, 1, 0, 1 ),
-"vsn": "chartreuse"
+"vsn": "chartreuse",
+"color": Color( 0.5, 1, 0, 1 )
 },
 16: {
-"color": Color( 0.82, 0.41, 0.12, 1 ),
-"vsn": "chocolate"
+"vsn": "chocolate",
+"color": Color( 0.82, 0.41, 0.12, 1 )
 },
 17: {
-"color": Color( 1, 0.5, 0.31, 1 ),
-"vsn": "coral"
+"vsn": "coral",
+"color": Color( 1, 0.5, 0.31, 1 )
 },
 18: {
-"color": Color( 0.39, 0.58, 0.93, 1 ),
-"vsn": "cornflower"
+"vsn": "cornflower",
+"color": Color( 0.39, 0.58, 0.93, 1 )
 },
 19: {
-"color": Color( 1, 0.97, 0.86, 1 ),
-"vsn": "cornsilk"
+"vsn": "cornsilk",
+"color": Color( 1, 0.97, 0.86, 1 )
 },
 20: {
-"color": Color( 0.86, 0.08, 0.24, 1 ),
-"vsn": "crimson"
+"vsn": "crimson",
+"color": Color( 0.86, 0.08, 0.24, 1 )
 },
 21: {
-"color": Color( 0, 1, 1, 1 ),
-"vsn": "cyan"
+"vsn": "cyan",
+"color": Color( 0, 1, 1, 1 )
 },
 22: {
-"color": Color( 0, 0, 0.55, 1 ),
-"vsn": "darkblue"
+"vsn": "darkblue",
+"color": Color( 0, 0, 0.55, 1 )
 },
 23: {
-"color": Color( 0, 0.55, 0.55, 1 ),
-"vsn": "darkcyan"
+"vsn": "darkcyan",
+"color": Color( 0, 0.55, 0.55, 1 )
 },
 24: {
-"color": Color( 0.72, 0.53, 0.04, 1 ),
-"vsn": "darkgoldenrod"
+"vsn": "darkgoldenrod",
+"color": Color( 0.72, 0.53, 0.04, 1 )
 },
 25: {
-"color": Color( 0.66, 0.66, 0.66, 1 ),
-"vsn": "darkgray"
+"vsn": "darkgray",
+"color": Color( 0.66, 0.66, 0.66, 1 )
 },
 26: {
-"color": Color( 0, 0.39, 0, 1 ),
-"vsn": "darkgreen"
+"vsn": "darkgreen",
+"color": Color( 0, 0.39, 0, 1 )
 },
 27: {
-"color": Color( 0.74, 0.72, 0.42, 1 ),
-"vsn": "darkkhaki"
+"vsn": "darkkhaki",
+"color": Color( 0.74, 0.72, 0.42, 1 )
 },
 28: {
-"color": Color( 0.55, 0, 0.55, 1 ),
-"vsn": "darkmagenta"
+"vsn": "darkmagenta",
+"color": Color( 0.55, 0, 0.55, 1 )
 },
 29: {
-"color": Color( 0.33, 0.42, 0.18, 1 ),
-"vsn": "darkolivegreen"
+"vsn": "darkolivegreen",
+"color": Color( 0.33, 0.42, 0.18, 1 )
 },
 30: {
-"color": Color( 1, 0.55, 0, 1 ),
-"vsn": "darkorange"
+"vsn": "darkorange",
+"color": Color( 1, 0.55, 0, 1 )
 },
 31: {
-"color": Color( 0.6, 0.2, 0.8, 1 ),
-"vsn": "darkorchid"
+"vsn": "darkorchid",
+"color": Color( 0.6, 0.2, 0.8, 1 )
 },
 32: {
-"color": Color( 0.55, 0, 0, 1 ),
-"vsn": "darkred"
+"vsn": "darkred",
+"color": Color( 0.55, 0, 0, 1 )
 },
 33: {
-"color": Color( 0.91, 0.59, 0.48, 1 ),
-"vsn": "darksalmon"
+"vsn": "darksalmon",
+"color": Color( 0.91, 0.59, 0.48, 1 )
 },
 34: {
-"color": Color( 0.56, 0.74, 0.56, 1 ),
-"vsn": "darkseagreen"
+"vsn": "darkseagreen",
+"color": Color( 0.56, 0.74, 0.56, 1 )
 },
 35: {
-"color": Color( 0.28, 0.24, 0.55, 1 ),
-"vsn": "darkslateblue"
+"vsn": "darkslateblue",
+"color": Color( 0.28, 0.24, 0.55, 1 )
 },
 36: {
-"color": Color( 0.18, 0.31, 0.31, 1 ),
-"vsn": "darkslategray"
+"vsn": "darkslategray",
+"color": Color( 0.18, 0.31, 0.31, 1 )
 },
 37: {
-"color": Color( 0, 0.81, 0.82, 1 ),
-"uvs": {
-Vector3( 0, 0, 1 ): Vector2( 10, 8 )
-},
-"vsn": "darkturquoise"
+"vsn": "darkturquoise",
+"color": Color( 0, 0.81, 0.82, 1 )
 },
 38: {
-"color": Color( 0.58, 0, 0.83, 1 ),
-"vsn": "darkviolet"
+"vsn": "darkviolet",
+"color": Color( 0.58, 0, 0.83, 1 )
 },
 39: {
-"color": Color( 1, 0.08, 0.58, 1 ),
-"vsn": "deeppink"
+"vsn": "deeppink",
+"color": Color( 1, 0.08, 0.58, 1 )
 },
 40: {
-"color": Color( 0, 0.75, 1, 1 ),
-"vsn": "deepskyblue"
+"vsn": "deepskyblue",
+"color": Color( 0, 0.75, 1, 1 )
 },
 41: {
-"color": Color( 0.41, 0.41, 0.41, 1 ),
-"vsn": "dimgray"
+"vsn": "dimgray",
+"color": Color( 0.41, 0.41, 0.41, 1 )
 },
 42: {
-"color": Color( 0.12, 0.56, 1, 1 ),
-"vsn": "dodgerblue"
+"vsn": "dodgerblue",
+"color": Color( 0.12, 0.56, 1, 1 )
 },
 43: {
-"color": Color( 0.7, 0.13, 0.13, 1 ),
-"vsn": "firebrick"
+"vsn": "firebrick",
+"color": Color( 0.7, 0.13, 0.13, 1 )
 },
 44: {
-"color": Color( 1, 0.98, 0.94, 1 ),
-"vsn": "floralwhite"
+"vsn": "floralwhite",
+"color": Color( 1, 0.98, 0.94, 1 )
 },
 45: {
-"color": Color( 0.13, 0.55, 0.13, 1 ),
-"vsn": "forestgreen"
+"vsn": "forestgreen",
+"color": Color( 0.13, 0.55, 0.13, 1 )
 },
 46: {
-"color": Color( 1, 0, 1, 1 ),
-"vsn": "fuchsia"
+"vsn": "fuchsia",
+"color": Color( 1, 0, 1, 1 )
 },
 47: {
-"color": Color( 0.86, 0.86, 0.86, 1 ),
-"vsn": "gainsboro"
+"vsn": "gainsboro",
+"color": Color( 0.86, 0.86, 0.86, 1 )
 },
 48: {
-"color": Color( 0.97, 0.97, 1, 1 ),
-"vsn": "ghostwhite"
+"vsn": "ghostwhite",
+"color": Color( 0.97, 0.97, 1, 1 )
 },
 49: {
-"color": Color( 1, 0.84, 0, 1 ),
-"vsn": "gold"
+"vsn": "gold",
+"color": Color( 1, 0.84, 0, 1 )
 },
 50: {
-"color": Color( 0.85, 0.65, 0.13, 1 ),
-"vsn": "goldenrod"
+"vsn": "goldenrod",
+"color": Color( 0.85, 0.65, 0.13, 1 )
 },
 51: {
-"color": Color( 0.75, 0.75, 0.75, 1 ),
-"vsn": "gray"
+"vsn": "gray",
+"color": Color( 0.75, 0.75, 0.75, 1 )
 },
 52: {
-"color": Color( 0, 1, 0, 1 ),
-"vsn": "green"
+"vsn": "green",
+"color": Color( 0, 1, 0, 1 )
 },
 53: {
-"color": Color( 0.68, 1, 0.18, 1 ),
-"vsn": "greenyellow"
+"vsn": "greenyellow",
+"color": Color( 0.68, 1, 0.18, 1 )
 },
 54: {
-"color": Color( 0.94, 1, 0.94, 1 ),
-"vsn": "honeydew"
+"vsn": "honeydew",
+"color": Color( 0.94, 1, 0.94, 1 )
 },
 55: {
-"color": Color( 1, 0.41, 0.71, 1 ),
-"vsn": "hotpink"
+"vsn": "hotpink",
+"color": Color( 1, 0.41, 0.71, 1 )
 },
 56: {
-"color": Color( 0.8, 0.36, 0.36, 1 ),
-"vsn": "indianred"
+"vsn": "indianred",
+"color": Color( 0.8, 0.36, 0.36, 1 )
 },
 57: {
-"color": Color( 0.29, 0, 0.51, 1 ),
-"vsn": "indigo"
+"vsn": "indigo",
+"color": Color( 0.29, 0, 0.51, 1 )
 },
 58: {
-"color": Color( 1, 1, 0.94, 1 ),
-"vsn": "ivory"
+"vsn": "ivory",
+"color": Color( 1, 1, 0.94, 1 )
 },
 59: {
-"color": Color( 0.94, 0.9, 0.55, 1 ),
-"vsn": "khaki"
+"vsn": "khaki",
+"color": Color( 0.94, 0.9, 0.55, 1 )
 },
 60: {
-"color": Color( 0.9, 0.9, 0.98, 1 ),
-"uvs": {
-Vector3( 0, 0, 1 ): Vector2( 10, 4 ),
-Vector3( 0, 1, 0 ): Vector2( 9, 4 ),
-Vector3( 1, 0, 0 ): Vector2( 2, 2 )
-},
-"vsn": "lavender"
+"vsn": "lavender",
+"color": Color( 0.9, 0.9, 0.98, 1 )
 },
 61: {
-"color": Color( 1, 0.94, 0.96, 1 ),
-"vsn": "lavenderblush"
+"vsn": "lavenderblush",
+"color": Color( 1, 0.94, 0.96, 1 )
 },
 62: {
-"color": Color( 0.49, 0.99, 0, 1 ),
-"vsn": "lawngreen"
+"vsn": "lawngreen",
+"color": Color( 0.49, 0.99, 0, 1 )
 },
 63: {
-"color": Color( 1, 0.98, 0.8, 1 ),
-"vsn": "lemonchiffon"
+"vsn": "lemonchiffon",
+"color": Color( 1, 0.98, 0.8, 1 )
 },
 64: {
-"color": Color( 0.68, 0.85, 0.9, 1 ),
-"vsn": "lightblue"
+"vsn": "lightblue",
+"color": Color( 0.68, 0.85, 0.9, 1 )
 },
 65: {
-"color": Color( 0.94, 0.5, 0.5, 1 ),
-"vsn": "lightcoral"
+"vsn": "lightcoral",
+"color": Color( 0.94, 0.5, 0.5, 1 )
 },
 66: {
-"color": Color( 0.88, 1, 1, 1 ),
-"vsn": "lightcyan"
+"vsn": "lightcyan",
+"color": Color( 0.88, 1, 1, 1 )
 },
 67: {
-"color": Color( 0.98, 0.98, 0.82, 1 ),
-"vsn": "lightgoldenrod"
+"vsn": "lightgoldenrod",
+"color": Color( 0.98, 0.98, 0.82, 1 )
 },
 68: {
-"color": Color( 0.83, 0.83, 0.83, 1 ),
-"vsn": "lightgray"
+"vsn": "lightgray",
+"color": Color( 0.83, 0.83, 0.83, 1 )
 },
 69: {
-"color": Color( 0.56, 0.93, 0.56, 1 ),
-"vsn": "lightgreen"
+"vsn": "lightgreen",
+"color": Color( 0.56, 0.93, 0.56, 1 )
 },
 70: {
-"color": Color( 1, 0.71, 0.76, 1 ),
-"vsn": "lightpink"
+"vsn": "lightpink",
+"color": Color( 1, 0.71, 0.76, 1 )
 },
 71: {
-"color": Color( 1, 0.63, 0.48, 1 ),
-"vsn": "lightsalmon"
+"vsn": "lightsalmon",
+"color": Color( 1, 0.63, 0.48, 1 )
 },
 72: {
-"color": Color( 0.13, 0.7, 0.67, 1 ),
-"vsn": "lightseagreen"
+"vsn": "lightseagreen",
+"color": Color( 0.13, 0.7, 0.67, 1 )
 },
 73: {
-"color": Color( 0.53, 0.81, 0.98, 1 ),
-"vsn": "lightskyblue"
+"vsn": "lightskyblue",
+"color": Color( 0.53, 0.81, 0.98, 1 )
 },
 74: {
-"color": Color( 0.47, 0.53, 0.6, 1 ),
-"vsn": "lightslategray"
+"vsn": "lightslategray",
+"color": Color( 0.47, 0.53, 0.6, 1 )
 },
 75: {
-"color": Color( 0.69, 0.77, 0.87, 1 ),
-"vsn": "lightsteelblue"
+"vsn": "lightsteelblue",
+"color": Color( 0.69, 0.77, 0.87, 1 )
 },
 76: {
-"color": Color( 1, 1, 0.88, 1 ),
-"vsn": "lightyellow"
+"vsn": "lightyellow",
+"color": Color( 1, 1, 0.88, 1 )
 },
 77: {
-"color": Color( 0, 1, 0, 1 ),
-"vsn": "lime"
+"vsn": "lime",
+"color": Color( 0, 1, 0, 1 )
 },
 78: {
-"color": Color( 0.2, 0.8, 0.2, 1 ),
-"vsn": "limegreen"
+"vsn": "limegreen",
+"color": Color( 0.2, 0.8, 0.2, 1 )
 },
 79: {
-"color": Color( 0.98, 0.94, 0.9, 1 ),
-"vsn": "linen"
+"vsn": "linen",
+"color": Color( 0.98, 0.94, 0.9, 1 )
 },
 80: {
-"color": Color( 1, 0, 1, 1 ),
-"vsn": "magenta"
+"vsn": "magenta",
+"color": Color( 1, 0, 1, 1 )
 },
 81: {
-"color": Color( 0.69, 0.19, 0.38, 1 ),
-"vsn": "maroon"
+"vsn": "maroon",
+"color": Color( 0.69, 0.19, 0.38, 1 )
 },
 82: {
-"color": Color( 0.4, 0.8, 0.67, 1 ),
-"vsn": "mediumaquamarine"
+"vsn": "mediumaquamarine",
+"color": Color( 0.4, 0.8, 0.67, 1 )
 },
 83: {
-"color": Color( 0, 0, 0.8, 1 ),
-"vsn": "mediumblue"
+"vsn": "mediumblue",
+"color": Color( 0, 0, 0.8, 1 )
 },
 84: {
-"color": Color( 0.73, 0.33, 0.83, 1 ),
-"vsn": "mediumorchid"
+"vsn": "mediumorchid",
+"color": Color( 0.73, 0.33, 0.83, 1 )
 },
 85: {
-"color": Color( 0.58, 0.44, 0.86, 1 ),
-"vsn": "mediumpurple"
+"vsn": "mediumpurple",
+"color": Color( 0.58, 0.44, 0.86, 1 )
 },
 86: {
-"color": Color( 0.24, 0.7, 0.44, 1 ),
-"vsn": "mediumseagreen"
+"vsn": "mediumseagreen",
+"color": Color( 0.24, 0.7, 0.44, 1 )
 },
 87: {
-"color": Color( 0.48, 0.41, 0.93, 1 ),
-"vsn": "mediumslateblue"
+"vsn": "mediumslateblue",
+"color": Color( 0.48, 0.41, 0.93, 1 )
 },
 88: {
-"color": Color( 0, 0.98, 0.6, 1 ),
-"vsn": "mediumspringgreen"
+"vsn": "mediumspringgreen",
+"color": Color( 0, 0.98, 0.6, 1 )
 },
 89: {
-"color": Color( 0.28, 0.82, 0.8, 1 ),
-"vsn": "mediumturquoise"
+"vsn": "mediumturquoise",
+"color": Color( 0.28, 0.82, 0.8, 1 )
 },
 90: {
-"color": Color( 0.78, 0.08, 0.52, 1 ),
-"vsn": "mediumvioletred"
+"vsn": "mediumvioletred",
+"color": Color( 0.78, 0.08, 0.52, 1 )
 },
 91: {
-"color": Color( 0.1, 0.1, 0.44, 1 ),
-"vsn": "midnightblue"
+"vsn": "midnightblue",
+"color": Color( 0.1, 0.1, 0.44, 1 )
 },
 92: {
-"color": Color( 0.96, 1, 0.98, 1 ),
-"vsn": "mintcream"
+"vsn": "mintcream",
+"color": Color( 0.96, 1, 0.98, 1 )
 },
 93: {
-"color": Color( 1, 0.89, 0.88, 1 ),
-"vsn": "mistyrose"
+"vsn": "mistyrose",
+"color": Color( 1, 0.89, 0.88, 1 )
 },
 94: {
-"color": Color( 1, 0.89, 0.71, 1 ),
-"vsn": "moccasin"
+"vsn": "moccasin",
+"color": Color( 1, 0.89, 0.71, 1 )
 },
 95: {
-"color": Color( 1, 0.87, 0.68, 1 ),
-"vsn": "navajowhite"
+"vsn": "navajowhite",
+"color": Color( 1, 0.87, 0.68, 1 )
 },
 96: {
-"color": Color( 0, 0, 0.5, 1 ),
-"vsn": "navyblue"
+"vsn": "navyblue",
+"color": Color( 0, 0, 0.5, 1 )
 },
 97: {
-"color": Color( 0.99, 0.96, 0.9, 1 ),
-"vsn": "oldlace"
+"vsn": "oldlace",
+"color": Color( 0.99, 0.96, 0.9, 1 )
 },
 98: {
-"color": Color( 0.5, 0.5, 0, 1 ),
-"vsn": "olive"
+"vsn": "olive",
+"color": Color( 0.5, 0.5, 0, 1 )
 },
 99: {
-"color": Color( 0.42, 0.56, 0.14, 1 ),
-"vsn": "olivedrab"
+"vsn": "olivedrab",
+"color": Color( 0.42, 0.56, 0.14, 1 )
 },
 100: {
-"color": Color( 1, 0.65, 0, 1 ),
-"vsn": "orange"
+"vsn": "orange",
+"color": Color( 1, 0.65, 0, 1 )
 },
 101: {
-"color": Color( 1, 0.27, 0, 1 ),
-"vsn": "orangered"
+"vsn": "orangered",
+"color": Color( 1, 0.27, 0, 1 )
 },
 102: {
-"color": Color( 0.85, 0.44, 0.84, 1 ),
-"vsn": "orchid"
+"vsn": "orchid",
+"color": Color( 0.85, 0.44, 0.84, 1 )
 },
 103: {
-"color": Color( 0.93, 0.91, 0.67, 1 ),
-"vsn": "palegoldenrod"
+"vsn": "palegoldenrod",
+"color": Color( 0.93, 0.91, 0.67, 1 )
 },
 104: {
-"color": Color( 0.6, 0.98, 0.6, 1 ),
-"vsn": "palegreen"
+"vsn": "palegreen",
+"color": Color( 0.6, 0.98, 0.6, 1 )
 },
 105: {
-"color": Color( 0.69, 0.93, 0.93, 1 ),
-"vsn": "paleturquoise"
+"vsn": "paleturquoise",
+"color": Color( 0.69, 0.93, 0.93, 1 )
 },
 106: {
-"color": Color( 0.86, 0.44, 0.58, 1 ),
-"vsn": "palevioletred"
+"vsn": "palevioletred",
+"color": Color( 0.86, 0.44, 0.58, 1 )
 },
 107: {
-"color": Color( 1, 0.94, 0.84, 1 ),
-"vsn": "papayawhip"
+"vsn": "papayawhip",
+"color": Color( 1, 0.94, 0.84, 1 )
 },
 108: {
-"color": Color( 1, 0.85, 0.73, 1 ),
-"vsn": "peachpuff"
+"vsn": "peachpuff",
+"color": Color( 1, 0.85, 0.73, 1 )
 },
 109: {
-"color": Color( 0.8, 0.52, 0.25, 1 ),
-"vsn": "peru"
+"vsn": "peru",
+"color": Color( 0.8, 0.52, 0.25, 1 )
 },
 110: {
-"color": Color( 1, 0.75, 0.8, 1 ),
-"vsn": "pink"
+"vsn": "pink",
+"color": Color( 1, 0.75, 0.8, 1 )
 },
 111: {
-"color": Color( 0.87, 0.63, 0.87, 1 ),
-"vsn": "plum"
+"vsn": "plum",
+"color": Color( 0.87, 0.63, 0.87, 1 )
 },
 112: {
-"color": Color( 0.69, 0.88, 0.9, 1 ),
-"vsn": "powderblue"
+"vsn": "powderblue",
+"color": Color( 0.69, 0.88, 0.9, 1 )
 },
 113: {
-"color": Color( 0.63, 0.13, 0.94, 1 ),
-"vsn": "purple"
+"vsn": "purple",
+"color": Color( 0.63, 0.13, 0.94, 1 )
 },
 114: {
-"color": Color( 0.4, 0.2, 0.6, 1 ),
-"vsn": "rebeccapurple"
+"vsn": "rebeccapurple",
+"color": Color( 0.4, 0.2, 0.6, 1 )
 },
 115: {
-"color": Color( 1, 0, 0, 1 ),
-"vsn": "red"
+"vsn": "red",
+"color": Color( 1, 0, 0, 1 )
 },
 116: {
-"color": Color( 0.74, 0.56, 0.56, 1 ),
-"vsn": "rosybrown"
+"vsn": "rosybrown",
+"color": Color( 0.74, 0.56, 0.56, 1 )
 },
 117: {
-"color": Color( 0.25, 0.41, 0.88, 1 ),
-"vsn": "royalblue"
+"vsn": "royalblue",
+"color": Color( 0.25, 0.41, 0.88, 1 )
 },
 118: {
-"color": Color( 0.55, 0.27, 0.07, 1 ),
-"vsn": "saddlebrown"
+"vsn": "saddlebrown",
+"color": Color( 0.55, 0.27, 0.07, 1 )
 },
 119: {
-"color": Color( 0.98, 0.5, 0.45, 1 ),
-"vsn": "salmon"
+"vsn": "salmon",
+"color": Color( 0.98, 0.5, 0.45, 1 )
 },
 120: {
-"color": Color( 0.18, 0.55, 0.34, 1 ),
-"vsn": "sandybrown"
+"vsn": "sandybrown",
+"color": Color( 0.18, 0.55, 0.34, 1 )
 },
 121: {
-"color": Color( 1, 0.96, 0.93, 1 ),
-"vsn": "seashell"
+"vsn": "seashell",
+"color": Color( 1, 0.96, 0.93, 1 )
 },
 122: {
-"color": Color( 0.63, 0.32, 0.18, 1 ),
-"vsn": "sienna"
+"vsn": "sienna",
+"color": Color( 0.63, 0.32, 0.18, 1 )
 },
 123: {
-"color": Color( 0.75, 0.75, 0.75, 1 ),
-"vsn": "silver"
+"vsn": "silver",
+"color": Color( 0.75, 0.75, 0.75, 1 )
 },
 124: {
-"color": Color( 0.53, 0.81, 0.92, 1 ),
-"vsn": "skyblue"
+"vsn": "skyblue",
+"color": Color( 0.53, 0.81, 0.92, 1 )
 },
 125: {
-"color": Color( 0.42, 0.35, 0.8, 1 ),
-"vsn": "slateblue"
+"vsn": "slateblue",
+"color": Color( 0.42, 0.35, 0.8, 1 )
 },
 126: {
-"color": Color( 0.44, 0.5, 0.56, 1 ),
-"vsn": "slategray"
+"vsn": "slategray",
+"color": Color( 0.44, 0.5, 0.56, 1 )
 },
 127: {
-"color": Color( 1, 0.98, 0.98, 1 ),
-"vsn": "snow"
+"vsn": "snow",
+"color": Color( 1, 0.98, 0.98, 1 )
 },
 128: {
-"color": Color( 0, 1, 0.5, 1 ),
-"vsn": "springgreen"
+"vsn": "springgreen",
+"color": Color( 0, 1, 0.5, 1 )
 },
 129: {
-"color": Color( 0.27, 0.51, 0.71, 1 ),
-"vsn": "steelblue"
+"vsn": "steelblue",
+"color": Color( 0.27, 0.51, 0.71, 1 )
 },
 130: {
-"color": Color( 0.82, 0.71, 0.55, 1 ),
-"vsn": "tan"
+"vsn": "tan",
+"color": Color( 0.82, 0.71, 0.55, 1 )
 },
 131: {
-"color": Color( 0, 0.5, 0.5, 1 ),
-"vsn": "teal"
+"vsn": "teal",
+"color": Color( 0, 0.5, 0.5, 1 )
 },
 132: {
-"color": Color( 0.85, 0.75, 0.85, 1 ),
-"vsn": "thistle"
+"vsn": "thistle",
+"color": Color( 0.85, 0.75, 0.85, 1 )
 },
 133: {
-"color": Color( 1, 0.39, 0.28, 1 ),
-"vsn": "tomato"
+"vsn": "tomato",
+"color": Color( 1, 0.39, 0.28, 1 )
 },
 134: {
-"color": Color( 0.25, 0.88, 0.82, 1 ),
-"vsn": "turquoise"
+"vsn": "turquoise",
+"color": Color( 0.25, 0.88, 0.82, 1 )
 },
 135: {
-"color": Color( 0.93, 0.51, 0.93, 1 ),
-"vsn": "violet"
+"vsn": "violet",
+"color": Color( 0.93, 0.51, 0.93, 1 )
 },
 136: {
-"color": Color( 0.5, 0.5, 0.5, 1 ),
-"vsn": "webgray"
+"vsn": "webgray",
+"color": Color( 0.5, 0.5, 0.5, 1 )
 },
 137: {
-"color": Color( 0, 0.5, 0, 1 ),
-"vsn": "webgreen"
+"vsn": "webgreen",
+"color": Color( 0, 0.5, 0, 1 )
 },
 138: {
-"color": Color( 0.5, 0, 0, 1 ),
-"vsn": "webmaroon"
+"vsn": "webmaroon",
+"color": Color( 0.5, 0, 0, 1 )
 },
 139: {
-"color": Color( 0.5, 0, 0.5, 1 ),
-"vsn": "webpurple"
+"vsn": "webpurple",
+"color": Color( 0.5, 0, 0.5, 1 )
 },
 140: {
-"color": Color( 0.96, 0.87, 0.7, 1 ),
-"vsn": "wheat"
+"vsn": "wheat",
+"color": Color( 0.96, 0.87, 0.7, 1 )
 },
 141: {
-"color": Color( 1, 1, 1, 1 ),
-"vsn": "white"
+"vsn": "white",
+"color": Color( 1, 1, 1, 1 )
 },
 142: {
-"color": Color( 0.96, 0.96, 0.96, 1 ),
-"vsn": "whitesmoke"
+"vsn": "whitesmoke",
+"color": Color( 0.96, 0.96, 0.96, 1 )
 },
 143: {
-"color": Color( 1, 1, 0, 1 ),
-"vsn": "yellow"
+"vsn": "yellow",
+"color": Color( 1, 1, 0, 1 )
 },
 144: {
-"color": Color( 0.6, 0.8, 0.2, 1 ),
-"vsn": "yellowgreen"
+"vsn": "yellowgreen",
+"color": Color( 0.6, 0.8, 0.2, 1 )
 }
 }
