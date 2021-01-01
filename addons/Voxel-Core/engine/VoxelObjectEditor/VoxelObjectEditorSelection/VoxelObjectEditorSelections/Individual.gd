@@ -13,14 +13,15 @@ func _init():
 func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	editor.set_cursors_visibility(true)
 	
-	if Input.is_mouse_button_pressed(BUTTON_LEFT) and not editor.last_hit.empty():
+	if (event is InputEventMouseButton and not event.pressed) and not editor.last_hit.empty():
+		editor.work_tool()
+	elif Input.is_mouse_button_pressed(BUTTON_LEFT):
 		editor.work_tool()
 	
-	if event is InputEventMouseMotion:
-		if not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):
-			if editor.last_hit.empty():
-				editor.set_cursors_selections([])
-			else:
-				editor.set_cursors_selections([editor.get_selection()])
+	if not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):
+		if editor.last_hit.empty():
+			editor.set_cursors_selections([])
+		else:
+			editor.set_cursors_selections([editor.get_selection()])
 	
 	return true

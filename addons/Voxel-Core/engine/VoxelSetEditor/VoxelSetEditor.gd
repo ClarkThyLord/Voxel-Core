@@ -86,6 +86,7 @@ func update_view() -> void:
 		
 		if is_instance_valid(VoxelSetViewer):
 			var editing_single : bool = VoxelSetViewer.get_selected_size() == 1
+			VoxelSetInfo.size_flags_vertical = Container.SIZE_FILL if editing_single else Container.SIZE_EXPAND_FILL
 			VoxelInfo.visible = editing_single
 			VoxelInspector.visible = editing_single
 			

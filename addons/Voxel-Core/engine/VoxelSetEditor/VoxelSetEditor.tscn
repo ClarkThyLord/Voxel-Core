@@ -18,13 +18,13 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 1024.0
-margin_bottom = 200.0
+margin_bottom = 206.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
 margin_right = 300.0
-margin_bottom = 200.0
+margin_bottom = 206.0
 rect_min_size = Vector2( 300, 0 )
 size_flags_vertical = 3
 
@@ -136,14 +136,15 @@ text = "Close"
 [node name="VoxelSetInfo" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
 margin_top = 24.0
 margin_right = 300.0
-margin_bottom = 200.0
+margin_bottom = 206.0
+rect_min_size = Vector2( 0, 50 )
 size_flags_vertical = 3
 
 [node name="VoxelInfo" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
 visible = false
-margin_top = 116.0
+margin_top = 78.0
 margin_right = 300.0
-margin_bottom = 200.0
+margin_bottom = 206.0
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VoxelInfo"]
@@ -178,18 +179,18 @@ placeholder_text = "Enter name..."
 [node name="VoxelData" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/VoxelInfo"]
 margin_top = 28.0
 margin_right = 300.0
-margin_bottom = 84.0
+margin_bottom = 128.0
 size_flags_vertical = 3
 
 [node name="HSplitContainer" type="VSeparator" parent="HBoxContainer"]
 margin_left = 304.0
 margin_right = 308.0
-margin_bottom = 200.0
+margin_bottom = 206.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
 margin_left = 312.0
 margin_right = 1024.0
-margin_bottom = 200.0
+margin_bottom = 206.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -197,7 +198,7 @@ size_flags_vertical = 3
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 712.0
-margin_bottom = 200.0
+margin_bottom = 206.0
 size_flags_horizontal = 7
 size_flags_vertical = 3
 search = ""
