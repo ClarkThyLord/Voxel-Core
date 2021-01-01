@@ -200,7 +200,7 @@ func _on_Import_Append_pressed():
 func _on_Import_Replace_pressed():
 	var result := Reader.read_file(import_file_path)
 	if result["error"] == OK:
-		voxel_set.Voxels = result["palette"]
+		voxel_set.set_voxels(result["palette"])
 		
 		voxel_set.request_refresh()
 	else: printerr(result["error"])
