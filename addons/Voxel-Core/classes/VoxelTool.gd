@@ -105,7 +105,7 @@ func add_face(
 		
 		material.vertex_color_use_as_albedo = true
 		if _uv_voxels:
-			material.albedo_texture = _voxel_set.Tiles
+			material.albedo_texture = _voxel_set.tiles
 		
 		material.metallic = metal
 		material.metallic_specular = specular

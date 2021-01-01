@@ -82,6 +82,10 @@ func is_uv_ready() -> bool:
 	return _uv_ready
 
 
+func size() -> int:
+	return _voxels.size()
+
+
 # Returns the uv scale
 func get_uv_scale() -> Vector2:
 	return _uv_scale

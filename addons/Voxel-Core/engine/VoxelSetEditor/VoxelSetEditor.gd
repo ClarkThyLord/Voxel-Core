@@ -74,22 +74,23 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	if is_instance_valid(VoxelSetViewer):
 		VoxelSetViewer.voxel_set = voxel_set
 	
-	if update: update_view()
+	if update:
+		update_view()
 
 
 func update_view() -> void:
 	if is_instance_valid(voxel_set):
 		if is_instance_valid(VoxelSetInfo):
-			VoxelSetInfo.text = "Voxels:\t\t" + str(voxel_set.Voxels.size())
-			VoxelSetInfo.text += "\nUV Ready:\t" + str(voxel_set.UVReady)
+			VoxelSetInfo.text = "Voxels:\t\t" + str(voxel_set.size())
+			VoxelSetInfo.text += "\nUV Ready:\t" + str(voxel_set.is_uv_ready())
 		
 		if is_instance_valid(VoxelSetViewer):
-			var editing_single : bool = VoxelSetViewer.Selections.size() == 1
+			var editing_single : bool = VoxelSetViewer.get_selected_size() == 1
 			VoxelInfo.visible = editing_single
 			VoxelInspector.visible = editing_single
 			
 			if editing_single:
-				var id = VoxelSetViewer.Selections[0]
+				var id = VoxelSetViewer.get_selected(0)
 				
 				VoxelID.text = str(id)
 				VoxelName.text = voxel_set.id_to_name(id)
@@ -107,11 +108,13 @@ func _on_Close_pressed():
 
 
 func _on_VoxelID_text_entered(new_id):
-	if not new_id.is_valid_integer(): return
+	if not new_id.is_valid_integer():
+		return
 	new_id = int(abs(new_id.to_int()))
-	if new_id == VoxelSetViewer.Selections[0]: return
+	if new_id == VoxelSetViewer.get_selected(0):
+		return
 	
-	var id = VoxelSetViewer.Selections[0]
+	var id = VoxelSetViewer.get_selected(0)
 	var name = voxel_set.id_to_name(id)
 	var voxel = voxel_set.get_voxel(id)
 	undo_redo.create_action("VoxelSetEditor : Set voxel id")
@@ -136,7 +139,7 @@ func _on_VoxelID_text_entered(new_id):
 
 
 func _on_VoxelName_text_entered(new_name : String):
-	var voxel_id = VoxelSetViewer.Selections[0]
+	var voxel_id = VoxelSetViewer.get_selected(0)
 	if new_name.empty():
 		var name = voxel_set.id_to_name()
 		undo_redo.create_action("VoxelSetEditor : Remove voxel name")

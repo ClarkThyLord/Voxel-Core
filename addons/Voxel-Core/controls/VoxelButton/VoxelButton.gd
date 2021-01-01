@@ -76,10 +76,10 @@ func set_voxel_set(value : Resource, update := true) -> void:
 
 
 # Quick setup of voxel_set, voxel_id and voxel_face; calls on update_view
-func setup(voxel_set : VoxelSet, voxel_set_id : int, voxel_face := Vector3.ZERO) -> void:
-	voxel_set = voxel_set
-	voxel_id = voxel_set_id
-	voxel_face = voxel_face
+func setup(voxel_set : VoxelSet, voxel_id : int, voxel_face := Vector3.ZERO) -> void:
+	set_voxel_set(voxel_set, false)
+	set_voxel_id(voxel_id, false)
+	set_voxel_face(voxel_face, false)
 	update_view()
 
 
@@ -105,6 +105,6 @@ func update_view() -> void:
 			var img_texture := ImageTexture.new()
 			img_texture.create_from_image(
 					voxel_set.tiles.get_data().get_rect(Rect2(
-							Vector2.ONE * uv * voxel_set.tilesize,
-							Vector2.ONE * voxel_set.tilesize)))
+							Vector2.ONE * uv * voxel_set.tile_size,
+							Vector2.ONE * voxel_set.tile_size)))
 			set_voxel_texture(img_texture)

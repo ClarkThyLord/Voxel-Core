@@ -63,7 +63,7 @@ text = "Import"
 margin_right = 315.0
 margin_bottom = 130.0
 rect_min_size = Vector2( 400, 300 )
-window_title = "Import File"
+window_title = "Open a File"
 resizable = true
 mode = 0
 filters = PoolStringArray( "*.vox ; VOX Files", "*.png, *.bmp, *.dds, *.exr, *.hdr, *.jpg, *.jpeg, *.tga, *.svg, *.svgz, *.webp; Image Files", "*.gpl; GIMP Palette" )
@@ -200,11 +200,11 @@ margin_right = 712.0
 margin_bottom = 200.0
 size_flags_horizontal = 7
 size_flags_vertical = 3
-Search = ""
-AllowEdit = true
-AllowedSelections = -1
-ShowHints = true
-VoxelSetRef = null
+search = ""
+allow_edit = true
+selection_max = -1
+show_hints = true
+voxel_set = null
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false
@@ -225,12 +225,8 @@ margin_bottom = 200.0
 rect_min_size = Vector2( 332, 200 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
-AllowedSelections = 6
-AllowEdit = true
-ViewMode = 1
-ViewSensitivity = 8
-VoxelID = 0
-VoxelSetRef = null
+selection_max = 6
+allow_edit = true
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import" to="." method="open_ImportFile"]
 [connection signal="file_selected" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_Import_file_selected"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Append" to="." method="_on_Import_Append_pressed"]

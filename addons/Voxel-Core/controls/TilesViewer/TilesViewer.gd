@@ -115,6 +115,7 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
+		texture = voxel_set.tiles
 		voxel_set.connect("requested_refresh", self, "update")
 	
 	if update:

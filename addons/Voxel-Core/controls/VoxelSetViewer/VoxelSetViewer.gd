@@ -132,6 +132,18 @@ func has_selected(voxel_id : int) -> bool:
 	return _selections.has(voxel_id)
 
 
+func get_selected(index : int) -> int:
+	return _selections[index]
+
+
+func get_selections() -> Array:
+	return _selections.duplicate()
+
+
+func get_selected_size() -> int:
+	return _selections.size()
+
+
 # Returns VoxelButton with given voxel_id if found, else returns null
 func get_voxel_button(voxel_id : int):
 	return Voxels.find_node(str(voxel_id), false, false) if Voxels else null
