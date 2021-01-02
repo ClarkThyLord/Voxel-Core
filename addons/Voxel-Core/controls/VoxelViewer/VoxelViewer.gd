@@ -166,7 +166,8 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
-		voxel_set.connect("requested_refresh", self, "update_view")
+		if not voxel_set.is_connected("requested_refresh", self, "update_view"):
+			voxel_set.connect("requested_refresh", self, "update_view")
 	if is_instance_valid(VoxelTexture):
 		VoxelTexture.voxel_set = voxel_set
 	

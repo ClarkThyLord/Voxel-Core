@@ -54,6 +54,7 @@ func _gui_input(event : InputEvent):
 
 func _draw():
 	if is_instance_valid(voxel_set) and voxel_set.is_uv_ready():
+		texture = voxel_set.tiles
 		if selection_max != 0:
 			for selection in _selections:
 				draw_rect(Rect2(
@@ -115,8 +116,8 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
-		texture = voxel_set.tiles
-		voxel_set.connect("requested_refresh", self, "update")
+		if not voxel_set.is_connected("requested_refresh", self, "update"):
+			voxel_set.connect("requested_refresh", self, "update")
 	
 	if update:
 		self.update()
