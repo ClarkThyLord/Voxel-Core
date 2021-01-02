@@ -381,30 +381,36 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 func setup_context_menu(global_position : Vector2, face := _last_hovered_face) -> void:
 	_editing_face = face
 	_editing_multiple = false
+	var selected_hovered := _selections.has(_editing_face)
 	if is_instance_valid(ContextMenu) and is_instance_valid(voxel_set):
 		ContextMenu.clear()
-		ContextMenu.add_item("Color side", 0)
-		if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
-			ContextMenu.add_item("Remove side color", 1)
 		
-		if voxel_set.is_uv_ready():
-			ContextMenu.add_item("Texture side", 2)
-		if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
-			ContextMenu.add_item("Remove side uv", 3)
-		
+		if _selections.size() < 6:
+			ContextMenu.add_item("Select all", 13)
 		if _selections.size() > 1:
+			ContextMenu.add_item("Unselect all", 11)
+		
+		if _selections.size() == 0 or not selected_hovered:
 			ContextMenu.add_separator()
-			ContextMenu.add_item("Color sides", 7)
+			ContextMenu.add_item("Color side", 0)
 			if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
-				ContextMenu.add_item("Remove side colors", 8)
-			
+				ContextMenu.add_item("Remove side color", 1)
 			
 			if voxel_set.is_uv_ready():
-				ContextMenu.add_item("Texture sides", 9)
+				ContextMenu.add_item("Texture side", 2)
 			if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
-				ContextMenu.add_item("Remove side uvs", 10)
+				ContextMenu.add_item("Remove side uv", 3)
+		
+		if selected_hovered and _selections.size() >= 1:
+			ContextMenu.add_separator()
+			ContextMenu.add_item("Color side(s)", 7)
+			if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
+				ContextMenu.add_item("Remove side color(s)", 8)
 			
-			ContextMenu.add_item("Unselect all", 11)
+			if voxel_set.is_uv_ready():
+				ContextMenu.add_item("Texture side(s)", 9)
+			if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
+				ContextMenu.add_item("Remove side uv(s)", 10)
 		
 		ContextMenu.add_separator()
 		ContextMenu.add_item("Color voxel", 4)
@@ -495,6 +501,10 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
+		13: # Select all
+			unselect_all()
+			for face in Voxel.Faces:
+				select(face)
 		11: # Unselect all
 			unselect_all()
 		12: # Modify material
