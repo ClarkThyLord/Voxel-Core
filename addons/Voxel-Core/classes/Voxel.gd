@@ -167,7 +167,7 @@ static func remove_face_uv(voxel : Dictionary, face : Vector3) -> void:
 
 # Returns the defined metallic within given voxel if present, otherwise returns 0
 static func get_metallic(voxel : Dictionary) -> float:
-	return voxel.get("metallic", 0)
+	return voxel.get("metallic", 0.0)
 
 
 # Sets the given metallic to the given voxel
@@ -197,7 +197,7 @@ static func remove_specular(voxel : Dictionary) -> void:
 
 # Returns the defined roughness within given voxel if present, otherwise returns 1
 static func get_roughness(voxel : Dictionary) -> float:
-	return voxel.get("roughness", 1)
+	return voxel.get("roughness", 1.0)
 
 
 # Sets the given roughness to the given voxel
@@ -212,7 +212,7 @@ static func remove_roughness(voxel : Dictionary) -> void:
 
 # Returns the defined energy within given voxel if present, otherwise returns 0
 static func get_energy(voxel : Dictionary) -> float:
-	return voxel.get("energy", 0)
+	return voxel.get("energy", 0.0)
 
 
 # Sets the given energy to the given voxel

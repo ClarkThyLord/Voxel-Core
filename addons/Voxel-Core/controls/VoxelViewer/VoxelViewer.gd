@@ -387,7 +387,7 @@ func setup_context_menu(global_position : Vector2, face := _last_hovered_face) -
 		
 		if _selections.size() < 6:
 			ContextMenu.add_item("Select all", 13)
-		if _selections.size() > 1:
+		if _selections.size() > 0:
 			ContextMenu.add_item("Unselect all", 11)
 		
 		if _selections.size() == 0 or not selected_hovered:
@@ -655,15 +655,27 @@ func _on_MaterialMenu_Cancel_pressed():
 
 func _on_MaterialMenu_Confirm_pressed():
 	var voxel = get_viewing_voxel()
-	undo_redo.create_action("VoxelViewer : Set material")
-	undo_redo.add_do_method(Voxel, "set_metallic", voxel, Voxel.get_metallic(voxel))
-	undo_redo.add_undo_method(Voxel, "set_metallic", voxel, Voxel.get_metallic(_unedited_voxel))
-	undo_redo.add_do_method(Voxel, "set_specular", voxel, Voxel.get_specular(voxel))
-	undo_redo.add_undo_method(Voxel, "set_specular", voxel, Voxel.get_specular(_unedited_voxel))
-	undo_redo.add_do_method(Voxel, "set_roughness", voxel, Voxel.get_roughness(voxel))
-	undo_redo.add_undo_method(Voxel, "set_roughness", voxel, Voxel.get_roughness(_unedited_voxel))
-	undo_redo.add_do_method(Voxel, "set_energy", voxel, Voxel.get_energy(voxel))
-	undo_redo.add_undo_method(Voxel, "set_energy", voxel, Voxel.get_energy(_unedited_voxel))
+	undo_redo.create_action("VoxelViewer : Set voxel material")
+	var metallic := Voxel.get_metallic(voxel)
+	var _metallic := Voxel.get_metallic(_unedited_voxel)
+	if metallic != _metallic:
+		undo_redo.add_do_method(Voxel, "set_metallic", voxel, metallic)
+		undo_redo.add_undo_method(Voxel, "set_metallic", voxel, _metallic)
+	var specular := Voxel.get_specular(voxel)
+	var _specular := Voxel.get_specular(_unedited_voxel)
+	if specular != specular:
+		undo_redo.add_do_method(Voxel, "set_specular", voxel, specular)
+		undo_redo.add_undo_method(Voxel, "set_specular", voxel, _specular)
+	var roughness := Voxel.get_roughness(voxel)
+	var _roughness := Voxel.get_roughness(_unedited_voxel)
+	if roughness != _roughness:
+		undo_redo.add_do_method(Voxel, "set_roughness", voxel, roughness)
+		undo_redo.add_undo_method(Voxel, "set_roughness", voxel, _roughness)
+	var energy := Voxel.get_energy(voxel)
+	var _energy := Voxel.get_energy(_unedited_voxel)
+	if energy != _energy:
+		undo_redo.add_do_method(Voxel, "set_energy", voxel, energy)
+		undo_redo.add_undo_method(Voxel, "set_energy", voxel, _energy)
 	undo_redo.add_do_method(voxel_set, "request_refresh")
 	undo_redo.add_undo_method(voxel_set, "request_refresh")
 	undo_redo.commit_action()
