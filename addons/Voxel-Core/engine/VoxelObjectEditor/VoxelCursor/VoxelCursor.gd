@@ -36,7 +36,6 @@ func _ready() -> void:
 ## Public Methods
 func set_color(value : Color) -> void:
 	color = value
-	color.a = 0.75
 	if is_instance_valid(material_override):
 		material_override.albedo_color = color
 

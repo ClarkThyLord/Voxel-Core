@@ -255,7 +255,7 @@ func set_cursor_dynamic(dynamic : bool) -> void:
 	CursorColor.disabled = dynamic
 	if dynamic:
 		var color = ColorPicked.color
-		color.a = 0.5
+		color.a = 0.75
 		set_cursor_color(color)
 	else:
 		set_cursor_color(config["cursor.color"])
