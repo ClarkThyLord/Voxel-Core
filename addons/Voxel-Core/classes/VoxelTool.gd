@@ -96,6 +96,7 @@ func add_face(
 	var specular : float = Voxel.get_specular(voxel)
 	var rough : float = Voxel.get_roughness(voxel)
 	var energy : float = Voxel.get_energy(voxel)
+	var energy_color : Color = Voxel.get_energy_color(voxel)
 	
 	var surface_id := str(metal) + "," + str(specular) + "," + str(rough) + "," + str(energy)
 	var surface : Surface = _surfaces.get(surface_id)
@@ -112,7 +113,7 @@ func add_face(
 		material.roughness = rough
 		if energy > 0.0:
 			material.emission_enabled = true
-			material.emission = color
+			material.emission = energy_color
 			material.emission_energy = energy
 		
 		surface.material = material

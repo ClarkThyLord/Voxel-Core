@@ -29,10 +29,11 @@ extends Object
 #      Vector3.FORWARD   :   Vector2,
 #      Vector3.BACK      :   Vector2
 #   },
-#   metallic             :   float,           ~   Metallic material value used for all voxel faces, value must be between 0.0 and 1.0 and if not present fallback is 0.0
-#   specular             :   float,           ~   Specular material value used for all voxel faces, value must be between 0.0 and 1.0 and if not present fallback is 0.5
-#   roughness            :   float,           ~   Roughness material value used for all voxel faces, value must be between 0.0 and 1.0 and if not present fallback is 1.0
-#   energy               :   float            ~   Emission energy material value used for all voxel faces, value must be between 0.0 and 16.0 and if not present fallback is 0.0
+#   metallic             :   float,           ~   Metallic value used for all voxel face's material, must be between 0.0 and 1.0 and if not present fallback is 0.0
+#   specular             :   float,           ~   Specular value used for all voxel faces, must be between 0.0 and 1.0 and if not present fallback is 0.5
+#   roughness            :   float,           ~   Roughness value used for all voxel faces, must be between 0.0 and 1.0 and if not present fallback is 1.0
+#   energy               :   float,           ~   Emission energy value used for all voxel faces, must be between 0.0 and 16.0 and if not present fallback is 0.0
+#   energy_color         :   Color            ~   Emission color used for all voxel faces, if not present fallback is white
 # }
 #
 
@@ -223,6 +224,21 @@ static func set_energy(voxel : Dictionary, energy : float) -> void:
 # Removes energy from given voxel
 static func remove_energy(voxel : Dictionary) -> void:
 	voxel.erase("energy")
+
+
+# Returns the defined energy_color within given voxel if present, otherwise returns 0
+static func get_energy_color(voxel : Dictionary) -> Color:
+	return voxel.get("energy_color", Color.white)
+
+
+# Sets the given energy_color to the given voxel
+static func set_energy_color(voxel : Dictionary, energy_color : Color) -> void:
+	voxel["energy_color"] = energy_color
+
+
+# Removes energy_color from given voxel
+static func remove_energy_color(voxel : Dictionary) -> void:
+	voxel.erase("energy_color")
 
 
 # Returns the world position as snapped world position

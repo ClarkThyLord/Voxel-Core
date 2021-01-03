@@ -109,6 +109,8 @@ onready var Roughness := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBox
 
 onready var Energy := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4/Energy")
 
+onready var EnergyColor := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5/EnergyColor")
+
 
 
 ## Built-In Virtual Methods
@@ -619,6 +621,7 @@ func show_MaterialMenu():
 		Specular.value = Voxel.get_specular(get_viewing_voxel())
 		Roughness.value = Voxel.get_roughness(get_viewing_voxel())
 		Energy.value = Voxel.get_energy(get_viewing_voxel())
+		EnergyColor.color = Voxel.get_energy_color(get_viewing_voxel())
 		MaterialMenu.popup_centered()
 
 func close_MaterialMenu():
@@ -644,6 +647,11 @@ func _on_Roughness_value_changed(roughness : float):
 
 func _on_Energy_value_changed(emergy : float):
 	Voxel.set_energy(get_viewing_voxel(), emergy)
+	update_view()
+
+
+func _on_EnergyColor_changed(color : Color):
+	Voxel.set_energy_color(get_viewing_voxel(), color)
 	update_view()
 
 
@@ -676,6 +684,11 @@ func _on_MaterialMenu_Confirm_pressed():
 	if energy != _energy:
 		undo_redo.add_do_method(Voxel, "set_energy", voxel, energy)
 		undo_redo.add_undo_method(Voxel, "set_energy", voxel, _energy)
+	var energy_color := Voxel.get_energy_color(voxel)
+	var _energy_color := Voxel.get_energy_color(_unedited_voxel)
+	if energy_color != _energy_color:
+		undo_redo.add_do_method(Voxel, "set_energy_color", voxel, energy_color)
+		undo_redo.add_undo_method(Voxel, "set_energy_color", voxel, _energy_color)
 	undo_redo.add_do_method(voxel_set, "request_refresh")
 	undo_redo.add_undo_method(voxel_set, "request_refresh")
 	undo_redo.commit_action()
