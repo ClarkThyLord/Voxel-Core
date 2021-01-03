@@ -271,11 +271,15 @@ func set_cursor_color(color : Color) -> void:
 	save_config()
 
 
+# Returns true if grid should be visible
+func is_grid_visible() -> bool:
+	return not Editing.pressed or (Editing.pressed and not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty()))))
+
 # Sets the grid visibility
 func set_grid_visible(visible : bool) -> void:
 	config["grid.visible"] = visible
 	GridVisible.pressed = visible
-	_grid.disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))
+	_grid.disabled = is_grid_visible()
 	save_config()
 
 
@@ -284,7 +288,7 @@ func set_grid_visible(visible : bool) -> void:
 func set_grid_constant(constant : bool) -> void:
 	config["grid.constant"] = constant
 	GridConstant.pressed = constant
-	_grid.disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))
+	_grid.disabled = is_grid_visible()
 	save_config()
 
 
@@ -604,7 +608,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 						prev_hit)
 				
 				if not GridConstant.pressed:
-					_grid.disabled = not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty())))
+					_grid.disabled = is_grid_visible()
 				
 				return handle_result
 	return false
@@ -614,7 +618,9 @@ func _on_Editing_toggled(editing : bool):
 	if is_instance_valid(voxel_object):
 		voxel_object.edit_hint = editing
 	
-	if not editing: set_cursors_visibility(false)
+	_grid.disabled = is_grid_visible()
+	if not editing:
+		set_cursors_visibility(false)
 	elif not last_hit.empty():
 		set_cursors_selections()
 		set_cursors_visibility(true)
