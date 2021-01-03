@@ -130,6 +130,8 @@ onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/
 
 onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
 
+onready var ImportMenu := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile")
+
 onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow")
 
 onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
@@ -204,17 +206,15 @@ func update_palette(palettes := Palettes.keys()) -> void:
 func update_selections(selection_modes := [
 			"individual",
 			"area",
-			"extrude"
+			"extrude",
 		]) -> void:
 	var prev = SelectionMode.get_selected_id()
 	SelectionMode.clear()
 	for select_mode in range(_selection_modes.size()):
 		if selection_modes.find(_selection_modes[select_mode].name.to_lower()) > -1:
 			SelectionMode.add_icon_item(
-				load("res://addons/Voxel-Core/assets/controls/" + _selection_modes[select_mode].name.to_lower() + ".png"),
-				_selection_modes[select_mode].name.capitalize(),
-				select_mode
-			)
+					load("res://addons/Voxel-Core/assets/controls/" + _selection_modes[select_mode].name.to_lower() + ".png"),
+					_selection_modes[select_mode].name.capitalize(), select_mode)
 	if SelectionMode.get_item_index(prev) > -1:
 		SelectionMode.select(SelectionMode.get_item_index(prev))
 	else: _on_SelectionMode_selected(SelectionMode.get_selected_id())
@@ -235,7 +235,8 @@ func update_mirrors(mirror := Vector3.ONE) -> void:
 func update_settings() -> void:
 	for tab in range(Settings.get_tab_count()):
 		var name : String = Settings.get_tab_title(tab)
-		Settings.set_tab_icon(tab, load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
+		Settings.set_tab_icon(tab, 
+				load("res://addons/Voxel-Core/assets/controls/" + name.to_lower() + ".png"))
 
 
 # Sets the cursor visibility
@@ -297,10 +298,8 @@ func update_grid_mode() -> void:
 	GridMode.clear()
 	for mode_index in range(VoxelGrid.GridModes.size()):
 		GridMode.add_icon_item(
-			load("res://addons/Voxel-Core/assets/controls/" + VoxelGrid.GridModes.keys()[mode_index].to_lower() + ".png"),
-			VoxelGrid.GridModes.keys()[mode_index].capitalize(),
-			mode_index
-		)
+				load("res://addons/Voxel-Core/assets/controls/" + VoxelGrid.GridModes.keys()[mode_index].to_lower() + ".png"),
+				VoxelGrid.GridModes.keys()[mode_index].capitalize(), mode_index)
 
 
 # Sets the grid mode
@@ -545,6 +544,24 @@ func setup_voxel_set(voxel_set : VoxelSet) -> void:
 	Notice.visible = not is_instance_valid(voxel_set)
 
 
+# Attach editor components to current voxelobject
+func attach_editor_components() -> void:
+	detach_editor_components()
+	voxel_object.add_child(_grid)
+	for cursor in _cursors.values():
+		voxel_object.add_child(cursor)
+
+
+# Detach editor components from their parents
+func detach_editor_components() -> void:
+	if is_instance_valid(_grid.get_parent()):
+		_grid.get_parent().remove_child(_grid)
+	for cursor in _cursors:
+		cursor = _cursors[cursor]
+		if is_instance_valid(cursor.get_parent()):
+			cursor.get_parent().remove_child(cursor)
+
+
 # Disconnect previous edited VoxelObject and starts editing the new one
 func start_editing(new_voxel_object : VoxelObject) -> void:
 	if new_voxel_object == voxel_object:
@@ -554,22 +571,17 @@ func start_editing(new_voxel_object : VoxelObject) -> void:
 	
 	voxel_object = new_voxel_object
 	
-	voxel_object.add_child(_grid)
-	for cursor in _cursors.values():
-		voxel_object.add_child(cursor)
-	
 	setup_voxel_set(voxel_object.voxel_set)
 	voxel_object.connect("set_voxel_set", self, "setup_voxel_set")
 	voxel_object.connect("tree_exiting", self, "stop_editing", [true])
+
 
 # Disconnect currently edited VoxelObject
 func stop_editing(close := false) -> void:
 	if is_instance_valid(voxel_object):
 		voxel_object.edit_hint = false
 		
-		voxel_object.remove_child(_grid)
-		for cursor in _cursors.values():
-			voxel_object.remove_child(cursor)
+		detach_editor_components()
 		
 		voxel_object.disconnect("set_voxel_set", self, "setup_voxel_set")
 		voxel_object.disconnect("tree_exiting", self, "stop_editing")
@@ -577,7 +589,8 @@ func stop_editing(close := false) -> void:
 	Editing.pressed = false
 	voxel_object = null
 	
-	if close: emit_signal("close")
+	if close:
+		emit_signal("close")
 
 
 func get_tool_normal() -> int:
@@ -614,23 +627,40 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 	return false
 
 
-func _on_Editing_toggled(editing : bool):
-	if is_instance_valid(voxel_object):
-		voxel_object.edit_hint = editing
-	
-	_grid.disabled = is_grid_visible()
-	if not editing:
-		set_cursors_visibility(false)
-	elif not last_hit.empty():
-		set_cursors_selections()
-		set_cursors_visibility(true)
-	emit_signal("editing", editing)
-
-
 # Shows color menu centered
 func show_color_menu():
 	ColorMenuColor.color = ColorPicked.color
 	ColorMenu.popup_centered()
+
+
+# Hide color menu
+func hide_color_menu():
+	ColorMenu.hide()
+
+
+# Shows import menu centered
+func show_import_menu():
+	ImportMenu.popup_centered()
+
+
+# Hides import menu
+func hide_import_menu():
+	ImportMenu.hide()
+
+
+
+## Private Methods
+func _on_Editing_toggled(editing : bool):
+	voxel_object.edit_hint = editing
+	
+	_grid.disabled = is_grid_visible()
+	set_cursors_visibility(editing)
+	if editing:
+		attach_editor_components()
+		if not last_hit.empty():
+			set_cursors_selections()
+	
+	emit_signal("editing", editing)
 
 
 func _on_ColorMenu_Add_pressed():
@@ -642,7 +672,7 @@ func _on_ColorMenu_Add_pressed():
 	undo_redo.add_undo_method(voxel_object.voxel_set, "request_refresh")
 	undo_redo.commit_action()
 	VoxelSetViewer.select(voxel_id)
-	ColorMenu.hide()
+	hide_color_menu()
 
 
 func _on_Tool_selected(id : int):
@@ -717,7 +747,8 @@ func _on_Import_Overwrite_pressed():
 		
 		voxel_object.voxel_set.set_voxels(result["palette"])
 		voxel_object.voxel_set.request_refresh()
-	else: printerr(result["error"])
+	else:
+		printerr(result["error"])
 	ImportHow.hide()
 
 
@@ -729,7 +760,8 @@ func _on_Import_New_pressed():
 		var voxel_set := VoxelSet.new()
 		voxel_set.set_voxels(result["palette"])
 		voxel_object.voxel_set = voxel_set
-	else: printerr(result["error"])
+	else:
+		printerr(result["error"])
 	ImportHow.hide()
 
 

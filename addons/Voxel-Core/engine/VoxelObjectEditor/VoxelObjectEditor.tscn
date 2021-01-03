@@ -723,7 +723,7 @@ margin_right = 32.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 32, 0 )
 disabled = true
-color = Color( 1, 1, 1, 0.5 )
+color = Color( 1, 1, 1, 0.75 )
 
 [node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
@@ -823,10 +823,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 44.0
-margin_top = 44.0
-margin_right = 359.0
-margin_bottom = 551.0
+margin_left = 48.0
+margin_top = 48.0
+margin_right = 363.0
+margin_bottom = 555.0
 size_flags_vertical = 3
 edit_alpha = false
 
