@@ -206,6 +206,7 @@ __meta__ = {
 }
 
 [node name="ColorMenu" type="PopupDialog" parent="."]
+visible = true
 anchor_right = 0.316406
 anchor_bottom = 0.836667
 rect_min_size = Vector2( 324, 502 )
@@ -223,12 +224,11 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 8.0
-margin_top = 8.0
-margin_right = 316.0
-margin_bottom = 470.0
+margin_right = 308.0
+margin_bottom = 462.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+edit_alpha = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -252,6 +252,7 @@ size_flags_horizontal = 3
 text = "Confirm"
 
 [node name="TextureMenu" type="PopupDialog" parent="."]
+visible = true
 anchor_right = 0.316406
 anchor_bottom = 0.433333
 rect_min_size = Vector2( 324, 260 )
@@ -307,14 +308,16 @@ text = "Confirm"
 
 [node name="MaterialMenu" type="PopupDialog" parent="."]
 visible = true
-margin_right = 229.0
-margin_bottom = 253.0
-rect_min_size = Vector2( 200, 225 )
+anchor_right = 0.224609
+anchor_bottom = 0.425
+margin_right = -1.00002
+margin_bottom = -2.0
+rect_min_size = Vector2( 230, 255 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 popup_exclusive = true
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu"]
@@ -329,17 +332,17 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu/VBoxContainer"]
-margin_right = 212.0
-margin_bottom = 194.0
+margin_right = 213.0
+margin_bottom = 196.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 16
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 7.0
-margin_right = 212.0
-margin_bottom = 31.0
+margin_top = 8.0
+margin_right = 213.0
+margin_bottom = 32.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_top = 5.0
@@ -348,17 +351,17 @@ margin_bottom = 19.0
 text = "Metallic:"
 
 [node name="Metallic" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 138.0
-margin_right = 212.0
+margin_left = 139.0
+margin_right = 213.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 1.0
 step = 0.01
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 47.0
-margin_right = 212.0
-margin_bottom = 71.0
+margin_top = 48.0
+margin_right = 213.0
+margin_bottom = 72.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_top = 5.0
@@ -367,17 +370,17 @@ margin_bottom = 19.0
 text = "Specular:"
 
 [node name="Specular" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 138.0
-margin_right = 212.0
+margin_left = 139.0
+margin_right = 213.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 1.0
 step = 0.01
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 87.0
-margin_right = 212.0
-margin_bottom = 111.0
+margin_top = 88.0
+margin_right = 213.0
+margin_bottom = 112.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3"]
 margin_top = 5.0
@@ -386,17 +389,17 @@ margin_bottom = 19.0
 text = "Roughness:"
 
 [node name="Roughness" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3"]
-margin_left = 138.0
-margin_right = 212.0
+margin_left = 139.0
+margin_right = 213.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 1.0
 step = 0.01
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 127.0
-margin_right = 212.0
-margin_bottom = 151.0
+margin_top = 128.0
+margin_right = 213.0
+margin_bottom = 152.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4"]
 margin_top = 5.0
@@ -405,17 +408,17 @@ margin_bottom = 19.0
 text = "Energy:"
 
 [node name="Energy" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4"]
-margin_left = 138.0
-margin_right = 212.0
+margin_left = 139.0
+margin_right = 213.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 16.0
 step = 0.1
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 167.0
-margin_right = 212.0
-margin_bottom = 187.0
+margin_top = 168.0
+margin_right = 213.0
+margin_bottom = 188.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5"]
 margin_top = 3.0
@@ -424,24 +427,24 @@ margin_bottom = 17.0
 text = "Energy Color:"
 
 [node name="EnergyColor" type="ColorPickerButton" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5"]
-margin_left = 138.0
-margin_right = 212.0
+margin_left = 139.0
+margin_right = 213.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 74, 20 )
 size_flags_horizontal = 10
 edit_alpha = false
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer"]
-margin_top = 198.0
-margin_right = 212.0
-margin_bottom = 212.0
+margin_top = 200.0
+margin_right = 213.0
+margin_bottom = 214.0
 align = 1
 valign = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MaterialMenu/VBoxContainer"]
-margin_top = 216.0
-margin_right = 212.0
-margin_bottom = 236.0
+margin_top = 218.0
+margin_right = 213.0
+margin_bottom = 238.0
 
 [node name="Cancel" type="Button" parent="MaterialMenu/VBoxContainer/HBoxContainer"]
 margin_right = 104.0
@@ -451,7 +454,7 @@ text = "Cancel"
 
 [node name="Confirm" type="Button" parent="MaterialMenu/VBoxContainer/HBoxContainer"]
 margin_left = 108.0
-margin_right = 212.0
+margin_right = 213.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
