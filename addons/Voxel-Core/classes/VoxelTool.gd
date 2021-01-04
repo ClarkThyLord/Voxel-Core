@@ -106,8 +106,9 @@ func add_face(
 	if not is_instance_valid(surface):
 		surface = Surface.new()
 		
-		if material > -1:
-			surface.material = _voxel_set.materials[material]
+		surface.material = _voxel_set.get_material(material) if is_instance_valid(_voxel_set) else null
+		if is_instance_valid(surface.material):
+			surface.material = surface.material.duplicate()
 		else:
 			surface.material = SpatialMaterial.new()
 			

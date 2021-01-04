@@ -109,6 +109,11 @@ func set_materials(values : Array, refresh := true) -> void:
 		request_refresh()
 
 
+# Returns VoxelSet material with id if present, otherwise returns null
+func get_material(id : int) -> Material:
+	return materials[id] if id > -1 and id < materials.size() else null
+
+
 # Returns number of voxels in VoxelSet
 func size() -> int:
 	return _voxels.size()
