@@ -92,11 +92,18 @@ func set_tiles(value : Texture, refresh := true) -> void:
 
 
 # Sets materials used by voxels in VoxelSet
-func set_materials(value : Array, refresh := true) -> void:
-	if value.empty():
+func set_materials(values : Array, refresh := true) -> void:
+	for index in range(values.size()):
+		var material = values[index]
+		if is_instance_valid(material) and not (material is SpatialMaterial or material is ShaderMaterial):
+			printerr("VoxelSet : Expected Spatial or Shader material got " + str(material))
+			values[index] = null
+	
+	if values.empty():
 		materials.resize(1)
 	else:
-		materials = value
+		materials = values
+	property_list_changed_notify()
 	
 	if refresh:
 		request_refresh()

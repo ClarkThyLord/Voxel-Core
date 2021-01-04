@@ -60,9 +60,8 @@ func commit() -> ArrayMesh:
 		var surface : Surface = _surfaces[surface_id]
 		var submesh = surface.surface_tool.commit_to_arrays()
 		mesh.add_surface_from_arrays(
-			Mesh.PRIMITIVE_TRIANGLES,
-			submesh
-		)
+				Mesh.PRIMITIVE_TRIANGLES,
+				submesh)
 		mesh.surface_set_name(mesh.get_surface_count() - 1, surface_id)
 		mesh.surface_set_material(mesh.get_surface_count() - 1, surface.material)
 	clear()
@@ -77,13 +76,12 @@ func commit() -> ArrayMesh:
 # top_right      :   Vector3                       :   grid position of top right vertex pertaining to face, if not given botttom right is used
 # top_left       :   Vector3                       :   grid position of top left vertex pertaining to face, if not given botttom right is used
 func add_face(
-	voxel : Dictionary,
-	face : Vector3,
-	bottom_right : Vector3,
-	bottom_left := Vector3.INF,
-	top_right := Vector3.INF,
-	top_left := Vector3.INF
-	) -> void:
+		voxel : Dictionary,
+		face : Vector3,
+		bottom_right : Vector3,
+		bottom_left := Vector3.INF,
+		top_right := Vector3.INF,
+		top_left := Vector3.INF) -> void:
 	bottom_right = bottom_right
 	if bottom_left == Vector3.INF: bottom_left = bottom_right
 	if top_right == Vector3.INF: top_right = bottom_right
@@ -91,32 +89,41 @@ func add_face(
 	
 	var color := Voxel.get_face_color(voxel, face)
 	var uv := Voxel.get_face_uv(voxel, face) if _uv_voxels else -Vector2.ONE
+	var uv_surface := uv != -Vector2.ONE
 	
-	var metal : float = Voxel.get_metallic(voxel)
-	var specular : float = Voxel.get_specular(voxel)
-	var rough : float = Voxel.get_roughness(voxel)
-	var energy : float = Voxel.get_energy(voxel)
-	var energy_color : Color = Voxel.get_energy_color(voxel)
+	var material := Voxel.get_material(voxel)
 	
-	var surface_id := str(metal) + "," + str(specular) + "," + str(rough) + "," + str(energy) + "," + str(energy_color)
+	var metal := Voxel.get_metallic(voxel)
+	var specular := Voxel.get_specular(voxel)
+	var rough := Voxel.get_roughness(voxel)
+	var energy := Voxel.get_energy(voxel)
+	var energy_color := Voxel.get_energy_color(voxel)
+	
+	var surface_id := str(material) if material > -1 else (str(metal) + "," + str(specular) + "," + str(rough) + "," + str(energy) + "," + str(energy_color))
+	if uv_surface:
+		surface_id += "_uv"
 	var surface : Surface = _surfaces.get(surface_id)
 	if not is_instance_valid(surface):
 		surface = Surface.new()
-		var material := SpatialMaterial.new()
 		
-		material.vertex_color_use_as_albedo = true
-		if _uv_voxels:
-			material.albedo_texture = _voxel_set.tiles
+		if material > -1:
+			surface.material = _voxel_set.materials[material]
+		else:
+			surface.material = SpatialMaterial.new()
+			
+			surface.material.metallic = metal
+			surface.material.metallic_specular = specular
+			surface.material.roughness = rough
+			if energy > 0.0:
+				surface.material.emission_enabled = true
+				surface.material.emission = energy_color
+				surface.material.emission_energy = energy
 		
-		material.metallic = metal
-		material.metallic_specular = specular
-		material.roughness = rough
-		if energy > 0.0:
-			material.emission_enabled = true
-			material.emission = energy_color
-			material.emission_energy = energy
+		if surface.material is SpatialMaterial:
+			surface.material.vertex_color_use_as_albedo = true
+			if uv_surface:
+				surface.material.albedo_texture = _voxel_set.tiles
 		
-		surface.material = material
 		_surfaces[surface_id] = surface
 	
 	surface.surface_tool.add_normal(face)
@@ -124,81 +131,81 @@ func add_face(
 	
 	match face:
 		Vector3.RIGHT:
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.RIGHT + Vector3.UP) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left + Vector3.RIGHT) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.ONE) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT + Vector3.BACK) * Voxel.VoxelWorldSize)
 		Vector3.LEFT:
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.UP) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.BACK) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.UP + Vector3.BACK) * Voxel.VoxelWorldSize)
 		Vector3.UP:
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.UP + Vector3.BACK) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left + Vector3.UP) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.ONE) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT + Vector3.UP) * Voxel.VoxelWorldSize)
 		Vector3.DOWN:
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.RIGHT + Vector3.BACK) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.BACK) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left) * Voxel.VoxelWorldSize)
 		Vector3.FORWARD:
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.RIGHT + Vector3.UP) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.UP) * Voxel.VoxelWorldSize)
 		Vector3.BACK:
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.ONE) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT + Vector3.BACK) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.UP + Vector3.BACK) * Voxel.VoxelWorldSize)
-			if _uv_voxels:
+			if uv_surface:
 				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left + Vector3.BACK) * Voxel.VoxelWorldSize)
 	
