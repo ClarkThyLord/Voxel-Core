@@ -101,6 +101,8 @@ onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/
 
 onready var MaterialMenu := get_node("MaterialMenu")
 
+onready var MaterialRef := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material")
+
 onready var Metallic := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic")
 
 onready var Specular := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular")
@@ -367,29 +369,48 @@ func show_context_menu(global_position : Vector2, face := _last_hovered_face) ->
 				ContextMenu.rect_size))
 
 
-func close_ColorMenu():
+# Shows the color menu centered with given color
+func show_color_menu(color : Color) -> void:
+	if is_instance_valid(ColorMenu):
+		VoxelColor.color = color
+		ColorMenu.popup_centered()
+
+
+# Closes the color menu
+func close_color_menu() -> void:
 	if is_instance_valid(ColorMenu):
 		ColorMenu.hide()
 	update_view()
 
 
-func close_TextureMenu():
+# Shows the texture menu centered with given color
+func show_texture_menu(uv : Vector2) -> void:
+	if is_instance_valid(TextureMenu):
+		VoxelTexture.unselect_all()
+		VoxelTexture.select(uv)
+		TextureMenu.popup_centered()
+
+
+# Closes the texture menu
+func close_texture_menu() -> void:
 	if is_instance_valid(TextureMenu):
 		TextureMenu.hide()
 	update_view()
 
 
-func show_MaterialMenu():
+# Shows the material menu with given voxel data
+func show_material_menu(voxel := get_viewing_voxel()) -> void:
 	if is_instance_valid(MaterialMenu):
-		Metallic.value = Voxel.get_metallic(get_viewing_voxel())
-		Specular.value = Voxel.get_specular(get_viewing_voxel())
-		Roughness.value = Voxel.get_roughness(get_viewing_voxel())
-		Energy.value = Voxel.get_energy(get_viewing_voxel())
-		EnergyColor.color = Voxel.get_energy_color(get_viewing_voxel())
+		Metallic.value = Voxel.get_metallic(voxel)
+		Specular.value = Voxel.get_specular(voxel)
+		Roughness.value = Voxel.get_roughness(voxel)
+		Energy.value = Voxel.get_energy(voxel)
+		EnergyColor.color = Voxel.get_energy_color(voxel)
 		MaterialMenu.popup_centered()
 
 
-func close_MaterialMenu():
+# Closes the material menu
+func close_material_menu() -> void:
 	if is_instance_valid(MaterialMenu):
 		MaterialMenu.hide()
 	update_view()
@@ -467,8 +488,7 @@ func _on_ContextMenu_id_pressed(id : int):
 	_unedited_voxel = get_viewing_voxel().duplicate(true)
 	match id:
 		0: # Color editing face
-			VoxelColor.color = Voxel.get_face_color(get_viewing_voxel(), _editing_face)
-			ColorMenu.popup_centered()
+			show_color_menu(Voxel.get_face_color(get_viewing_voxel(), _editing_face))
 		1: # Remove editing face color
 			var voxel = get_viewing_voxel()
 			undo_redo.create_action("VoxelViewer : Remove side color")
@@ -478,9 +498,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 		2: # Texture editing face
-			VoxelTexture.unselect_all()
-			VoxelTexture.select(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
-			TextureMenu.popup_centered()
+			show_texture_menu(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
 		3: # Remove editing face uv
 			var voxel := get_viewing_voxel()
 			undo_redo.create_action("VoxelViewer : Remove side uv")
@@ -491,8 +509,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.commit_action()
 		7: # Color selected faces
 			_editing_multiple = true
-			VoxelColor.color = Voxel.get_face_color(get_viewing_voxel(), _editing_face)
-			ColorMenu.popup_centered()
+			show_color_menu(Voxel.get_face_color(get_viewing_voxel(), _editing_face))
 		8: # Remove selected faces color
 			_editing_multiple = true
 			var voxel = get_viewing_voxel()
@@ -505,9 +522,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.commit_action()
 		9: # Texture selected face
 			_editing_multiple = true
-			VoxelTexture.unselect_all()
-			VoxelTexture.select(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
-			TextureMenu.popup_centered()
+			show_texture_menu(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
 		10: # Remove selected face uv
 			_editing_multiple = true
 			var voxel := get_viewing_voxel()
@@ -519,12 +534,9 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 		4: # Set voxel color
-			VoxelColor.color = Voxel.get_color(get_viewing_voxel())
-			ColorMenu.popup_centered()
+			show_color_menu(Voxel.get_color(get_viewing_voxel()))
 		5: # Set voxel uv
-			VoxelTexture.unselect_all()
-			VoxelTexture.select(Voxel.get_uv(get_viewing_voxel()))
-			TextureMenu.popup_centered()
+			show_texture_menu(Voxel.get_uv(get_viewing_voxel()))
 		6: # Remove voxel uv
 			var voxel = voxel_set.get_voxel(voxel_id)
 			undo_redo.create_action("VoxelViewer : Remove uv")
@@ -540,7 +552,7 @@ func _on_ContextMenu_id_pressed(id : int):
 		11: # Unselect all
 			unselect_all()
 		12: # Modify material
-			show_MaterialMenu()
+			show_material_menu()
 
 
 func _on_ColorPicker_color_changed(color : Color):
@@ -555,7 +567,7 @@ func _on_ColorPicker_color_changed(color : Color):
 func _on_ColorMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
-	close_ColorMenu()
+	close_color_menu()
 
 
 func _on_ColorMenu_Confirm_pressed():
@@ -585,7 +597,7 @@ func _on_ColorMenu_Confirm_pressed():
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-	close_ColorMenu()
+	close_color_menu()
 
 
 func _on_VoxelTexture_selected_uv(uv : Vector2):
@@ -600,7 +612,7 @@ func _on_VoxelTexture_selected_uv(uv : Vector2):
 func _on_TextureMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
-	close_TextureMenu()
+	close_texture_menu()
 
 
 func _on_TextureMenu_Confirm_pressed():
@@ -630,7 +642,7 @@ func _on_TextureMenu_Confirm_pressed():
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-	close_TextureMenu()
+	close_texture_menu()
 
 
 func _on_Metallic_value_changed(metallic : float):
@@ -661,7 +673,7 @@ func _on_EnergyColor_changed(color : Color):
 func _on_MaterialMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
-	close_MaterialMenu()
+	close_material_menu()
 
 
 func _on_MaterialMenu_Confirm_pressed():
@@ -696,4 +708,4 @@ func _on_MaterialMenu_Confirm_pressed():
 	undo_redo.add_undo_method(voxel_set, "request_refresh")
 	undo_redo.commit_action()
 	
-	close_MaterialMenu()
+	close_material_menu()
