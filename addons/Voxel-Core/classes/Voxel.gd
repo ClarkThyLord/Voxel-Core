@@ -10,7 +10,7 @@ extends Object
 # a way as to respect the original structure so as to avoid conflicts.
 #
 # {
-#   vsn                  :   String,          ~   VoxelSetName, used by VoxelSet to associate name with voxel
+#   name                 :   String,          ~   Used in VoxelSets, should always be lowercase
 #   color                :   Color,           ~   Default color used for all voxel faces, if not present fallback is Transparent color
 #   colors               :   Dictionary = {   ~   Color used on a per face bases, if not present fallback is voxel color
 #      Vector3.UP        :   Color,
@@ -166,6 +166,26 @@ static func remove_face_uv(voxel : Dictionary, face : Vector3) -> void:
 			voxel.erase("uvs")
 
 
+# Returns true if given name is valid
+static func is_valid_name(name : String) -> bool:
+	return not name.empty()
+
+
+# Returns the defined name within given voxel if present, otherwise returns an empty string
+static func get_name(voxel : Dictionary) -> String:
+	return voxel.get("name", "")
+
+
+# Sets the given name to the given voxel
+static func set_name(voxel : Dictionary, name : String) -> void:
+	voxel["name"] = name.to_lower()
+
+
+# Removes name from given voxel
+static func remove_name(voxel : Dictionary) -> void:
+	voxel.erase("name")
+
+
 # Returns the defined metallic within given voxel if present, otherwise returns 0
 static func get_metallic(voxel : Dictionary) -> float:
 	return voxel.get("metallic", 0.0)
@@ -226,7 +246,7 @@ static func remove_energy(voxel : Dictionary) -> void:
 	voxel.erase("energy")
 
 
-# Returns the defined energy_color within given voxel if present, otherwise returns 0
+# Returns the defined energy_color within given voxel if present, otherwise returns Color.white
 static func get_energy_color(voxel : Dictionary) -> Color:
 	return voxel.get("energy_color", Color.white)
 

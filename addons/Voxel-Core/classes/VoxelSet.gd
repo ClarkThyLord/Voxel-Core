@@ -22,7 +22,7 @@ export var tiles : Texture = null setget set_tiles
 
 ## Private Variables
 # Voxels stored by their id
-var _voxels := {}
+var _voxels := []
 
 # Flag indicating whether _uv_scale, tile_size and tiles texture is set
 var _uv_ready := false
@@ -37,20 +37,30 @@ func _get(property : String):
 	if property == "VOXELS":
 		return _voxels
 
+
 func _set(property : String, value) -> bool:
 	if property == "VOXELS":
-		_voxels = value
+		if typeof(value) == TYPE_DICTIONARY:
+			for key in value:
+				var voxel : Dictionary = value[key]
+				if voxel.has("vsn"):
+					Voxel.set_name(voxel, voxel["vsn"])
+					voxel.erase("vsn")
+				_voxels.append(value[key])
+		else:
+			_voxels = value
 		return true
 	return false
+
 
 func _get_property_list():
 	var properties = []
 	
 	properties.append({
 		"name": "VOXELS",
-		"type": TYPE_DICTIONARY,
+		"type": TYPE_ARRAY,
 		"hint": PROPERTY_HINT_NONE,
-		"usage": PROPERTY_USAGE_STORAGE
+		"usage": PROPERTY_USAGE_STORAGE,
 	})
 	
 	return properties
@@ -61,9 +71,8 @@ func _get_property_list():
 # Sets tile_size, calls on request_refresh by default
 func set_tile_size(value : Vector2, refresh := true) -> void:
 	tile_size = Vector2(
-		floor(clamp(value.x, 1, 256)),
-		floor(clamp(value.y, 1, 256))
-	)
+			floor(clamp(value.x, 1, 256)),
+			floor(clamp(value.y, 1, 256)))
 	
 	if refresh:
 		request_refresh()
@@ -77,110 +86,84 @@ func set_tiles(value : Texture, refresh := true) -> void:
 		request_refresh()
 
 
-# Returns true if VoxelSet has everything necessary for uv mapping
-func is_uv_ready() -> bool:
-	return _uv_ready
-
-
+# Returns number of voxels in VoxelSet
 func size() -> int:
 	return _voxels.size()
 
 
+# Returns true if VoxelSet has no voxels
+func empty() -> bool:
+	return _voxels.empty()
+
+
+# Returns true if VoxelSet has voxel with given id
+func has_id(id : int) -> bool:
+	return id > -1 and id < _voxels.size()
+
+
+# Returns true if VoxelSet has everything necessary for uv mapping
+func uv_ready() -> bool:
+	return _uv_ready
+
+
 # Returns the uv scale
-func get_uv_scale() -> Vector2:
+func uv_scale() -> Vector2:
 	return _uv_scale
 
 
 # Returns true if given id is valid
 static func is_valid_id(id : int) -> bool:
-	return id >= 0
+	return id > -1
 
 
-# Returns true if given name is valid
-static func is_valid_name(name : String) -> bool:
-	return not name.empty()
-
-
-# Return true if no _voxels are present
-func empty() -> bool:
-	return _voxels.empty()
-
-
-# Returns list of all the registered voxel ids
-# returns   :   Array<int>   :   list of registered voxel ids
+# Returns a list of all the voxel ids
+# returns   :   Array<int>   :   contained voxel ids
 func get_ids() -> Array:
-	return _voxels.keys()
+	return range(_voxels.size())
 
 
-# Returns the next available id
-func get_next_id() -> int:
-	var ids := _voxels.keys()
-	ids.sort()
-	return (ids.back() + 1) if ids.size() > 0 else 0
-
-
-# Sets given name to voxel with given id
-func name_voxel(id : int, name : String) -> void:
-	if not is_valid_id(id):
-		printerr("_voxelset : given id `" + str(id) + "` is out of range")
-		return
-	elif not is_valid_name(name):
-		printerr("_voxelset : given voxel name `" + name + "` is invalid")
-		return
-	
-	get_voxel(id)["vsn"] = name
-
-
-# Removes name from voxel with given id
-func unname_voxel(id : int) -> void:
-	if not is_valid_id(id):
-		printerr("_voxelset : given id `" + str(id) + "` is out of range")
-		return
-	
-	get_voxel(id).erase("vsn")
-
-
-# Returns name associated with the given id, return a empty string if id isn't found
+# Returns name associated with the given id, returns a empty string if id isn't found
 func id_to_name(id : int) -> String:
-	return get_voxel(id).get("vsn", "")
+	return Voxel.get_name(get_voxel(id))
 
 
-# Returns id associated with the given name, returns -1 if name isn't found
+# Returns the id of the voxel with the given name, returns -1 if not found
 func name_to_id(name : String) -> int:
-	for id in _voxels:
+	name = name.to_lower()
+	for id in get_ids():
 		if id_to_name(id) == name:
 			return id
 	return -1
 
 
-# Set a voxel with give name and id
-func set_voxel(voxel : Dictionary, name := "", id := get_next_id()) -> int:
-	if not is_valid_id(id):
-		printerr("_voxelset : given id `" + str(id) + "` is out of range")
-		return -1
+# Set the voxel at given id, next available id is assigned if non is provided
+func set_voxel(voxel : Dictionary, id : int = size()) -> void:
+	if id == size():
+		_voxels.append(voxel)
+		return
+	elif not has_id(id):
+		printerr("VoxelSet : given id `" + str(id) + "` is out of range")
+		return
 	
 	_voxels[id] = voxel
-	if not name.empty():
-		name_voxel(id, name)
-	
-	return id
+
 
 # Replaces all _voxels
-func set_voxels(voxels : Dictionary) -> void:
+func set_voxels(voxels : Array) -> void:
 	_voxels = voxels
 
 
 # Gets voxel Dictionary by their id, returns an empty Dictionary if not found
 func get_voxel(id : int) -> Dictionary:
-	return _voxels.get(id, {})
+	return _voxels[id] if has_id(id) else {}
 
 
-# Erase voxel with given id
+# Erase voxel from VoxelSet
 func erase_voxel(id : int) -> void:
-	_voxels.erase(id)
+	_voxels.remove(id)
 
 
-# Erases all _voxels
+# Erases all voxels in VoxelSet
 func erase_voxels() -> void:
 	_voxels.clear()
 
@@ -200,12 +183,13 @@ func request_refresh() -> void:
 # NOTE: Reference Reader.gd for valid file imports
 # source_file   :   String   :   Path to file to be loaded
 # return int    :   int      :   Error code
-func load_file(source_file : String) -> int:
+func load_file(source_file : String, append := false) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)
 	if error == OK:
-		var palette := {}
-		for index in range(read["palette"].size()):
-			palette[index] = read["palette"][index]
-		set_voxels(palette)
+		if append:
+			for voxel in read["palette"]:
+				set_voxel(voxel)
+		else:
+			set_voxels(read["palette"])
 	return error

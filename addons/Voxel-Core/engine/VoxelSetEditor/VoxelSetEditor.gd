@@ -83,7 +83,7 @@ func update_view() -> void:
 	if is_instance_valid(voxel_set):
 		if is_instance_valid(VoxelSetInfo):
 			VoxelSetInfo.text = "Voxels:\t\t" + str(voxel_set.size())
-			VoxelSetInfo.text += "\nUV Ready:\t" + str(voxel_set.is_uv_ready())
+			VoxelSetInfo.text += "\nUV Ready:\t" + str(voxel_set.uv_ready())
 		
 		if is_instance_valid(VoxelSetViewer):
 			var editing_single : bool = VoxelSetViewer.get_selected_size() == 1
@@ -105,6 +105,20 @@ func update_view() -> void:
 		VoxelSetInfo.text = ""
 
 
+func open_ImportFile():
+	ImportFile.popup_centered()
+
+
+func open_ImportHow():
+	ImportHow.popup_centered()
+
+
+func close_ImportHow():
+	ImportHow.hide()
+
+
+
+## Private Methods
 func _on_Close_pressed():
 	emit_signal("close")
 
@@ -142,25 +156,25 @@ func _on_VoxelID_text_entered(new_id):
 
 func _on_VoxelName_text_entered(new_name : String):
 	var voxel_id = VoxelSetViewer.get_selected(0)
-	if new_name.empty():
-		var name = voxel_set.id_to_name()
-		undo_redo.create_action("VoxelSetEditor : Remove voxel name")
-		undo_redo.add_do_method(voxel_set, "unname_voxel", voxel_id)
-		undo_redo.add_undo_method(voxel_set, "name_voxel", voxel_id, name)
-	else:
-		undo_redo.create_action("VoxelSetEditor : Rename voxel")
-		undo_redo.add_do_method(voxel_set, "name_voxel", voxel_id, new_name)
-		var id = voxel_set.name_to_id(new_name)
-		if id > -1:
-			undo_redo.add_undo_method(voxel_set, "name_voxel", id, new_name)
-		var name = voxel_set.id_to_name(voxel_id)
-		if not name.empty():
-			undo_redo.add_undo_method(voxel_set, "name_voxel", voxel_id, name)
-	undo_redo.add_do_method(voxel_set, "request_refresh")
-	undo_redo.add_undo_method(voxel_set, "request_refresh")
-	undo_redo.commit_action()
-	VoxelSetViewer.unselect_all()
-	VoxelSetViewer.select(voxel_id)
+	var voxel = voxel_set.get_voxel(voxel_id)
+	var old_name = Voxel.get_name(voxel)
+	if new_name != old_name:
+		if new_name.empty():
+			undo_redo.create_action("VoxelSetEditor : Remove voxel name")
+			undo_redo.add_do_method(Voxel, "remove_name", voxel)
+			undo_redo.add_undo_method(Voxel, "set_name", voxel, old_name)
+		else:
+			undo_redo.create_action("VoxelSetEditor : Rename voxel")
+			undo_redo.add_do_method(Voxel, "set_name", voxel, new_name)
+			if old_name.empty():
+				undo_redo.add_undo_method(Voxel, "remove_name", voxel)
+			else:
+				undo_redo.add_undo_method(Voxel, "set_name", voxel, old_name)
+		undo_redo.add_do_method(voxel_set, "request_refresh")
+		undo_redo.add_undo_method(voxel_set, "request_refresh")
+		undo_redo.commit_action()
+		VoxelSetViewer.unselect_all()
+		VoxelSetViewer.select(voxel_id)
 
 
 func _on_VoxelSetViewer_selected(voxel_id : int):
@@ -169,18 +183,6 @@ func _on_VoxelSetViewer_selected(voxel_id : int):
 
 func _on_VoxelSetViewer_unselected(voxel_id : int):
 	update_view()
-
-
-func open_ImportFile():
-	ImportFile.popup_centered()
-
-
-func open_ImportHow():
-	ImportHow.popup_centered()
-
-
-func close_ImportHow():
-	ImportHow.hide()
 
 
 func _on_Import_file_selected(path):

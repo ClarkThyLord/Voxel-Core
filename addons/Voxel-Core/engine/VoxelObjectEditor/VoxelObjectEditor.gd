@@ -664,7 +664,7 @@ func _on_Editing_toggled(editing : bool):
 
 
 func _on_ColorMenu_Add_pressed():
-	var voxel_id = voxel_object.voxel_set.get_next_id()
+	var voxel_id = voxel_object.voxel_set.size()
 	undo_redo.create_action("VoxelObjectEditor : Add voxel to used VoxeSet")
 	undo_redo.add_do_method(voxel_object.voxel_set, "set_voxel", Voxel.colored(ColorMenuColor.color))
 	undo_redo.add_undo_method(voxel_object.voxel_set, "erase_voxel", voxel_id)

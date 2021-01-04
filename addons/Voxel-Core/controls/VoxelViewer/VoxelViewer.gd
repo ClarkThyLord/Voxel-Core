@@ -316,6 +316,87 @@ func update_view() -> void:
 		Select.mesh = _voxel_tool.commit()
 
 
+# Shows the context menu and options according to context
+func show_context_menu(global_position : Vector2, face := _last_hovered_face) -> void:
+	_editing_face = face
+	_editing_multiple = false
+	var selected_hovered := _selections.has(_editing_face)
+	if is_instance_valid(ContextMenu) and is_instance_valid(voxel_set):
+		ContextMenu.clear()
+		
+		if _selections.size() < 6:
+			ContextMenu.add_item("Select all", 13)
+		if _selections.size() > 0:
+			ContextMenu.add_item("Unselect all", 11)
+		
+		if _selections.size() == 0 or not selected_hovered:
+			ContextMenu.add_separator()
+			ContextMenu.add_item("Color side", 0)
+			if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
+				ContextMenu.add_item("Remove side color", 1)
+			
+			if voxel_set.uv_ready():
+				ContextMenu.add_item("Texture side", 2)
+			if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
+				ContextMenu.add_item("Remove side uv", 3)
+		
+		if selected_hovered and _selections.size() >= 1:
+			ContextMenu.add_separator()
+			ContextMenu.add_item("Color side(s)", 7)
+			if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
+				ContextMenu.add_item("Remove side color(s)", 8)
+			
+			if voxel_set.uv_ready():
+				ContextMenu.add_item("Texture side(s)", 9)
+			if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
+				ContextMenu.add_item("Remove side uv(s)", 10)
+		
+		ContextMenu.add_separator()
+		ContextMenu.add_item("Color voxel", 4)
+		
+		ContextMenu.add_item("Modify material", 12)
+		
+		if voxel_set.uv_ready():
+			ContextMenu.add_item("Texture voxel", 5)
+		if Voxel.has_uv(get_viewing_voxel()):
+			ContextMenu.add_item("Remove voxel uv", 6)
+		ContextMenu.set_as_minsize()
+		
+		ContextMenu.popup(Rect2(
+				global_position,
+				ContextMenu.rect_size))
+
+
+func close_ColorMenu():
+	if is_instance_valid(ColorMenu):
+		ColorMenu.hide()
+	update_view()
+
+
+func close_TextureMenu():
+	if is_instance_valid(TextureMenu):
+		TextureMenu.hide()
+	update_view()
+
+
+func show_MaterialMenu():
+	if is_instance_valid(MaterialMenu):
+		Metallic.value = Voxel.get_metallic(get_viewing_voxel())
+		Specular.value = Voxel.get_specular(get_viewing_voxel())
+		Roughness.value = Voxel.get_roughness(get_viewing_voxel())
+		Energy.value = Voxel.get_energy(get_viewing_voxel())
+		EnergyColor.color = Voxel.get_energy_color(get_viewing_voxel())
+		MaterialMenu.popup_centered()
+
+
+func close_MaterialMenu():
+	if is_instance_valid(MaterialMenu):
+		MaterialMenu.hide()
+	update_view()
+
+
+
+## Private Methods
 func _set_last_hovered_face(face : Vector3):
 	_last_hovered_face = face
 
@@ -334,7 +415,7 @@ func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 				get_voxle_button(normal).pressed = false
 		elif event.button_index == BUTTON_RIGHT:
 			if allow_edit:
-				setup_context_menu(event.global_position, _last_hovered_face)
+				show_context_menu(event.global_position, _last_hovered_face)
 	update_hint()
 
 
@@ -368,7 +449,7 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 					_is_dragging = false
 			elif event.button_index == BUTTON_RIGHT and not _last_hovered_face == Vector3.ZERO:
 				if allow_edit:
-					setup_context_menu(event.global_position, _last_hovered_face)
+					show_context_menu(event.global_position, _last_hovered_face)
 		
 		if _is_dragging:
 			View3D.set_default_cursor_shape(Control.CURSOR_MOVE)
@@ -378,57 +459,6 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 			View3D.set_default_cursor_shape(Control.CURSOR_ARROW)
 		update_hint()
 		update_view()
-
-
-func setup_context_menu(global_position : Vector2, face := _last_hovered_face) -> void:
-	_editing_face = face
-	_editing_multiple = false
-	var selected_hovered := _selections.has(_editing_face)
-	if is_instance_valid(ContextMenu) and is_instance_valid(voxel_set):
-		ContextMenu.clear()
-		
-		if _selections.size() < 6:
-			ContextMenu.add_item("Select all", 13)
-		if _selections.size() > 0:
-			ContextMenu.add_item("Unselect all", 11)
-		
-		if _selections.size() == 0 or not selected_hovered:
-			ContextMenu.add_separator()
-			ContextMenu.add_item("Color side", 0)
-			if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
-				ContextMenu.add_item("Remove side color", 1)
-			
-			if voxel_set.is_uv_ready():
-				ContextMenu.add_item("Texture side", 2)
-			if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
-				ContextMenu.add_item("Remove side uv", 3)
-		
-		if selected_hovered and _selections.size() >= 1:
-			ContextMenu.add_separator()
-			ContextMenu.add_item("Color side(s)", 7)
-			if Voxel.has_face_color(get_viewing_voxel(), _editing_face):
-				ContextMenu.add_item("Remove side color(s)", 8)
-			
-			if voxel_set.is_uv_ready():
-				ContextMenu.add_item("Texture side(s)", 9)
-			if Voxel.has_face_uv(get_viewing_voxel(), _editing_face):
-				ContextMenu.add_item("Remove side uv(s)", 10)
-		
-		ContextMenu.add_separator()
-		ContextMenu.add_item("Color voxel", 4)
-		
-		ContextMenu.add_item("Modify material", 12)
-		
-		if voxel_set.is_uv_ready():
-			ContextMenu.add_item("Texture voxel", 5)
-		if Voxel.has_uv(get_viewing_voxel()):
-			ContextMenu.add_item("Remove voxel uv", 6)
-		ContextMenu.set_as_minsize()
-		
-		ContextMenu.popup(Rect2(
-			global_position,
-			ContextMenu.rect_size
-		))
 
 
 func _on_ContextMenu_id_pressed(id : int):
@@ -522,14 +552,8 @@ func _on_ColorPicker_color_changed(color : Color):
 	update_view()
 
 
-func close_ColorMenu():
-	if is_instance_valid(ColorMenu):
-		ColorMenu.hide()
-	update_view()
-
-
 func _on_ColorMenu_Cancel_pressed():
-	voxel_set.set_voxel(_unedited_voxel, "", voxel_id)
+	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
 	close_ColorMenu()
 
@@ -573,14 +597,8 @@ func _on_VoxelTexture_selected_uv(uv : Vector2):
 	update_view()
 
 
-func close_TextureMenu():
-	if is_instance_valid(TextureMenu):
-		TextureMenu.hide()
-	update_view()
-
-
 func _on_TextureMenu_Cancel_pressed():
-	voxel_set.set_voxel(_unedited_voxel, "", voxel_id)
+	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
 	close_TextureMenu()
 
@@ -615,21 +633,6 @@ func _on_TextureMenu_Confirm_pressed():
 	close_TextureMenu()
 
 
-func show_MaterialMenu():
-	if is_instance_valid(MaterialMenu):
-		Metallic.value = Voxel.get_metallic(get_viewing_voxel())
-		Specular.value = Voxel.get_specular(get_viewing_voxel())
-		Roughness.value = Voxel.get_roughness(get_viewing_voxel())
-		Energy.value = Voxel.get_energy(get_viewing_voxel())
-		EnergyColor.color = Voxel.get_energy_color(get_viewing_voxel())
-		MaterialMenu.popup_centered()
-
-func close_MaterialMenu():
-	if is_instance_valid(MaterialMenu):
-		MaterialMenu.hide()
-	update_view()
-
-
 func _on_Metallic_value_changed(metallic : float):
 	Voxel.set_metallic(get_viewing_voxel(), metallic)
 	update_view()
@@ -656,7 +659,7 @@ func _on_EnergyColor_changed(color : Color):
 
 
 func _on_MaterialMenu_Cancel_pressed():
-	voxel_set.set_voxel(_unedited_voxel, "", voxel_id)
+	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
 	close_MaterialMenu()
 

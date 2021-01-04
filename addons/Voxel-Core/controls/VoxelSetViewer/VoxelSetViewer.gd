@@ -235,6 +235,8 @@ func correct() -> void:
 	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
 
 
+
+## Private Methods
 func _on_Voxels_gui_input(event):
 	if allow_edit and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
 		ContextMenu.clear()
@@ -284,7 +286,7 @@ func _on_VoxelButton_pressed(voxel_button) -> void:
 func _on_ContextMenu_id_pressed(_id : int):
 	match _id:
 		0:
-			var id = voxel_set.get_next_id()
+			var id = voxel_set.size()
 			undo_redo.create_action("VoxelSetViewer : Add voxel")
 			undo_redo.add_do_method(voxel_set, "set_voxel", Voxel.colored(Color.white))
 			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
@@ -294,7 +296,7 @@ func _on_ContextMenu_id_pressed(_id : int):
 			unselect_all()
 			select(id)
 		1:
-			var id = voxel_set.get_next_id()
+			var id = voxel_set.size()
 			undo_redo.create_action("VoxelSetViewer : Duplicate voxel")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_set.get_voxel(_selections[0]).duplicate(true))
 			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
@@ -319,7 +321,7 @@ func _on_ContextMenu_id_pressed(_id : int):
 		3: unselect_all()
 		4:
 			undo_redo.create_action("VoxelSetViewer : Duplicate voxels")
-			var id = voxel_set.get_next_id()
+			var id = voxel_set.size()
 			var ids = []
 			for selection in range(_selections.size()):
 				ids.append(id + selection)
