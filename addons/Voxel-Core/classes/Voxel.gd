@@ -34,6 +34,7 @@ extends Object
 #   roughness            :   float,           ~   Roughness value used for all voxel faces, must be between 0.0 and 1.0 and if not present fallback is 1.0
 #   energy               :   float,           ~   Emission energy value used for all voxel faces, must be between 0.0 and 16.0 and if not present fallback is 0.0
 #   energy_color         :   Color            ~   Emission color used for all voxel faces, if not present fallback is white
+#   material             :   int              ~   ID of the VoxelSet material used for this voxel, if not present fallback is -1
 # }
 #
 
@@ -259,6 +260,21 @@ static func set_energy_color(voxel : Dictionary, energy_color : Color) -> void:
 # Removes energy_color from given voxel
 static func remove_energy_color(voxel : Dictionary) -> void:
 	voxel.erase("energy_color")
+
+
+# Returns the defined material within given voxel if present, otherwise returns -1
+static func get_material(voxel : Dictionary) -> int:
+	return voxel.get("material", -1)
+
+
+# Sets the given material to the given voxel
+static func set_material(voxel : Dictionary, material : int) -> void:
+	voxel["material"] = material
+
+
+# Removes material from given voxel
+static func remove_material(voxel : Dictionary) -> void:
+	voxel.erase("material")
 
 
 # Returns the world position as snapped world position

@@ -18,6 +18,11 @@ export var tile_size := Vector2(32.0, 32.0) setget set_tile_size
 # Texture used for tiles / uv mapping
 export var tiles : Texture = null setget set_tiles
 
+# Materials used by voxels
+export(Array, Material) var materials := [
+	SpatialMaterial.new(),
+] setget set_materials
+
 
 
 ## Private Variables
@@ -81,6 +86,17 @@ func set_tile_size(value : Vector2, refresh := true) -> void:
 # Sets tiles, calls on request_refresh by default
 func set_tiles(value : Texture, refresh := true) -> void:
 	tiles = value
+	
+	if refresh:
+		request_refresh()
+
+
+# Sets materials used by voxels in VoxelSet
+func set_materials(value : Array, refresh := true) -> void:
+	if value.empty():
+		materials.resize(1)
+	else:
+		materials = value
 	
 	if refresh:
 		request_refresh()
