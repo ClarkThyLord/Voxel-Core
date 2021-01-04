@@ -191,21 +191,18 @@ func _on_Import_file_selected(path):
 
 
 func _on_Import_Append_pressed():
-	var result := Reader.read_file(import_file_path)
-	if result["error"] == OK:
-		for voxel in result["palette"]:
-			voxel_set.set_voxel(result["palette"][voxel])
-		
+	var result = voxel_set.load_file(import_file_path, true)
+	if result == OK:
 		voxel_set.request_refresh()
-	else: printerr(result["error"])
+	else:
+		printerr(result)
 	close_ImportHow()
 
 
 func _on_Import_Replace_pressed():
-	var result := Reader.read_file(import_file_path)
-	if result["error"] == OK:
-		voxel_set.set_voxels(result["palette"])
-		
+	var result = voxel_set.load_file(import_file_path, false)
+	if result == OK:
 		voxel_set.request_refresh()
-	else: printerr(result["error"])
+	else:
+		printerr(result)
 	close_ImportHow()

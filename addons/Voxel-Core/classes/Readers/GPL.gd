@@ -9,7 +9,7 @@ static func read(image : File) -> Dictionary:
 	var result := {
 		"error": OK,
 		"voxels": {},
-		"palette": {}
+		"palette": [],
 	}
 	
 	if image.get_line() == "GIMP Palette":
@@ -25,9 +25,10 @@ static func read(image : File) -> Dictionary:
 					var end = name.find("(")
 					name = name.substr(0, end)
 				
-				result["palette"][result["palette"].size()] = Voxel.colored(color)
+				var voxel := Voxel.colored(color)
+				result["palette"].append(voxel)
 				if not name.empty():
-					result["palette"][result["palette"].size() - 1]["vsn"] = name.strip_edges()
+					Voxel.set_name(voxel, name.strip_edges())
 	else:
 		result["error"] = ERR_FILE_UNRECOGNIZED
 	

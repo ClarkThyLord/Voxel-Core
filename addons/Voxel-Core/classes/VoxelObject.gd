@@ -261,18 +261,17 @@ func select_face_similar(target : Vector3, face_normal : Vector3, selected := []
 
 # Loads and sets voxels and replaces VoxelSet with given file
 # NOTE: Reference Reader.gd for valid file imports
-# source_file   :   String   :   Path to file to be loaded
-# return int    :   int      :   Error code
-func load_file(source_file : String) -> int:
+# source_file     :   String   :   Path to file to be loaded
+# new_voxel_set   :   bool     :   If true new VoxelSet is created, else overwrite current one
+# return int      :   int      :   Error code
+func load_file(source_file : String, new_voxel_set := true) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)
 	if error == OK:
-		var palette := {}
-		for index in range(read["palette"].size()):
-			palette[index] = read["palette"][index]
-		var voxelsetref = VoxelSet.new()
-		voxelsetref.set_voxels(palette)
-		set_voxel_set(voxelsetref)
+		if new_voxel_set or not is_instance_valid(voxel_set):
+			set_voxel_set(VoxelSet.new(), false)
+		voxel_set.set_voxels(read["palette"])
+		
 		set_voxels(read["voxels"])
 	return error
 

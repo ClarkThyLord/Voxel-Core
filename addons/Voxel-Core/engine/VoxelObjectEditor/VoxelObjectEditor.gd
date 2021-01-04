@@ -741,27 +741,20 @@ func _on_ImportFile_file_selected(path : String):
 
 
 func _on_Import_Overwrite_pressed():
-	var result := Reader.read_file(import_file_path)
-	if result["error"] == OK:
-		voxel_object.set_voxels(result["voxels"])
-		
-		voxel_object.voxel_set.set_voxels(result["palette"])
+	var result := voxel_object.load_file(import_file_path, false)
+	if result == OK:
 		voxel_object.voxel_set.request_refresh()
 	else:
-		printerr(result["error"])
+		printerr(result)
 	ImportHow.hide()
 
 
 func _on_Import_New_pressed():
-	var result := Reader.read_file(import_file_path)
-	if result["error"] == OK:
-		voxel_object.set_voxels(result["voxels"])
-		
-		var voxel_set := VoxelSet.new()
-		voxel_set.set_voxels(result["palette"])
-		voxel_object.voxel_set = voxel_set
+	var result := voxel_object.load_file(import_file_path, true)
+	if result == OK:
+		voxel_object.voxel_set.request_refresh()
 	else:
-		printerr(result["error"])
+		printerr(result)
 	ImportHow.hide()
 
 
