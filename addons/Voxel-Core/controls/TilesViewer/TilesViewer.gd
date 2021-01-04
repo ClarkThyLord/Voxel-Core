@@ -53,7 +53,7 @@ func _gui_input(event : InputEvent):
 
 
 func _draw():
-	if is_instance_valid(voxel_set) and voxel_set.is_uv_ready():
+	if is_instance_valid(voxel_set) and voxel_set.uv_ready():
 		texture = voxel_set.tiles
 		if selection_max != 0:
 			for selection in _selections:
@@ -125,12 +125,12 @@ func set_voxel_set(value : Resource, update := true) -> void:
 
 # Returns world position as uv position
 func world_to_uv(world : Vector2) -> Vector2:
-	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.is_uv_ready() else -Vector2.ONE
+	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.uv_ready() else -Vector2.ONE
 
 
 # Returns true if uv position is valid
 func is_valid_uv(uv : Vector2) -> bool:
-	if is_instance_valid(voxel_set) and voxel_set.is_uv_ready():
+	if is_instance_valid(voxel_set) and voxel_set.uv_ready():
 		var bounds = voxel_set.tiles.get_size() / voxel_set.tile_size
 		return uv.x >= 0 and uv.y >= 0 and uv.x < bounds.x and uv.y < bounds.y
 	return false
