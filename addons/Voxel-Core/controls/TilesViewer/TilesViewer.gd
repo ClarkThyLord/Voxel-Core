@@ -69,8 +69,8 @@ func _draw():
 			draw_rect(Rect2(
 							_last_uv_hovered * voxel_set.tile_size,
 							voxel_set.tile_size),
-					hovered_color if is_valid_uv(_last_uv_hovered) else invalid_color
-					, false, 3)
+					hovered_color if is_valid_uv(_last_uv_hovered) else invalid_color,
+					false, 3)
 
 
 
@@ -170,3 +170,10 @@ func unselect_shrink(size := selection_max, emit := true) -> void:
 	if size >= 0:
 		while _selections.size() > size:
 			unselect(_selections.back(), emit)
+
+
+
+## Private Methods
+func _on_TilesViewer_mouse_exited():
+	_last_uv_hovered = -Vector2.ONE
+	update()
