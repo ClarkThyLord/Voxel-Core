@@ -628,23 +628,23 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 
 
 # Shows color menu centered
-func show_color_menu():
-	ColorMenuColor.color = ColorPicked.color
+func show_color_menu(color := ColorPicked.color) -> void:
+	ColorMenuColor.color = color
 	ColorMenu.popup_centered()
 
 
 # Hide color menu
-func hide_color_menu():
+func hide_color_menu() -> void:
 	ColorMenu.hide()
 
 
 # Shows import menu centered
-func show_import_menu():
+func show_import_menu() -> void:
 	ImportMenu.popup_centered()
 
 
 # Hides import menu
-func hide_import_menu():
+func hide_import_menu() -> void:
 	ImportMenu.hide()
 
 

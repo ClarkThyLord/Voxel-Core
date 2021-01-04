@@ -9,5 +9,4 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="mouse_exited" from="." to="." method="set" binds= [ "last_uv_hovered", Vector2( -1, -1 ) ]]
 [connection signal="mouse_exited" from="." to="." method="_on_TilesViewer_mouse_exited"]

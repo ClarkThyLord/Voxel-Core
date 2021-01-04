@@ -25,7 +25,7 @@ var import_file_path := ""
 
 
 ## OnReady Variables
-onready var ImportFile := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile")
+onready var ImportMenu := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile")
 
 onready var ImportHow := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow")
 
@@ -105,15 +105,23 @@ func update_view() -> void:
 		VoxelSetInfo.text = ""
 
 
-func open_ImportFile():
-	ImportFile.popup_centered()
+# Show import menu centered
+func show_import_menu() -> void:
+	ImportMenu.popup_centered()
 
 
-func open_ImportHow():
+# Hide import menu
+func hide_import_menu() -> void:
+	ImportMenu.hide()
+
+
+# Show import how centered
+func show_import_how():
 	ImportHow.popup_centered()
 
 
-func close_ImportHow():
+# Hide import how
+func hide_import_how():
 	ImportHow.hide()
 
 
@@ -187,7 +195,7 @@ func _on_VoxelSetViewer_unselected(voxel_id : int):
 
 func _on_Import_file_selected(path):
 	import_file_path = path
-	open_ImportHow()
+	show_import_how()
 
 
 func _on_Import_Append_pressed():
@@ -196,7 +204,7 @@ func _on_Import_Append_pressed():
 		voxel_set.request_refresh()
 	else:
 		printerr(result)
-	close_ImportHow()
+	hide_import_how()
 
 
 func _on_Import_Replace_pressed():
@@ -205,4 +213,4 @@ func _on_Import_Replace_pressed():
 		voxel_set.request_refresh()
 	else:
 		printerr(result)
-	close_ImportHow()
+	hide_import_how()

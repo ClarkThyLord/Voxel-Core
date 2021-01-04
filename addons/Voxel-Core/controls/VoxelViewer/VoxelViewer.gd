@@ -318,7 +318,7 @@ func update_view() -> void:
 		Select.mesh = _voxel_tool.commit()
 
 
-# Shows the context menu and options according to context
+# Shows the context menu and options
 func show_context_menu(global_position : Vector2, face := _last_hovered_face) -> void:
 	_editing_face = face
 	_editing_multiple = false
@@ -377,7 +377,7 @@ func show_color_menu(color : Color) -> void:
 
 
 # Closes the color menu
-func close_color_menu() -> void:
+func hide_color_menu() -> void:
 	if is_instance_valid(ColorMenu):
 		ColorMenu.hide()
 	update_view()
@@ -392,7 +392,7 @@ func show_texture_menu(uv : Vector2) -> void:
 
 
 # Closes the texture menu
-func close_texture_menu() -> void:
+func hide_texture_menu() -> void:
 	if is_instance_valid(TextureMenu):
 		TextureMenu.hide()
 	update_view()
@@ -410,7 +410,7 @@ func show_material_menu(voxel := get_viewing_voxel()) -> void:
 
 
 # Closes the material menu
-func close_material_menu() -> void:
+func hide_material_menu() -> void:
 	if is_instance_valid(MaterialMenu):
 		MaterialMenu.hide()
 	update_view()
@@ -567,7 +567,7 @@ func _on_ColorPicker_color_changed(color : Color):
 func _on_ColorMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
-	close_color_menu()
+	hide_color_menu()
 
 
 func _on_ColorMenu_Confirm_pressed():
@@ -597,7 +597,7 @@ func _on_ColorMenu_Confirm_pressed():
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-	close_color_menu()
+	hide_color_menu()
 
 
 func _on_VoxelTexture_selected_uv(uv : Vector2):
@@ -612,7 +612,7 @@ func _on_VoxelTexture_selected_uv(uv : Vector2):
 func _on_TextureMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
-	close_texture_menu()
+	hide_texture_menu()
 
 
 func _on_TextureMenu_Confirm_pressed():
@@ -642,7 +642,7 @@ func _on_TextureMenu_Confirm_pressed():
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-	close_texture_menu()
+	hide_texture_menu()
 
 
 func _on_Metallic_value_changed(metallic : float):
@@ -673,7 +673,7 @@ func _on_EnergyColor_changed(color : Color):
 func _on_MaterialMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
-	close_material_menu()
+	hide_material_menu()
 
 
 func _on_MaterialMenu_Confirm_pressed():
@@ -708,4 +708,4 @@ func _on_MaterialMenu_Confirm_pressed():
 	undo_redo.add_undo_method(voxel_set, "request_refresh")
 	undo_redo.commit_action()
 	
-	close_material_menu()
+	hide_material_menu()
