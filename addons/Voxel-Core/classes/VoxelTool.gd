@@ -98,7 +98,7 @@ func add_face(
 	var energy : float = Voxel.get_energy(voxel)
 	var energy_color : Color = Voxel.get_energy_color(voxel)
 	
-	var surface_id := str(metal) + "," + str(specular) + "," + str(rough) + "," + str(energy)
+	var surface_id := str(metal) + "," + str(specular) + "," + str(rough) + "," + str(energy) + "," + str(energy_color)
 	var surface : Surface = _surfaces.get(surface_id)
 	if not is_instance_valid(surface):
 		surface = Surface.new()
