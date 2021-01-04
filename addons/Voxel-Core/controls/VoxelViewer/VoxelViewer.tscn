@@ -196,8 +196,10 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 324.0
-margin_bottom = 485.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 328.0
+margin_bottom = 489.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 edit_alpha = false
@@ -462,7 +464,7 @@ text = "Confirm"
 [connection signal="selected_uv" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_VoxelTexture_selected_uv"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_TextureMenu_Cancel_pressed"]
 [connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
-[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material" to="." method="_on_Energy_value_changed"]
+[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material" to="." method="_on_Material_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic" to="." method="_on_Metallic_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular" to="." method="_on_Specular_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3/Roughness" to="." method="_on_Roughness_value_changed"]

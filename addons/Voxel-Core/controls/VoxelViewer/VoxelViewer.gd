@@ -670,6 +670,17 @@ func _on_EnergyColor_changed(color : Color):
 	update_view()
 
 
+func _on_Material_value_changed(value : int):
+	Metallic.editable = value == -1
+	Specular.editable = value == -1
+	Roughness.editable = value == -1
+	Energy.editable = value == -1
+	EnergyColor.disabled = value > -1
+	
+	Voxel.set_material(get_viewing_voxel(), value)
+	update_view()
+
+
 func _on_MaterialMenu_Cancel_pressed():
 	voxel_set.set_voxel(_unedited_voxel, voxel_id)
 	
@@ -679,31 +690,37 @@ func _on_MaterialMenu_Cancel_pressed():
 func _on_MaterialMenu_Confirm_pressed():
 	var voxel = get_viewing_voxel()
 	undo_redo.create_action("VoxelViewer : Set voxel material")
+	
 	var metallic := Voxel.get_metallic(voxel)
 	var _metallic := Voxel.get_metallic(_unedited_voxel)
 	if metallic != _metallic:
 		undo_redo.add_do_method(Voxel, "set_metallic", voxel, metallic)
 		undo_redo.add_undo_method(Voxel, "set_metallic", voxel, _metallic)
+	
 	var specular := Voxel.get_specular(voxel)
 	var _specular := Voxel.get_specular(_unedited_voxel)
-	if specular != specular:
+	if specular != _specular:
 		undo_redo.add_do_method(Voxel, "set_specular", voxel, specular)
 		undo_redo.add_undo_method(Voxel, "set_specular", voxel, _specular)
+	
 	var roughness := Voxel.get_roughness(voxel)
 	var _roughness := Voxel.get_roughness(_unedited_voxel)
 	if roughness != _roughness:
 		undo_redo.add_do_method(Voxel, "set_roughness", voxel, roughness)
 		undo_redo.add_undo_method(Voxel, "set_roughness", voxel, _roughness)
+	
 	var energy := Voxel.get_energy(voxel)
 	var _energy := Voxel.get_energy(_unedited_voxel)
 	if energy != _energy:
 		undo_redo.add_do_method(Voxel, "set_energy", voxel, energy)
 		undo_redo.add_undo_method(Voxel, "set_energy", voxel, _energy)
+	
 	var energy_color := Voxel.get_energy_color(voxel)
 	var _energy_color := Voxel.get_energy_color(_unedited_voxel)
 	if energy_color != _energy_color:
 		undo_redo.add_do_method(Voxel, "set_energy_color", voxel, energy_color)
 		undo_redo.add_undo_method(Voxel, "set_energy_color", voxel, _energy_color)
+	
 	undo_redo.add_do_method(voxel_set, "request_refresh")
 	undo_redo.add_undo_method(voxel_set, "request_refresh")
 	undo_redo.commit_action()
