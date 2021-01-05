@@ -158,6 +158,26 @@ func set_voxel_id(value : int, update := true) -> void:
 		update_view()
 
 
+# Returns true if face is selected
+func has_selected(face : Vector3) -> bool:
+	return _selections.has(face)
+
+
+# Returns face selected at given index
+func get_selected(index : int) -> Vector3:
+	return _selections[index]
+
+
+# Returns array of selected faces
+func get_selections() -> Array:
+	return _selections.duplicate()
+
+
+# Returns number of faces selected
+func get_selected_size() -> int:
+	return _selections.size()
+
+
 # Sets voxel_set, and calls on update by default
 func set_voxel_set(value : Resource, update := true) -> void:
 	if not (typeof(value) == TYPE_NIL or value is VoxelSet):

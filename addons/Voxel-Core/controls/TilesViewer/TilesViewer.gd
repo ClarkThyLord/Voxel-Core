@@ -123,6 +123,26 @@ func set_voxel_set(value : Resource, update := true) -> void:
 		self.update()
 
 
+# Returns true if uv is selected
+func has_selected(uv : Vector2) -> bool:
+	return _selections.has(uv)
+
+
+# Returns uv selected at given index
+func get_selected(index : int) -> Vector2:
+	return _selections[index]
+
+
+# Returns array of selected faces
+func get_selections() -> Array:
+	return _selections.duplicate()
+
+
+# Returns number of faces selected
+func get_selected_size() -> int:
+	return _selections.size()
+
+
 # Returns world position as uv position
 func world_to_uv(world : Vector2) -> Vector2:
 	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.uv_ready() else -Vector2.ONE
