@@ -277,6 +277,39 @@ static func remove_material(voxel : Dictionary) -> void:
 	voxel.erase("material")
 
 
+# Removes unnecessary properties of given voxel in accordance to Voxel schema
+static func clean(voxel : Dictionary) -> void:
+	if not is_valid_name(get_name(voxel)):
+		remove_name(voxel)
+	
+	if get_uv(voxel) == get_uv({}):
+		remove_uv(voxel)
+	
+	for face in Faces:
+		if get_face_color(voxel, face) == get_color({}):
+			remove_face_color(voxel, face)
+		if get_face_uv(voxel, face) == get_uv({}):
+			remove_face_uv(voxel, face)
+	
+	if get_material(voxel) == get_material({}):
+		remove_material(voxel)
+	
+	if get_metallic(voxel) == get_metallic({}):
+		remove_metallic(voxel)
+	
+	if get_specular(voxel) == get_specular({}):
+		remove_specular(voxel)
+	
+	if get_roughness(voxel) == get_roughness({}):
+		remove_roughness(voxel)
+	
+	if get_energy(voxel) == get_energy({}):
+		remove_energy(voxel)
+	
+	if get_energy_color(voxel) == get_energy_color({}):
+		remove_energy_color(voxel)
+
+
 # Returns the world position as snapped world position
 static func world_to_snapped(world : Vector3) -> Vector3:
 	return (world / VoxelWorldSize).floor() * VoxelWorldSize

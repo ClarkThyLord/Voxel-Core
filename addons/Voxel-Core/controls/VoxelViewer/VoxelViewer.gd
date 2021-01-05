@@ -418,6 +418,7 @@ func hide_texture_menu() -> void:
 # Shows the material menu with given voxel data
 func show_material_menu(voxel := get_viewing_voxel()) -> void:
 	if is_instance_valid(MaterialMenu):
+		MaterialRef.value = Voxel.get_material(voxel)
 		Metallic.value = Voxel.get_metallic(voxel)
 		Specular.value = Voxel.get_specular(voxel)
 		Roughness.value = Voxel.get_roughness(voxel)
@@ -517,6 +518,7 @@ func _on_ContextMenu_id_pressed(id : int):
 		1: # Remove editing face color
 			var voxel = get_viewing_voxel()
 			Voxel.remove_face_color(voxel, _editing_face)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Remove voxel face color")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -529,6 +531,7 @@ func _on_ContextMenu_id_pressed(id : int):
 		3: # Remove editing face uv
 			var voxel := get_viewing_voxel()
 			Voxel.remove_face_uv(voxel, _editing_face)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Remove voxel face uv")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -544,6 +547,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			var voxel = get_viewing_voxel()
 			for selection in _selections:
 				Voxel.remove_face_color(voxel, selection)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Remove voxel face(s) color")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -559,6 +563,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			var voxel := get_viewing_voxel()
 			for selection in _selections:
 				Voxel.remove_face_uv(voxel, selection)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Remove voxel face(s) uv")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -573,6 +578,7 @@ func _on_ContextMenu_id_pressed(id : int):
 		6: # Remove voxel uv
 			var voxel = voxel_set.get_voxel(voxel_id)
 			Voxel.remove_uv(voxel)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Remove voxel uv")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -609,9 +615,7 @@ func _on_ColorMenu_Confirm_pressed():
 	match _editing_action:
 		0, 7:
 			var voxel = get_viewing_voxel()
-			for selection in (_selections if _editing_multiple else [_editing_face]):
-				var color = Voxel.get_face_color(voxel, selection)
-				Voxel.set_face_color(voxel, selection, VoxelColor.color)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Set voxel face(s) color")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -621,7 +625,7 @@ func _on_ColorMenu_Confirm_pressed():
 			undo_redo.commit_action()
 		4:
 			var voxel = get_viewing_voxel()
-			Voxel.set_color(voxel, VoxelColor.color)
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Set voxel color")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -651,8 +655,7 @@ func _on_TextureMenu_Confirm_pressed():
 	match _editing_action:
 		2, 9:
 			var voxel = get_viewing_voxel()
-			for selection in (_selections if _editing_multiple else [_editing_face]):
-				Voxel.set_face_uv(voxel, selection, VoxelTexture.get_selected(0))
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Set voxel face(s) uv")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -662,8 +665,7 @@ func _on_TextureMenu_Confirm_pressed():
 			undo_redo.commit_action()
 		5:
 			var voxel = get_viewing_voxel()
-			var uv = Voxel.get_uv(voxel)
-			Voxel.set_uv(voxel, VoxelTexture.get_selected(0))
+			Voxel.clean(voxel)
 			
 			undo_redo.create_action("VoxelViewer : Set voxel uv")
 			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
@@ -718,31 +720,7 @@ func _on_MaterialMenu_Cancel_pressed():
 
 func _on_MaterialMenu_Confirm_pressed():
 	var voxel = get_viewing_voxel()
-	
-	var metallic := Voxel.get_metallic(voxel)
-	var _metallic := Voxel.get_metallic(_unedited_voxel)
-	if metallic != _metallic:
-		Voxel.set_metallic(voxel, metallic)
-	
-	var specular := Voxel.get_specular(voxel)
-	var _specular := Voxel.get_specular(_unedited_voxel)
-	if specular != _specular:
-		Voxel.set_specular(voxel, specular)
-	
-	var roughness := Voxel.get_roughness(voxel)
-	var _roughness := Voxel.get_roughness(_unedited_voxel)
-	if roughness != _roughness:
-		Voxel.set_roughness(voxel, roughness)
-	
-	var energy := Voxel.get_energy(voxel)
-	var _energy := Voxel.get_energy(_unedited_voxel)
-	if energy != _energy:
-		Voxel.set_energy(voxel, energy)
-	
-	var energy_color := Voxel.get_energy_color(voxel)
-	var _energy_color := Voxel.get_energy_color(_unedited_voxel)
-	if energy_color != _energy_color:
-		Voxel.set_energy_color(voxel, energy_color)
+	Voxel.clean(voxel)
 	
 	undo_redo.create_action("VoxelViewer : Set voxel material")
 	undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, voxel)
