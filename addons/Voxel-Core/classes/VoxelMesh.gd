@@ -71,8 +71,12 @@ func erase_voxels() -> void:
 func update_mesh() -> void:
 	if not _voxels.empty():
 		var vt := VoxelTool.new()
-		# TODO Retain multiple materials
-		var material = get_surface_material(0) if get_surface_material_count() > 0 else null
+		var materials := {}
+		if is_instance_valid(mesh) and mesh is ArrayMesh:
+			for index in get_surface_material_count():
+				var material := get_surface_material(index)
+				if is_instance_valid(material):
+					materials[mesh.surface_get_name(index)] = material
 		
 		match MeshModes.NAIVE if edit_hint else mesh_mode:
 			MeshModes.GREEDY:
@@ -80,9 +84,10 @@ func update_mesh() -> void:
 			_:
 				mesh = naive_volume(_voxels.keys(), vt)
 		
-		if is_instance_valid(mesh):
-			mesh.surface_set_name(0, "voxels")
-			set_surface_material(0, material)
+		for material_name in materials:
+			var material_index = mesh.surface_find_by_name(material_name)
+			if material_index > -1:
+				set_surface_material(material_index, materials[material_name])
 	else:
 		mesh = null
 	.update_mesh()
