@@ -288,7 +288,7 @@ func _on_ContextMenu_id_pressed(_id : int):
 		0:
 			var id = voxel_set.size()
 			undo_redo.create_action("VoxelSetViewer : Add voxel")
-			undo_redo.add_do_method(voxel_set, "set_voxel", Voxel.colored(Color.white))
+			undo_redo.add_do_method(voxel_set, "add_voxel", Voxel.colored(Color.white))
 			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
@@ -298,7 +298,10 @@ func _on_ContextMenu_id_pressed(_id : int):
 		1:
 			var id = voxel_set.size()
 			undo_redo.create_action("VoxelSetViewer : Duplicate voxel")
-			undo_redo.add_do_method(voxel_set, "set_voxel", voxel_set.get_voxel(_selections[0]).duplicate(true))
+			undo_redo.add_do_method(
+					voxel_set,
+					"add_voxel",
+					voxel_set.get_voxel(_selections[0]).duplicate(true))
 			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
@@ -310,10 +313,9 @@ func _on_ContextMenu_id_pressed(_id : int):
 			undo_redo.add_do_method(voxel_set, "erase_voxel", _selections[0])
 			undo_redo.add_undo_method(
 					voxel_set,
-					"set_voxel",
-					voxel_set.get_voxel(_selections[0]),
+					"insert_voxel",
 					_selections[0],
-					voxel_set.id_to_name(_selections[0]))
+					voxel_set.get_voxel(_selections[0]))
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
@@ -325,8 +327,14 @@ func _on_ContextMenu_id_pressed(_id : int):
 			var ids = []
 			for selection in range(_selections.size()):
 				ids.append(id + selection)
-				undo_redo.add_do_method(voxel_set, "set_voxel", voxel_set.get_voxel(_selections[selection]).duplicate(true), "", ids.back())
-				undo_redo.add_undo_method(voxel_set, "erase_voxel", ids.back())
+				undo_redo.add_do_method(
+						voxel_set,
+						"add_voxel",
+						voxel_set.get_voxel(_selections[selection]).duplicate(true))
+				undo_redo.add_undo_method(
+					voxel_set,
+					"erase_voxel",
+					id + _selections.size() - selection - 1)
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
@@ -335,14 +343,18 @@ func _on_ContextMenu_id_pressed(_id : int):
 				select(_id)
 		5: 
 			undo_redo.create_action("VoxelSetViewer : Remove voxels")
-			for selection in _selections:
-				undo_redo.add_do_method(voxel_set, "erase_voxel", selection)
+			var selections := _selections.duplicate()
+			selections.sort()
+			for index in range(selections.size()):
+				undo_redo.add_do_method(
+						voxel_set,
+						"erase_voxel",
+						selections[selections.size() - index - 1])
 				undo_redo.add_undo_method(
 						voxel_set,
-						"set_voxel",
-						voxel_set.get_voxel(selection),
-						voxel_set.id_to_name(selection),
-						selection)
+						"insert_voxel",
+						selections[index],
+						voxel_set.get_voxel(selections[index]))
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()

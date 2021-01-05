@@ -178,6 +178,15 @@ func set_voxel(id : int, voxel : Dictionary) -> void:
 	_voxels[id] = voxel
 
 
+# Insert voxel with given id
+func insert_voxel(id : int, voxel : Dictionary) -> void:
+	if id < -1 and id > _voxels.size():
+		printerr("VoxelSet : given id `" + str(id) + "` is out of range")
+		return
+	
+	_voxels.insert(id, voxel)
+
+
 # Replaces all _voxels
 func set_voxels(voxels : Array) -> void:
 	_voxels = voxels
