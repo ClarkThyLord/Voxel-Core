@@ -164,12 +164,14 @@ func name_to_id(name : String) -> int:
 	return -1
 
 
-# Set the voxel at given id, next available id is assigned if non is provided
-func set_voxel(voxel : Dictionary, id : int = size()) -> void:
-	if id == size():
-		_voxels.append(voxel)
-		return
-	elif not has_id(id):
+# Appends voxel to end of VoxelSet
+func add_voxel(voxel : Dictionary) -> void:
+	_voxels.append(voxel)
+
+
+# Sets the voxel at given id
+func set_voxel(id : int, voxel : Dictionary) -> void:
+	if not has_id(id):
 		printerr("VoxelSet : given id `" + str(id) + "` is out of range")
 		return
 	
@@ -217,7 +219,7 @@ func load_file(source_file : String, append := false) -> int:
 	if error == OK:
 		if append:
 			for voxel in read["palette"]:
-				set_voxel(voxel)
+				add_voxel(voxel)
 		else:
 			set_voxels(read["palette"])
 	return error
