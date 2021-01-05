@@ -2,583 +2,442 @@
 
 [ext_resource path="res://addons/Voxel-Core/classes/VoxelSet.gd" type="Script" id=1]
 
+[sub_resource type="SpatialMaterial" id=1]
+
 [resource]
 script = ExtResource( 1 )
-VOXELS = {
-1: {
-"vsn": "aliceblue",
-"color": Color( 0.94, 0.97, 1, 1 )
-},
-2: {
-"vsn": "antiquewhite",
-"color": Color( 0.98, 0.92, 0.84, 1 )
-},
-3: {
-"vsn": "aqua",
-"color": Color( 0, 1, 1, 1 )
-},
-4: {
-"vsn": "aquamarine",
-"color": Color( 0.5, 1, 0.83, 1 )
-},
-5: {
-"vsn": "azure",
-"color": Color( 0.94, 1, 1, 1 )
-},
-6: {
-"vsn": "beige",
-"color": Color( 0.96, 0.96, 0.86, 1 )
-},
-7: {
-"vsn": "bisque",
-"color": Color( 1, 0.89, 0.77, 1 )
-},
-8: {
-"vsn": "black",
-"color": Color( 0, 0, 0, 1 )
-},
-9: {
-"vsn": "blanchedalmond",
-"color": Color( 1, 0.92, 0.8, 1 )
-},
-10: {
-"vsn": "blue",
-"color": Color( 0, 0, 1, 1 )
-},
-11: {
-"vsn": "blueviolet",
-"color": Color( 0.54, 0.17, 0.89, 1 )
-},
-12: {
-"vsn": "brown",
-"color": Color( 0.65, 0.16, 0.16, 1 )
-},
-13: {
-"vsn": "burlywood",
-"color": Color( 0.87, 0.72, 0.53, 1 )
-},
-14: {
-"vsn": "cadetblue",
-"color": Color( 0.37, 0.62, 0.63, 1 )
-},
-15: {
-"vsn": "chartreuse",
-"color": Color( 0.5, 1, 0, 1 )
-},
-16: {
-"vsn": "chocolate",
-"color": Color( 0.82, 0.41, 0.12, 1 )
-},
-17: {
-"vsn": "coral",
-"color": Color( 1, 0.5, 0.31, 1 )
-},
-18: {
-"vsn": "cornflower",
-"color": Color( 0.39, 0.58, 0.93, 1 )
-},
-19: {
-"vsn": "cornsilk",
-"color": Color( 1, 0.97, 0.86, 1 )
-},
-20: {
-"vsn": "crimson",
-"color": Color( 0.86, 0.08, 0.24, 1 )
-},
-21: {
-"vsn": "cyan",
-"color": Color( 0, 1, 1, 1 )
-},
-22: {
-"vsn": "darkblue",
-"color": Color( 0, 0, 0.55, 1 )
-},
-23: {
-"vsn": "darkcyan",
-"color": Color( 0, 0.55, 0.55, 1 )
-},
-24: {
-"vsn": "darkgoldenrod",
-"color": Color( 0.72, 0.53, 0.04, 1 )
-},
-25: {
-"vsn": "darkgray",
-"color": Color( 0.66, 0.66, 0.66, 1 )
-},
-26: {
-"vsn": "darkgreen",
-"color": Color( 0, 0.39, 0, 1 )
-},
-27: {
-"vsn": "darkkhaki",
-"color": Color( 0.74, 0.72, 0.42, 1 )
-},
-28: {
-"vsn": "darkmagenta",
-"color": Color( 0.55, 0, 0.55, 1 )
-},
-29: {
-"vsn": "darkolivegreen",
-"color": Color( 0.33, 0.42, 0.18, 1 )
-},
-30: {
-"vsn": "darkorange",
-"color": Color( 1, 0.55, 0, 1 )
-},
-31: {
-"vsn": "darkorchid",
-"color": Color( 0.6, 0.2, 0.8, 1 )
-},
-32: {
-"vsn": "darkred",
-"color": Color( 0.55, 0, 0, 1 )
-},
-33: {
-"vsn": "darksalmon",
-"color": Color( 0.91, 0.59, 0.48, 1 )
-},
-34: {
-"vsn": "darkseagreen",
-"color": Color( 0.56, 0.74, 0.56, 1 )
-},
-35: {
-"vsn": "darkslateblue",
-"color": Color( 0.28, 0.24, 0.55, 1 )
-},
-36: {
-"vsn": "darkslategray",
-"color": Color( 0.18, 0.31, 0.31, 1 )
-},
-37: {
-"vsn": "darkturquoise",
-"color": Color( 0, 0.81, 0.82, 1 )
-},
-38: {
-"vsn": "darkviolet",
-"color": Color( 0.58, 0, 0.83, 1 )
-},
-39: {
-"vsn": "deeppink",
-"color": Color( 1, 0.08, 0.58, 1 )
-},
-40: {
-"vsn": "deepskyblue",
-"color": Color( 0, 0.75, 1, 1 )
-},
-41: {
-"vsn": "dimgray",
-"color": Color( 0.41, 0.41, 0.41, 1 )
-},
-42: {
-"vsn": "dodgerblue",
-"color": Color( 0.12, 0.56, 1, 1 )
-},
-43: {
-"vsn": "firebrick",
-"color": Color( 0.7, 0.13, 0.13, 1 )
-},
-44: {
-"vsn": "floralwhite",
-"color": Color( 1, 0.98, 0.94, 1 )
-},
-45: {
-"vsn": "forestgreen",
-"color": Color( 0.13, 0.55, 0.13, 1 )
-},
-46: {
-"vsn": "fuchsia",
-"color": Color( 1, 0, 1, 1 )
-},
-47: {
-"vsn": "gainsboro",
-"color": Color( 0.86, 0.86, 0.86, 1 )
-},
-48: {
-"vsn": "ghostwhite",
-"color": Color( 0.97, 0.97, 1, 1 )
-},
-49: {
-"vsn": "gold",
-"color": Color( 1, 0.84, 0, 1 )
-},
-50: {
-"vsn": "goldenrod",
-"color": Color( 0.85, 0.65, 0.13, 1 )
-},
-51: {
-"vsn": "gray",
-"color": Color( 0.75, 0.75, 0.75, 1 )
-},
-52: {
-"vsn": "green",
-"color": Color( 0, 1, 0, 1 )
-},
-53: {
-"vsn": "greenyellow",
-"color": Color( 0.68, 1, 0.18, 1 )
-},
-54: {
-"vsn": "honeydew",
-"color": Color( 0.94, 1, 0.94, 1 )
-},
-55: {
-"vsn": "hotpink",
-"color": Color( 1, 0.41, 0.71, 1 )
-},
-56: {
-"vsn": "indianred",
-"color": Color( 0.8, 0.36, 0.36, 1 )
-},
-57: {
-"vsn": "indigo",
-"color": Color( 0.29, 0, 0.51, 1 )
-},
-58: {
-"vsn": "ivory",
-"color": Color( 1, 1, 0.94, 1 )
-},
-59: {
-"vsn": "khaki",
-"color": Color( 0.94, 0.9, 0.55, 1 )
-},
-60: {
-"vsn": "lavender",
-"color": Color( 0.9, 0.9, 0.98, 1 )
-},
-61: {
-"vsn": "lavenderblush",
-"color": Color( 1, 0.94, 0.96, 1 )
-},
-62: {
-"vsn": "lawngreen",
-"color": Color( 0.49, 0.99, 0, 1 )
-},
-63: {
-"vsn": "lemonchiffon",
-"color": Color( 1, 0.98, 0.8, 1 )
-},
-64: {
-"vsn": "lightblue",
-"color": Color( 0.68, 0.85, 0.9, 1 )
-},
-65: {
-"vsn": "lightcoral",
-"color": Color( 0.94, 0.5, 0.5, 1 )
-},
-66: {
-"vsn": "lightcyan",
-"color": Color( 0.88, 1, 1, 1 )
-},
-67: {
-"vsn": "lightgoldenrod",
-"color": Color( 0.98, 0.98, 0.82, 1 )
-},
-68: {
-"vsn": "lightgray",
-"color": Color( 0.83, 0.83, 0.83, 1 )
-},
-69: {
-"vsn": "lightgreen",
-"color": Color( 0.56, 0.93, 0.56, 1 )
-},
-70: {
-"vsn": "lightpink",
-"color": Color( 1, 0.71, 0.76, 1 )
-},
-71: {
-"vsn": "lightsalmon",
-"color": Color( 1, 0.63, 0.48, 1 )
-},
-72: {
-"vsn": "lightseagreen",
-"color": Color( 0.13, 0.7, 0.67, 1 )
-},
-73: {
-"vsn": "lightskyblue",
-"color": Color( 0.53, 0.81, 0.98, 1 )
-},
-74: {
-"vsn": "lightslategray",
-"color": Color( 0.47, 0.53, 0.6, 1 )
-},
-75: {
-"vsn": "lightsteelblue",
-"color": Color( 0.69, 0.77, 0.87, 1 )
-},
-76: {
-"vsn": "lightyellow",
-"color": Color( 1, 1, 0.88, 1 )
-},
-77: {
-"vsn": "lime",
-"color": Color( 0, 1, 0, 1 )
-},
-78: {
-"vsn": "limegreen",
-"color": Color( 0.2, 0.8, 0.2, 1 )
-},
-79: {
-"vsn": "linen",
-"color": Color( 0.98, 0.94, 0.9, 1 )
-},
-80: {
-"vsn": "magenta",
-"color": Color( 1, 0, 1, 1 )
-},
-81: {
-"vsn": "maroon",
-"color": Color( 0.69, 0.19, 0.38, 1 )
-},
-82: {
-"vsn": "mediumaquamarine",
-"color": Color( 0.4, 0.8, 0.67, 1 )
-},
-83: {
-"vsn": "mediumblue",
-"color": Color( 0, 0, 0.8, 1 )
-},
-84: {
-"vsn": "mediumorchid",
-"color": Color( 0.73, 0.33, 0.83, 1 )
-},
-85: {
-"vsn": "mediumpurple",
-"color": Color( 0.58, 0.44, 0.86, 1 )
-},
-86: {
-"vsn": "mediumseagreen",
-"color": Color( 0.24, 0.7, 0.44, 1 )
-},
-87: {
-"vsn": "mediumslateblue",
-"color": Color( 0.48, 0.41, 0.93, 1 )
-},
-88: {
-"vsn": "mediumspringgreen",
-"color": Color( 0, 0.98, 0.6, 1 )
-},
-89: {
-"vsn": "mediumturquoise",
-"color": Color( 0.28, 0.82, 0.8, 1 )
-},
-90: {
-"vsn": "mediumvioletred",
-"color": Color( 0.78, 0.08, 0.52, 1 )
-},
-91: {
-"vsn": "midnightblue",
-"color": Color( 0.1, 0.1, 0.44, 1 )
-},
-92: {
-"vsn": "mintcream",
-"color": Color( 0.96, 1, 0.98, 1 )
-},
-93: {
-"vsn": "mistyrose",
-"color": Color( 1, 0.89, 0.88, 1 )
-},
-94: {
-"vsn": "moccasin",
-"color": Color( 1, 0.89, 0.71, 1 )
-},
-95: {
-"vsn": "navajowhite",
-"color": Color( 1, 0.87, 0.68, 1 )
-},
-96: {
-"vsn": "navyblue",
-"color": Color( 0, 0, 0.5, 1 )
-},
-97: {
-"vsn": "oldlace",
-"color": Color( 0.99, 0.96, 0.9, 1 )
-},
-98: {
-"vsn": "olive",
-"color": Color( 0.5, 0.5, 0, 1 )
-},
-99: {
-"vsn": "olivedrab",
-"color": Color( 0.42, 0.56, 0.14, 1 )
-},
-100: {
-"vsn": "orange",
-"color": Color( 1, 0.65, 0, 1 )
-},
-101: {
-"vsn": "orangered",
-"color": Color( 1, 0.27, 0, 1 )
-},
-102: {
-"vsn": "orchid",
-"color": Color( 0.85, 0.44, 0.84, 1 )
-},
-103: {
-"vsn": "palegoldenrod",
-"color": Color( 0.93, 0.91, 0.67, 1 )
-},
-104: {
-"vsn": "palegreen",
-"color": Color( 0.6, 0.98, 0.6, 1 )
-},
-105: {
-"vsn": "paleturquoise",
-"color": Color( 0.69, 0.93, 0.93, 1 )
-},
-106: {
-"vsn": "palevioletred",
-"color": Color( 0.86, 0.44, 0.58, 1 )
-},
-107: {
-"vsn": "papayawhip",
-"color": Color( 1, 0.94, 0.84, 1 )
-},
-108: {
-"vsn": "peachpuff",
-"color": Color( 1, 0.85, 0.73, 1 )
-},
-109: {
-"vsn": "peru",
-"color": Color( 0.8, 0.52, 0.25, 1 )
-},
-110: {
-"vsn": "pink",
-"color": Color( 1, 0.75, 0.8, 1 )
-},
-111: {
-"vsn": "plum",
-"color": Color( 0.87, 0.63, 0.87, 1 )
-},
-112: {
-"vsn": "powderblue",
-"color": Color( 0.69, 0.88, 0.9, 1 )
-},
-113: {
-"vsn": "purple",
-"color": Color( 0.63, 0.13, 0.94, 1 )
-},
-114: {
-"vsn": "rebeccapurple",
-"color": Color( 0.4, 0.2, 0.6, 1 )
-},
-115: {
-"vsn": "red",
-"color": Color( 1, 0, 0, 1 )
-},
-116: {
-"vsn": "rosybrown",
-"color": Color( 0.74, 0.56, 0.56, 1 )
-},
-117: {
-"vsn": "royalblue",
-"color": Color( 0.25, 0.41, 0.88, 1 )
-},
-118: {
-"vsn": "saddlebrown",
-"color": Color( 0.55, 0.27, 0.07, 1 )
-},
-119: {
-"vsn": "salmon",
-"color": Color( 0.98, 0.5, 0.45, 1 )
-},
-120: {
-"vsn": "sandybrown",
-"color": Color( 0.18, 0.55, 0.34, 1 )
-},
-121: {
-"vsn": "seashell",
-"color": Color( 1, 0.96, 0.93, 1 )
-},
-122: {
-"vsn": "sienna",
-"color": Color( 0.63, 0.32, 0.18, 1 )
-},
-123: {
-"vsn": "silver",
-"color": Color( 0.75, 0.75, 0.75, 1 )
-},
-124: {
-"vsn": "skyblue",
-"color": Color( 0.53, 0.81, 0.92, 1 )
-},
-125: {
-"vsn": "slateblue",
-"color": Color( 0.42, 0.35, 0.8, 1 )
-},
-126: {
-"vsn": "slategray",
-"color": Color( 0.44, 0.5, 0.56, 1 )
-},
-127: {
-"vsn": "snow",
-"color": Color( 1, 0.98, 0.98, 1 )
-},
-128: {
-"vsn": "springgreen",
-"color": Color( 0, 1, 0.5, 1 )
-},
-129: {
-"vsn": "steelblue",
-"color": Color( 0.27, 0.51, 0.71, 1 )
-},
-130: {
-"vsn": "tan",
-"color": Color( 0.82, 0.71, 0.55, 1 )
-},
-131: {
-"vsn": "teal",
-"color": Color( 0, 0.5, 0.5, 1 )
-},
-132: {
-"vsn": "thistle",
-"color": Color( 0.85, 0.75, 0.85, 1 )
-},
-133: {
-"vsn": "tomato",
-"color": Color( 1, 0.39, 0.28, 1 )
-},
-134: {
-"vsn": "turquoise",
-"color": Color( 0.25, 0.88, 0.82, 1 )
-},
-135: {
-"vsn": "violet",
-"color": Color( 0.93, 0.51, 0.93, 1 )
-},
-136: {
-"vsn": "webgray",
-"color": Color( 0.5, 0.5, 0.5, 1 )
-},
-137: {
-"vsn": "webgreen",
-"color": Color( 0, 0.5, 0, 1 )
-},
-138: {
-"vsn": "webmaroon",
-"color": Color( 0.5, 0, 0, 1 )
-},
-139: {
-"vsn": "webpurple",
-"color": Color( 0.5, 0, 0.5, 1 )
-},
-140: {
-"vsn": "wheat",
-"color": Color( 0.96, 0.87, 0.7, 1 )
-},
-141: {
-"vsn": "white",
-"color": Color( 1, 1, 1, 1 )
-},
-142: {
-"vsn": "whitesmoke",
-"color": Color( 0.96, 0.96, 0.96, 1 )
-},
-143: {
-"vsn": "yellow",
-"color": Color( 1, 1, 0, 1 )
-},
-144: {
-"vsn": "yellowgreen",
-"color": Color( 0.6, 0.8, 0.2, 1 )
-}
-}
+tile_size = Vector2( 32, 32 )
+materials = [ SubResource( 1 ) ]
+VOXELS = [ {
+"color": Color( 0.94, 0.97, 1, 1 ),
+"name": "aliceblue"
+}, {
+"color": Color( 0.98, 0.92, 0.84, 1 ),
+"name": "antiquewhite"
+}, {
+"color": Color( 0, 1, 1, 1 ),
+"name": "aqua"
+}, {
+"color": Color( 0.5, 1, 0.83, 1 ),
+"name": "aquamarine"
+}, {
+"color": Color( 0.94, 1, 1, 1 ),
+"name": "azure"
+}, {
+"color": Color( 0.96, 0.96, 0.86, 1 ),
+"name": "beige"
+}, {
+"color": Color( 1, 0.89, 0.77, 1 ),
+"name": "bisque"
+}, {
+"color": Color( 0, 0, 0, 1 ),
+"name": "black"
+}, {
+"color": Color( 1, 0.92, 0.8, 1 ),
+"name": "blanchedalmond"
+}, {
+"color": Color( 0, 0, 1, 1 ),
+"name": "blue"
+}, {
+"color": Color( 0.54, 0.17, 0.89, 1 ),
+"name": "blueviolet"
+}, {
+"color": Color( 0.65, 0.16, 0.16, 1 ),
+"name": "brown"
+}, {
+"color": Color( 0.87, 0.72, 0.53, 1 ),
+"name": "burlywood"
+}, {
+"color": Color( 0.37, 0.62, 0.63, 1 ),
+"name": "cadetblue"
+}, {
+"color": Color( 0.5, 1, 0, 1 ),
+"name": "chartreuse"
+}, {
+"color": Color( 0.82, 0.41, 0.12, 1 ),
+"name": "chocolate"
+}, {
+"color": Color( 1, 0.5, 0.31, 1 ),
+"name": "coral"
+}, {
+"color": Color( 0.39, 0.58, 0.93, 1 ),
+"name": "cornflower"
+}, {
+"color": Color( 1, 0.97, 0.86, 1 ),
+"name": "cornsilk"
+}, {
+"color": Color( 0.86, 0.08, 0.24, 1 ),
+"name": "crimson"
+}, {
+"color": Color( 0, 1, 1, 1 ),
+"name": "cyan"
+}, {
+"color": Color( 0, 0, 0.55, 1 ),
+"name": "darkblue"
+}, {
+"color": Color( 0, 0.55, 0.55, 1 ),
+"name": "darkcyan"
+}, {
+"color": Color( 0.72, 0.53, 0.04, 1 ),
+"name": "darkgoldenrod"
+}, {
+"color": Color( 0.66, 0.66, 0.66, 1 ),
+"name": "darkgray"
+}, {
+"color": Color( 0, 0.39, 0, 1 ),
+"name": "darkgreen"
+}, {
+"color": Color( 0.74, 0.72, 0.42, 1 ),
+"name": "darkkhaki"
+}, {
+"color": Color( 0.55, 0, 0.55, 1 ),
+"name": "darkmagenta"
+}, {
+"color": Color( 0.33, 0.42, 0.18, 1 ),
+"name": "darkolivegreen"
+}, {
+"color": Color( 1, 0.55, 0, 1 ),
+"name": "darkorange"
+}, {
+"color": Color( 0.6, 0.2, 0.8, 1 ),
+"name": "darkorchid"
+}, {
+"color": Color( 0.55, 0, 0, 1 ),
+"name": "darkred"
+}, {
+"color": Color( 0.91, 0.59, 0.48, 1 ),
+"name": "darksalmon"
+}, {
+"color": Color( 0.56, 0.74, 0.56, 1 ),
+"name": "darkseagreen"
+}, {
+"color": Color( 0.28, 0.24, 0.55, 1 ),
+"name": "darkslateblue"
+}, {
+"color": Color( 0.18, 0.31, 0.31, 1 ),
+"name": "darkslategray"
+}, {
+"color": Color( 0, 0.81, 0.82, 1 ),
+"name": "darkturquoise"
+}, {
+"color": Color( 0.58, 0, 0.83, 1 ),
+"name": "darkviolet"
+}, {
+"color": Color( 1, 0.08, 0.58, 1 ),
+"name": "deeppink"
+}, {
+"color": Color( 0, 0.75, 1, 1 ),
+"name": "deepskyblue"
+}, {
+"color": Color( 0.41, 0.41, 0.41, 1 ),
+"name": "dimgray"
+}, {
+"color": Color( 0.12, 0.56, 1, 1 ),
+"name": "dodgerblue"
+}, {
+"color": Color( 0.7, 0.13, 0.13, 1 ),
+"name": "firebrick"
+}, {
+"color": Color( 1, 0.98, 0.94, 1 ),
+"name": "floralwhite"
+}, {
+"color": Color( 0.13, 0.55, 0.13, 1 ),
+"name": "forestgreen"
+}, {
+"color": Color( 1, 0, 1, 1 ),
+"name": "fuchsia"
+}, {
+"color": Color( 0.86, 0.86, 0.86, 1 ),
+"name": "gainsboro"
+}, {
+"color": Color( 0.97, 0.97, 1, 1 ),
+"name": "ghostwhite"
+}, {
+"color": Color( 1, 0.84, 0, 1 ),
+"name": "gold"
+}, {
+"color": Color( 0.85, 0.65, 0.13, 1 ),
+"name": "goldenrod"
+}, {
+"color": Color( 0.75, 0.75, 0.75, 1 ),
+"name": "gray"
+}, {
+"color": Color( 0, 1, 0, 1 ),
+"name": "green"
+}, {
+"color": Color( 0.68, 1, 0.18, 1 ),
+"name": "greenyellow"
+}, {
+"color": Color( 0.94, 1, 0.94, 1 ),
+"name": "honeydew"
+}, {
+"color": Color( 1, 0.41, 0.71, 1 ),
+"name": "hotpink"
+}, {
+"color": Color( 0.8, 0.36, 0.36, 1 ),
+"name": "indianred"
+}, {
+"color": Color( 0.29, 0, 0.51, 1 ),
+"name": "indigo"
+}, {
+"color": Color( 1, 1, 0.94, 1 ),
+"name": "ivory"
+}, {
+"color": Color( 0.94, 0.9, 0.55, 1 ),
+"name": "khaki"
+}, {
+"color": Color( 0.9, 0.9, 0.98, 1 ),
+"name": "lavender"
+}, {
+"color": Color( 1, 0.94, 0.96, 1 ),
+"name": "lavenderblush"
+}, {
+"color": Color( 0.49, 0.99, 0, 1 ),
+"name": "lawngreen"
+}, {
+"color": Color( 1, 0.98, 0.8, 1 ),
+"name": "lemonchiffon"
+}, {
+"color": Color( 0.68, 0.85, 0.9, 1 ),
+"name": "lightblue"
+}, {
+"color": Color( 0.94, 0.5, 0.5, 1 ),
+"name": "lightcoral"
+}, {
+"color": Color( 0.88, 1, 1, 1 ),
+"name": "lightcyan"
+}, {
+"color": Color( 0.98, 0.98, 0.82, 1 ),
+"name": "lightgoldenrod"
+}, {
+"color": Color( 0.83, 0.83, 0.83, 1 ),
+"name": "lightgray"
+}, {
+"color": Color( 0.56, 0.93, 0.56, 1 ),
+"name": "lightgreen"
+}, {
+"color": Color( 1, 0.71, 0.76, 1 ),
+"name": "lightpink"
+}, {
+"color": Color( 1, 0.63, 0.48, 1 ),
+"name": "lightsalmon"
+}, {
+"color": Color( 0.13, 0.7, 0.67, 1 ),
+"name": "lightseagreen"
+}, {
+"color": Color( 0.53, 0.81, 0.98, 1 ),
+"name": "lightskyblue"
+}, {
+"color": Color( 0.47, 0.53, 0.6, 1 ),
+"name": "lightslategray"
+}, {
+"color": Color( 0.69, 0.77, 0.87, 1 ),
+"name": "lightsteelblue"
+}, {
+"color": Color( 1, 1, 0.88, 1 ),
+"name": "lightyellow"
+}, {
+"color": Color( 0, 1, 0, 1 ),
+"name": "lime"
+}, {
+"color": Color( 0.2, 0.8, 0.2, 1 ),
+"name": "limegreen"
+}, {
+"color": Color( 0.98, 0.94, 0.9, 1 ),
+"name": "linen"
+}, {
+"color": Color( 1, 0, 1, 1 ),
+"name": "magenta"
+}, {
+"color": Color( 0.69, 0.19, 0.38, 1 ),
+"name": "maroon"
+}, {
+"color": Color( 0.4, 0.8, 0.67, 1 ),
+"name": "mediumaquamarine"
+}, {
+"color": Color( 0, 0, 0.8, 1 ),
+"name": "mediumblue"
+}, {
+"color": Color( 0.73, 0.33, 0.83, 1 ),
+"name": "mediumorchid"
+}, {
+"color": Color( 0.58, 0.44, 0.86, 1 ),
+"name": "mediumpurple"
+}, {
+"color": Color( 0.24, 0.7, 0.44, 1 ),
+"name": "mediumseagreen"
+}, {
+"color": Color( 0.48, 0.41, 0.93, 1 ),
+"name": "mediumslateblue"
+}, {
+"color": Color( 0, 0.98, 0.6, 1 ),
+"name": "mediumspringgreen"
+}, {
+"color": Color( 0.28, 0.82, 0.8, 1 ),
+"name": "mediumturquoise"
+}, {
+"color": Color( 0.78, 0.08, 0.52, 1 ),
+"name": "mediumvioletred"
+}, {
+"color": Color( 0.1, 0.1, 0.44, 1 ),
+"name": "midnightblue"
+}, {
+"color": Color( 0.96, 1, 0.98, 1 ),
+"name": "mintcream"
+}, {
+"color": Color( 1, 0.89, 0.88, 1 ),
+"name": "mistyrose"
+}, {
+"color": Color( 1, 0.89, 0.71, 1 ),
+"name": "moccasin"
+}, {
+"color": Color( 1, 0.87, 0.68, 1 ),
+"name": "navajowhite"
+}, {
+"color": Color( 0, 0, 0.5, 1 ),
+"name": "navyblue"
+}, {
+"color": Color( 0.99, 0.96, 0.9, 1 ),
+"name": "oldlace"
+}, {
+"color": Color( 0.5, 0.5, 0, 1 ),
+"name": "olive"
+}, {
+"color": Color( 0.42, 0.56, 0.14, 1 ),
+"name": "olivedrab"
+}, {
+"color": Color( 1, 0.65, 0, 1 ),
+"name": "orange"
+}, {
+"color": Color( 1, 0.27, 0, 1 ),
+"name": "orangered"
+}, {
+"color": Color( 0.85, 0.44, 0.84, 1 ),
+"name": "orchid"
+}, {
+"color": Color( 0.93, 0.91, 0.67, 1 ),
+"name": "palegoldenrod"
+}, {
+"color": Color( 0.6, 0.98, 0.6, 1 ),
+"name": "palegreen"
+}, {
+"color": Color( 0.69, 0.93, 0.93, 1 ),
+"name": "paleturquoise"
+}, {
+"color": Color( 0.86, 0.44, 0.58, 1 ),
+"name": "palevioletred"
+}, {
+"color": Color( 1, 0.94, 0.84, 1 ),
+"name": "papayawhip"
+}, {
+"color": Color( 1, 0.85, 0.73, 1 ),
+"name": "peachpuff"
+}, {
+"color": Color( 0.8, 0.52, 0.25, 1 ),
+"name": "peru"
+}, {
+"color": Color( 1, 0.75, 0.8, 1 ),
+"name": "pink"
+}, {
+"color": Color( 0.87, 0.63, 0.87, 1 ),
+"name": "plum"
+}, {
+"color": Color( 0.69, 0.88, 0.9, 1 ),
+"name": "powderblue"
+}, {
+"color": Color( 0.63, 0.13, 0.94, 1 ),
+"name": "purple"
+}, {
+"color": Color( 0.4, 0.2, 0.6, 1 ),
+"name": "rebeccapurple"
+}, {
+"color": Color( 1, 0, 0, 1 ),
+"name": "red"
+}, {
+"color": Color( 0.74, 0.56, 0.56, 1 ),
+"name": "rosybrown"
+}, {
+"color": Color( 0.25, 0.41, 0.88, 1 ),
+"name": "royalblue"
+}, {
+"color": Color( 0.55, 0.27, 0.07, 1 ),
+"name": "saddlebrown"
+}, {
+"color": Color( 0.98, 0.5, 0.45, 1 ),
+"name": "salmon"
+}, {
+"color": Color( 0.18, 0.55, 0.34, 1 ),
+"name": "sandybrown"
+}, {
+"color": Color( 1, 0.96, 0.93, 1 ),
+"name": "seashell"
+}, {
+"color": Color( 0.63, 0.32, 0.18, 1 ),
+"name": "sienna"
+}, {
+"color": Color( 0.75, 0.75, 0.75, 1 ),
+"name": "silver"
+}, {
+"color": Color( 0.53, 0.81, 0.92, 1 ),
+"name": "skyblue"
+}, {
+"color": Color( 0.42, 0.35, 0.8, 1 ),
+"name": "slateblue"
+}, {
+"color": Color( 0.44, 0.5, 0.56, 1 ),
+"name": "slategray"
+}, {
+"color": Color( 1, 0.98, 0.98, 1 ),
+"name": "snow"
+}, {
+"color": Color( 0, 1, 0.5, 1 ),
+"name": "springgreen"
+}, {
+"color": Color( 0.27, 0.51, 0.71, 1 ),
+"name": "steelblue"
+}, {
+"color": Color( 0.82, 0.71, 0.55, 1 ),
+"name": "tan"
+}, {
+"color": Color( 0, 0.5, 0.5, 1 ),
+"name": "teal"
+}, {
+"color": Color( 0.85, 0.75, 0.85, 1 ),
+"name": "thistle"
+}, {
+"color": Color( 1, 0.39, 0.28, 1 ),
+"name": "tomato"
+}, {
+"color": Color( 0.25, 0.88, 0.82, 1 ),
+"name": "turquoise"
+}, {
+"color": Color( 0.93, 0.51, 0.93, 1 ),
+"name": "violet"
+}, {
+"color": Color( 0.5, 0.5, 0.5, 1 ),
+"name": "webgray"
+}, {
+"color": Color( 0, 0.5, 0, 1 ),
+"name": "webgreen"
+}, {
+"color": Color( 0.5, 0, 0, 1 ),
+"name": "webmaroon"
+}, {
+"color": Color( 0.5, 0, 0.5, 1 ),
+"name": "webpurple"
+}, {
+"color": Color( 0.96, 0.87, 0.7, 1 ),
+"name": "wheat"
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"name": "white"
+}, {
+"color": Color( 0.96, 0.96, 0.96, 1 ),
+"name": "whitesmoke"
+}, {
+"color": Color( 1, 1, 0, 1 ),
+"name": "yellow"
+}, {
+"color": Color( 0.6, 0.8, 0.2, 1 ),
+"name": "yellowgreen"
+} ]
