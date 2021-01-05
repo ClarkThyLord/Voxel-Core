@@ -127,6 +127,33 @@ func hide_import_how():
 
 
 ## Private Methods
+func _on_Refresh_pressed():
+	voxel_set.request_refresh()
+
+
+func _on_Import_file_selected(path):
+	import_file_path = path
+	show_import_how()
+
+
+func _on_Import_Append_pressed():
+	var result = voxel_set.load_file(import_file_path, true)
+	if result == OK:
+		voxel_set.request_refresh()
+	else:
+		printerr(result)
+	hide_import_how()
+
+
+func _on_Import_Replace_pressed():
+	var result = voxel_set.load_file(import_file_path, false)
+	if result == OK:
+		voxel_set.request_refresh()
+	else:
+		printerr(result)
+	hide_import_how()
+
+
 func _on_Close_pressed():
 	emit_signal("close")
 
@@ -191,26 +218,3 @@ func _on_VoxelSetViewer_selected(voxel_id : int):
 
 func _on_VoxelSetViewer_unselected(voxel_id : int):
 	update_view()
-
-
-func _on_Import_file_selected(path):
-	import_file_path = path
-	show_import_how()
-
-
-func _on_Import_Append_pressed():
-	var result = voxel_set.load_file(import_file_path, true)
-	if result == OK:
-		voxel_set.request_refresh()
-	else:
-		printerr(result)
-	hide_import_how()
-
-
-func _on_Import_Replace_pressed():
-	var result = voxel_set.load_file(import_file_path, false)
-	if result == OK:
-		voxel_set.request_refresh()
-	else:
-		printerr(result)
-	hide_import_how()
