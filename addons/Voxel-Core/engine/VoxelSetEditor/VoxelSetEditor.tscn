@@ -57,6 +57,7 @@ alignment = 2
 margin_left = 50.0
 margin_right = 106.0
 margin_bottom = 20.0
+hint_tooltip = "Import voxels from file"
 text = "Import"
 
 [node name="ImportFile" type="FileDialog" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import"]
@@ -131,12 +132,14 @@ text = "Cancel"
 margin_left = 110.0
 margin_right = 170.0
 margin_bottom = 20.0
+hint_tooltip = "Request refresh from all connected objects"
 text = "Refresh"
 
 [node name="Close" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
 margin_left = 174.0
 margin_right = 221.0
 margin_bottom = 20.0
+hint_tooltip = "Close the VoxelSetEditor"
 text = "Close"
 
 [node name="VoxelSetInfo" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
@@ -148,9 +151,9 @@ size_flags_vertical = 3
 
 [node name="VoxelInfo" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
 visible = false
-margin_top = 78.0
+margin_top = 114.0
 margin_right = 300.0
-margin_bottom = 206.0
+margin_bottom = 200.0
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VoxelInfo"]
@@ -167,6 +170,7 @@ text = "ID:"
 margin_left = 23.0
 margin_right = 81.0
 margin_bottom = 24.0
+hint_tooltip = "Enter to change id"
 
 [node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer"]
 margin_left = 85.0
@@ -179,13 +183,14 @@ text = "Name:"
 margin_left = 131.0
 margin_right = 300.0
 margin_bottom = 24.0
+hint_tooltip = "Enter to change name"
 size_flags_horizontal = 3
 placeholder_text = "Enter name..."
 
 [node name="VoxelData" type="RichTextLabel" parent="HBoxContainer/VBoxContainer/VoxelInfo"]
 margin_top = 28.0
 margin_right = 300.0
-margin_bottom = 128.0
+margin_bottom = 86.0
 size_flags_vertical = 3
 
 [node name="HSplitContainer" type="VSeparator" parent="HBoxContainer"]
