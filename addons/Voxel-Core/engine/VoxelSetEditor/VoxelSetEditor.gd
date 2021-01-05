@@ -161,27 +161,19 @@ func _on_Close_pressed():
 func _on_VoxelID_text_entered(new_id):
 	if not new_id.is_valid_integer():
 		return
-	new_id = int(abs(new_id.to_int()))
+	new_id = new_id.to_int()
 	if new_id == VoxelSetViewer.get_selected(0):
+		return
+	elif new_id <= -1 or new_id >= voxel_set.size():
 		return
 	
 	var id = VoxelSetViewer.get_selected(0)
-	var name = voxel_set.id_to_name(id)
 	var voxel = voxel_set.get_voxel(id)
 	undo_redo.create_action("VoxelSetEditor : Set voxel id")
 	undo_redo.add_do_method(voxel_set, "erase_voxel", id)
-	undo_redo.add_undo_method(voxel_set, "set_voxel", voxel, name, id)
-	
-	var _name = voxel_set.id_to_name(new_id)
-	var _voxel = voxel_set.get_voxel(new_id)
-	if not voxel.empty():
-		undo_redo.add_do_method(voxel_set, "erase_voxel", new_id)
-	undo_redo.add_do_method(voxel_set, "set_voxel", voxel, name, new_id)
-	if voxel.empty():
-		undo_redo.add_undo_method(voxel_set, "erase_voxel", new_id)
-	else:
-		undo_redo.add_undo_method(voxel_set, "set_voxel", _voxel, _name, new_id)
-	
+	undo_redo.add_undo_method(voxel_set, "insert_voxel", id, voxel)
+	undo_redo.add_do_method(voxel_set, "insert_voxel", new_id, voxel)
+	undo_redo.add_undo_method(voxel_set, "erase_voxel", new_id)
 	undo_redo.add_do_method(voxel_set, "request_refresh")
 	undo_redo.add_undo_method(voxel_set, "request_refresh")
 	undo_redo.commit_action()
@@ -192,24 +184,22 @@ func _on_VoxelID_text_entered(new_id):
 func _on_VoxelName_text_entered(new_name : String):
 	var voxel_id = VoxelSetViewer.get_selected(0)
 	var voxel = voxel_set.get_voxel(voxel_id)
-	var old_name = Voxel.get_name(voxel)
-	if new_name != old_name:
-		if new_name.empty():
-			undo_redo.create_action("VoxelSetEditor : Remove voxel name")
-			undo_redo.add_do_method(Voxel, "remove_name", voxel)
-			undo_redo.add_undo_method(Voxel, "set_name", voxel, old_name)
-		else:
-			undo_redo.create_action("VoxelSetEditor : Rename voxel")
-			undo_redo.add_do_method(Voxel, "set_name", voxel, new_name)
-			if old_name.empty():
-				undo_redo.add_undo_method(Voxel, "remove_name", voxel)
-			else:
-				undo_redo.add_undo_method(Voxel, "set_name", voxel, old_name)
-		undo_redo.add_do_method(voxel_set, "request_refresh")
-		undo_redo.add_undo_method(voxel_set, "request_refresh")
-		undo_redo.commit_action()
-		VoxelSetViewer.unselect_all()
-		VoxelSetViewer.select(voxel_id)
+	if new_name == Voxel.get_name(voxel):
+		return
+	
+	var _voxel = voxel.duplicate(true)
+	if new_name.empty():
+		undo_redo.create_action("VoxelSetEditor : Remove voxel name")
+		Voxel.remove_name(_voxel)
+	else:
+		undo_redo.create_action("VoxelSetEditor : Set voxel name")
+		Voxel.set_name(_voxel, new_name)
+	Voxel.clean(_voxel)
+	undo_redo.add_do_method(voxel_set, "set_voxel", voxel_id, _voxel)
+	undo_redo.add_undo_method(voxel_set, "set_voxel", voxel_id, voxel)
+	undo_redo.add_do_method(voxel_set, "request_refresh")
+	undo_redo.add_undo_method(voxel_set, "request_refresh")
+	undo_redo.commit_action()
 
 
 func _on_VoxelSetViewer_selected(voxel_id : int):
