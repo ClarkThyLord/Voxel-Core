@@ -159,29 +159,29 @@ func add_face(
 			surface.surface_tool.add_vertex((top_right + Vector3.UP + Vector3.BACK) * Voxel.VoxelWorldSize)
 		Vector3.UP:
 			if uv_surface:
-				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.UP + Vector3.BACK) * Voxel.VoxelWorldSize)
 			if uv_surface:
-				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left + Vector3.UP) * Voxel.VoxelWorldSize)
 			if uv_surface:
-				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.ONE) * Voxel.VoxelWorldSize)
 			if uv_surface:
-				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT + Vector3.UP) * Voxel.VoxelWorldSize)
 		Vector3.DOWN:
 			if uv_surface:
-				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_right + Vector3.RIGHT + Vector3.BACK) * Voxel.VoxelWorldSize)
 			if uv_surface:
-				surface.surface_tool.add_uv((uv + Vector2.DOWN) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_right + Vector3.RIGHT) * Voxel.VoxelWorldSize)
 			if uv_surface:
-				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((top_left + Vector3.BACK) * Voxel.VoxelWorldSize)
 			if uv_surface:
-				surface.surface_tool.add_uv((uv + Vector2.ONE) * _voxel_set.uv_scale())
+				surface.surface_tool.add_uv((uv + Vector2.RIGHT) * _voxel_set.uv_scale())
 			surface.surface_tool.add_vertex((bottom_left) * Voxel.VoxelWorldSize)
 		Vector3.FORWARD:
 			if uv_surface:
