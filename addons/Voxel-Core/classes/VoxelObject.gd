@@ -194,6 +194,19 @@ func center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> void
 	move(vec_to_center(alignment, volume), volume)
 
 
+# Flips voxels in given volume over set axis
+func flip(x : bool, y : bool, z : bool, volume := get_voxels()) -> void:
+	var flipped := {}
+	for voxel_grid in volume:
+		flipped[Vector3(
+				(voxel_grid.x + (1 if x else 0)) * (-1 if x else 1),
+				(voxel_grid.y + (1 if y else 0)) * (-1 if y else 1),
+				(voxel_grid.z + (1 if z else 0)) * (-1 if z else 1))] = get_voxel_id(voxel_grid)
+		erase_voxel(voxel_grid)
+	for voxel_grid in flipped:
+		set_voxel(voxel_grid, flipped[voxel_grid])
+
+
 # Returns the translation necessary to center given volume by
 # alignment   :   Vector3          :   Alignment to center voxels by
 # volume      :   Array<Vector3>   :   Array of grid positions representing voxels to center

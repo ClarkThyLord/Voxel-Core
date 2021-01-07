@@ -712,9 +712,36 @@ func _on_Center_Apply_pressed():
 			CenterX.value,
 			CenterY.value,
 			CenterZ.value))
-	undo_redo.create_action("VoxelObjectEditor : Align voxels")
+	undo_redo.create_action("VoxelObjectEditor : Center voxels")
 	undo_redo.add_do_method(voxel_object, "move", translation)
 	undo_redo.add_undo_method(voxel_object, "move", -translation)
+	undo_redo.add_do_method(voxel_object, "update_mesh")
+	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
+
+
+func _on_Flip_X_pressed():
+	undo_redo.create_action("VoxelObjectEditor : X flip voxels")
+	undo_redo.add_do_method(voxel_object, "flip", true, false, false)
+	undo_redo.add_undo_method(voxel_object, "flip", true, false, false)
+	undo_redo.add_do_method(voxel_object, "update_mesh")
+	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
+
+
+func _on_Flip_Y_pressed():
+	undo_redo.create_action("VoxelObjectEditor : Y flip voxels")
+	undo_redo.add_do_method(voxel_object, "flip", false, true, false)
+	undo_redo.add_undo_method(voxel_object, "flip", false, true, false)
+	undo_redo.add_do_method(voxel_object, "update_mesh")
+	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
+
+
+func _on_Flip_Z_pressed():
+	undo_redo.create_action("VoxelObjectEditor : Z flip voxels")
+	undo_redo.add_do_method(voxel_object, "flip", false, false, true)
+	undo_redo.add_undo_method(voxel_object, "flip", false, false, true)
 	undo_redo.add_do_method(voxel_object, "update_mesh")
 	undo_redo.add_undo_method(voxel_object, "update_mesh")
 	undo_redo.commit_action()

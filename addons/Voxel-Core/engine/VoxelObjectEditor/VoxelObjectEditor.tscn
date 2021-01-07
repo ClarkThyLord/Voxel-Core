@@ -254,7 +254,11 @@ margin_top = 78.0
 margin_right = 332.0
 margin_bottom = 172.0
 size_flags_vertical = 3
+search = ""
+allow_edit = false
 selection_max = 1
+show_hints = false
+voxel_set = null
 
 [node name="Notice" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 visible = false
@@ -449,17 +453,45 @@ hint_tooltip = "Center all voxels with alignment"
 size_flags_horizontal = 3
 text = "Center"
 
-[node name="Clear" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
+[node name="Flip" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
 margin_top = 82.0
 margin_right = 335.0
 margin_bottom = 102.0
+
+[node name="X" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip"]
+margin_right = 109.0
+margin_bottom = 20.0
+hint_tooltip = "Center all voxels with alignment"
+size_flags_horizontal = 3
+text = "Flip X"
+
+[node name="Y" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip"]
+margin_left = 113.0
+margin_right = 222.0
+margin_bottom = 20.0
+hint_tooltip = "Center all voxels with alignment"
+size_flags_horizontal = 3
+text = "Flip Y"
+
+[node name="Z" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip"]
+margin_left = 226.0
+margin_right = 335.0
+margin_bottom = 20.0
+hint_tooltip = "Center all voxels with alignment"
+size_flags_horizontal = 3
+text = "Flip Z"
+
+[node name="Clear" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
+margin_top = 106.0
+margin_right = 335.0
+margin_bottom = 126.0
 hint_tooltip = "Removes all voxels"
 text = "Clear Voxels"
 
 [node name="FileHeader" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
-margin_top = 106.0
+margin_top = 130.0
 margin_right = 335.0
-margin_bottom = 128.0
+margin_bottom = 152.0
 
 [node name="ToolButton" type="ToolButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/FileHeader"]
 margin_right = 35.0
@@ -473,9 +505,9 @@ margin_bottom = 22.0
 size_flags_horizontal = 3
 
 [node name="File" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
-margin_top = 132.0
+margin_top = 156.0
 margin_right = 335.0
-margin_bottom = 154.0
+margin_bottom = 178.0
 
 [node name="Export" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File"]
 visible = false
@@ -845,10 +877,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 52.0
-margin_top = 52.0
-margin_right = 367.0
-margin_bottom = 559.0
+margin_left = 56.0
+margin_top = 56.0
+margin_right = 371.0
+margin_bottom = 563.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -886,6 +918,9 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice/NewVoxelSet" to="." method="_on_NewVoxelSet_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Apply" to="." method="_on_Translate_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Apply" to="." method="_on_Center_Apply_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/X" to="." method="_on_Flip_X_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/Y" to="." method="_on_Flip_Y_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/Z" to="." method="_on_Flip_Z_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Clear" to="." method="_on_Clear_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile" to="." method="_on_ImportFile_file_selected"]
