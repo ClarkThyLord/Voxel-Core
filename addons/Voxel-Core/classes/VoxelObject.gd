@@ -199,9 +199,9 @@ func flip(x : bool, y : bool, z : bool, volume := get_voxels()) -> void:
 	var flipped := {}
 	for voxel_grid in volume:
 		flipped[Vector3(
-				(voxel_grid.x + (1 if x else 0)) * (-1 if x else 1),
+				(voxel_grid.x + (1 if z else 0)) * (-1 if z else 1),
 				(voxel_grid.y + (1 if y else 0)) * (-1 if y else 1),
-				(voxel_grid.z + (1 if z else 0)) * (-1 if z else 1))] = get_voxel_id(voxel_grid)
+				(voxel_grid.z + (1 if x else 0)) * (-1 if x else 1))] = get_voxel_id(voxel_grid)
 		erase_voxel(voxel_grid)
 	for voxel_grid in flipped:
 		set_voxel(voxel_grid, flipped[voxel_grid])
