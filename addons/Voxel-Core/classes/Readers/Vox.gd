@@ -50,18 +50,19 @@ static func read(file : File) -> Dictionary:
 						var z := -file.get_8()
 						var y := file.get_8()
 						result["voxels"][Vector3(
-							x,
-							y,
-							z
-						).floor()] = file.get_8() - 1
+								x, y, z).floor()] = file.get_8() - 1
 				"RGBA":
 					for i in range(0,256):
-						result["palette"].append(Color(
+						var color := Color(
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0),
-								float(file.get_8() / 255.0)))
-				_: file.get_buffer(chunk_size)
+								float(file.get_8() / 255.0))
+						color.a = 1.0
+						if not result["palette"].has(color):
+							result["palette"].append(color)
+				_:
+					file.get_buffer(chunk_size)
 		
 		if result["palette"].empty():
 			result["palette"] = magicavoxel_default_palette.duplicate()

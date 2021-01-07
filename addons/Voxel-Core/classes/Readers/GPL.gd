@@ -25,10 +25,11 @@ static func read(image : File) -> Dictionary:
 					var end = name.find("(")
 					name = name.substr(0, end)
 				
-				var voxel := Voxel.colored(color)
-				result["palette"].append(voxel)
-				if not name.empty():
-					Voxel.set_name(voxel, name.strip_edges())
+				if not result["palette"].has(color):
+					var voxel := Voxel.colored(color)
+					result["palette"].append(voxel)
+					if not name.empty():
+						Voxel.set_name(voxel, name.strip_edges())
 	else:
 		result["error"] = ERR_FILE_UNRECOGNIZED
 	

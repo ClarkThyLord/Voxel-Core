@@ -17,7 +17,7 @@ static func read(image : Image) -> Dictionary:
 		for y in range(image.get_height()):
 			if image.get_pixel(x, y).a > 0:
 				var color := image.get_pixel(x, y)
-				color.a = 1
+				color.a = 1.0
 				var index = result["palette"].find(color)
 				if index == -1:
 					index = result["palette"].size()
