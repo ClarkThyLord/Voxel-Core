@@ -183,6 +183,9 @@ func _exit_tree():
 
 
 ## Public Methods
+func is_editing() -> bool:
+	return Editing.pressed
+
 # Updates the drop down ui menu in editor with all loaded tools
 func update_tools(tools := _tools) -> void:
 	Tool.clear()

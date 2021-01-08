@@ -86,6 +86,9 @@ func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 		voxel_set_editor.connect("close", self, "close_voxel_set_editor")
 		add_control_to_bottom_panel(voxel_set_editor, "VoxelSet")
 	voxel_set_editor.voxel_set = voxel_set
+	
+	if is_instance_valid(voxel_object_editor) and voxel_object_editor.is_editing():
+		return
 	make_bottom_panel_item_visible(voxel_set_editor)
 
 
@@ -109,6 +112,8 @@ func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
 
 func close_voxel_object_editor() -> void:
 	if is_instance_valid(voxel_object_editor):
+		if voxel_object_editor.is_editing():
+			return
 		voxel_object_editor.stop_editing()
 		remove_control_from_bottom_panel(voxel_object_editor)
 		voxel_object_editor.queue_free()
@@ -136,9 +141,10 @@ func handles(object : Object) -> bool:
 			else:
 				close_voxel_object_editor()
 			return true
-	if not get_editor_interface().get_selection().get_selected_nodes().has(_handling_voxel_object):
-		_handling_voxel_object = null
-		close_voxel_object_editor()
+	if str(object).find("MultiNodeEdit") > -1 or (is_instance_valid(_handling_voxel_object) and not get_editor_interface().get_selection().get_selected_nodes().has(_handling_voxel_object)):
+		if not (is_instance_valid(voxel_object_editor) and voxel_object_editor.is_editing()):
+			_handling_voxel_object = null
+			close_voxel_object_editor()
 	return false
 
 
