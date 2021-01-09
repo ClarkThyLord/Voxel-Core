@@ -65,6 +65,19 @@ func _exit_tree():
 
 
 func handles(object : Object) -> bool:
+	
+	if _current_main_scene != "3D":
+		close_voxel_object_editor()
+	if is_instance_valid(_handling_voxel_object):
+		var selections := get_editor_interface().get_selection().get_selected_nodes()
+		if selections.size() != 1 or not selections.has(_handling_voxel_object):
+			_handling_voxel_object = null
+			close_voxel_object_editor()
+	
+	return true if typeof_voxel_core(object) > VoxelCore.OTHER else false
+
+
+func edit(object):
 	match typeof_voxel_core(object):
 		VoxelCore.VOXEL_SET:
 			_handling_voxel_set = object
@@ -75,13 +88,7 @@ func handles(object : Object) -> bool:
 			_handling_voxel_object = object
 			if _current_main_scene == "3D":
 				show_voxel_object_editor(object)
-			else:
-				close_voxel_object_editor()
 			return true
-	if str(object).find("MultiNodeEdit") > -1 or (is_instance_valid(_handling_voxel_object) and not get_editor_interface().get_selection().get_selected_nodes().has(_handling_voxel_object)):
-		_handling_voxel_object = null
-		close_voxel_object_editor()
-	return false
 
 
 func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
