@@ -18,6 +18,12 @@ enum ViewModes { VIEW_2D, VIEW_3D }
 
 
 
+## Constants
+# Default environment used
+var DefaultEnv := preload("res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer_env.tres")
+
+
+
 ## Exported Variables
 # Number of uv positions that can be selected at any one time
 export(int, 0, 6) var selection_max := 0 setget set_selection_max
@@ -37,7 +43,8 @@ export var voxel_id : int setget set_voxel_id
 # VoxelSet beings used
 export(Resource) var voxel_set = null setget set_voxel_set
 
-export(Environment) var environment setget set_environment
+# Environment used in 3D view
+export(Environment) var environment := DefaultEnv setget set_environment
 
 
 
@@ -208,6 +215,7 @@ func set_voxel_set(value : Resource, update := true) -> void:
 func set_environment(value : Environment) -> void:
 	environment = value
 	if is_instance_valid(ViewPort):
+		ViewPort.transparent_bg = environment == DefaultEnv
 		ViewPort.world.environment = environment
 
 
@@ -353,6 +361,8 @@ func show_context_menu(global_position : Vector2, face := _last_hovered_face) ->
 	ContextMenu.clear()
 	if _last_hovered_face == Vector3.ZERO:
 		ContextMenu.add_item("Change environment", 14)
+		if environment != DefaultEnv:
+			ContextMenu.add_item("Reset environment", 15)
 	elif allow_edit:
 		_editing_face = face
 		_editing_multiple = false
@@ -619,6 +629,8 @@ func _on_ContextMenu_id_pressed(id : int):
 			show_material_menu()
 		14:
 			show_environment_change_menu()
+		15:
+			set_environment(DefaultEnv)
 
 
 func _on_ColorPicker_color_changed(color : Color):

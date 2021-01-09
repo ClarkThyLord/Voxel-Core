@@ -3,14 +3,12 @@
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/Voxel-Core/controls/TilesViewer/TilesViewer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer_env.tres" type="Environment" id=4]
 
-[sub_resource type="Environment" id=1]
-ambient_light_color = Color( 1, 1, 1, 1 )
+[sub_resource type="World" id=1]
+environment = ExtResource( 4 )
 
-[sub_resource type="World" id=6]
-environment = SubResource( 1 )
-
-[sub_resource type="CubeMesh" id=7]
+[sub_resource type="CubeMesh" id=2]
 size = Vector3( 0.5, 0.5, 0.5 )
 
 [sub_resource type="BoxShape" id=3]
@@ -29,7 +27,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-environment = SubResource( 1 )
+environment = ExtResource( 4 )
 
 [node name="View2D" type="Control" parent="."]
 visible = false
@@ -132,7 +130,7 @@ __meta__ = {
 [node name="Viewport" type="Viewport" parent="View3D"]
 size = Vector2( 1024, 600 )
 own_world = true
-world = SubResource( 6 )
+world = SubResource( 1 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
@@ -149,7 +147,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.7 )
 omni_range = 1.1122
 
 [node name="VoxelPreview" type="MeshInstance" parent="View3D/Viewport"]
-mesh = SubResource( 7 )
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="View3D/Viewport/VoxelPreview"]
@@ -159,7 +157,7 @@ shape = SubResource( 3 )
 
 [node name="Select" type="MeshInstance" parent="View3D/Viewport"]
 material_override = SubResource( 4 )
-mesh = SubResource( 7 )
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
@@ -222,10 +220,10 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 24.0
-margin_top = 24.0
-margin_right = 348.0
-margin_bottom = 509.0
+margin_left = 28.0
+margin_top = 28.0
+margin_right = 352.0
+margin_bottom = 513.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 edit_alpha = false
