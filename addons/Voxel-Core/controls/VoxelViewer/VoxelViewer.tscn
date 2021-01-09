@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelViewer/VoxelViewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/Voxel-Core/controls/VoxelButton/VoxelButton.tscn" type="PackedScene" id=2]
@@ -7,7 +7,10 @@
 [sub_resource type="Environment" id=1]
 ambient_light_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="CubeMesh" id=5]
+[sub_resource type="World" id=6]
+environment = SubResource( 1 )
+
+[sub_resource type="CubeMesh" id=7]
 size = Vector3( 0.5, 0.5, 0.5 )
 
 [sub_resource type="BoxShape" id=3]
@@ -26,6 +29,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+environment = SubResource( 1 )
 
 [node name="View2D" type="Control" parent="."]
 visible = false
@@ -128,6 +132,7 @@ __meta__ = {
 [node name="Viewport" type="Viewport" parent="View3D"]
 size = Vector2( 1024, 600 )
 own_world = true
+world = SubResource( 6 )
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 3
@@ -137,7 +142,6 @@ physics_object_picking = true
 
 [node name="Camera" type="Camera" parent="View3D/Viewport/CameraPivot"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
-environment = SubResource( 1 )
 current = true
 
 [node name="OmniLight" type="OmniLight" parent="View3D/Viewport/CameraPivot"]
@@ -145,7 +149,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.7 )
 omni_range = 1.1122
 
 [node name="VoxelPreview" type="MeshInstance" parent="View3D/Viewport"]
-mesh = SubResource( 5 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="VoxelStaticBody" type="StaticBody" parent="View3D/Viewport/VoxelPreview"]
@@ -155,7 +159,7 @@ shape = SubResource( 3 )
 
 [node name="Select" type="MeshInstance" parent="View3D/Viewport"]
 material_override = SubResource( 4 )
-mesh = SubResource( 5 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="ToolBar" type="HBoxContainer" parent="."]
@@ -218,10 +222,10 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 340.0
-margin_bottom = 501.0
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 348.0
+margin_bottom = 509.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 edit_alpha = false
@@ -324,17 +328,17 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu/VBoxContainer"]
-margin_right = 183.0
-margin_bottom = 249.0
+margin_right = 233.0
+margin_bottom = 284.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 16
 alignment = 1
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 4.0
-margin_right = 183.0
-margin_bottom = 28.0
+margin_top = 22.0
+margin_right = 233.0
+margin_bottom = 46.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6"]
 margin_top = 5.0
@@ -343,22 +347,22 @@ margin_bottom = 19.0
 text = "Material:"
 
 [node name="Material" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6"]
-margin_left = 109.0
-margin_right = 183.0
+margin_left = 159.0
+margin_right = 233.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 min_value = -1.0
 rounded = true
 
 [node name="HSeparator" type="HSeparator" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 44.0
-margin_right = 183.0
-margin_bottom = 48.0
+margin_top = 62.0
+margin_right = 233.0
+margin_bottom = 66.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 64.0
-margin_right = 183.0
-margin_bottom = 88.0
+margin_top = 82.0
+margin_right = 233.0
+margin_bottom = 106.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_top = 5.0
@@ -367,17 +371,17 @@ margin_bottom = 19.0
 text = "Metallic:"
 
 [node name="Metallic" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 109.0
-margin_right = 183.0
+margin_left = 159.0
+margin_right = 233.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 1.0
 step = 0.01
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 104.0
-margin_right = 183.0
-margin_bottom = 128.0
+margin_top = 122.0
+margin_right = 233.0
+margin_bottom = 146.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2"]
 margin_top = 5.0
@@ -386,17 +390,17 @@ margin_bottom = 19.0
 text = "Specular:"
 
 [node name="Specular" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 109.0
-margin_right = 183.0
+margin_left = 159.0
+margin_right = 233.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 1.0
 step = 0.01
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 144.0
-margin_right = 183.0
-margin_bottom = 168.0
+margin_top = 162.0
+margin_right = 233.0
+margin_bottom = 186.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3"]
 margin_top = 5.0
@@ -405,17 +409,17 @@ margin_bottom = 19.0
 text = "Roughness:"
 
 [node name="Roughness" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3"]
-margin_left = 109.0
-margin_right = 183.0
+margin_left = 159.0
+margin_right = 233.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 1.0
 step = 0.01
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 184.0
-margin_right = 183.0
-margin_bottom = 208.0
+margin_top = 202.0
+margin_right = 233.0
+margin_bottom = 226.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4"]
 margin_top = 5.0
@@ -424,17 +428,17 @@ margin_bottom = 19.0
 text = "Energy:"
 
 [node name="Energy" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4"]
-margin_left = 109.0
-margin_right = 183.0
+margin_left = 159.0
+margin_right = 233.0
 margin_bottom = 24.0
 size_flags_horizontal = 10
 max_value = 16.0
 step = 0.1
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
-margin_top = 224.0
-margin_right = 183.0
-margin_bottom = 244.0
+margin_top = 242.0
+margin_right = 233.0
+margin_bottom = 262.0
 
 [node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5"]
 margin_top = 3.0
@@ -443,30 +447,38 @@ margin_bottom = 17.0
 text = "Energy Color:"
 
 [node name="EnergyColor" type="ColorPickerButton" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5"]
-margin_left = 109.0
-margin_right = 186.0
+margin_left = 156.0
+margin_right = 233.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 77, 20 )
 size_flags_horizontal = 10
 edit_alpha = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MaterialMenu/VBoxContainer"]
-margin_top = 253.0
-margin_right = 183.0
-margin_bottom = 273.0
+margin_top = 288.0
+margin_right = 233.0
+margin_bottom = 308.0
 
 [node name="Cancel" type="Button" parent="MaterialMenu/VBoxContainer/HBoxContainer"]
-margin_right = 89.0
+margin_right = 114.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 
 [node name="Confirm" type="Button" parent="MaterialMenu/VBoxContainer/HBoxContainer"]
-margin_left = 93.0
-margin_right = 183.0
+margin_left = 118.0
+margin_right = 233.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
+
+[node name="EnvironmentMenu" type="FileDialog" parent="."]
+margin_right = 315.0
+margin_bottom = 349.0
+rect_min_size = Vector2( 200, 350 )
+window_title = "Open a File"
+mode = 0
+filters = PoolStringArray( "*.tres; Environment files" )
 [connection signal="gui_input" from="View2D/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="View2D/Left" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
@@ -496,3 +508,4 @@ text = "Confirm"
 [connection signal="color_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5/EnergyColor" to="." method="_on_EnergyColor_changed"]
 [connection signal="pressed" from="MaterialMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_MaterialMenu_Cancel_pressed"]
 [connection signal="pressed" from="MaterialMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_MaterialMenu_Confirm_pressed"]
+[connection signal="file_selected" from="EnvironmentMenu" to="." method="_on_EnvironmentMenu_file_selected"]
