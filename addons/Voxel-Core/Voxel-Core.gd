@@ -8,7 +8,7 @@ enum VoxelCore {
 	OTHER = -1,
 	VOXEL_SET,
 	VOXEL_OBJECT,
-	VOXEL_MESH
+	VOXEL_MESH,
 }
 
 
@@ -47,8 +47,8 @@ func _enter_tree():
 	add_import_plugin(VoxelObjects)
 	add_import_plugin(VoxelSets)
 	
-	connect("scene_closed", self, "on_scene_closed")
-	connect("main_screen_changed", self, "on_main_screen_changed")
+	connect("scene_closed", self, "_on_scene_closed")
+	connect("main_screen_changed", self, "_on_main_screen_changed")
 	
 	print("Voxel-Core is active...")
 
@@ -62,6 +62,30 @@ func _exit_tree():
 	close_voxel_object_editor()
 	
 	print("Voxel-Core is inactive!")
+
+
+func handles(object : Object) -> bool:
+	match typeof_voxel_core(object):
+		VoxelCore.VOXEL_SET:
+			_handling_voxel_set = object
+			if not is_instance_valid(voxel_object_editor) or not voxel_object_editor.is_editing():
+				show_voxel_set_editor(object)
+			return true
+		VoxelCore.VOXEL_OBJECT:
+			_handling_voxel_object = object
+			if _current_main_scene == "3D":
+				show_voxel_object_editor(object)
+			else:
+				close_voxel_object_editor()
+			return true
+	if str(object).find("MultiNodeEdit") > -1 or (is_instance_valid(_handling_voxel_object) and not get_editor_interface().get_selection().get_selected_nodes().has(_handling_voxel_object)):
+		_handling_voxel_object = null
+		close_voxel_object_editor()
+	return false
+
+
+func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
+	return voxel_object_editor.handle_input(camera, event) if is_instance_valid(voxel_object_editor) else false
 
 
 
@@ -100,7 +124,7 @@ func show_voxel_object_editor(voxel_object : VoxelObject) -> void:
 	if not is_instance_valid(voxel_object_editor):
 		voxel_object_editor = VoxelObjectEditor.instance()
 		voxel_object_editor.undo_redo = get_undo_redo()
-		voxel_object_editor.connect("editing", self, "on_voxel_object_editor_editing_toggled")
+		voxel_object_editor.connect("editing", self, "_on_voxel_object_editor_editing_toggled")
 		voxel_object_editor.connect("close", self, "close_voxel_object_editor")
 		add_control_to_bottom_panel(voxel_object_editor, "VoxelObject")
 	voxel_object_editor.start_editing(voxel_object)
@@ -115,38 +139,9 @@ func close_voxel_object_editor() -> void:
 		voxel_object_editor = null
 
 
-func on_voxel_object_editor_editing_toggled(toggled : bool) -> void:
-	if is_instance_valid(voxel_object_editor) and voxel_object_editor.voxel_object == _handling_voxel_object:
-		if toggled:
-			get_editor_interface().get_selection().clear()
-		else:
-			get_editor_interface().get_selection().add_node(_handling_voxel_object)
 
-func handles(object : Object) -> bool:
-	match typeof_voxel_core(object):
-		VoxelCore.VOXEL_SET:
-			_handling_voxel_set = object
-			if is_instance_valid(voxel_object_editor) and not voxel_object_editor.is_editing():
-				show_voxel_set_editor(object)
-			return true
-		VoxelCore.VOXEL_OBJECT:
-			_handling_voxel_object = object
-			if _current_main_scene == "3D":
-				show_voxel_object_editor(object)
-			else:
-				close_voxel_object_editor()
-			return true
-	if str(object).find("MultiNodeEdit") > -1 or (is_instance_valid(_handling_voxel_object) and not get_editor_interface().get_selection().get_selected_nodes().has(_handling_voxel_object)):
-		_handling_voxel_object = null
-		close_voxel_object_editor()
-	return false
-
-
-func on_scene_closed(filepath : String) -> void:
-	close_voxel_object_editor()
-
-
-func on_main_screen_changed(screen_name : String) -> void:
+## Private Methods
+func _on_main_screen_changed(screen_name : String) -> void:
 	_current_main_scene = screen_name
 	if screen_name == "3D" and is_instance_valid(_handling_voxel_object):
 		show_voxel_object_editor(_handling_voxel_object)
@@ -154,5 +149,13 @@ func on_main_screen_changed(screen_name : String) -> void:
 		close_voxel_object_editor()
 
 
-func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
-	return voxel_object_editor.handle_input(camera, event) if is_instance_valid(voxel_object_editor) else false
+func _on_scene_closed(filepath : String) -> void:
+	close_voxel_object_editor()
+
+
+func _on_voxel_object_editor_editing_toggled(toggled : bool) -> void:
+	if is_instance_valid(voxel_object_editor) and voxel_object_editor.voxel_object == _handling_voxel_object:
+		if toggled:
+			get_editor_interface().get_selection().clear()
+		else:
+			get_editor_interface().get_selection().add_node(_handling_voxel_object)
