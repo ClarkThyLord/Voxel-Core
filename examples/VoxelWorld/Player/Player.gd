@@ -5,6 +5,8 @@ extends KinematicBody
 ## Exported Variables
 export(float, 0.0, 100.0) var speed := 12.0
 
+export(float, 0.0, 100.0) var jump := 1.0
+
 export(float, -100.0, 100.0) var gravity := -9.81
 
 export(float, 0.0, 10.0) var camera_sensitivity := 5.0
@@ -46,6 +48,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event : InputEvent) -> void:
+	if not camera.current:
+		return
+	
 	if event is InputEventKey:
 		if event.scancode == KEY_ESCAPE and not event.is_pressed():
 			Input.set_mouse_mode(
@@ -94,7 +99,7 @@ func _unhandled_input(event : InputEvent) -> void:
 
 
 func _physics_process(delta : float) -> void:
-	if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+	if not camera.current or Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
 		return
 	
 	var direction := Vector3()
@@ -106,6 +111,9 @@ func _physics_process(delta : float) -> void:
 		direction += Vector3.RIGHT
 	if Input.is_action_pressed("ui_left"):
 		direction += Vector3.LEFT
+	
+	if Input.is_action_just_pressed("ui_select"):
+		translate(Vector3.UP * jump)
 	
 	var velocity := Vector3()
 	velocity += -camera.global_transform.basis.z * direction.z
