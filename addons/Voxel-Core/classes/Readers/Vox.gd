@@ -59,8 +59,7 @@ static func read(file : File) -> Dictionary:
 								float(file.get_8() / 255.0),
 								float(file.get_8() / 255.0))
 						color.a = 1.0
-						if not result["palette"].has(color):
-							result["palette"].append(color)
+						result["palette"].append(color)
 				_:
 					file.get_buffer(chunk_size)
 		

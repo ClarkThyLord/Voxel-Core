@@ -428,14 +428,8 @@ func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 					else:
 						break
 			
-			vt.add_face(
-				voxel,
-				face,
-				bottom_right,
-				bottom_left,
-				top_right,
-				top_left
-			)
+			vt.add_face(voxel,face,
+					bottom_right, bottom_left, top_right, top_left)
 	
 	return vt.commit()
 
