@@ -16,6 +16,8 @@ export(NodePath) var world_path setget set_world_path
 ## Private Variables
 var _world : VoxelMesh = null
 
+var _block_id := 0
+
 var _cursor_normal := Vector3()
 
 var _cursor_position := Vector3()
@@ -28,6 +30,10 @@ onready var camera : Camera = get_node("Camera")
 onready var raycast : RayCast = get_node("Camera/RayCast")
 
 onready var cursor : MeshInstance = get_node("Cursor")
+
+onready var block : MeshInstance = get_node("Camera/Block")
+
+onready var block_animation : AnimationPlayer = get_node("Camera/Block/AnimationPlayer")
 
 
 
@@ -60,14 +66,29 @@ func _unhandled_input(event : InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		if not event.pressed:
 			if is_instance_valid(_world) and raycast.is_colliding():
-				if event.button_index == BUTTON_LEFT:
-					var target = Voxel.world_to_grid(_cursor_position)
-					target += _cursor_normal
-					_world.set_voxel(target, 0)
-				if event.button_index == BUTTON_RIGHT:
-					var target = Voxel.world_to_grid(_cursor_position)
-					_world.erase_voxel(target)
-				_world.update_mesh()
+				match event.button_index:
+					BUTTON_LEFT:
+						var target = Voxel.world_to_grid(_cursor_position)
+						target += _cursor_normal
+						_world.set_voxel(target, _block_id)
+						_world.update_mesh()
+						block_animation.play("act")
+					BUTTON_RIGHT:
+						var target = Voxel.world_to_grid(_cursor_position)
+						_world.erase_voxel(target)
+						_world.update_mesh()
+						block_animation.play("act")
+					BUTTON_WHEEL_UP:
+						if is_instance_valid(_world):
+							_block_id = int(clamp(
+									_block_id + 1, 0, _world.voxel_set.size() - 1))
+							_update_block()
+					BUTTON_WHEEL_DOWN:
+						if is_instance_valid(_world):
+							_block_id = int(clamp(
+									_block_id - 1, 0, _world.voxel_set.size() - 1))
+							_update_block()
+				
 	
 	_update_cursor_position()
 
@@ -108,6 +129,7 @@ func set_world_path(path : NodePath) -> void:
 			var node = get_node(path)
 			if node is VoxelMesh:
 				_world = node
+				_update_block()
 
 
 
@@ -123,3 +145,15 @@ func _update_cursor_position() -> void:
 		tran += Vector3.ONE * (Voxel.VoxelWorldSize / 2)
 		tran = to_local(tran)
 		cursor.translation = tran
+
+
+func _update_block() -> void:
+	if is_instance_valid(_world) and is_instance_valid(_world.voxel_set):
+		var vt := VoxelTool.new()
+		
+		vt.begin(_world.voxel_set, true)
+		for face in Voxel.Faces:
+			vt.add_face(
+					_world.voxel_set.get_voxel(_block_id),
+					face, -Vector3.ONE / 2)
+		block.mesh = vt.commit()

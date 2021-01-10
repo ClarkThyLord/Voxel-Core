@@ -1,9 +1,44 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://examples/VoxelWorld/Player/Player.gd" type="Script" id=1]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.25, 0.5, 0.25 )
+
+[sub_resource type="CubeMesh" id=4]
+size = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="Animation" id=5]
+resource_name = "act"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 3,
+"values": [ Vector3( -33.1114, 43.2181, -27.1717 ), Vector3( 0, 35, 0 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "idle"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 0, 35, 0 ) ]
+}
 
 [sub_resource type="CubeMesh" id=2]
 size = Vector3( 0.5, 0.5, 0.5 )
@@ -27,6 +62,17 @@ current = true
 [node name="RayCast" type="RayCast" parent="Camera"]
 enabled = true
 cast_to = Vector3( 0, 0, -3.5 )
+
+[node name="Block" type="MeshInstance" parent="Camera"]
+transform = Transform( 0.204788, 0, 0.143394, 0, 0.25, 0, -0.143394, 0, 0.204788, 0.4, -0.25, -0.5 )
+mesh = SubResource( 4 )
+material/0 = null
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Camera/Block"]
+autoplay = "idle"
+anims/act = SubResource( 5 )
+anims/idle = SubResource( 6 )
+next/act = "idle"
 
 [node name="Cursor" type="MeshInstance" parent="."]
 visible = false
