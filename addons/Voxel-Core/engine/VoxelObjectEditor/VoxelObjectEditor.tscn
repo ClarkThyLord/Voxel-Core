@@ -134,6 +134,7 @@ size_flags_horizontal = 3
 margin_left = 241.0
 margin_right = 332.0
 margin_bottom = 24.0
+hint_tooltip = "Enable editing"
 shortcut = SubResource( 2 )
 text = "Editing"
 icon = ExtResource( 8 )
@@ -461,7 +462,7 @@ margin_bottom = 102.0
 [node name="X" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip"]
 margin_right = 109.0
 margin_bottom = 20.0
-hint_tooltip = "Center all voxels with alignment"
+hint_tooltip = "Flip voxels over x-axis"
 size_flags_horizontal = 3
 text = "Flip X"
 
@@ -469,7 +470,7 @@ text = "Flip X"
 margin_left = 113.0
 margin_right = 222.0
 margin_bottom = 20.0
-hint_tooltip = "Center all voxels with alignment"
+hint_tooltip = "Flip voxels over y-axis"
 size_flags_horizontal = 3
 text = "Flip Y"
 
@@ -477,7 +478,7 @@ text = "Flip Y"
 margin_left = 226.0
 margin_right = 335.0
 margin_bottom = 20.0
-hint_tooltip = "Center all voxels with alignment"
+hint_tooltip = "Flip voxels over z-axis"
 size_flags_horizontal = 3
 text = "Flip Z"
 
@@ -877,10 +878,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 56.0
-margin_top = 56.0
-margin_right = 371.0
-margin_bottom = 563.0
+margin_left = 60.0
+margin_top = 60.0
+margin_right = 375.0
+margin_bottom = 567.0
 size_flags_vertical = 3
 edit_alpha = false
 
