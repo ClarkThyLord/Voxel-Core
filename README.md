@@ -25,41 +25,40 @@
 ---
 
 # About
-Voxel-Core is a plugin for the [Godot](https://github.com/godotengine/godot) game engine made with GDScript, created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly), offering various voxel features, utilities and fully fledged in-engine editors.
+Voxel-Core is a voxel plugin for the [Godot](https://github.com/godotengine/godot) game engine made with GDScript, created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly), offering various voxel features, utilities and fully fledged in-engine editors.
 
 ## Why Voxel-Core?
-Voxel-Core aspires to be the all-in-one solution for voxel content, you get everything needed to create, modify, save, share, import and do more with voxel content right out of the box! And while primarily focusing on voxel objects (e.g. characters, creatures, props, etc.) it's not limited to just that. Having been built with GDScript means two things: First, it will run anywhere Godot will (Desktop, Web, Mobile), without the need for anything else. Second, its design is meant to be intuitive and extendable, allowing you to easily use and extend it to fulfill your specific need. So, whether it's something as simple as importing files from MagicaVoxel, or creating infinite voxel worlds, Voxel-Core strives to fulfill your every need!
+- Runs anywhere Godot does (e.g. desktop, web, mobile, etc.)
+- Great for voxel objects (e.g. characters, creatures, props, etc.)
+- Designed to be easily extended, modify and expand Voxel-Core to meet your needs
 
-## Features ([Video](https://youtu.be/d85DMiwnIFI))
-- VoxelObject is a MeshInstance used to create and edit voxel content in-engine and in-game with ease
-	- Offers many easy to use methods to create and modify voxel content 
+## Features ([Video](https://youtu.be/cnHA7uZahp8))
+- VoxelObject, is a new MeshInstance type that is used to visualize voxel content
+	- Easily embed self-maintaining StaticBodies
 	- Fully automatic UV Mapping, creating textured voxel content has never been easier
-	- Meshing modes: naive meshing, for efficient culled meshes; greedy meshing, for optimized meshes
-	- Generate and embed self maintained StaticBodies
-- VoxelSet is a Resource, much like a TileSet, used to define an array of voxels used by VoxelObjects
+	- Meshing modes: naive meshing, for creating quick culled meshes; greedy meshing, for creating optimized meshes
+- VoxelSet, a Resource, much like a TileSet, that stores voxels, textures and materials used by VoxelObjects
 	- Create an almost infinite variety of voxels
-	- Define colors, textures, materials and more on a per face basis
-	- Create Materials that can be applied to one or more voxels
-	- Easily define and set textures used for UV Mapping
-- In-Engine Editors, interactive and responsive editors allowing users to create and edit voxel content with ease
-	- Quality of life keyboard shortcuts
-	- Integrated UndoRedo support throughout
-	- VoxelObjectEditor, easy and friendly way to create and modify VoxelObjects in-scene
+	- Define SpatialMaterials and Shaders for one or more voxels
+	- Set colors, textures, materials and more on a voxel or per face basis
+- In-Engine Editors, making the creation and modification of voxel content a simple matter
+	- Integrated keyboard shortcuts and undo/redo support throughout
+	- VoxelObjectEditor, create and modify voxel content in-scene
 		- Offers many operations, such as: adding, removing, swapping, filling and more
-		- Apply operations individually, by area or by extruding a face
+		- Apply operations individually, by area or by face / extrusion
 		- Mirror operations over x, y and z axis
-		- Import files, apply edit effects and more...
-	- VoxelSetEditor, create, modify and manage your VoxelSets with ease and simplicity
-		- Add, remove, duplicate voxels on the fly
+		- Import files, apply effects and more...
+	- VoxelSetEditor, create, modify and manage your VoxelSets
+		- Add, remove, duplicate voxels
 		- Live interactive 3D and 2D voxel preview
-		- Various options to get the specific look you want for your voxel
+		- Many options to get the specific look you want from your voxel
 - Readers, used to import files as both static and dynamic voxel content
-	- Fully integrated with the editor, meaning recognized project files will be imported automatically
-	- Image files (jpg, png, and all other natively supported files), quickly creating 3D prototypes
+	- Fully integrated with the editor, automatically recognizes and imports files as voxel content
+	- Image files (jpg, png, and any other supported raster format), quickly create 3D prototypes from 2D content
 	- Vox files (MagicaVoxel), making it easy and simple to work back and forward between programs
-	- Color palette files (images, vox, gpl, etc.), work with the same colors across platforms
+	- Color palette files (images, vox, gpl, etc.), allows you to work with the same color palettes across platforms
 
-# [Usage / Docs](https://github.com/ClarkThyLord/Voxel-Core/wiki)
+# [Wiki / Usage](https://github.com/ClarkThyLord/Voxel-Core/wiki)
 
 # Getting Voxel-Core
 ## Godot Asset Library
