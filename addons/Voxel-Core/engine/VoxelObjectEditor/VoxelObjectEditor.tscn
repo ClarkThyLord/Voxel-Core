@@ -737,8 +737,8 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor"]
-margin_right = 326.0
-margin_bottom = 126.0
+margin_right = 325.0
+margin_bottom = 162.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 follow_focus = true
@@ -748,29 +748,35 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer"]
-margin_right = 326.0
-margin_bottom = 126.0
+margin_right = 325.0
+margin_bottom = 162.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="VoxelRaycasting" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
+margin_top = 56.0
+margin_right = 325.0
+margin_bottom = 80.0
+text = "Voxel Raycasting"
+
 [node name="CursorVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
-margin_right = 326.0
+margin_right = 325.0
 margin_bottom = 24.0
 pressed = true
 text = "Visible"
 
 [node name="CursorDynamic" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
 margin_top = 28.0
-margin_right = 326.0
+margin_right = 325.0
 margin_bottom = 52.0
 hint_tooltip = "Cursor changes color based on selected palette"
 pressed = true
 text = "Dynamic Color"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
-margin_top = 56.0
-margin_right = 326.0
-margin_bottom = 76.0
+margin_top = 84.0
+margin_right = 325.0
+margin_bottom = 104.0
 
 [node name="CursorColor" type="ColorPickerButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer"]
 margin_right = 32.0
@@ -878,10 +884,8 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 60.0
-margin_top = 60.0
-margin_right = 375.0
-margin_bottom = 567.0
+margin_right = 315.0
+margin_bottom = 507.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -907,6 +911,55 @@ margin_right = 315.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
+
+[node name="VoxelRaycastingMenu" type="PopupDialog" parent="."]
+margin_right = 335.0
+margin_bottom = 167.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VoxelRaycastingMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VoxelRaycastingMenu/VBoxContainer"]
+margin_right = 335.0
+margin_bottom = 131.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "Enable Voxel Raycasting?
+Might significantly improve performance when editing Voxel Object.
+!!! Warning Experimental !!!"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelRaycastingMenu/VBoxContainer"]
+margin_top = 135.0
+margin_right = 335.0
+margin_bottom = 167.0
+rect_min_size = Vector2( 0, 32 )
+alignment = 1
+
+[node name="Enable" type="Button" parent="VoxelRaycastingMenu/VBoxContainer/HBoxContainer"]
+margin_left = 108.0
+margin_top = 6.0
+margin_right = 162.0
+margin_bottom = 26.0
+size_flags_vertical = 4
+text = "Enable"
+
+[node name="Disable" type="Button" parent="VoxelRaycastingMenu/VBoxContainer/HBoxContainer"]
+margin_left = 166.0
+margin_top = 6.0
+margin_right = 226.0
+margin_bottom = 26.0
+size_flags_vertical = 4
+text = "Disable"
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
@@ -933,6 +986,7 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer2/GitHub" to="." method="_on_GitHub_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer/SettingsRefresh" to="." method="load_config"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General/ScrollContainer/VBoxContainer/HBoxContainer/SettingsReset2" to="." method="reset_config"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/VoxelRaycasting" to="." method="set_voxel_raycasting"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible" to="." method="set_cursor_visible"]
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic" to="." method="set_cursor_dynamic"]
 [connection signal="color_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor" to="." method="set_cursor_color"]
@@ -942,3 +996,7 @@ text = "Cancel"
 [connection signal="color_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor" to="." method="set_grid_color"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Add" to="." method="_on_ColorMenu_Add_pressed"]
 [connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
+[connection signal="pressed" from="VoxelRaycastingMenu/VBoxContainer/HBoxContainer/Enable" to="." method="set_voxel_raycasting" binds= [ true ]]
+[connection signal="pressed" from="VoxelRaycastingMenu/VBoxContainer/HBoxContainer/Enable" to="VoxelRaycastingMenu" method="hide"]
+[connection signal="pressed" from="VoxelRaycastingMenu/VBoxContainer/HBoxContainer/Disable" to="." method="set_voxel_raycasting" binds= [ false ]]
+[connection signal="pressed" from="VoxelRaycastingMenu/VBoxContainer/HBoxContainer/Disable" to="VoxelRaycastingMenu" method="hide"]

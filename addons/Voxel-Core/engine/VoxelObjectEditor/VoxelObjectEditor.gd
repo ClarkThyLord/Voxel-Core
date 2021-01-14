@@ -29,6 +29,7 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 const ConfigDefault := {
 	"cursor.visible": true,
 	"cursor.dynamic": true,
+#	"cursor.voxel_raycasting": false,
 	"cursor.color": Color.white,
 	"grid.visible": true,
 	"grid.mode": VoxelGrid.GridModes.WIRED,
@@ -140,6 +141,10 @@ onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxConta
 
 onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 
+onready var VoxelRaycasting := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/VoxelRaycasting")
+
+onready var VoxelRaycastingMenu := get_node("VoxelRaycastingMenu")
+
 onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
 
 onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
@@ -186,6 +191,7 @@ func _exit_tree():
 func is_editing() -> bool:
 	return Editing.pressed
 
+
 # Updates the drop down ui menu in editor with all loaded tools
 func update_tools(tools := _tools) -> void:
 	Tool.clear()
@@ -204,6 +210,7 @@ func update_palette(palettes := Palettes.keys()) -> void:
 			load("res://addons/Voxel-Core/assets/controls/" + palette.to_lower() + ".png"),
 			palette.capitalize(),
 			Palettes[palette.to_upper()])
+
 
 # Updates the drop down ui menu in editor with all loaded selection modes
 func update_selections(selection_modes := [
@@ -278,6 +285,7 @@ func set_cursor_color(color : Color) -> void:
 # Returns true if grid should be visible
 func is_grid_visible() -> bool:
 	return not Editing.pressed or (Editing.pressed and not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty()))))
+
 
 # Sets the grid visibility
 func set_grid_visible(visible : bool) -> void:
@@ -411,16 +419,23 @@ func get_rpalette(palette : int = get_palette()) -> Dictionary:
 	return voxel_object.voxel_set.get_voxel(palette)
 
 
+# Setter for voxel raycasting, saves to config
+func set_voxel_raycasting(value : bool) -> void:
+	VoxelRaycasting.pressed = value
+	config["cursor.voxel_raycasting"] = value
+	save_config()
+
+
 # Saves the current editor config to file
 func save_config() -> void:
-	var config = File.new()
-	var opened = config.open(
-		"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.json",
-		File.WRITE
-	)
+	var file := File.new()
+	var opened = file.open(
+			"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.json",
+			File.WRITE)
 	if opened == OK:
-		config.store_string(JSON.print(config))
-		config.close()
+		file.store_string(JSON.print(config))
+	if file.is_open():
+		file.close()
 
 
 # Loads and sets the config file
@@ -457,6 +472,10 @@ func load_config() -> void:
 	
 	set_cursor_visible(config["cursor.visible"])
 	set_cursor_dynamic(config["cursor.dynamic"])
+	if config.has("cursor.voxel_raycasting"):
+		set_voxel_raycasting(config["cursor.voxel_raycasting"])
+	else:
+		show_voxel_raycasting_menu()
 	set_cursor_color(config["cursor.color"])
 	
 	set_grid_visible(config["grid.visible"])
@@ -475,23 +494,30 @@ func reset_config() -> void:
 # Attempts to raycast for the VoxelObject
 func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> Dictionary:
 	var hit := {}
-	var exclude := []
-	var from = camera.project_ray_origin(screen_position)
-	var to = from + camera.project_ray_normal(screen_position) * 1000
-	while true:
-		hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
-		if not hit.empty():
-			if target.is_a_parent_of(hit.collider):
-				if _grid.is_a_parent_of(hit.collider):
-					hit["normal"] = Vector3.ZERO
-				hit["position"] = Voxel.world_to_grid(
-						voxel_object.to_local(
-								hit.position + -hit.normal * (Voxel.VoxelWorldSize / 2)))
-				break
+	var from := camera.project_ray_origin(screen_position)
+	var direction := camera.project_ray_normal(screen_position)
+	
+	if VoxelRaycasting.pressed:
+		hit = voxel_object.intersect_ray(from, direction)
+	else:
+		var exclude := []
+		var to := from + direction * 1000
+		while true:
+			hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
+			if not hit.empty():
+				if target.is_a_parent_of(hit.collider):
+					if _grid.is_a_parent_of(hit.collider):
+						hit["normal"] = Vector3.ZERO
+					hit["position"] = Voxel.world_to_grid(
+							voxel_object.to_local(
+									hit.position + -hit.normal * (Voxel.VoxelWorldSize / 2)))
+					hit["normal"] = hit["normal"].round()
+					break
+				else:
+					exclude.append(hit.collider)
 			else:
-				exclude.append(hit.collider)
-		else:
-			break
+				break
+	
 	return hit
 
 
@@ -610,9 +636,6 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 		if event is InputEventMouse:
 			var prev_hit = last_hit
 			last_hit = raycast_for(camera, event.position, voxel_object)
-			if not last_hit.empty():
-				last_hit["normal"] = last_hit["normal"].round()
-			
 			if Editing.pressed:
 				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
 					set_cursors_visibility(false)
@@ -649,6 +672,14 @@ func show_import_menu() -> void:
 # Hides import menu
 func hide_import_menu() -> void:
 	ImportMenu.hide()
+
+
+func show_voxel_raycasting_menu() -> void:
+	VoxelRaycastingMenu.popup_centered()
+
+
+func hide_voxel_raycasting_menu() -> void:
+	VoxelRaycastingMenu.hide()
 
 
 
