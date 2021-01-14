@@ -144,6 +144,7 @@ flat = true
 margin_left = 274.0
 margin_right = 332.0
 margin_bottom = 24.0
+hint_tooltip = "Update voxel content"
 text = "Update"
 
 [node name="Options" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
@@ -763,6 +764,8 @@ size_flags_vertical = 3
 margin_top = 56.0
 margin_right = 325.0
 margin_bottom = 80.0
+hint_tooltip = "Might significantly improve performance when editing Voxel Object
+!!! Warning Experimental !!!"
 text = "Voxel Raycasting"
 
 [node name="CursorVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
