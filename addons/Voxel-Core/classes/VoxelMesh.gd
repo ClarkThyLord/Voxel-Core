@@ -78,7 +78,7 @@ func update_mesh() -> void:
 				if is_instance_valid(material):
 					materials[mesh.surface_get_name(index)] = material
 		
-		match MeshModes.NAIVE if edit_hint else mesh_mode:
+		match MeshModes.NAIVE if edit_hint > 0 else mesh_mode:
 			MeshModes.GREEDY:
 				mesh = greed_volume(_voxels.keys(), vt)
 			_:
@@ -96,7 +96,7 @@ func update_mesh() -> void:
 func update_static_body() -> void:
 	var staticBody = get_node_or_null("StaticBody")
 	
-	if (edit_hint or static_body) and is_instance_valid(mesh):
+	if (edit_hint >= 2 or static_body) and is_instance_valid(mesh):
 		if not is_instance_valid(staticBody):
 			staticBody = StaticBody.new()
 			staticBody.set_name("StaticBody")

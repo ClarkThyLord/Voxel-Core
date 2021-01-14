@@ -423,6 +423,7 @@ func get_rpalette(palette : int = get_palette()) -> Dictionary:
 func set_voxel_raycasting(value : bool) -> void:
 	VoxelRaycasting.pressed = value
 	config["cursor.voxel_raycasting"] = value
+	_update_editing_hint()
 	save_config()
 
 
@@ -608,7 +609,7 @@ func start_editing(new_voxel_object : VoxelObject) -> void:
 # Disconnect currently edited VoxelObject
 func stop_editing(close := false) -> void:
 	if is_instance_valid(voxel_object):
-		voxel_object.edit_hint = false
+		voxel_object.edit_hint = 0
 		
 		detach_editor_components()
 		
@@ -691,8 +692,19 @@ func _raycast_stop(hit : Dictionary) -> bool:
 	return false
 
 
+func _update_editing_hint() -> void:
+	if is_instance_valid(voxel_object):
+		var flag = 0
+		if Editing.pressed:
+			if VoxelRaycasting.pressed:
+				flag = 1
+			else:
+				flag = 2
+		voxel_object.edit_hint = flag
+
+
 func _on_Editing_toggled(editing : bool):
-	voxel_object.edit_hint = editing
+	_update_editing_hint()
 	
 	_grid.disabled = is_grid_visible()
 	set_cursors_visibility(editing)

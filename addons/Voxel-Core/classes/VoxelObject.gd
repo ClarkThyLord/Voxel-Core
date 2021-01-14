@@ -43,13 +43,13 @@ export(Resource) var voxel_set = null setget set_voxel_set
 ## Public Variables
 # Flag indicating that edits to voxel data will be frequent
 # NOTE: When true will only allow naive meshing
-var edit_hint := false setget set_edit_hint
+var edit_hint := 0 setget set_edit_hint
 
 
 
 # Public Methods
 # Sets the EditHint flag, calls update_mesh if needed and not told otherwise
-func set_edit_hint(value : bool, update := is_inside_tree()) -> void:
+func set_edit_hint(value : int, update := is_inside_tree()) -> void:
 	edit_hint = value
 	
 	if update:
