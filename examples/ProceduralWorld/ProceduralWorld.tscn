@@ -21,6 +21,8 @@ script/source = "extends Camera
 ## Exported Variables
 export(float, 0.0, 100.0) var speed := 12.0
 
+export(float, 1.0, 10.0) var boost := 2.25
+
 export(float, 0.0, 10.0) var camera_sensitivity := 5.0
 
 
@@ -41,7 +43,9 @@ func _process(delta : float):
 	if Input.is_action_pressed(\"ui_left\"):
 		direction += Vector3.LEFT
 	
-	translate(direction * speed * delta)
+	translate(
+			direction * speed * 
+			(boost if Input.is_key_pressed(KEY_SHIFT) else 1) * delta)
 
 
 func _unhandled_input(event : InputEvent):
@@ -68,9 +72,9 @@ marker_path = NodePath("Camera")
 environment = SubResource( 3 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 5, 7 )
+transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 17, 7 )
 script = SubResource( 1 )
-speed = 31.417
+speed = 25.0
 
 [node name="Chunks" type="Spatial" parent="."]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
