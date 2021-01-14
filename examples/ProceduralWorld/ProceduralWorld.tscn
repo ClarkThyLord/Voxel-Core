@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://examples/ProceduralWorld/ProceduralWorld.gd" type="Script" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Camera
+
+
+
+## Exported Variables
+export(float, 0.0, 100.0) var speed := 12.0
+
+export(float, 0.0, 10.0) var camera_sensitivity := 5.0
+
+
+
+## Built-In Virtual Methods
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+
+func _process(delta : float):
+	var direction := Vector3()
+	if Input.is_action_pressed(\"ui_up\"):
+		direction += Vector3.FORWARD
+	if Input.is_action_pressed(\"ui_down\"):
+		direction += Vector3.BACK
+	if Input.is_action_pressed(\"ui_right\"):
+		direction += Vector3.RIGHT
+	if Input.is_action_pressed(\"ui_left\"):
+		direction += Vector3.LEFT
+	
+	translate(direction * speed * delta)
+
+
+func _unhandled_input(event : InputEvent):
+	if event is InputEventMouseMotion:
+		if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
+			return
+		
+		var movement : Vector2 = event.relative.normalized()
+		rotation_degrees.x += -movement.y * camera_sensitivity
+		rotation_degrees.y += -movement.x * camera_sensitivity
+	elif event is InputEventKey:
+		if event.scancode == KEY_ESCAPE and not event.is_pressed():
+			Input.set_mouse_mode(
+					Input.MOUSE_MODE_CAPTURED
+					if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE
+					else Input.MOUSE_MODE_VISIBLE)
+"
+
+[node name="ProceduralWorld" type="Spatial"]
+script = ExtResource( 1 )
+marker_path = NodePath("Camera")
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 5, 7 )
+script = SubResource( 1 )
+speed = 31.417
+
+[node name="Chunks" type="Spatial" parent="."]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
