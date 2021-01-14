@@ -47,8 +47,8 @@ func _process(delta):
 		if is_instance_valid(marker):
 			var center_chunk := _world_to_chunk(marker.translation)
 			if _chunks.has(center_chunk):
-				for x in range(-(chunk_layers * 2), (chunk_layers * 2) + 1):
-					for z in range(-(chunk_layers * 2), (chunk_layers * 2) + 1):
+				for x in range(-chunk_layers, chunk_layers + 1):
+					for z in range(-chunk_layers, chunk_layers + 1):
 						var chunk := center_chunk + Vector3(x, 0, z)
 						if not _chunks.has(chunk):
 							_add_chunk(chunk)
