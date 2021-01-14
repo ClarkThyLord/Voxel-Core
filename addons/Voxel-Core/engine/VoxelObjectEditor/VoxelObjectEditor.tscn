@@ -126,19 +126,25 @@ icon = ExtResource( 4 )
 
 [node name="HSeparator" type="HSeparator" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 113.0
-margin_right = 237.0
+margin_right = 175.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Editing" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 241.0
-margin_right = 332.0
+margin_left = 179.0
+margin_right = 270.0
 margin_bottom = 24.0
 hint_tooltip = "Enable editing"
 shortcut = SubResource( 2 )
 text = "Editing"
 icon = ExtResource( 8 )
 flat = true
+
+[node name="Update" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 274.0
+margin_right = 332.0
+margin_bottom = 24.0
+text = "Update"
 
 [node name="Options" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 margin_top = 28.0
@@ -961,6 +967,7 @@ margin_bottom = 26.0
 size_flags_vertical = 4
 text = "Disable"
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Update" to="." method="_on_Update_pressed"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode" to="." method="_on_SelectionMode_selected"]
