@@ -220,6 +220,60 @@ func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) 
 	return -box["position"] - (box["size"] * alignment).floor()
 
 
+# https://web.archive.org/web/20201108160724/http://www.cse.chalmers.se/edu/year/2010/course/TDA361/grid.pdf
+func intersect_ray(from : Vector3, direction : Vector3) -> Dictionary:
+	var hit := {}
+	var grid := Voxel.world_to_grid(from)
+	var snapped := Voxel.world_to_snapped(from)
+	var step := Vector3(
+			1 if direction.x > 0 else -1,
+			1 if direction.y > 0 else -1,
+			1 if direction.z > 0 else -1)
+	var t_delta := Vector3(
+			abs(1.0 / direction.x),
+			abs(1.0 / direction.y),
+			abs(1.0 / direction.z))
+	var dist := Vector3(
+		(snapped.x + 1 - from.x) if step.x > 0 else (from.x - snapped.x),
+		(snapped.y + 1 - from.y) if step.y > 0 else (from.y - snapped.y),
+		(snapped.z + 1 - from.z) if step.z > 0 else (from.z - snapped.z))
+	var t_max := t_delta * dist
+	var step_index := -1
+	
+	var path = []
+	
+	var t = 0.0
+	var max_d := 64.0
+	while t < max_d:
+		path.append(grid)
+		if get_voxel_id(grid) > -1:
+			hit["position"] = grid
+			hit["normal"] = Vector3(
+					-step.x if step_index == 0 else 0,
+					-step.y if step_index == 1 else 0,
+					-step.z if step_index == 2 else 0)
+			break
+		
+		match t_max.min_axis():
+			Vector3.AXIS_X:
+				grid.x += step.x
+				t = t_max.x
+				t_max.x += t_delta.x
+				step_index = 0
+			Vector3.AXIS_Y:
+				grid.y += step.y
+				t = t_max.y
+				t_max.y += t_delta.y
+				step_index = 1
+			Vector3.AXIS_Z:
+				grid.z += step.z
+				t = t_max.z
+				t_max.z += t_delta.z
+				step_index = 2
+	
+	return hit
+
+
 # Returns Array of all voxel grid positions connected to given target
 # target     :   Vector3          :   Grid position at which to start flood select
 # selected   :   Array            :   Array to add selected voxel grid positions to
