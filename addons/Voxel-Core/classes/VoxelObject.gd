@@ -221,11 +221,19 @@ func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) 
 
 # A Fast Voxel Traversal Algorithm for Ray Tracing, by John Amanatides
 # Algorithm paper: https://web.archive.org/web/20201108160724/http://www.cse.chalmers.se/edu/year/2010/course/TDA361/grid.pdf
-# from        :   Vector3                      :   World position from which to start raycast
-# direction   :   Vector3                      :   Direction of raycast
-# return      :   Dictionary<String, Vector3>  :   If voxel is "hit", returns Dictionary with grid position and face normal; else empty
-func intersect_ray(from : Vector3, direction : Vector3, max_distance := 64) -> Dictionary:
-	var hit := {}
+# from           :   Vector3                      :   World position from which to start raycast
+# direction      :   Vector3                      :   Direction of raycast
+# max_distance   :   int                          :   Maximum distance of ray cast
+# stop           :   FuncRef                      :   Calls on function, that receives "hit" and returns bool, as raycast is projected, if it returns true raycast is returned
+# return         :   Dictionary<String, Vector3>  :   If voxel is "hit", returns Dictionary with grid position and face normal; else empty
+func intersect_ray(
+		from : Vector3,
+		direction : Vector3,
+		max_distance := 64,
+		stop : FuncRef = null) -> Dictionary:
+	var hit := {
+		"normal": Vector3()
+	}
 	var grid := Voxel.world_to_grid(from)
 	var step := Vector3(
 			1 if direction.x > 0 else -1,
@@ -237,13 +245,14 @@ func intersect_ray(from : Vector3, direction : Vector3, max_distance := 64) -> D
 	var step_index := -1
 	
 	var t = 0.0
+	var valid := false
 	while t < max_distance:
-		if get_voxel_id(grid) > -1:
-			hit["position"] = grid
-			hit["normal"] = Vector3(
-					-step.x if step_index == 0 else 0,
-					-step.y if step_index == 1 else 0,
-					-step.z if step_index == 2 else 0)
+		hit["position"] = grid
+		hit["normal"].x = -step.x if step_index == 0 else 0
+		hit["normal"].y = -step.y if step_index == 1 else 0
+		hit["normal"].z = -step.z if step_index == 2 else 0
+		if get_voxel_id(grid) > -1 or (is_instance_valid(stop) and stop.call_func(hit)):
+			valid = true
 			break
 		
 		match t_max.min_axis():
@@ -262,7 +271,8 @@ func intersect_ray(from : Vector3, direction : Vector3, max_distance := 64) -> D
 				t = t_max.z
 				t_max.z += t_delta.z
 				step_index = 2
-	
+	if not valid:
+		hit.clear()
 	return hit
 
 
@@ -270,14 +280,14 @@ func intersect_ray(from : Vector3, direction : Vector3, max_distance := 64) -> D
 # target     :   Vector3          :   Grid position at which to start flood select
 # selected   :   Array            :   Array to add selected voxel grid positions to
 # return     :   Array<Vector3>   :   Array of all voxel grid positions connected to given target
-func select_floot(target : Vector3, selected := []) -> Array:
+func select_flood(target : Vector3, selected := []) -> Array:
 	selected.append(get_voxel_id(target))
 	
 	for direction in Voxel.Faces:
 		var next = target + direction
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if not selected.has(next):
-				select_floot(next, selected)
+				select_flood(next, selected)
 	
 	return selected
 

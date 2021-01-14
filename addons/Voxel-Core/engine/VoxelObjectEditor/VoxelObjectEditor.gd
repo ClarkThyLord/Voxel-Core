@@ -498,7 +498,7 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 	var direction := camera.project_ray_normal(screen_position)
 	
 	if VoxelRaycasting.pressed:
-		hit = voxel_object.intersect_ray(from, direction)
+		hit = voxel_object.intersect_ray(from, direction, 64, funcref(self, "_raycast_stop"))
 	else:
 		var exclude := []
 		var to := from + direction * 1000
@@ -684,6 +684,13 @@ func hide_voxel_raycasting_menu() -> void:
 
 
 ## Private Methods
+func _raycast_stop(hit : Dictionary) -> bool:
+	if not is_grid_visible() and (hit["position"].y == -1 or hit["position"].y == 0):
+		hit["normal"] = Vector3.ZERO
+		return true
+	return false
+
+
 func _on_Editing_toggled(editing : bool):
 	voxel_object.edit_hint = editing
 	
