@@ -1,6 +1,15 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://examples/ProceduralWorld/ProceduralWorld.gd" type="Script" id=1]
+
+[sub_resource type="ProceduralSky" id=2]
+
+[sub_resource type="Environment" id=3]
+background_mode = 3
+background_sky = SubResource( 2 )
+background_color = Color( 0.698039, 0.952941, 0.980392, 1 )
+fog_enabled = true
+ssao_enabled = true
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Camera
@@ -52,6 +61,9 @@ func _unhandled_input(event : InputEvent):
 [node name="ProceduralWorld" type="Spatial"]
 script = ExtResource( 1 )
 marker_path = NodePath("Camera")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 3 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 5, 7 )
