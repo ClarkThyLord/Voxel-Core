@@ -219,33 +219,25 @@ func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) 
 			clamp(alignment.z, 0.0, 1.0))
 	return -box["position"] - (box["size"] * alignment).floor()
 
-
-# https://web.archive.org/web/20201108160724/http://www.cse.chalmers.se/edu/year/2010/course/TDA361/grid.pdf
-func intersect_ray(from : Vector3, direction : Vector3) -> Dictionary:
+# A Fast Voxel Traversal Algorithm for Ray Tracing, by John Amanatides
+# Algorithm paper: https://web.archive.org/web/20201108160724/http://www.cse.chalmers.se/edu/year/2010/course/TDA361/grid.pdf
+# from        :   Vector3                      :   World position from which to start raycast
+# direction   :   Vector3                      :   Direction of raycast
+# return      :   Dictionary<String, Vector3>  :   If voxel is "hit", returns Dictionary with grid position and face normal; else empty
+func intersect_ray(from : Vector3, direction : Vector3, max_distance := 64) -> Dictionary:
 	var hit := {}
 	var grid := Voxel.world_to_grid(from)
-	var snapped := Voxel.world_to_snapped(from)
 	var step := Vector3(
 			1 if direction.x > 0 else -1,
 			1 if direction.y > 0 else -1,
 			1 if direction.z > 0 else -1)
-	var t_delta := Vector3(
-			abs(1.0 / direction.x),
-			abs(1.0 / direction.y),
-			abs(1.0 / direction.z))
-	var dist := Vector3(
-		(snapped.x + 1 - from.x) if step.x > 0 else (from.x - snapped.x),
-		(snapped.y + 1 - from.y) if step.y > 0 else (from.y - snapped.y),
-		(snapped.z + 1 - from.z) if step.z > 0 else (from.z - snapped.z))
+	var t_delta := direction.inverse().abs()
+	var dist := from.distance_to(Voxel.world_to_snapped(from))
 	var t_max := t_delta * dist
 	var step_index := -1
 	
-	var path = []
-	
 	var t = 0.0
-	var max_d := 64.0
-	while t < max_d:
-		path.append(grid)
+	while t < max_distance:
 		if get_voxel_id(grid) > -1:
 			hit["position"] = grid
 			hit["normal"] = Vector3(
