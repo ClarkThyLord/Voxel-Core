@@ -2,18 +2,18 @@
 
 [ext_resource path="res://examples/ProceduralWorld/ProceduralWorld.gd" type="Script" id=1]
 
-[sub_resource type="ProceduralSky" id=2]
+[sub_resource type="ProceduralSky" id=1]
 
-[sub_resource type="Environment" id=3]
+[sub_resource type="Environment" id=2]
 background_mode = 3
-background_sky = SubResource( 2 )
+background_sky = SubResource( 1 )
 background_color = Color( 0.698039, 0.952941, 0.980392, 1 )
 fog_enabled = true
 fog_color = Color( 0.698039, 0.952941, 0.980392, 1 )
 fog_depth_end = 125.0
 ssao_enabled = true
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Camera
 
 
@@ -66,14 +66,16 @@ func _unhandled_input(event : InputEvent):
 
 [node name="ProceduralWorld" type="Spatial"]
 script = ExtResource( 1 )
+frequency = 2.0
+amplitude = 3.0
 marker_path = NodePath("Camera")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 3 )
+environment = SubResource( 2 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 17, 7 )
-script = SubResource( 1 )
+script = SubResource( 3 )
 speed = 25.0
 
 [node name="Chunks" type="Spatial" parent="."]

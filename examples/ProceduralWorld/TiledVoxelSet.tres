@@ -33,4 +33,25 @@ Vector3( 0, 1, 0 ): Vector2( 0, 0 )
 Vector3( 0, -1, 0 ): Vector2( 2, 1 ),
 Vector3( 0, 1, 0 ): Vector2( 0, 0 )
 }
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 3, 1 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 3, 0 ),
+Vector3( 0, 1, 0 ): Vector2( 3, 0 )
+}
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 4, 1 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 4, 0 ),
+Vector3( 0, 1, 0 ): Vector2( 4, 0 )
+}
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 6, 0 ),
+"uvs": {
+Vector3( 0, -1, 0 ): Vector2( 2, 1 ),
+Vector3( 0, 1, 0 ): Vector2( 0, 1 )
+}
 } ]
