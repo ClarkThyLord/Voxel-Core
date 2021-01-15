@@ -52,6 +52,10 @@ func _ready():
 	randomize()
 	_noise.seed = randi()
 
+func _exit_tree():
+	for structure in _structures:
+		structure.free()
+
 
 func _process(delta):
 	if not marker_path.is_empty():
@@ -125,11 +129,12 @@ func _generate_chunk(chunk : Vector3) -> void:
 						voxel_id = 0
 				chunk_node.set_voxel(grid, voxel_id)
 				
-				if not (grid.y < 3 and grid.y == altitude - 1):
+				if not (grid.y < 19 and grid.y == altitude - 1):
 					continue
-				var spawn_point := _noise.get_noise_3dv(Vector3(
-						floor(grid.x / 5), 0, floor(grid.z / 5)))
-				if spawn_point < structure_rate and not spawn_points.has(spawn_point) and randf() > structure_rate:
+				var spawn_point := range_lerp(
+						_noise.get_noise_3dv(Vector3(floor(x / 5), 0, floor(z / 5)) * frequency) * amplitude,
+						-1, 1, 0, 1)
+				if not spawn_points.has(spawn_point) and randf() > structure_rate:
 					spawn_points.append(spawn_point)
 					var structure : VoxelMesh = _structures[randi() % _structures.size()]
 					for structure_grid in structure.get_voxels():
