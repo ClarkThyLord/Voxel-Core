@@ -8,15 +8,17 @@ const voxel_set := preload("res://examples/ProceduralWorld/TiledVoxelSet.tres")
 
 
 ## Exported Variables
-export(int, 8, 64) var height_max := 16
+export(int, 8, 64) var height := 16
 
-export(float, 0.01, 10.0, 0.01) var frequency := 1
+export(float, 0.01, 10.0, 0.01) var frequency := 1.0
+
+export(float, 0.01, 10.0, 0.01) var amplitude := 1.0
 
 export(float, 0.01, 10.0, 0.01) var redistribution := 1.8
 
-export(int, 0, 3) var chunk_layers := 1
+export(int, 0, 10) var chunk_layers := 3
 
-export(int, 16, 128) var chunk_size := 32
+export(int, 16, 128) var chunk_size := 16
 
 export var marker_path : NodePath
 
@@ -26,6 +28,8 @@ export var marker_path : NodePath
 var _noise : OpenSimplexNoise
 
 var _chunks := {}
+
+var _chunk_nodes := {}
 
 
 
@@ -80,26 +84,26 @@ func _generate_chunk(chunk : Vector3) -> void:
 	for x in range(chunk_size):
 		for z in range(chunk_size):
 			var grid_pos := _chunk_to_world(chunk) + Vector3(x, 0, z)
-			var noise_1 := _noise.get_noise_3dv(grid_pos) * frequency
-			var noise_2 := 0.5 * _noise.get_noise_3dv(grid_pos * 2) * frequency
-			var noise_4 := 0.25 * _noise.get_noise_3dv(grid_pos * 4) * frequency
+			var noise_1 := _noise.get_noise_3dv(grid_pos * frequency) * amplitude
+			var noise_2 := 0.5 * _noise.get_noise_3dv(grid_pos * 2 * frequency) * amplitude
+			var noise_4 := 0.25 * _noise.get_noise_3dv(grid_pos * 4 * frequency) * amplitude
 			var noise := pow(
 					range_lerp(
 					noise_1 + noise_2 + noise_4,
 					-1, 1, 0, 1), 1.8) * redistribution
 			
-			var height := int(range_lerp(
+			var altitude := int(range_lerp(
 					noise,
-					0, 1, 0, height_max))
-			height = height if height > 0 else 1
+					0, 1, 0, height))
+			altitude = altitude if altitude > 0 else 1
 			
-			for y in range(height):
+			for y in range(altitude):
 				var voxel_id := -1
-				if y == height - 1:
+				if y == altitude - 1:
 					voxel_id = 1
-				elif y < height - 3:
+				elif y < altitude - 3:
 					voxel_id = 3
-				elif y < height - 1:
+				elif y < altitude - 1:
 					voxel_id = 0
 				chunk_node.set_voxel(Vector3(x, y, z), voxel_id)
 	chunk_node.update_mesh()
