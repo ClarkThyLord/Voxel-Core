@@ -12,7 +12,7 @@ tiles = ExtResource( 2 )
 materials = [ SubResource( 1 ) ]
 VOXELS = [ {
 "color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 0, 0 )
+"uv": Vector2( 1, 1 )
 }, {
 "color": Color( 1, 1, 1, 1 ),
 "uv": Vector2( 1, 0 ),
@@ -22,89 +22,15 @@ Vector3( 0, 1, 0 ): Vector2( 0, 0 )
 }
 }, {
 "color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 2, 0 ),
-"uvs": {
-Vector3( 0, -1, 0 ): Vector2( 2, 1 ),
-Vector3( 0, 1, 0 ): Vector2( 0, 0 )
-}
+"uv": Vector2( 0, 0 )
 }, {
 "color": Color( 1, 1, 1, 1 ),
 "uv": Vector2( 2, 1 )
 }, {
 "color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 3, 1 ),
+"uv": Vector2( 2, 0 ),
 "uvs": {
-Vector3( 0, -1, 0 ): Vector2( 3, 0 ),
-Vector3( 0, 1, 0 ): Vector2( 3, 0 )
+Vector3( 0, -1, 0 ): Vector2( 2, 1 ),
+Vector3( 0, 1, 0 ): Vector2( 0, 0 )
 }
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 4, 1 ),
-"uvs": {
-Vector3( 0, -1, 0 ): Vector2( 4, 0 ),
-Vector3( 0, 1, 0 ): Vector2( 4, 0 )
-}
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 6, 0 ),
-"uvs": {
-Vector3( -1, 0, 0 ): Vector2( 7, 0 ),
-Vector3( 0, -1, 0 ): Vector2( 7, 0 ),
-Vector3( 0, 0, 1 ): Vector2( 7, 0 ),
-Vector3( 0, 1, 0 ): Vector2( 7, 0 ),
-Vector3( 1, 0, 0 ): Vector2( 7, 0 )
-}
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 6, 1 ),
-"uvs": {
-Vector3( -1, 0, 0 ): Vector2( 5, 0 ),
-Vector3( 0, -1, 0 ): Vector2( 5, 0 ),
-Vector3( 0, 0, -1 ): Vector2( 5, 0 ),
-Vector3( 0, 0, 1 ): Vector2( 5, 0 ),
-Vector3( 1, 0, 0 ): Vector2( 5, 0 )
-}
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 7, 0 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 7, 1 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 0, 1 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 1, 1 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 0, 2 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 1, 2 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 2, 2 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 3, 2 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 4, 2 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 5, 2 )
-}, {
-"color": Color( 1, 0.396768, 0.396768, 1 ),
-"energy": 0.3,
-"metallic": 0.0,
-"roughness": 1.0,
-"specular": 0.5,
-"uv": Vector2( 6, 2 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 5, 0 )
-}, {
-"color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 5, 1 )
 } ]

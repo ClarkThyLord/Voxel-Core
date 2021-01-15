@@ -10,7 +10,7 @@ background_sky = SubResource( 2 )
 background_color = Color( 0.698039, 0.952941, 0.980392, 1 )
 fog_enabled = true
 fog_color = Color( 0.698039, 0.952941, 0.980392, 1 )
-fog_depth_end = 90.0
+fog_depth_end = 125.0
 ssao_enabled = true
 
 [sub_resource type="GDScript" id=1]

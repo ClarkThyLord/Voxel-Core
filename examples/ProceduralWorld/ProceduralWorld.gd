@@ -90,10 +90,18 @@ func _generate_chunk(chunk : Vector3) -> void:
 			
 			var height := int(range_lerp(
 					noise,
-					0, 1, 0, height_max - 1)) + 1
+					0, 1, 0, height_max))
+			height = height if height > 0 else 1
 			
 			for y in range(height):
-				chunk_node.set_voxel(Vector3(x, y, z), 0)
+				var voxel_id := -1
+				if y == height - 1:
+					voxel_id = 1
+				elif y < height - 3:
+					voxel_id = 3
+				elif y < height - 1:
+					voxel_id = 0
+				chunk_node.set_voxel(Vector3(x, y, z), voxel_id)
 	chunk_node.update_mesh()
 	
 	chunk_node.translation = chunk * chunk_size
