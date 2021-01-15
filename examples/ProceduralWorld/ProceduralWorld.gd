@@ -33,12 +33,11 @@ var _chunks := {}
 
 var _chunk_nodes := {}
 
-var _structures := {
-	"tree.oak":
+var _structures := [
 		preload("res://examples/ProceduralWorld/structures/tree.oak.tscn").instance(),
-	"tree.birch":
 		preload("res://examples/ProceduralWorld/structures/tree.birch.tscn").instance(),
-}
+		preload("res://examples/ProceduralWorld/structures/rock.tscn").instance(),
+]
 
 
 
@@ -132,7 +131,7 @@ func _generate_chunk(chunk : Vector3) -> void:
 						floor(grid.x / 5), 0, floor(grid.z / 5)))
 				if spawn_point < structure_rate and not spawn_points.has(spawn_point) and randf() > structure_rate:
 					spawn_points.append(spawn_point)
-					var structure : VoxelMesh = _structures["tree." + ("oak" if randf() > 0.5 else "birch")]
+					var structure : VoxelMesh = _structures[randi() % _structures.size()]
 					for structure_grid in structure.get_voxels():
 						chunk_node.set_voxel(
 								grid + Vector3.UP + structure_grid,
