@@ -29,7 +29,7 @@ const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
 const ConfigDefault := {
 	"cursor.visible": true,
 	"cursor.dynamic": true,
-#	"cursor.voxel_raycasting": false,
+	"cursor.voxel_raycasting": false,
 	"cursor.color": Color.white,
 	"grid.visible": true,
 	"grid.mode": VoxelGrid.GridModes.WIRED,
@@ -142,8 +142,6 @@ onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxConta
 onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 
 onready var VoxelRaycasting := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/VoxelRaycasting")
-
-onready var VoxelRaycastingMenu := get_node("VoxelRaycastingMenu")
 
 onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
 
@@ -473,10 +471,9 @@ func load_config() -> void:
 	
 	set_cursor_visible(config["cursor.visible"])
 	set_cursor_dynamic(config["cursor.dynamic"])
-	if config.has("cursor.voxel_raycasting"):
-		set_voxel_raycasting(config["cursor.voxel_raycasting"])
-	else:
-		show_voxel_raycasting_menu()
+	
+	set_voxel_raycasting(config["cursor.voxel_raycasting"])
+	
 	set_cursor_color(config["cursor.color"])
 	
 	set_grid_visible(config["grid.visible"])
@@ -673,14 +670,6 @@ func show_import_menu() -> void:
 # Hides import menu
 func hide_import_menu() -> void:
 	ImportMenu.hide()
-
-
-func show_voxel_raycasting_menu() -> void:
-	VoxelRaycastingMenu.popup_centered()
-
-
-func hide_voxel_raycasting_menu() -> void:
-	VoxelRaycastingMenu.hide()
 
 
 
