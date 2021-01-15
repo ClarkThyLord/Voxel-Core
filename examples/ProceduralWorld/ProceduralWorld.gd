@@ -2,6 +2,11 @@ extends Spatial
 
 
 
+## Enums
+enum Biomes { PLAIN, DRY, TUNDRA }
+
+
+
 ## Constants
 const voxel_set := preload("res://examples/ProceduralWorld/TiledVoxelSet.tres")
 
@@ -17,6 +22,8 @@ export(float, 0.01, 10.0, 0.01) var amplitude := 1.0
 export(float, 0.01, 10.0, 0.01) var redistribution := 1.8
 
 export(float, 0.0, 1.0, 0.01) var structure_rate := 0.8
+
+export(float, 0.0, 100.0, 1.0) var biome_factor := 10.0
 
 export(int, 0, 10) var chunk_layers := 3
 
@@ -97,23 +104,49 @@ func _generate_chunk(chunk : Vector3) -> void:
 	
 	for x in range(chunk_size):
 		for z in range(chunk_size):
-			var grid := _chunk_to_world(chunk) + Vector3(x, 0, z)
-			var noise_1 := _noise.get_noise_3dv(grid * frequency) * amplitude
-			var noise_2 := 0.5 * _noise.get_noise_3dv(grid * 2 * frequency) * amplitude
-			var noise_4 := 0.25 * _noise.get_noise_3dv(grid * 4 * frequency) * amplitude
+			var world_grid := _chunk_to_world(chunk) + Vector3(x, 0, z)
+			
+			var biome := range_lerp(
+				_noise.get_noise_2d(
+					floor(world_grid.x / chunk_size),
+					floor(world_grid.z / chunk_size)) * biome_factor,
+					-1, 1, 0, Biomes.size())
+			
+			var biome_key := -1
+			var biome_frequency := frequency
+			var biome_amplitude := amplitude
+			var biome_redistribution := redistribution
+			var biome_structure_rate := structure_rate
+			
+			if biome > 2:
+				biome_key = Biomes.TUNDRA
+				biome_structure_rate *= 0.05
+			elif biome > 1:
+				biome_key = Biomes.PLAIN
+				biome_amplitude *= 0.4
+			else:
+				biome_key = Biomes.DRY
+				biome_frequency *= 0.2
+				biome_structure_rate *= 0.01
+			
+			var noise_1 := _noise.get_noise_3dv(
+					world_grid * biome_frequency) * biome_amplitude
+			var noise_2 := 0.5 * _noise.get_noise_3dv(
+					world_grid * 2 * biome_frequency) * biome_amplitude
+			var noise_4 := 0.25 * _noise.get_noise_3dv(
+					world_grid * 4 * biome_frequency) * biome_amplitude
 			var noise := pow(
 					range_lerp(noise_1 + noise_2 + noise_4, -1, 1, 0, 1),
-					redistribution)
+					biome_redistribution)
 			
 			var altitude := int(range_lerp(
 					noise,
 					0, 1, 0, height))
 			altitude = altitude if altitude > 0 else 1
 			
-			grid.x = x
-			grid.z = z
+			var local_grid := Vector3(x, 0, z)
 			for y in range(altitude):
-				grid.y = y
+				local_grid.y = y
 				var voxel_id := -1
 				if y > 19:
 					if y == altitude - 1:
@@ -122,24 +155,36 @@ func _generate_chunk(chunk : Vector3) -> void:
 						voxel_id = 3
 				else:
 					if y == altitude - 1:
-						voxel_id = 1
+						match biome_key:
+							Biomes.PLAIN:
+								voxel_id = 1
+							Biomes.TUNDRA:
+								voxel_id = 7
+							Biomes.DRY:
+								voxel_id = 0
+							
 					elif y < altitude - 3:
 						voxel_id = 3
 					elif y < altitude - 1:
 						voxel_id = 0
-				chunk_node.set_voxel(grid, voxel_id)
+				chunk_node.set_voxel(local_grid, voxel_id)
 				
-				if not (grid.y < 19 and grid.y == altitude - 1):
+				if not (local_grid.y < 19 and local_grid.y == altitude - 1):
 					continue
 				var spawn_point := range_lerp(
-						_noise.get_noise_3dv(Vector3(floor(x / 5), 0, floor(z / 5)) * frequency) * amplitude,
+						_noise.get_noise_3dv(
+								(Vector3(
+										floor(world_grid.x / 5),
+										0,
+										floor(world_grid.z / 5))
+								* biome_frequency)) *  biome_amplitude,
 						-1, 1, 0, 1)
-				if not spawn_points.has(spawn_point) and randf() > structure_rate:
+				if not spawn_points.has(spawn_point) and randf() < biome_structure_rate:
 					spawn_points.append(spawn_point)
 					var structure : VoxelMesh = _structures[randi() % _structures.size()]
 					for structure_grid in structure.get_voxels():
 						chunk_node.set_voxel(
-								grid + Vector3.UP + structure_grid,
+								local_grid + Vector3.UP + structure_grid,
 								structure.get_voxel_id(structure_grid))
 	chunk_node.update_mesh()
 	
