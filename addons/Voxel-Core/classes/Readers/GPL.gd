@@ -5,16 +5,17 @@ extends Reference
 
 
 # Public Methods
-static func read(image : File) -> Dictionary:
+# Reads GPL file, and returns voxel palette
+static func read(gpl_file : File) -> Dictionary:
 	var result := {
 		"error": OK,
 		"voxels": {},
 		"palette": [],
 	}
 	
-	if image.get_line() == "GIMP Palette":
-		while not image.eof_reached():
-			var line = image.get_line()
+	if gpl_file.get_line() == "GIMP Palette":
+		while not gpl_file.eof_reached():
+			var line = gpl_file.get_line()
 			if typeof(line) == TYPE_STRING and not line.empty() and (line[0].is_valid_integer() or line[0] == " "):
 				var tokens = line.split("\t")
 				var name = ""

@@ -22,13 +22,8 @@ func fill(voxel_object, position : Vector3, target : int, replacement : int, und
 		undo_redo.add_undo_method(voxel_object, 'set_voxel', position, target)
 		for face in Voxel.Faces:
 			fill(
-				voxel_object,
-				position + face,
-				target,
-				replacement,
-				undo_redo,
-				filled
-			)
+					voxel_object, position + face, target, replacement,
+					undo_redo, filled)
 
 
 func work(editor) -> void:
@@ -40,12 +35,8 @@ func work(editor) -> void:
 				continue
 			
 			fill(
-				editor.voxel_object,
-				position,
-				target,
-				editor.get_palette(),
-				editor.undo_redo
-			)
+					editor.voxel_object, position, target, editor.get_palette(),
+					editor.undo_redo)
 	editor.undo_redo.add_do_method(editor.voxel_object, "update_mesh")
 	editor.undo_redo.add_undo_method(editor.voxel_object, "update_mesh")
 	editor.undo_redo.commit_action()

@@ -44,11 +44,6 @@ anchor_top = 0.366667
 anchor_right = 0.34082
 anchor_bottom = 0.646667
 toggle_mode = true
-voxel_color = Color( 0, 0, 0, 1 )
-voxel_texture = null
-voxel_id = -1
-voxel_face = Vector3( 0, 0, 0 )
-voxel_set = null
 
 [node name="Front" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.34082
@@ -56,11 +51,6 @@ anchor_top = 0.366667
 anchor_right = 0.504883
 anchor_bottom = 0.646667
 toggle_mode = true
-voxel_color = Color( 0, 0, 0, 1 )
-voxel_texture = null
-voxel_id = -1
-voxel_face = Vector3( 0, 0, 0 )
-voxel_set = null
 
 [node name="Right" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.504883
@@ -72,11 +62,6 @@ margin_top = 0.000335693
 margin_right = -1.0
 margin_bottom = 0.000335693
 toggle_mode = true
-voxel_color = Color( 0, 0, 0, 1 )
-voxel_texture = null
-voxel_id = -1
-voxel_face = Vector3( 0, 0, 0 )
-voxel_set = null
 
 [node name="Back" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.668945
@@ -87,11 +72,6 @@ margin_left = -0.999939
 margin_top = 1.52588e-05
 margin_right = -0.999939
 toggle_mode = true
-voxel_color = Color( 0, 0, 0, 1 )
-voxel_texture = null
-voxel_id = -1
-voxel_face = Vector3( 0, 0, 0 )
-voxel_set = null
 
 [node name="Top" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.34082
@@ -99,11 +79,6 @@ anchor_top = 0.0866667
 anchor_right = 0.504883
 anchor_bottom = 0.366666
 toggle_mode = true
-voxel_color = Color( 0, 0, 0, 1 )
-voxel_texture = null
-voxel_id = -1
-voxel_face = Vector3( 0, 0, 0 )
-voxel_set = null
 
 [node name="Bottom" parent="View2D" instance=ExtResource( 2 )]
 anchor_left = 0.34082
@@ -111,11 +86,6 @@ anchor_top = 0.646667
 anchor_right = 0.504883
 anchor_bottom = 0.926667
 toggle_mode = true
-voxel_color = Color( 0, 0, 0, 1 )
-voxel_texture = null
-voxel_id = -1
-voxel_face = Vector3( 0, 0, 0 )
-voxel_set = null
 
 [node name="View3D" type="ViewportContainer" parent="."]
 anchor_right = 1.0
@@ -220,10 +190,10 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 28.0
-margin_top = 28.0
-margin_right = 352.0
-margin_bottom = 513.0
+margin_left = 36.0
+margin_top = 36.0
+margin_right = 360.0
+margin_bottom = 521.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 edit_alpha = false
@@ -280,10 +250,6 @@ margin_bottom = 219.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 selection_max = 1
-hovered_color = Color( 1, 1, 1, 0.6 )
-selected_color = Color( 1, 1, 1, 1 )
-invalid_color = Color( 1, 0, 0, 1 )
-voxel_set = null
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
 margin_top = 223.0

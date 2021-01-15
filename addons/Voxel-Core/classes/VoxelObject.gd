@@ -232,7 +232,7 @@ func intersect_ray(
 		max_distance := 64,
 		stop : FuncRef = null) -> Dictionary:
 	var hit := {
-		"normal": Vector3()
+		"normal": Vector3(),
 	}
 	var grid := Voxel.world_to_grid(from)
 	var step := Vector3(

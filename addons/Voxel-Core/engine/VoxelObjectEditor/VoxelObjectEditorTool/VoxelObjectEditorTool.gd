@@ -14,7 +14,7 @@ var tool_normal := 0
 var selection_modes := PoolStringArray([
 	"individual",
 	"area",
-	"extrude"
+	"extrude",
 ])
 
 # A 1 in each coordinate means all selection mirrors are applicable using this tool

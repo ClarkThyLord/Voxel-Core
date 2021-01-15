@@ -28,6 +28,8 @@ var _surface_tool := SurfaceTool.new()
 ## Built-In Virtual Methods
 func _init():
 	setup()
+
+
 func _ready() -> void:
 	setup()
 
@@ -86,16 +88,20 @@ func update() -> void:
 			var x : int = -grid_size.x
 			while x <= grid_size.x:
 				_surface_tool.add_normal(Vector3.UP)
-				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(x, 0, -abs(grid_size.z))))
-				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(x, 0, abs(grid_size.z))))
+				_surface_tool.add_vertex(
+						Voxel.grid_to_snapped(Vector3(x, 0, -abs(grid_size.z))))
+				_surface_tool.add_vertex(
+						Voxel.grid_to_snapped(Vector3(x, 0, abs(grid_size.z))))
 				
 				x += 1
 			
 			var z : int = -grid_size.z
 			while z <= grid_size.z:
 				_surface_tool.add_normal(Vector3.UP)
-				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(-abs(grid_size.x), 0, z)))
-				_surface_tool.add_vertex(Voxel.grid_to_snapped(Vector3(abs(grid_size.x), 0, z)))
+				_surface_tool.add_vertex(
+						Voxel.grid_to_snapped(Vector3(-abs(grid_size.x), 0, z)))
+				_surface_tool.add_vertex(
+						Voxel.grid_to_snapped(Vector3(abs(grid_size.x), 0, z)))
 				
 				z += 1
 			

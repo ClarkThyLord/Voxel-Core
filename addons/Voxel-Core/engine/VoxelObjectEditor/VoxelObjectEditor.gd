@@ -225,7 +225,8 @@ func update_selections(selection_modes := [
 					_selection_modes[select_mode].name.capitalize(), select_mode)
 	if SelectionMode.get_item_index(prev) > -1:
 		SelectionMode.select(SelectionMode.get_item_index(prev))
-	else: _on_SelectionMode_selected(SelectionMode.get_selected_id())
+	else:
+		_on_SelectionMode_selected(SelectionMode.get_selected_id())
 
 
 # Disables and enables possible selection mirror(s) possible with current tool
@@ -281,7 +282,7 @@ func set_cursor_color(color : Color) -> void:
 
 
 # Returns true if grid should be visible
-func is_grid_visible() -> bool:
+func is_grid_disabled() -> bool:
 	return not Editing.pressed or (Editing.pressed and not GridVisible.pressed or (GridVisible.pressed and (not GridConstant.pressed and (is_instance_valid(voxel_object) and not voxel_object.empty()))))
 
 
@@ -289,7 +290,7 @@ func is_grid_visible() -> bool:
 func set_grid_visible(visible : bool) -> void:
 	config["grid.visible"] = visible
 	GridVisible.pressed = visible
-	_grid.disabled = is_grid_visible()
+	_grid.disabled = is_grid_disabled()
 	save_config()
 
 
@@ -298,7 +299,7 @@ func set_grid_visible(visible : bool) -> void:
 func set_grid_constant(constant : bool) -> void:
 	config["grid.constant"] = constant
 	GridConstant.pressed = constant
-	_grid.disabled = is_grid_visible()
+	_grid.disabled = is_grid_disabled()
 	save_config()
 
 
@@ -645,7 +646,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 						prev_hit)
 				
 				if not GridConstant.pressed:
-					_grid.disabled = is_grid_visible()
+					_grid.disabled = is_grid_disabled()
 				
 				return handle_result
 	return false
@@ -675,7 +676,7 @@ func hide_import_menu() -> void:
 
 ## Private Methods
 func _raycast_stop(hit : Dictionary) -> bool:
-	if not is_grid_visible() and (hit["position"].y == -1 or hit["position"].y == 0):
+	if not is_grid_disabled() and (hit["position"].y == -1 or hit["position"].y == 0):
 		hit["normal"] = Vector3.ZERO
 		return true
 	return false
@@ -695,7 +696,7 @@ func _update_editing_hint() -> void:
 func _on_Editing_toggled(editing : bool):
 	_update_editing_hint()
 	
-	_grid.disabled = is_grid_visible()
+	_grid.disabled = is_grid_disabled()
 	set_cursors_visibility(editing)
 	if editing:
 		attach_editor_components()

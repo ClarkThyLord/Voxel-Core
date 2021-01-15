@@ -446,6 +446,7 @@ func hide_texture_menu() -> void:
 func show_material_menu(voxel := get_viewing_voxel()) -> void:
 	if is_instance_valid(MaterialMenu):
 		MaterialRef.value = Voxel.get_material(voxel)
+		MaterialRef.max_value = voxel_set.materials.size()
 		Metallic.value = Voxel.get_metallic(voxel)
 		Specular.value = Voxel.get_specular(voxel)
 		Roughness.value = Voxel.get_roughness(voxel)

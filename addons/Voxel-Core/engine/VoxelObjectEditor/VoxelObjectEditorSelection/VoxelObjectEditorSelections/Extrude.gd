@@ -60,8 +60,10 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 						if editor.get_tool_normal() > 0:
 							for i in range(_face.size()):
 								_face[i] += editor.last_hit["normal"]
-				else: _face.clear()
-			else: _face.clear()
+				else:
+					_face.clear()
+			else:
+				_face.clear()
 			editor.set_cursors_selections(_face)
 	
 	return true

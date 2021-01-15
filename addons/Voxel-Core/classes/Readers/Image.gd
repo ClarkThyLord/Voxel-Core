@@ -5,6 +5,7 @@ extends Reference
 
 
 ## Public Methods
+# Reads images pixels, returns voxel content and voxel palette
 static func read(image : Image) -> Dictionary:
 	var result := {
 		"error": OK,
