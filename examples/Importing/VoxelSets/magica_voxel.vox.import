@@ -1,0 +1,13 @@
+[remap]
+
+importer="VoxelCore.VoxelSet"
+type="Resource"
+path="res://.import/magica_voxel.vox-877de476ad5f09836522692edf564755.tres"
+
+[deps]
+
+source_file="res://examples/Importing/VoxelSets/magica_voxel.vox"
+dest_files=[ "res://.import/magica_voxel.vox-877de476ad5f09836522692edf564755.tres" ]
+
+[params]
+

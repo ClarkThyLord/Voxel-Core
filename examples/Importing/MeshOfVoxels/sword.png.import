@@ -1,0 +1,15 @@
+[remap]
+
+importer="VoxelCore.MeshOfVoxels"
+type="Mesh"
+path="res://.import/sword.png-6d0d41a4332488c739a23235f3d18ea5.mesh"
+
+[deps]
+
+source_file="res://examples/Importing/MeshOfVoxels/sword.png"
+dest_files=[ "res://.import/sword.png-6d0d41a4332488c739a23235f3d18ea5.mesh" ]
+
+[params]
+
+mesh_mode=1
+center=1

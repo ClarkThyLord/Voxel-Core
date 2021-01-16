@@ -10,18 +10,54 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "GPLReader",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Readers/GPL.gd"
+}, {
+"base": "Reference",
+"class": "ImageReader",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Readers/Image.gd"
+}, {
+"base": "Reference",
+"class": "Reader",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Reader.gd"
+}, {
+"base": "Reference",
+"class": "VoxReader",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/Readers/Vox.gd"
+}, {
+"base": "Object",
 "class": "Voxel",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/src/Voxel.gd"
+"path": "res://addons/Voxel-Core/classes/Voxel.gd"
 }, {
 "base": "MeshInstance",
 "class": "VoxelMesh",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/src/VoxelMesh.gd"
+"path": "res://addons/Voxel-Core/classes/VoxelMesh.gd"
+}, {
+"base": "Resource",
+"class": "VoxelSet",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/VoxelSet.gd"
+}, {
+"base": "Reference",
+"class": "VoxelTool",
+"language": "GDScript",
+"path": "res://addons/Voxel-Core/classes/VoxelTool.gd"
 } ]
 _global_script_class_icons={
-"Voxel": "res://addons/Voxel-Core/assets/Voxel.png",
-"VoxelMesh": "res://addons/Voxel-Core/assets/VoxelMesh.png"
+"GPLReader": "",
+"ImageReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
+"Reader": "",
+"VoxReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
+"Voxel": "res://addons/Voxel-Core/assets/classes/Voxel.png",
+"VoxelMesh": "res://addons/Voxel-Core/assets/classes/VoxelMesh.png",
+"VoxelSet": "res://addons/Voxel-Core/assets/classes/VoxelSet.png",
+"VoxelTool": "res://addons/Voxel-Core/assets/classes/VoxelTool.png"
 }
 
 [application]
@@ -31,13 +67,40 @@ boot_splash/image="res://assets/VoxelCore.splash.png"
 boot_splash/bg_color=Color( 1, 1, 1, 1 )
 config/icon="res://icon.png"
 
-[autoload]
-
-VoxelSet="*res://addons/Voxel-Core/defaults/VoxelSet.default.gd"
-
 [editor_plugins]
 
 enabled=PoolStringArray( "Voxel-Core" )
+
+[input]
+
+ui_left={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777231,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":14,"pressure":0.0,"pressed":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":65,"unicode":0,"echo":false,"script":null)
+ ]
+}
+ui_right={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777233,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":15,"pressure":0.0,"pressed":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":68,"unicode":0,"echo":false,"script":null)
+ ]
+}
+ui_up={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777232,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":12,"pressure":0.0,"pressed":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":87,"unicode":0,"echo":false,"script":null)
+ ]
+}
+ui_down={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777234,"unicode":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":13,"pressure":0.0,"pressed":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [rendering]
 
