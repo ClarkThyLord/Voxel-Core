@@ -1,6 +1,6 @@
 <p align="center">
 	<a>
-		<img width="128px" src="./assets/VoxelCore.svg?sanitize=true" alt="VOXEL-CORE" />
+		<img width="128px" src="./assets/VoxelCore.svg?sanitize=true" alt="" />
 		<h1 align="center">
 			Voxel-Core
 		</h1>
@@ -23,6 +23,9 @@
 > Voxels in Godot!
 
 ---
+
+
+<img src="./assets/promo.jpg" alt="" align="center"/>
 
 # About
 Voxel-Core is a plugin for [Godot](https://github.com/godotengine/godot) made with GDScript, it was created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly), offering various VoxelObjects used to display voxels, as well as a in-engine editor.
