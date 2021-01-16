@@ -54,4 +54,10 @@ Vector3( 0, 1, 0 ): Vector2( 4, 0 )
 Vector3( 0, -1, 0 ): Vector2( 2, 1 ),
 Vector3( 0, 1, 0 ): Vector2( 0, 1 )
 }
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 7, 0 )
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"uv": Vector2( 5, 0 )
 } ]

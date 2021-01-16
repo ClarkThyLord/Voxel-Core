@@ -41,9 +41,32 @@ var _chunks := {}
 var _chunk_nodes := {}
 
 var _structures := [
-		preload("res://examples/ProceduralWorld/structures/tree.oak.tscn").instance(),
-		preload("res://examples/ProceduralWorld/structures/tree.birch.tscn").instance(),
-		preload("res://examples/ProceduralWorld/structures/rock.tscn").instance(),
+		[
+			0.5,
+			preload("res://examples/ProceduralWorld/structures/tree.oak.tscn").instance(),
+		],
+		[
+			0.5,
+			preload("res://examples/ProceduralWorld/structures/tree.birch.tscn").instance(),
+		],
+		[
+			0.3,
+			preload("res://examples/ProceduralWorld/structures/rock.tscn").instance(),
+		],
+		[
+			0.15,
+			preload("res://examples/ProceduralWorld/structures/house.tscn").instance(),
+		],
+		[
+			0.05,
+			preload("res://examples/ProceduralWorld/structures/tower.tscn").instance(),
+		],
+]
+
+var _biome_structures := [
+	[0, 1, 2, 4],
+	[2, 3, 4],
+	[0, 4],
 ]
 
 
@@ -61,7 +84,7 @@ func _ready():
 
 func _exit_tree():
 	for structure in _structures:
-		structure.free()
+		structure[1].free()
 
 
 func _process(delta):
@@ -181,11 +204,14 @@ func _generate_chunk(chunk : Vector3) -> void:
 						-1, 1, 0, 1)
 				if not spawn_points.has(spawn_point) and randf() < biome_structure_rate:
 					spawn_points.append(spawn_point)
-					var structure : VoxelMesh = _structures[randi() % _structures.size()]
-					for structure_grid in structure.get_voxels():
-						chunk_node.set_voxel(
-								local_grid + Vector3.UP + structure_grid,
-								structure.get_voxel_id(structure_grid))
+					var structure_id : int = _biome_structures[biome_key][randi() % _biome_structures[biome_key].size()]
+					var structure_chance : float = _structures[structure_id][0]
+					if randf() < structure_chance:
+						var structure : VoxelMesh = _structures[structure_id][1]
+						for structure_grid in structure.get_voxels():
+							chunk_node.set_voxel(
+									local_grid + Vector3.UP + structure_grid,
+									structure.get_voxel_id(structure_grid))
 	chunk_node.update_mesh()
 	
 	chunk_node.translation = chunk * chunk_size
