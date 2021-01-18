@@ -711,8 +711,7 @@ func _on_Editing_toggled(editing : bool):
 	set_cursors_visibility(editing)
 	if editing:
 		attach_editor_components()
-		if not last_hit.empty():
-			set_cursors_selections()
+		set_cursors_selections()
 	
 	emit_signal("editing", editing)
 

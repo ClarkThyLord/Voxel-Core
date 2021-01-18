@@ -179,7 +179,7 @@ func load_environment() -> void:
 		file.close()
 
 
-# Sets the current editor config to default
+# Resets the environment to default
 func reset_environment() -> void:
 	set_environment(DefaultEnv)
 	save_environment()
