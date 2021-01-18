@@ -132,6 +132,7 @@ onready var EnvironmentMenu := get_node("EnvironmentMenu")
 func _ready():
 	set_view_mode(view_mode)
 	set_voxel_set(voxel_set)
+	load_environment()
 	
 	if not is_instance_valid(undo_redo):
 		undo_redo = UndoRedo.new()
@@ -139,6 +140,51 @@ func _ready():
 
 
 ## Public Methods
+# Saves the used environment path
+func save_environment() -> void:
+	if environment == DefaultEnv:
+		var dir := Directory.new()
+		if dir.file_exists("res://addons/Voxel-Core/controls/VoxelViewer/config.var"):
+			dir.remove("res://addons/Voxel-Core/controls/VoxelViewer/config.var")
+	elif is_instance_valid(environment):
+		var file := File.new()
+		var opened = file.open(
+				"res://addons/Voxel-Core/controls/VoxelViewer/config.var",
+				File.WRITE)
+		if opened == OK:
+			file.store_string(environment.resource_path)
+		if file.is_open():
+			file.close()
+
+
+# Loads and sets the environment file
+func load_environment() -> void:
+	var loaded := false
+	var file := File.new()
+	var opened = file.open(
+			"res://addons/Voxel-Core/controls/VoxelViewer/config.var",
+			File.READ)
+	if opened == OK:
+		var environment_path = file.get_as_text()
+		if file.file_exists(environment_path):
+			var _environment := load(environment_path)
+			if _environment is Environment:
+				set_environment(_environment)
+			loaded = true
+	
+	if not loaded:
+		set_environment(DefaultEnv)
+	
+	if file.is_open():
+		file.close()
+
+
+# Sets the current editor config to default
+func reset_environment() -> void:
+	set_environment(DefaultEnv)
+	save_environment()
+
+
 func set_selection_max(value : int, update := true) -> void:
 	selection_max = clamp(value, 0, 6)
 	unselect_shrink()
@@ -631,7 +677,7 @@ func _on_ContextMenu_id_pressed(id : int):
 		14:
 			show_environment_change_menu()
 		15:
-			set_environment(DefaultEnv)
+			reset_environment()
 
 
 func _on_ColorPicker_color_changed(color : Color):
@@ -775,3 +821,4 @@ func _on_EnvironmentMenu_file_selected(path):
 	if _environment is Environment:
 		set_environment(_environment)
 		property_list_changed_notify()
+		save_environment()
