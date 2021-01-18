@@ -34,7 +34,8 @@ const ConfigDefault := {
 	"grid.visible": true,
 	"grid.mode": VoxelGrid.GridModes.WIRED,
 	"grid.color": Color.white,
-	"grid.constant": true
+	"grid.constant": true,
+	"grid.size": Vector2(16, 16),
 }
 
 
@@ -152,6 +153,10 @@ onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContai
 onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 
 onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
+
+onready var GridSizeX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/X")
+
+onready var GridSizeZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/Z")
 
 onready var ColorMenu := get_node("ColorMenu")
 
@@ -328,6 +333,15 @@ func set_grid_color(color : Color) -> void:
 	save_config()
 
 
+# Sets the grid size
+func set_grid_size(size : Vector2) -> void:
+	config["grid.size"] = size
+	GridSizeX.value = size.x
+	GridSizeZ.value = size.y
+	_grid.grid_size = Vector3(size.x, 0, size.y)
+	save_config()
+
+
 # Gets the user selected mirror(s)
 func get_mirrors() -> Array:
 	var mirrors := []
@@ -430,57 +444,54 @@ func set_voxel_raycasting(value : bool) -> void:
 func save_config() -> void:
 	var file := File.new()
 	var opened = file.open(
-			"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.json",
+			"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.var",
 			File.WRITE)
 	if opened == OK:
-		file.store_string(JSON.print(config))
+		file.store_var(config)
 	if file.is_open():
 		file.close()
 
 
 # Loads and sets the config file
 func load_config() -> void:
-	var config_file = File.new()
+	var loaded := false
+	var config_file := File.new()
 	var opened = config_file.open(
-			"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.json",
+			"res://addons/Voxel-Core/engine/VoxelObjectEditor/config.var",
 			File.READ)
-	if opened == OK:
-		var config_file_data = JSON.parse(config_file.get_as_text())
-		if config_file_data.error == OK and typeof(config_file_data.result) == TYPE_DICTIONARY:
-			config = config_file_data.result
-			
-			config["cursor.color"] = config["cursor.color"].split_floats(",")
-			config["cursor.color"] = Color(
-					config["cursor.color"][0],
-					config["cursor.color"][1],
-					config["cursor.color"][2],
-					config["cursor.color"][3])
-			
-			config["grid.color"] = config["grid.color"].split_floats(",")
-			config["grid.color"] = Color(
-					config["grid.color"][0],
-					config["grid.color"][1],
-					config["grid.color"][2],
-					config["grid.color"][3])
-		else:
-			config = ConfigDefault.duplicate()
-	else:
+	if opened == OK and not config_file.eof_reached():
+		var config_file_data = config_file.get_var()
+		if typeof(config_file_data) == TYPE_DICTIONARY:
+			config = config_file_data
+			loaded = true
+	
+	if not loaded:
 		config = ConfigDefault.duplicate()
 	
 	if config_file.is_open():
 		config_file.close()
 	
-	set_cursor_visible(config["cursor.visible"])
-	set_cursor_dynamic(config["cursor.dynamic"])
+	if config.has("cursor.visible"):
+		set_cursor_visible(config["cursor.visible"])
+	if config.has("cursor.dynamic"):
+		set_cursor_dynamic(config["cursor.dynamic"])
 	
-	set_voxel_raycasting(config["cursor.voxel_raycasting"])
+	if config.has("cursor.voxel_raycasting"):
+		set_voxel_raycasting(config["cursor.voxel_raycasting"])
 	
-	set_cursor_color(config["cursor.color"])
+	if config.has("cursor.color"):
+		set_cursor_color(config["cursor.color"])
 	
-	set_grid_visible(config["grid.visible"])
-	set_grid_mode(config["grid.mode"])
-	set_grid_color(config["grid.color"])
-	set_grid_constant(config["grid.constant"])
+	if config.has("grid.visible"):
+		set_grid_visible(config["grid.visible"])
+	if config.has("grid.mode"):
+		set_grid_mode(config["grid.mode"])
+	if config.has("grid.color"):
+		set_grid_color(config["grid.color"])
+	if config.has("grid.constant"):
+		set_grid_constant(config["grid.constant"])
+	if config.has("grid.size"):
+		set_grid_size(config["grid.size"])
 
 
 # Sets the current editor config to default
@@ -846,3 +857,11 @@ func _on_GitHub_pressed():
 
 func _on_Update_pressed():
 	voxel_object.update_mesh()
+
+
+func _on_Grid_Size_X_value_changed(value : int):
+	set_grid_size(Vector2(value, _grid.grid_size.z))
+
+
+func _on_Grid_Size_Z_value_changed(value : int):
+	set_grid_size(Vector2(_grid.grid_size.x, value))
