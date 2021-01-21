@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Voxel",
 "language": "GDScript",
-"path": "res://addons/voxel-core/classes/Voxel.gd"
+"path": "res://addons/voxel-core/classes/voxel.gd"
 }, {
 "base": "MeshInstance",
 "class": "VoxelMesh",
