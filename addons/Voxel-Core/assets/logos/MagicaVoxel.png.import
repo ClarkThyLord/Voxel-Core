@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/MagicaVoxel.png-79cb2f17c7c6027bd5a3ef10d951ecd0.stex"
+path="res://.import/MagicaVoxel.png-30a5149067cfc4e001c354a603b78d60.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/logos/MagicaVoxel.png"
-dest_files=[ "res://.import/MagicaVoxel.png-79cb2f17c7c6027bd5a3ef10d951ecd0.stex" ]
+source_file="res://addons/voxel-core/assets/logos/MagicaVoxel.png"
+dest_files=[ "res://.import/MagicaVoxel.png-30a5149067cfc4e001c354a603b78d60.stex" ]
 
 [params]
 

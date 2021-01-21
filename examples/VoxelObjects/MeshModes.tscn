@@ -583,7 +583,6 @@ anims/idle = SubResource( 16 )
 
 [node name="Head" parent="Goblin2" index="1"]
 mesh = SubResource( 20 )
-mesh_mode = 1
 VOXELS = {
 Vector3( -3, 2, 0 ): 0,
 Vector3( -2, 0, -1 ): 0,
@@ -627,7 +626,6 @@ Vector3( 2, 2, 0 ): 0
 
 [node name="Body" parent="Goblin2" index="2"]
 mesh = SubResource( 23 )
-mesh_mode = 1
 VOXELS = {
 Vector3( -3, 4, 3 ): 0,
 Vector3( -3, 5, 2 ): 0,
@@ -715,7 +713,6 @@ Vector3( 2, 6, 3 ): 0
 
 [node name="Feet" parent="Goblin2" index="3"]
 mesh = SubResource( 26 )
-mesh_mode = 1
 VOXELS = {
 Vector3( -3, 0, 2 ): 1,
 Vector3( -3, 0, 3 ): 1,
@@ -739,7 +736,6 @@ Vector3( 2, 0, 4 ): 1
 
 [node name="Hands" parent="Goblin2" index="4"]
 mesh = SubResource( 28 )
-mesh_mode = 1
 VOXELS = {
 Vector3( -5, 0, 3 ): 0,
 Vector3( -5, 0, 4 ): 0,

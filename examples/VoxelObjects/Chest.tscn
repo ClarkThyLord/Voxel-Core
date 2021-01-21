@@ -1,7 +1,7 @@
 [gd_scene load_steps=24 format=2]
 
-[ext_resource path="res://addons/Voxel-Core/classes/VoxelSet.gd" type="Script" id=1]
-[ext_resource path="res://addons/Voxel-Core/classes/VoxelMesh.gd" type="Script" id=2]
+[ext_resource path="res://addons/voxel-core/classes/voxel_set.gd" type="Script" id=1]
+[ext_resource path="res://addons/voxel-core/classes/voxel_mesh.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "close"
@@ -327,7 +327,7 @@ Vector3( 2, 5, 2 ): 1
 }
 
 [node name="Top" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1.5 )
+transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 3, -1.5 )
 mesh = SubResource( 20 )
 material/0 = null
 script = ExtResource( 2 )

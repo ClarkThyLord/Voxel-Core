@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/down.png-820330472629ba27a2f2dff51e863052.stex"
+path="res://.import/down.png-e920e62c852398092f2c7db7a9fb7935.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/down.png"
-dest_files=[ "res://.import/down.png-820330472629ba27a2f2dff51e863052.stex" ]
+source_file="res://addons/voxel-core/assets/controls/down.png"
+dest_files=[ "res://.import/down.png-e920e62c852398092f2c7db7a9fb7935.stex" ]
 
 [params]
 

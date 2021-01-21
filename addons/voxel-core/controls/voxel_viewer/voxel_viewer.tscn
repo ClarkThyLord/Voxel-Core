@@ -1,0 +1,475 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://addons/voxel-core/controls/voxel_viewer/voxel_viewer.gd" type="Script" id=1]
+[ext_resource path="res://addons/voxel-core/controls/voxel_button/voxel_button.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/voxel-core/controls/tiles_viewer/tiles_viewer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/voxel-core/controls/voxel_viewer/voxel_viewer_env.tres" type="Environment" id=4]
+
+[sub_resource type="World" id=1]
+environment = ExtResource( 4 )
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 0.5, 0.5, 0.5 )
+
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 0.25, 0.25, 0.25 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
+params_grow = true
+params_grow_amount = 0.001
+albedo_color = Color( 0, 0.25, 1, 0.607843 )
+
+[node name="VoxelViewer" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+environment = ExtResource( 4 )
+
+[node name="View2D" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_clip_content = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Left" parent="View2D" instance=ExtResource( 2 )]
+anchor_left = 0.176758
+anchor_top = 0.366667
+anchor_right = 0.34082
+anchor_bottom = 0.646667
+toggle_mode = true
+
+[node name="Front" parent="View2D" instance=ExtResource( 2 )]
+anchor_left = 0.34082
+anchor_top = 0.366667
+anchor_right = 0.504883
+anchor_bottom = 0.646667
+toggle_mode = true
+
+[node name="Right" parent="View2D" instance=ExtResource( 2 )]
+anchor_left = 0.504883
+anchor_top = 0.366666
+anchor_right = 0.668945
+anchor_bottom = 0.646666
+margin_left = -1.0
+margin_top = 0.000335693
+margin_right = -1.0
+margin_bottom = 0.000335693
+toggle_mode = true
+
+[node name="Back" parent="View2D" instance=ExtResource( 2 )]
+anchor_left = 0.668945
+anchor_top = 0.366667
+anchor_right = 0.833008
+anchor_bottom = 0.646667
+margin_left = -0.999939
+margin_top = 1.52588e-05
+margin_right = -0.999939
+toggle_mode = true
+
+[node name="Top" parent="View2D" instance=ExtResource( 2 )]
+anchor_left = 0.34082
+anchor_top = 0.0866667
+anchor_right = 0.504883
+anchor_bottom = 0.366666
+toggle_mode = true
+
+[node name="Bottom" parent="View2D" instance=ExtResource( 2 )]
+anchor_left = 0.34082
+anchor_top = 0.646667
+anchor_right = 0.504883
+anchor_bottom = 0.926667
+toggle_mode = true
+
+[node name="View3D" type="ViewportContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="View3D"]
+size = Vector2( 1024, 600 )
+own_world = true
+world = SubResource( 1 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+physics_object_picking = true
+
+[node name="CameraPivot" type="Spatial" parent="View3D/Viewport"]
+
+[node name="Camera" type="Camera" parent="View3D/Viewport/CameraPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+current = true
+
+[node name="OmniLight" type="OmniLight" parent="View3D/Viewport/CameraPivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.7 )
+omni_range = 1.1122
+
+[node name="VoxelPreview" type="MeshInstance" parent="View3D/Viewport"]
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="VoxelStaticBody" type="StaticBody" parent="View3D/Viewport/VoxelPreview"]
+
+[node name="CollisionShape" type="CollisionShape" parent="View3D/Viewport/VoxelPreview/VoxelStaticBody"]
+shape = SubResource( 3 )
+
+[node name="Select" type="MeshInstance" parent="View3D/Viewport"]
+material_override = SubResource( 4 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="ToolBar" type="HBoxContainer" parent="."]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 244.0
+margin_bottom = 32.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ViewMode" type="OptionButton" parent="ToolBar"]
+margin_right = 64.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 64, 20 )
+size_flags_horizontal = 0
+text = "3D"
+align = 1
+items = [ "2D", null, false, 0, null, "3D", null, false, 1, null ]
+selected = 1
+
+[node name="Hint" type="Label" parent="ToolBar"]
+margin_left = 68.0
+margin_right = 232.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 164, 20 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ContextMenu" type="PopupMenu" parent="."]
+anchor_right = 0.0878906
+anchor_bottom = 0.206667
+items = [ "Color side", null, 0, false, false, 0, 0, null, "", false, "Remove side's color", null, 0, false, false, 1, 0, null, "", false, "Texture side", null, 0, false, false, 2, 0, null, "", false, "Remove side's texture", null, 0, false, false, 3, 0, null, "", false, "", null, 0, false, false, -1, 0, null, "", true, "Color voxel", null, 0, false, false, 4, 0, null, "", false, "Texture voxel", null, 0, false, false, 5, 0, null, "", false, "Remove voxel's texture", null, 0, false, false, 6, 0, null, "", false ]
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ColorMenu" type="PopupDialog" parent="."]
+margin_right = 324.0
+margin_bottom = 502.0
+rect_min_size = Vector2( 340, 525 )
+popup_exclusive = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.00003
+margin_bottom = -8.00003
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
+margin_left = 52.0
+margin_top = 52.0
+margin_right = 376.0
+margin_bottom = 537.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+edit_alpha = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
+margin_top = 489.0
+margin_right = 324.0
+margin_bottom = 509.0
+
+[node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
+margin_right = 160.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
+margin_left = 164.0
+margin_right = 324.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
+
+[node name="TextureMenu" type="PopupDialog" parent="."]
+margin_right = 324.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 324, 260 )
+popup_exclusive = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.00003
+margin_bottom = -8.00003
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TextureMenu/VBoxContainer"]
+margin_right = 307.0
+margin_bottom = 219.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VoxelTexture" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 307.0
+margin_bottom = 219.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+selection_max = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
+margin_top = 223.0
+margin_right = 307.0
+margin_bottom = 243.0
+
+[node name="Cancel" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
+margin_right = 151.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
+margin_left = 155.0
+margin_right = 307.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
+
+[node name="MaterialMenu" type="PopupDialog" parent="."]
+margin_right = 250.0
+margin_bottom = 325.0
+rect_min_size = Vector2( 250, 325 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+popup_exclusive = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.00003
+margin_bottom = -8.00003
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu/VBoxContainer"]
+margin_right = 233.0
+margin_bottom = 284.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 16
+alignment = 1
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 22.0
+margin_right = 233.0
+margin_bottom = 46.0
+
+[node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6"]
+margin_top = 5.0
+margin_right = 56.0
+margin_bottom = 19.0
+text = "Material:"
+
+[node name="Material" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6"]
+margin_left = 159.0
+margin_right = 233.0
+margin_bottom = 24.0
+size_flags_horizontal = 10
+min_value = -1.0
+rounded = true
+
+[node name="HSeparator" type="HSeparator" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 62.0
+margin_right = 233.0
+margin_bottom = 66.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 82.0
+margin_right = 233.0
+margin_bottom = 106.0
+
+[node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 55.0
+margin_bottom = 19.0
+text = "Metallic:"
+
+[node name="Metallic" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 159.0
+margin_right = 233.0
+margin_bottom = 24.0
+size_flags_horizontal = 10
+max_value = 1.0
+step = 0.01
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 122.0
+margin_right = 233.0
+margin_bottom = 146.0
+
+[node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_top = 5.0
+margin_right = 58.0
+margin_bottom = 19.0
+text = "Specular:"
+
+[node name="Specular" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 159.0
+margin_right = 233.0
+margin_bottom = 24.0
+size_flags_horizontal = 10
+max_value = 1.0
+step = 0.01
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 162.0
+margin_right = 233.0
+margin_bottom = 186.0
+
+[node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3"]
+margin_top = 5.0
+margin_right = 73.0
+margin_bottom = 19.0
+text = "Roughness:"
+
+[node name="Roughness" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 159.0
+margin_right = 233.0
+margin_bottom = 24.0
+size_flags_horizontal = 10
+max_value = 1.0
+step = 0.01
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 202.0
+margin_right = 233.0
+margin_bottom = 226.0
+
+[node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4"]
+margin_top = 5.0
+margin_right = 46.0
+margin_bottom = 19.0
+text = "Energy:"
+
+[node name="Energy" type="SpinBox" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4"]
+margin_left = 159.0
+margin_right = 233.0
+margin_bottom = 24.0
+size_flags_horizontal = 10
+max_value = 16.0
+step = 0.1
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="MaterialMenu/VBoxContainer/VBoxContainer"]
+margin_top = 242.0
+margin_right = 233.0
+margin_bottom = 262.0
+
+[node name="Label" type="Label" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5"]
+margin_top = 3.0
+margin_right = 83.0
+margin_bottom = 17.0
+text = "Energy Color:"
+
+[node name="EnergyColor" type="ColorPickerButton" parent="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5"]
+margin_left = 156.0
+margin_right = 233.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 77, 20 )
+size_flags_horizontal = 10
+edit_alpha = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MaterialMenu/VBoxContainer"]
+margin_top = 288.0
+margin_right = 233.0
+margin_bottom = 308.0
+
+[node name="Cancel" type="Button" parent="MaterialMenu/VBoxContainer/HBoxContainer"]
+margin_right = 114.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="MaterialMenu/VBoxContainer/HBoxContainer"]
+margin_left = 118.0
+margin_right = 233.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
+
+[node name="EnvironmentMenu" type="FileDialog" parent="."]
+margin_right = 315.0
+margin_bottom = 349.0
+rect_min_size = Vector2( 200, 350 )
+window_title = "Open a File"
+mode = 0
+filters = PoolStringArray( "*.tres; Environment files" )
+[connection signal="gui_input" from="View2D/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Left" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
+[connection signal="mouse_exited" from="View2D/Front" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Right" to="." method="_on_Face_gui_input" binds= [ Vector3( 1, 0, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Right" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Back" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, 1 ) ]]
+[connection signal="mouse_exited" from="View2D/Back" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Top" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 1, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Top" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View2D/Bottom" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, -1, 0 ) ]]
+[connection signal="mouse_exited" from="View2D/Bottom" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
+[connection signal="gui_input" from="View3D" to="." method="_on_View3D_gui_input"]
+[connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
+[connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
+[connection signal="color_changed" from="ColorMenu/VBoxContainer/VoxelColor" to="." method="_on_ColorPicker_color_changed"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_ColorMenu_Cancel_pressed"]
+[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
+[connection signal="selected_uv" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_VoxelTexture_selected_uv"]
+[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_TextureMenu_Cancel_pressed"]
+[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
+[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material" to="." method="_on_Material_value_changed"]
+[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic" to="." method="_on_Metallic_value_changed"]
+[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular" to="." method="_on_Specular_value_changed"]
+[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3/Roughness" to="." method="_on_Roughness_value_changed"]
+[connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4/Energy" to="." method="_on_Energy_value_changed"]
+[connection signal="color_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5/EnergyColor" to="." method="_on_EnergyColor_changed"]
+[connection signal="pressed" from="MaterialMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_MaterialMenu_Cancel_pressed"]
+[connection signal="pressed" from="MaterialMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_MaterialMenu_Confirm_pressed"]
+[connection signal="file_selected" from="EnvironmentMenu" to="." method="_on_EnvironmentMenu_file_selected"]

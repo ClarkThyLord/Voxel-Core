@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://examples/VoxelWorld/kenney_voxels.jpg" type="Texture" id=1]
-[ext_resource path="res://addons/Voxel-Core/classes/VoxelMesh.gd" type="Script" id=2]
+[ext_resource path="res://addons/voxel-core/classes/voxel_mesh.gd" type="Script" id=2]
 [ext_resource path="res://examples/VoxelWorld/TiledVoxelSet.tres" type="Resource" id=3]
 [ext_resource path="res://examples/VoxelWorld/Player/Player.tscn" type="PackedScene" id=4]
 

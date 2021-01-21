@@ -1,6 +1,6 @@
 tool
 extends EditorImportPlugin
-# Import files as Mesh Resource, not to be confused with VoxelObjects
+# Import files as static Mesh Resource, not to be confused with VoxelObjects
 
 
 

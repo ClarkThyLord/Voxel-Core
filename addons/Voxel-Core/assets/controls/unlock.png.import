@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/unlock.png-b42aa4bc858b545b102c72b9d908465e.stex"
+path="res://.import/unlock.png-ddbd22687d18368c3f3e2116f87f58bc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/unlock.png"
-dest_files=[ "res://.import/unlock.png-b42aa4bc858b545b102c72b9d908465e.stex" ]
+source_file="res://addons/voxel-core/assets/controls/unlock.png"
+dest_files=[ "res://.import/unlock.png-ddbd22687d18368c3f3e2116f87f58bc.stex" ]
 
 [params]
 

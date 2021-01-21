@@ -14,11 +14,11 @@ enum VoxelCore {
 
 
 ## Constants
-const VoxelObject := preload("res://addons/Voxel-Core/classes/VoxelObject.gd")
+const VoxelObject := preload("res://addons/voxel-core/classes/voxel_object.gd")
 
-const VoxelSetEditor := preload("res://addons/Voxel-Core/engine/VoxelSetEditor/VoxelSetEditor.tscn")
+const VoxelSetEditor := preload("res://addons/voxel-core/engine/voxel_set_editor/voxel_set_editor.tscn")
 
-const VoxelObjectEditor := preload("res://addons/Voxel-Core/engine/VoxelObjectEditor/VoxelObjectEditor.tscn")
+const VoxelObjectEditor := preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.tscn")
 
 
 
@@ -33,11 +33,11 @@ var voxel_set_editor
 
 var voxel_object_editor
 
-var Meshes := preload("res://addons/Voxel-Core/engine/Importers/Meshes.gd").new()
+var Meshes := preload("res://addons/voxel-core/engine/Importers/meshes.gd").new()
 
-var VoxelObjects := preload("res://addons/Voxel-Core/engine/Importers/VoxelObjects.gd").new()
+var VoxelObjects := preload("res://addons/voxel-core/engine/Importers/voxel_objects.gd").new()
 
-var VoxelSets := preload("res://addons/Voxel-Core/engine/Importers/VoxelSets.gd").new()
+var VoxelSets := preload("res://addons/voxel-core/engine/Importers/voxel_sets.gd").new()
 
 
 

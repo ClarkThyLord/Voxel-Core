@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/duplicate.png-388737944e7edb39342aff3203fd9d82.stex"
+path="res://.import/duplicate.png-2f73b353b427b078fd0fdb0de9e665e0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/duplicate.png"
-dest_files=[ "res://.import/duplicate.png-388737944e7edb39342aff3203fd9d82.stex" ]
+source_file="res://addons/voxel-core/assets/controls/duplicate.png"
+dest_files=[ "res://.import/duplicate.png-2f73b353b427b078fd0fdb0de9e665e0.stex" ]
 
 [params]
 

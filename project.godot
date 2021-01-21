@@ -12,52 +12,52 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "GPLReader",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/Readers/GPL.gd"
+"path": "res://addons/voxel-core/classes/readers/gpl.gd"
 }, {
 "base": "Reference",
 "class": "ImageReader",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/Readers/Image.gd"
+"path": "res://addons/voxel-core/classes/readers/image.gd"
 }, {
 "base": "Reference",
 "class": "Reader",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/Reader.gd"
+"path": "res://addons/voxel-core/classes/reader.gd"
 }, {
 "base": "Reference",
 "class": "VoxReader",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/Readers/Vox.gd"
+"path": "res://addons/voxel-core/classes/readers/vox.gd"
 }, {
 "base": "Object",
 "class": "Voxel",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/Voxel.gd"
+"path": "res://addons/voxel-core/classes/voxel.gd"
 }, {
 "base": "MeshInstance",
 "class": "VoxelMesh",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/VoxelMesh.gd"
+"path": "res://addons/voxel-core/classes/voxel_mesh.gd"
 }, {
 "base": "Resource",
 "class": "VoxelSet",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/VoxelSet.gd"
+"path": "res://addons/voxel-core/classes/voxel_set.gd"
 }, {
 "base": "Reference",
 "class": "VoxelTool",
 "language": "GDScript",
-"path": "res://addons/Voxel-Core/classes/VoxelTool.gd"
+"path": "res://addons/voxel-core/classes/voxel_tool.gd"
 } ]
 _global_script_class_icons={
 "GPLReader": "",
 "ImageReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
 "Reader": "",
 "VoxReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
-"Voxel": "res://addons/Voxel-Core/assets/classes/Voxel.png",
-"VoxelMesh": "res://addons/Voxel-Core/assets/classes/VoxelMesh.png",
-"VoxelSet": "res://addons/Voxel-Core/assets/classes/VoxelSet.png",
-"VoxelTool": "res://addons/Voxel-Core/assets/classes/VoxelTool.png"
+"Voxel": "res://addons/voxel-core/assets/classes/voxel.png",
+"VoxelMesh": "res://addons/voxel-core/assets/classes/voxel_mesh.png",
+"VoxelSet": "res://addons/voxel-core/assets/classes/voxel_set.png",
+"VoxelTool": ""
 }
 
 [application]
@@ -69,7 +69,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "Voxel-Core" )
+enabled=PoolStringArray( "voxel-core" )
 
 [input]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/grid.png-7e0b55832bc3b60bd47642ba4f2be786.stex"
+path="res://.import/grid.png-56b39c1518415acbf54834e0514757f3.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/grid.png"
-dest_files=[ "res://.import/grid.png-7e0b55832bc3b60bd47642ba4f2be786.stex" ]
+source_file="res://addons/voxel-core/assets/controls/grid.png"
+dest_files=[ "res://.import/grid.png-56b39c1518415acbf54834e0514757f3.stex" ]
 
 [params]
 

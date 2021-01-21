@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/effects.png-0f7a453fa8e3d67f3ecdda2c1dd93b9c.stex"
+path="res://.import/effects.png-cc3019a7415108bbe2cd6a01b2a05f4d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/effects.png"
-dest_files=[ "res://.import/effects.png-0f7a453fa8e3d67f3ecdda2c1dd93b9c.stex" ]
+source_file="res://addons/voxel-core/assets/controls/effects.png"
+dest_files=[ "res://.import/effects.png-cc3019a7415108bbe2cd6a01b2a05f4d.stex" ]
 
 [params]
 

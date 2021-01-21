@@ -1,7 +1,8 @@
 [gd_resource type="Resource" load_steps=4 format=2]
 
-[ext_resource path="res://addons/Voxel-Core/classes/VoxelSet.gd" type="Script" id=1]
+[ext_resource path="res://addons/voxel-core/classes/voxel_set.gd" type="Script" id=1]
 [ext_resource path="res://examples/ProceduralWorld/kenney_voxels.jpg" type="Texture" id=2]
+
 
 [sub_resource type="SpatialMaterial" id=1]
 

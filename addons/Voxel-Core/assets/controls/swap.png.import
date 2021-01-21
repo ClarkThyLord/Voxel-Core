@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/swap.png-d1757552e4e26b13dbe1082aa34cb8b8.stex"
+path="res://.import/swap.png-7b4fb67b51c967e125a18b8652c326a8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/swap.png"
-dest_files=[ "res://.import/swap.png-d1757552e4e26b13dbe1082aa34cb8b8.stex" ]
+source_file="res://addons/voxel-core/assets/controls/swap.png"
+dest_files=[ "res://.import/swap.png-7b4fb67b51c967e125a18b8652c326a8.stex" ]
 
 [params]
 

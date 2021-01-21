@@ -5,10 +5,10 @@
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.25, 0.5, 0.25 )
 
-[sub_resource type="CubeMesh" id=4]
+[sub_resource type="CubeMesh" id=2]
 size = Vector3( 0.5, 0.5, 0.5 )
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=3]
 resource_name = "act"
 length = 0.2
 tracks/0/type = "value"
@@ -24,7 +24,7 @@ tracks/0/keys = {
 "values": [ Vector3( -33.1114, 43.2181, -27.1717 ), Vector3( 0, 35, 0 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 resource_name = "idle"
 length = 0.1
 tracks/0/type = "value"
@@ -40,10 +40,10 @@ tracks/0/keys = {
 "values": [ Vector3( 0, 35, 0 ) ]
 }
 
-[sub_resource type="CubeMesh" id=2]
+[sub_resource type="CubeMesh" id=5]
 size = Vector3( 0.5, 0.5, 0.5 )
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=6]
 flags_transparent = true
 params_grow = true
 params_grow_amount = 0.001
@@ -65,16 +65,16 @@ cast_to = Vector3( 0, 0, -3.5 )
 
 [node name="Block" type="MeshInstance" parent="Camera"]
 transform = Transform( 0.204788, 0, 0.143394, 0, 0.25, 0, -0.143394, 0, 0.204788, 0.4, -0.25, -0.5 )
-mesh = SubResource( 4 )
+mesh = SubResource( 2 )
 material/0 = null
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Camera/Block"]
 autoplay = "idle"
-anims/act = SubResource( 5 )
-anims/idle = SubResource( 6 )
+anims/act = SubResource( 3 )
+anims/idle = SubResource( 4 )
 next/act = "idle"
 
 [node name="Cursor" type="MeshInstance" parent="."]
 visible = false
-mesh = SubResource( 2 )
-material/0 = SubResource( 3 )
+mesh = SubResource( 5 )
+material/0 = SubResource( 6 )

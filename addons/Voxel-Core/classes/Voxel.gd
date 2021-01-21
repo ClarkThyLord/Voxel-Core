@@ -1,5 +1,5 @@
 tool
-class_name Voxel, "res://addons/Voxel-Core/assets/classes/Voxel.png"
+class_name Voxel, "res://addons/voxel-core/assets/classes/voxel.png"
 extends Object
 # Utility class containing various properties and methods to do with voxels.
 #

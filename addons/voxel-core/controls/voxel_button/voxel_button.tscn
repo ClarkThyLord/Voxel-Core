@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/voxel-core/controls/voxel_button/voxel_button.gd" type="Script" id=1]
+
+[node name="VoxelButton" type="Button"]
+anchor_right = 0.03125
+anchor_bottom = 0.0533333
+rect_min_size = Vector2( 32, 32 )
+mouse_default_cursor_shape = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VoxelColor" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
+focus_mode = 2
+mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VoxelTexture" type="TextureRect" parent="VoxelColor"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

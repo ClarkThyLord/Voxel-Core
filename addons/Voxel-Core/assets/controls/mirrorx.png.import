@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mirrorx.png-f73cbfeb62816e016785fe5077bc954b.stex"
+path="res://.import/mirrorx.png-572be229c3f5fcf661e2d24477316d4c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Voxel-Core/assets/controls/mirrorx.png"
-dest_files=[ "res://.import/mirrorx.png-f73cbfeb62816e016785fe5077bc954b.stex" ]
+source_file="res://addons/voxel-core/assets/controls/mirrorx.png"
+dest_files=[ "res://.import/mirrorx.png-572be229c3f5fcf661e2d24477316d4c.stex" ]
 
 [params]
 
