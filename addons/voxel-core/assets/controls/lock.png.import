@@ -1,0 +1,34 @@
+[remap]
+
+importer="texture"
+type="StreamTexture"
+path="res://.import/lock.png-553809ff2d6459b74d8ba546626fed09.stex"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://addons/voxel-core/assets/controls/lock.png"
+dest_files=[ "res://.import/lock.png-553809ff2d6459b74d8ba546626fed09.stex" ]
+
+[params]
+
+compress/mode=0
+compress/lossy_quality=0.7
+compress/hdr_mode=0
+compress/bptc_ldr=0
+compress/normal_map=0
+flags/repeat=0
+flags/filter=true
+flags/mipmaps=false
+flags/anisotropic=false
+flags/srgb=2
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/HDR_as_SRGB=false
+process/invert_color=false
+stream=false
+size_limit=0
+detect_3d=true
+svg/scale=1.0
