@@ -53,6 +53,7 @@ onready var Search := get_node("VBoxContainer/Search")
 onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
 
 onready var Hints := get_node("VBoxContainer/Hints")
+
 onready var Hint := get_node("VBoxContainer/Hints/Hint")
 
 onready var ContextMenu := get_node("ContextMenu")
@@ -232,7 +233,8 @@ func update_view(redraw := false) -> void:
 
 # Corrects the columns of listing to fit as many voxels horizonataly
 func correct() -> void:
-	if Voxels: Voxels.columns = int(floor(rect_size.x / 36))
+	if is_instance_valid(Voxels):
+		Voxels.columns = int(floor(rect_size.x / 36))
 
 
 
