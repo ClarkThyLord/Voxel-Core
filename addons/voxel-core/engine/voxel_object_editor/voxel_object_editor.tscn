@@ -262,11 +262,7 @@ margin_top = 78.0
 margin_right = 332.0
 margin_bottom = 172.0
 size_flags_vertical = 3
-search = ""
-allow_edit = false
 selection_max = 1
-show_hints = false
-voxel_set = null
 
 [node name="Notice" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 visible = false
@@ -540,10 +536,7 @@ rect_min_size = Vector2( 400, 300 )
 window_title = "Open a File"
 resizable = true
 mode = 0
-access = 2
 filters = PoolStringArray( "*.vox ; VOX Files", "*.png, *.bmp, *.dds, *.exr, *.hdr, *.jpg, *.jpeg, *.tga, *.svg, *.svgz, *.webp; Image Files" )
-current_dir = "/Users/Christian Moises/Documents/GitHub/Voxel-Core"
-current_path = "/Users/Christian Moises/Documents/GitHub/Voxel-Core/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -947,10 +940,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 16.0
-margin_top = 16.0
-margin_right = 331.0
-margin_bottom = 523.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 335.0
+margin_bottom = 527.0
 size_flags_vertical = 3
 edit_alpha = false
 
