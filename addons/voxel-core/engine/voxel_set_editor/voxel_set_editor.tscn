@@ -5,10 +5,6 @@
 [ext_resource path="res://addons/voxel-core/engine/voxel_set_editor/voxel_set_editor.gd" type="Script" id=3]
 [ext_resource path="res://addons/voxel-core/assets/classes/voxel_set.png" type="Texture" id=4]
 
-
-
-
-
 [node name="VoxelSetEditor" type="ScrollContainer"]
 anchor_right = 1.0
 margin_bottom = 200.0
@@ -216,9 +212,11 @@ margin_right = 712.0
 margin_bottom = 200.0
 size_flags_horizontal = 7
 size_flags_vertical = 3
+search = ""
 allow_edit = true
 selection_max = -1
 show_hints = true
+voxel_set = null
 
 [node name="VoxelInspector" type="HBoxContainer" parent="HBoxContainer"]
 visible = false
@@ -241,7 +239,11 @@ size_flags_horizontal = 0
 size_flags_vertical = 4
 selection_max = 6
 allow_edit = true
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import" to="." method="open_ImportFile"]
+view_mode = 1
+camera_sensitivity = 8
+voxel_id = 0
+voxel_set = null
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import" to="." method="show_import_menu"]
 [connection signal="file_selected" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_Import_file_selected"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Append" to="." method="_on_Import_Append_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Replace" to="." method="_on_Import_Replace_pressed"]

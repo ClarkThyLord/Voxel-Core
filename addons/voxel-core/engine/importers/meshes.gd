@@ -84,7 +84,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		var voxel_mesh = VoxelMesh.new()
 		voxel_mesh.voxel_set = VoxelSet.new()
 		
-		voxel_mesh.set_mesh_mode(options.get("MeshMode", VoxelMesh.MeshModes.GREEDY))
+		voxel_mesh.set_mesh_mode(options.get("mesh_mode", VoxelMesh.MeshModes.GREEDY))
 		voxel_mesh.voxel_set.set_voxels(read["palette"])
 		for voxel_position in read["voxels"]:
 			voxel_mesh.set_voxel(voxel_position, read["voxels"][voxel_position])
