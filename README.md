@@ -15,6 +15,9 @@
 	<a href="https://godotengine.org/asset-library/asset/465">
 		<img src="https://img.shields.io/badge/Godot-AssetLibrary-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAACZSURBVDhPzYzBDYMwEAQt0VjCJxWkq1TBkybyIU3kw58iAJ1vF1bmUBLEIyONbN/tOp3O7fGcTDwz0WwXhiMR2cJlWYjU/EIZ+sZ721aoH/sAVYfD7j1MhgapMcoOVYfD66XOGizx5I5ZVB0OGdQ37/qxiarD4S+i6uSvAQPNq1/kTEHV0QDvkbpHdUWDn0RlSxQuRfRvSGkGI8iOwHqmdCcAAAAASUVORK5CYII=" alt="AssetLibrary">
 	</a>
+	<a href="https://github.com/godotengine/awesome-godot">
+		<img src="https://awesome.re/mentioned-badge.svg" alt="Godot-Awesome">
+	</a>
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/blob/master/LICENSE">
 		<img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" alt="License">
 	</a>
