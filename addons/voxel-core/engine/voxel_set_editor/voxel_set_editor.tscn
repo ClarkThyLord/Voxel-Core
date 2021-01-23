@@ -247,7 +247,7 @@ voxel_set = null
 [connection signal="file_selected" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile" to="." method="_on_Import_file_selected"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Append" to="." method="_on_Import_Append_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Replace" to="." method="_on_Import_Replace_pressed"]
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Cancel" to="." method="close_ImportHow"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow/VBoxContainer/HBoxContainer/Cancel" to="." method="hide_import_how"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Refresh" to="." method="_on_Refresh_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Close" to="." method="_on_Close_pressed"]
 [connection signal="text_entered" from="HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID" to="." method="_on_VoxelID_text_entered"]

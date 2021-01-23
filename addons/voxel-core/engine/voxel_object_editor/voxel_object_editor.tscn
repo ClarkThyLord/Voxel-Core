@@ -1,34 +1,34 @@
 [gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" type="Script" id=1]
+[ext_resource path="res://addons/voxel-core/assets/controls/grid.png" type="Texture" id=2]
 [ext_resource path="res://addons/voxel-core/controls/voxel_set_viewer/voxel_set_viewer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/voxel-core/assets/classes/voxel_core.png" type="Texture" id=4]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorz.png" type="Texture" id=5]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrory.png" type="Texture" id=6]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/mirrorx.png" type="Texture" id=7]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/edit.png" type="Texture" id=8]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/add.png" type="Texture" id=13]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/sub.png" type="Texture" id=14]
+[ext_resource path="res://addons/voxel-core/assets/controls/general.png" type="Texture" id=9]
+[ext_resource path="res://addons/voxel-core/assets/controls/wired.png" type="Texture" id=10]
+[ext_resource path="res://addons/voxel-core/assets/controls/cursor.png" type="Texture" id=11]
+[ext_resource path="res://addons/voxel-core/assets/controls/solid.png" type="Texture" id=12]
+[ext_resource path="res://addons/voxel-core/assets/controls/pick.png" type="Texture" id=13]
+[ext_resource path="res://addons/voxel-core/assets/controls/secondary.png" type="Texture" id=14]
+[ext_resource path="res://addons/voxel-core/assets/controls/swap.png" type="Texture" id=15]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/export.png" type="Texture" id=16]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/import.png" type="Texture" id=17]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/cursor.png" type="Texture" id=19]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/grid.png" type="Texture" id=20]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/general.png" type="Texture" id=21]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/solid.png" type="Texture" id=22]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/primary.png" type="Texture" id=23]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/area.png" type="Texture" id=24]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/extrude.png" type="Texture" id=25]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/secondary.png" type="Texture" id=26]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/individual.png" type="Texture" id=27]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/swap.png" type="Texture" id=28]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/fill.png" type="Texture" id=29]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/pick.png" type="Texture" id=30]
+[ext_resource path="res://addons/voxel-core/assets/controls/fill.png" type="Texture" id=18]
+[ext_resource path="res://addons/voxel-core/assets/controls/sub.png" type="Texture" id=19]
+[ext_resource path="res://addons/voxel-core/assets/controls/add.png" type="Texture" id=20]
+[ext_resource path="res://addons/voxel-core/assets/controls/primary.png" type="Texture" id=21]
+[ext_resource path="res://addons/voxel-core/assets/controls/individual.png" type="Texture" id=22]
+[ext_resource path="res://addons/voxel-core/assets/controls/area.png" type="Texture" id=23]
+[ext_resource path="res://addons/voxel-core/assets/controls/extrude.png" type="Texture" id=24]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/docs.png" type="Texture" id=31]
 [ext_resource path="res://addons/Voxel-Core/assets/logos/GitHub.png" type="Texture" id=32]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/issues.png" type="Texture" id=33]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/reset.png" type="Texture" id=34]
 [ext_resource path="res://addons/Voxel-Core/assets/controls/refresh.png" type="Texture" id=35]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/wired.png" type="Texture" id=36]
 
 [sub_resource type="InputEventKey" id=1]
 scancode = 32
@@ -169,8 +169,8 @@ hint_tooltip = "Tools"
 size_flags_horizontal = 3
 shortcut = SubResource( 4 )
 text = "Add"
-icon = ExtResource( 13 )
-items = [ "Add", ExtResource( 13 ), false, 0, null, "Sub", ExtResource( 14 ), false, 1, null, "Swap", ExtResource( 28 ), false, 2, null, "Fill", ExtResource( 29 ), false, 3, null, "Pick", ExtResource( 30 ), false, 4, null ]
+icon = ExtResource( 20 )
+items = [ "Add", ExtResource( 20 ), false, 0, null, "Sub", ExtResource( 19 ), false, 1, null, "Swap", ExtResource( 15 ), false, 2, null, "Fill", ExtResource( 18 ), false, 3, null, "Pick", ExtResource( 13 ), false, 4, null ]
 selected = 0
 
 [node name="Palette" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer"]
@@ -181,8 +181,8 @@ hint_tooltip = "Palettes"
 size_flags_horizontal = 3
 shortcut = SubResource( 6 )
 text = "Primary"
-icon = ExtResource( 23 )
-items = [ "Primary", ExtResource( 23 ), false, 0, null, "Secondary", ExtResource( 26 ), false, 1, null ]
+icon = ExtResource( 21 )
+items = [ "Primary", ExtResource( 21 ), false, 0, null, "Secondary", ExtResource( 14 ), false, 1, null ]
 selected = 0
 
 [node name="SelectionMode" type="OptionButton" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer"]
@@ -193,8 +193,8 @@ hint_tooltip = "Selection modes"
 size_flags_horizontal = 3
 shortcut = SubResource( 8 )
 text = "Individual"
-icon = ExtResource( 27 )
-items = [ "Individual", ExtResource( 27 ), false, 0, null, "Area", ExtResource( 24 ), false, 1, null, "Extrude", ExtResource( 25 ), false, 2, null ]
+icon = ExtResource( 22 )
+items = [ "Individual", ExtResource( 22 ), false, 0, null, "Area", ExtResource( 23 ), false, 1, null, "Extrude", ExtResource( 24 ), false, 2, null ]
 selected = 0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer"]
@@ -262,7 +262,11 @@ margin_top = 78.0
 margin_right = 332.0
 margin_bottom = 172.0
 size_flags_vertical = 3
+search = ""
+allow_edit = false
 selection_max = 1
+show_hints = false
+voxel_set = null
 
 [node name="Notice" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer"]
 visible = false
@@ -636,7 +640,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
-"_tab_icon": ExtResource( 21 )
+"_tab_icon": ExtResource( 9 )
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/General"]
@@ -736,7 +740,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
-"_tab_icon": ExtResource( 19 )
+"_tab_icon": ExtResource( 11 )
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor"]
@@ -808,7 +812,7 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
-"_tab_icon": ExtResource( 20 )
+"_tab_icon": ExtResource( 2 )
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid"]
@@ -839,7 +843,6 @@ margin_top = 28.0
 margin_right = 325.0
 margin_bottom = 52.0
 hint_tooltip = "If disabled grid is only visible while VoxelObject is empty"
-pressed = true
 text = "Constant"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
@@ -865,8 +868,8 @@ margin_top = 80.0
 margin_right = 325.0
 margin_bottom = 102.0
 text = "Wired"
-icon = ExtResource( 36 )
-items = [ "Solid", ExtResource( 22 ), false, 0, null, "Wired", ExtResource( 36 ), false, 1, null ]
+icon = ExtResource( 10 )
+items = [ "Solid", ExtResource( 12 ), false, 0, null, "Wired", ExtResource( 10 ), false, 1, null ]
 selected = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer"]
@@ -944,10 +947,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 12.0
-margin_top = 12.0
-margin_right = 327.0
-margin_bottom = 519.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 331.0
+margin_bottom = 523.0
 size_flags_vertical = 3
 edit_alpha = false
 
