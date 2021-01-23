@@ -1,5 +1,7 @@
 [gd_scene load_steps=15 format=2]
 
+
+[ext_resource path="res://addons/voxel-core/classes/voxel_set.gd" type="Script" id=1]
 [ext_resource path="res://addons/voxel-core/classes/voxel_mesh.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=1]
@@ -210,6 +212,28 @@ surfaces/0 = {
 "vertex_count": 80
 }
 
+[sub_resource type="Resource" id=14]
+script = ExtResource( 1 )
+tile_size = Vector2( 32, 32 )
+materials = [ SubResource( 6 ) ]
+VOXELS = [ {
+"color": Color( 0.137276, 0.354244, 0.0612878, 1 ),
+"metallic": 0.1,
+"roughness": 0.7
+}, {
+"color": Color( 0.361775, 0.262364, 0.0733849, 1 ),
+"metallic": 0.1,
+"roughness": 0.85
+}, {
+"color": Color( 1, 1, 1, 1 ),
+"metallic": 0.4,
+"roughness": 0.4
+}, {
+"color": Color( 1, 0, 0, 1 ),
+"energy": 3.0,
+"energy_color": Color( 1, 0, 0, 1 )
+} ]
+
 [node name="Goblin" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.92629 )
 
@@ -224,6 +248,7 @@ material/0 = null
 material/1 = null
 material/2 = null
 script = ExtResource( 2 )
+voxel_set = SubResource( 14 )
 VOXELS = {
 Vector3( -3, 2, 0 ): 0,
 Vector3( -2, 0, -1 ): 0,
@@ -271,6 +296,7 @@ mesh = SubResource( 8 )
 material/0 = null
 material/1 = null
 script = ExtResource( 2 )
+voxel_set = SubResource( 14 )
 VOXELS = {
 Vector3( -3, 4, 3 ): 0,
 Vector3( -3, 5, 2 ): 0,
@@ -362,6 +388,7 @@ mesh = SubResource( 11 )
 material/0 = null
 material/1 = null
 script = ExtResource( 2 )
+voxel_set = SubResource( 14 )
 VOXELS = {
 Vector3( -3, 0, 2 ): 1,
 Vector3( -3, 0, 3 ): 1,
@@ -388,6 +415,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.222, 0.013 )
 mesh = SubResource( 13 )
 material/0 = null
 script = ExtResource( 2 )
+voxel_set = SubResource( 14 )
 VOXELS = {
 Vector3( -5, 0, 3 ): 0,
 Vector3( -5, 0, 4 ): 0,
