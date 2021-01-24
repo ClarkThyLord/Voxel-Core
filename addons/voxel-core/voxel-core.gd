@@ -33,11 +33,11 @@ var voxel_set_editor
 
 var voxel_object_editor
 
-var Meshes := preload("res://addons/voxel-core/engine/Importers/meshes.gd").new()
+var Meshes := preload("res://addons/voxel-core/engine/importers/meshes.gd").new()
 
-var VoxelObjects := preload("res://addons/voxel-core/engine/Importers/voxel_objects.gd").new()
+var VoxelObjects := preload("res://addons/voxel-core/engine/importers/voxel_objects.gd").new()
 
-var VoxelSets := preload("res://addons/voxel-core/engine/Importers/voxel_sets.gd").new()
+var VoxelSets := preload("res://addons/voxel-core/engine/importers/voxel_sets.gd").new()
 
 
 

@@ -244,26 +244,26 @@ func _on_Voxels_gui_input(event):
 		ContextMenu.clear()
 		if _selections.size() > 1:
 			ContextMenu.add_icon_item(
-					preload("res://addons/Voxel-Core/assets/controls/cancel.png"),
+					preload("res://addons/voxel-core/assets/controls/cancel.png"),
 					"Deselect voxels", 3)
 			ContextMenu.add_separator()
 		ContextMenu.add_icon_item(
-					preload("res://addons/Voxel-Core/assets/controls/add.png"),
+					preload("res://addons/voxel-core/assets/controls/add.png"),
 					"Add voxel", 0)
 		if _selections.size() == 1:
 			ContextMenu.add_icon_item(
-					preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
+					preload("res://addons/voxel-core/assets/controls/duplicate.png"),
 					"Duplicate voxel", 1)
 			ContextMenu.add_icon_item(
-					preload("res://addons/Voxel-Core/assets/controls/sub.png"),
+					preload("res://addons/voxel-core/assets/controls/sub.png"),
 					"Remove voxel", 2)
 		elif _selections.size() > 1:
 			ContextMenu.add_separator()
 			ContextMenu.add_icon_item(
-					preload("res://addons/Voxel-Core/assets/controls/duplicate.png"),
+					preload("res://addons/voxel-core/assets/controls/duplicate.png"),
 					"Duplicate voxels", 4)
 			ContextMenu.add_icon_item(
-					preload("res://addons/Voxel-Core/assets/controls/sub.png"),
+					preload("res://addons/voxel-core/assets/controls/sub.png"),
 					"Remove voxels", 5)
 		ContextMenu.set_as_minsize()
 		

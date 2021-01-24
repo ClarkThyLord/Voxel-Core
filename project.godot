@@ -51,9 +51,9 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "GPLReader": "",
-"ImageReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
+"ImageReader": "res://addons/voxel-core/assets/logos/MagicaVoxel.png",
 "Reader": "",
-"VoxReader": "res://addons/Voxel-Core/assets/logos/MagicaVoxel.png",
+"VoxReader": "res://addons/voxel-core/assets/logos/MagicaVoxel.png",
 "Voxel": "res://addons/voxel-core/assets/classes/voxel.png",
 "VoxelMesh": "res://addons/voxel-core/assets/classes/voxel_mesh.png",
 "VoxelSet": "res://addons/voxel-core/assets/classes/voxel_set.png",

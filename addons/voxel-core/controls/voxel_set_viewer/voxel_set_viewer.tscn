@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/voxel-core/controls/voxel_set_viewer/voxel_set_viewer.gd" type="Script" id=2]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/duplicate.png" type="Texture" id=3]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/sub.png" type="Texture" id=4]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/add.png" type="Texture" id=5]
-[ext_resource path="res://addons/Voxel-Core/assets/controls/cancel.png" type="Texture" id=6]
+[ext_resource path="res://addons/voxel-core/assets/controls/duplicate.png" type="Texture" id=3]
+[ext_resource path="res://addons/voxel-core/assets/controls/sub.png" type="Texture" id=4]
+[ext_resource path="res://addons/voxel-core/assets/controls/add.png" type="Texture" id=5]
+[ext_resource path="res://addons/voxel-core/assets/controls/cancel.png" type="Texture" id=6]
 
 [node name="VoxelSetViewer" type="Control"]
 anchor_right = 1.0
