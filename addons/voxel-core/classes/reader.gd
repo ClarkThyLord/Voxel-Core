@@ -18,4 +18,11 @@ static func read_file(file_path : String) -> Dictionary:
 		"qbt": continue
 		"vxm": continue
 		"gpl": result = GPLReader.read_file(file_path)
+		"voxels":
+			var var_result = VarReader.read_file(file_path)
+			if var_result.has("variant"):
+				if var_result["variant"].has("palette") or \
+						var_result["variant"].has("voxels"):
+					result = var_result["variant"]
+					result["error"] = var_result["error"]
 	return result

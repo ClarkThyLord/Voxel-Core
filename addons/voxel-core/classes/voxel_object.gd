@@ -337,11 +337,13 @@ func load_file(source_file : String, new_voxel_set := true) -> int:
 	var read := Reader.read_file(source_file)
 	var error : int = read.get("error", FAILED)
 	if error == OK:
-		if new_voxel_set or not is_instance_valid(voxel_set):
-			set_voxel_set(VoxelSet.new(), false)
-		voxel_set.set_voxels(read["palette"])
+		if read.has("palette"):
+			if new_voxel_set or not is_instance_valid(voxel_set):
+				set_voxel_set(VoxelSet.new(), false)
+			voxel_set.set_voxels(read["palette"])
 		
-		set_voxels(read["voxels"])
+		if read.has("voxels"):
+			set_voxels(read["voxels"])
 	return error
 
 
