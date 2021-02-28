@@ -812,12 +812,31 @@ func _on_Clear_pressed():
 	undo_redo.commit_action()
 
 
+func _on_ExportFile_file_selected(path : String):
+	var file := File.new()
+	var opened = file.open(path, File.WRITE)
+	if opened == OK:
+		file.store_var({
+			"voxels": voxel_object.get_voxel_ids()
+		})
+	if file.is_open():
+		file.close()
+
+
 func _on_ImportFile_file_selected(path : String):
 	import_file_path = path
-	if is_instance_valid(voxel_object.voxel_set):
-		ImportHow.popup_centered()
-	else:
-		_on_Import_New_pressed()
+	match path.get_extension():
+		"voxels":
+			var result := voxel_object.load_file(import_file_path, false)
+			if result == OK:
+				voxel_object.voxel_set.request_refresh()
+			else:
+				printerr(result)
+		_:
+			if is_instance_valid(voxel_object.voxel_set):
+				ImportHow.popup_centered()
+			else:
+				_on_Import_New_pressed()
 
 
 func _on_Import_Overwrite_pressed():

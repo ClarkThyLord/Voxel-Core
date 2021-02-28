@@ -60,6 +60,10 @@ func get_voxels() -> Array:
 	return _voxels.keys()
 
 
+func get_voxel_ids() -> Dictionary:
+	return _voxels.duplicate()
+
+
 func erase_voxel(grid : Vector3) -> void:
 	_voxels.erase(grid)
 

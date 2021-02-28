@@ -134,6 +134,12 @@ func get_voxels() -> Array:
 	return []
 
 
+# Returns Dictionary of all voxel grid positions with their voxel id
+# return   :   Dictionary<Vector3, int>   :   Dictionary with Vector3 each representing a grid position of a voxel with a VoxelSet id
+func get_voxel_ids() -> Dictionary:
+	return {}
+
+
 # Erase voxel id at given grid position
 func erase_voxel(grid : Vector3) -> void:
 	pass

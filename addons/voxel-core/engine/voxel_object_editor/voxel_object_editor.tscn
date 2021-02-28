@@ -514,14 +514,25 @@ margin_right = 335.0
 margin_bottom = 178.0
 
 [node name="Export" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File"]
-visible = false
-margin_right = 173.0
+margin_right = 165.0
 margin_bottom = 22.0
 size_flags_horizontal = 3
 text = "Export"
 icon = ExtResource( 16 )
 
+[node name="ExportFile" type="FileDialog" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export"]
+margin_left = 169.0
+margin_right = 569.0
+margin_bottom = 300.0
+rect_min_size = Vector2( 400, 300 )
+resizable = true
+filters = PoolStringArray( "*.voxels ; Save voxels" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Import" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File"]
+margin_left = 169.0
 margin_right = 335.0
 margin_bottom = 22.0
 hint_tooltip = "Import voxels from file"
@@ -536,7 +547,7 @@ rect_min_size = Vector2( 400, 300 )
 window_title = "Open a File"
 resizable = true
 mode = 0
-filters = PoolStringArray( "*.vox ; VOX Files", "*.png, *.bmp, *.dds, *.exr, *.hdr, *.jpg, *.jpeg, *.tga, *.svg, *.svgz, *.webp; Image Files" )
+filters = PoolStringArray( "*.vox ; VOX Files", "*.png, *.bmp, *.dds, *.exr, *.hdr, *.jpg, *.jpeg, *.tga, *.svg, *.svgz, *.webp; Image Files", "*.voxels; Import voxels" )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -940,10 +951,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 335.0
-margin_bottom = 527.0
+margin_left = 28.0
+margin_top = 28.0
+margin_right = 343.0
+margin_bottom = 535.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -986,6 +997,8 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/Y" to="." method="_on_Flip_Y_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/Z" to="." method="_on_Flip_Z_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Clear" to="." method="_on_Clear_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export/ExportFile" method="popup_centered"]
+[connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export/ExportFile" to="." method="_on_ExportFile_file_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile" to="." method="_on_ImportFile_file_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow/VBoxContainer/HBoxContainer/Overwrite" to="." method="_on_Import_Overwrite_pressed"]
