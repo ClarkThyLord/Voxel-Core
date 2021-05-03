@@ -69,7 +69,7 @@ func commit() -> ArrayMesh:
 
 
 # Adds a voxel face to Mesh with given vertex positions and voxel data
-# voxel          :   Dictioanry<String, Variant>   :   voxel data to use
+# voxel          :   Dictionary<String, Variant>   :   voxel data to use
 # face           :   Vector3                       :   face of voxel to generate
 # bottom_right   :   Vector3                       :   grid position of bottom right vertex pertaining to face
 # bottom_left    :   Vector3                       :   grid position of bottom left vertex pertaining to face, if not given botttom right is used
