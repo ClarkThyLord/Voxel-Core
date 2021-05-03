@@ -106,7 +106,7 @@ func _process(delta):
 
 ## Private Methods
 func _world_to_chunk(world : Vector3) -> Vector3:
-	var chunk := (world / chunk_size).round()
+	var chunk := (world / chunk_size).floor()
 	chunk.y = 0
 	return chunk
 
