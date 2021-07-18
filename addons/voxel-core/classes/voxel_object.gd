@@ -35,6 +35,9 @@ export var uv_map := false setget set_uv_map
 # Flag indicating the persitant attachment and maintenance of a StaticBody
 export var static_body := false setget set_static_body
 
+# Size of each voxel in object
+export var voxel_size := 0.5 setget set_voxel_size
+
 # The VoxelSet for this VoxelObject
 export(Resource) var voxel_set = null setget set_voxel_set
 
@@ -67,6 +70,14 @@ func set_mesh_mode(value : int, update := is_inside_tree()) -> void:
 # Sets the uv_map, calls update_mesh if needed and not told otherwise
 func set_uv_map(value : bool, update := is_inside_tree()) -> void:
 	uv_map = value
+	
+	if update:
+		update_mesh()
+
+
+# Sets the size of each voxel
+func set_voxel_size(size: float, update := is_inside_tree()) -> void:
+	voxel_size = size
 	
 	if update:
 		update_mesh()
@@ -153,9 +164,9 @@ func erase_voxels() -> void:
 
 # Returns 3D axis-aligned bounding box
 # volume   :   Array<Vector3>   :   Array of grid positions from which to calculate bounds
-# return   :   Dictionary       :   bounding box, contains: { position : Vector3, size: Vector3 }
+# return   :   Dictionary       :   bounding box, contains: { position : Vector3, size: Vector3, end: Vector3 }
 func get_box(volume := get_voxels()) -> Dictionary:
-	var box := { "position": Vector3.ZERO, "size": Vector3.ZERO }
+	var box := { "position": Vector3.ZERO, "size": Vector3.ZERO, "end": Vector3.ZERO }
 	
 	if not volume.empty():
 		box["position"] = Vector3.INF
@@ -177,9 +188,25 @@ func get_box(volume := get_voxels()) -> Dictionary:
 				box["size"].z = voxel_grid.z
 		
 		box["size"] = (box["size"] - box["position"]).abs() + Vector3.ONE
+		box["end"] = box["position"] + box["size"]
 	
 	return box
 
+
+# Returns 3D axis-aligned bounding box, transformed to global coordinates
+# volume   :   Array<Vector3>   :   Array of grid positions from which to calculate bounds
+# return   :   Dictionary       :   bounding box, contains: { position : Vector3, size: Vector3, end: Vector3 }
+func get_box_transformed(volume := get_voxels()) -> Dictionary:
+	var box := get_box(volume)
+	
+	box.position = box.position * voxel_size
+	box.end = box.end * voxel_size
+	
+	box.position = global_transform.xform(box.position)
+	box.end = global_transform.xform(box.end)
+	box.size = box.end - box.position
+	
+	return box
 
 # Moves voxels in given volume by given translation
 # translation   :   Vector3          :   translation to move voxels by
@@ -240,13 +267,13 @@ func intersect_ray(
 	var hit := {
 		"normal": Vector3(),
 	}
-	var grid := Voxel.world_to_grid(from)
+	var grid := Voxel.world_to_grid(from, voxel_size)
 	var step := Vector3(
 			1 if direction.x > 0 else -1,
 			1 if direction.y > 0 else -1,
 			1 if direction.z > 0 else -1)
 	var t_delta := direction.inverse().abs()
-	var dist := from.distance_to(Voxel.world_to_snapped(from))
+	var dist := from.distance_to(Voxel.world_to_snapped(from, voxel_size))
 	var t_max := t_delta * dist
 	var step_index := -1
 	
@@ -357,9 +384,13 @@ func load_file(source_file : String, new_voxel_set := true) -> int:
 # volume   :   Array<Vector3>    :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
 # vt       :   VoxelTool         :   VoxelTool with which ArrayMesh will be built
 # return   :   ArrayMesh         :   Naive voxel mesh
-func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
+func naive_volume(volume: Array, vt: VoxelTool = null) -> ArrayMesh:
 	if not is_instance_valid(voxel_set):
 		return null
+	
+	if not vt:
+		vt = VoxelTool.new()
+		vt.set_voxel_size(voxel_size)
 	
 	vt.begin(voxel_set, uv_map)
 	
@@ -375,9 +406,13 @@ func naive_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
 # volume   :   Array<Vector3>   :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
 # vt       :   VoxelTool        :   VoxelTool with which ArrayMesh will be built
 # return   :   ArrayMesh        :   Greedy voxel mesh
-func greed_volume(volume : Array, vt := VoxelTool.new()) -> ArrayMesh:
+func greed_volume(volume: Array, vt: VoxelTool = null) -> ArrayMesh:
 	if not is_instance_valid(voxel_set):
 		return null
+	
+	if not vt:
+		vt = VoxelTool.new()
+		vt.set_voxel_size(voxel_size)
 	
 	vt.begin(voxel_set, uv_map)
 	

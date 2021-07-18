@@ -3,8 +3,6 @@ extends Reference
 # MagicaVoxel file reader
 
 
-
-# Constants
 const magicavoxel_default_palette := [
 	Color("00000000"), Color("ffffffff"), Color("ffccffff"), Color("ff99ffff"), Color("ff66ffff"), Color("ff33ffff"), Color("ff00ffff"), Color("ffffccff"), Color("ffccccff"), Color("ff99ccff"), Color("ff66ccff"), Color("ff33ccff"), Color("ff00ccff"), Color("ffff99ff"), Color("ffcc99ff"), Color("ff9999ff"),
 	Color("ff6699ff"), Color("ff3399ff"), Color("ff0099ff"), Color("ffff66ff"), Color("ffcc66ff"), Color("ff9966ff"), Color("ff6666ff"), Color("ff3366ff"), Color("ff0066ff"), Color("ffff33ff"), Color("ffcc33ff"), Color("ff9933ff"), Color("ff6633ff"), Color("ff3333ff"), Color("ff0033ff"), Color("ffff00ff"),
@@ -26,61 +24,368 @@ const magicavoxel_default_palette := [
 
 
 
-# Public Methods
-# Reads vox file, returns voxel content and voxel palette
-static func read(vox_file : File) -> Dictionary:
+# Reads a key-value dictionary from a vox file
+static func _read_vox_dict(file: File) -> Dictionary:
+	# Dictionary containing data read from vox file
+	var dict := {}
+	
+	# number of key-value pairs to read from dict in file
+	var pairs_to_read := file.get_32()
+	
+	for i in pairs_to_read:
+		# size of key_string in bytes
+		var key_size := file.get_32()
+		var key := file.get_buffer(key_size).get_string_from_ascii()
+		
+		var value_size := file.get_32()
+		var value := file.get_buffer(value_size)
+		
+		dict[key] = value
+	
+	return dict
+
+
+static func _skip_unimplemented(file: File, chunk_size: int):
+	var _val = file.get_buffer(chunk_size)
+
+
+static func _pool_array_to_int(array: PoolByteArray) -> int:
+	var val := 0
+	
+	for i in range(0, 4):
+		val = val | (array[i] << (i * 8))
+	
+	return val
+
+
+static func _unpack_transfom(rotation, translation) -> Transform:
+	var rot0 := Vector3(1, 0, 0)
+	var rot1 := Vector3(0, 1, 0)
+	var rot2 := Vector3(0, 0, 1)
+	
+	var origin := Vector3(0, 0, 0)
+	
+	if rotation != null:
+		# extract bits from pool array
+		var rotation_bits := _pool_array_to_int(rotation)
+		
+		# a untransformed rotation matrix
+		var rot_matrix := [
+			Vector3(1, 0, 0),
+			Vector3(0, 1, 0),
+			Vector3(0, 0, 1)
+		]
+		
+		# unpack the rotation bits
+		var rot0_idx := rotation_bits & 3
+		var rot1_idx := (rotation_bits >> 2) & 3
+		
+		rot0 = rot_matrix[rot0_idx]
+		rot1 = rot_matrix[rot1_idx]
+		
+		# by process of elimination, find rot2
+		rot_matrix.remove(rot0_idx)
+		rot_matrix.remove(rot1_idx)
+		
+		rot2 = rot_matrix.front()
+	
+	if translation != null:
+		# extract string
+		var translation_string: String = translation.get_string_from_ascii()
+		
+		var translation_array := translation_string.split_floats(" ")
+		origin = Vector3(-translation_array[0], translation_array[2], translation_array[1])
+	
+	return Transform(rot0, rot1, rot2, origin)
+
+
+enum _Node_Type {
+	TRANSFORM,
+	GROUP,
+	SHAPE
+}
+
+
+# Reads a vox file into a dict:
+#	"error": OK if no Errors occured
+#	"tree": Dict tree structure containing the vox files scenes contents
+#	"palette": Vox files Palette in form of an Array of Colors
+static func _read(file: File) -> Dictionary:
 	var result := {
 		"error": OK,
-		"voxels": {},
-		"palette": [],
+		"tree": {},
+		"voxels": [],
+		"palette": magicavoxel_default_palette.duplicate(),
 	}
 	
-	var magic := vox_file.get_buffer(4).get_string_from_ascii()
-	var magic_version := vox_file.get_32()
-	if magic == "VOX " and magic_version == 150:
-		var nodes := {}
-		while vox_file.get_position() < vox_file.get_len():
-			var chunk_name = vox_file.get_buffer(4).get_string_from_ascii()
-			var chunk_size = vox_file.get_32()
-			var chunk_children = vox_file.get_32()
-			
-			match chunk_name:
-				"XYZI":
-					for i in range(0, vox_file.get_32()):
-						var x := vox_file.get_8()
-						var z := -vox_file.get_8()
-						var y := vox_file.get_8()
-						result["voxels"][Vector3(
-								x, y, z).floor()] = vox_file.get_8() - 1
-				"RGBA":
-					for i in range(0,256):
-						var color := Color(
-								float(vox_file.get_8() / 255.0),
-								float(vox_file.get_8() / 255.0),
-								float(vox_file.get_8() / 255.0),
-								float(vox_file.get_8() / 255.0))
-						color.a = 1.0
-						result["palette"].append(color)
-				_:
-					vox_file.get_buffer(chunk_size)
-		
-		if result["palette"].empty():
-			result["palette"] = magicavoxel_default_palette.duplicate()
-	else:
-		result["error"] = ERR_FILE_UNRECOGNIZED
+	var header: String = file.get_buffer(4).get_string_from_ascii()
+	var version := file.get_32()
 	
-	for index in range(result["palette"].size()):
-		result["palette"][index] = Voxel.colored(result["palette"][index])
+	if not header == "VOX " or not version == 150:
+		result["error"] = ERR_FILE_UNRECOGNIZED
+		return result
+	
+	# stores all models in the file
+	var _models := []
+	
+	# holds all info nodes in the file, indexed by node_id
+	var _nodes := {}
+	
+	# stores the size information of a size chunk,
+	# to be consumed by the next node
+	var _size := Vector3()
+	
+	while file.get_position() < file.get_len():
+		# common fields, present in all chunks
+		var chunk_id: String = file.get_buffer(4).get_string_from_ascii()
+		var chunk_size := file.get_32()
+		var _chunk_child_size := file.get_32()
+		
+		match chunk_id:
+			# empty "main" chunk
+			"MAIN":
+				pass
+			
+			# size info about next model
+			"SIZE":
+				_size.x = file.get_32()
+				_size.z = file.get_32()
+				_size.y = file.get_32()
+			
+			# model data
+			"XYZI":
+				var model := { 
+					"size": _size,
+					"voxels": {}
+				}
+				
+				var num_voxels = file.get_32()
+				
+				for i in num_voxels:
+					var x: = _size.x - file.get_8() - 1
+					var z := file.get_8()
+					var y := file.get_8()
+					var id := file.get_8() - 1
+					
+					model.voxels[Vector3(x, y, z)] = id
+				
+				_models.append(model)
+			
+			# palette, replaces default palette
+			"RGBA":
+				for i in range(0, 256):
+					var color := Color8(
+						file.get_8(),
+						file.get_8(),
+						file.get_8(),
+						file.get_8()
+					)
+					
+					result.palette[i] = color
+			
+			# node info. contains transform, and name info
+			"nTRN":
+				var node_id := file.get_32()
+				var info_dict := _read_vox_dict(file)
+				
+				# get the nodes info
+				var name := ""
+				var hidden := false
+				
+				if info_dict.has("_name"):
+					name = info_dict["_name"].get_string_from_utf8()
+				
+				if info_dict.has("hidden"):
+					var hidden_string: String = info_dict["_hidden"].get_string_from_utf8()
+					hidden = true if hidden_string == "1" else false
+				
+				# various other info
+				var child_id := file.get_32()
+				var _reserved_id := file.get_32()
+				var _layer_id := file.get_32()
+				var _frames := file.get_32()
+				
+				# get the ndoes transforms
+				var transform_dict := _read_vox_dict(file)
+								
+				var rotation = null
+				var translation = null
+				
+				if transform_dict.has("_r"):
+					rotation = transform_dict["_r"]
+				
+				if transform_dict.has("_t"):
+					translation = transform_dict["_t"]
+				
+				var transform = _unpack_transfom(rotation, translation)
+				
+				_nodes[node_id] = {
+					"type": _Node_Type.TRANSFORM,
+					"name": name,
+					"hidden": hidden,
+					"child_id": child_id,
+					"transform": transform
+				}
+			
+			# group. can hold shapes, and/or other groups
+			"nGRP":
+				var node_id := file.get_32()
+				
+				# unused
+				var _node_dict := _read_vox_dict(file)
+				
+				var child_count := file.get_32()
+				var child_ids := PoolIntArray()
+				
+				child_ids.resize(child_count)
+				
+				for i in child_count:
+					child_ids[i] = file.get_32()
+				
+				_nodes[node_id] = {
+					"type": _Node_Type.GROUP,
+					"child_ids": child_ids
+				}
+			
+			# shape. instance of a model
+			"nSHP":
+				var node_id := file.get_32()
+				
+				# unused
+				var _node_dict := _read_vox_dict(file)
+				var _model_count := file.get_32()
+				
+				var model_id := file.get_32()
+				
+				# unused
+				var _model_dict := _read_vox_dict(file)
+				
+				_nodes[node_id] = {
+					"type": _Node_Type.SHAPE,
+					"model_id": model_id
+				}
+			
+			# unimplemented:
+			#"IMAP":
+			#	pass
+			#"LAYR":
+			#	pass
+			#"MATL":
+			#	pass
+			#"MATT":
+			#	pass
+			#"rOBJ":
+			#	pass
+			
+			_:
+				_skip_unimplemented(file, chunk_size)
+	
+	# construct node tree from parsed file
+	if _nodes.size() > 0:
+		result["tree"] = _make_tree_from_nodes(_nodes.keys().front(), _nodes, _models)
+	else:
+		result["tree"] = {
+			"type": "SHAPE",
+			"model": _models.front()
+		}
+	
+	for i in result["palette"].size():
+		result["palette"][i] = Voxel.colored(result["palette"][i])
 	
 	return result
 
 
-static func read_file(vox_path : String) -> Dictionary:
+# transforms the node dict into a tree structure,
+# containing only groups and models
+static func _make_tree_from_nodes(node_id: int, nodes: Dictionary, models: Array):
+	var node = nodes[node_id]
+	var transform_node = {}
+	
+	if node.type == _Node_Type.TRANSFORM and node.child_id:
+		transform_node = node
+		node = nodes[node.child_id]
+	
+	var tree_node 
+	
+	if transform_node:
+		tree_node = {
+			"type": "NONE",
+			"name": transform_node["name"],
+			"transform": transform_node["transform"]
+		}
+	else:
+		tree_node = {}
+	
+	if node.type == _Node_Type.GROUP:
+		tree_node["children"] = []
+		tree_node.type = "GROUP"
+		
+		for id in node.child_ids:
+			tree_node.children.append(_make_tree_from_nodes(
+				id,
+				nodes,
+				models
+			))
+		
+	elif node.type == _Node_Type.SHAPE:
+		tree_node["model"] = models[node.model_id]
+		tree_node.type = "SHAPE"
+	
+	return tree_node
+
+
+# merge voxels of a previously generated tree into a single model
+static func _merge_voxels(tree: Dictionary) -> Dictionary:
+	var voxels = {}
+	
+	if tree.has("model"):
+		voxels = tree.model.voxels
+	
+	# get all child voxels
+	if tree.has("children"):		
+		for child in tree.children:
+			# recursivly get voxels of child dicts
+			var child_voxels := _merge_voxels(child)
+			
+			# merge voxels into own
+			for key in child_voxels.keys():
+				voxels[key] = child_voxels[key]
+	
+	# transform voxels
+	if tree.has("transform"):
+		var transformed_voxels := {}
+		var transform: Transform = tree.transform
+		
+		# magica voxel positions are calculated from the models centre
+		# offset the transform to account for this
+		if tree.has("model"):
+			transform = transform.translated( -(tree.model.size / 2).floor() )
+		
+		for key in voxels.keys():
+			var t_key = transform.xform(key)
+			transformed_voxels[t_key] = voxels[key]
+		
+		voxels = transformed_voxels
+	
+	return voxels
+
+
+static func read_file(vox_path: String, merge_voxels := true) -> Dictionary:
 	var result := { "error": OK }
 	var vox_file := File.new()
+	
 	result["error"] = vox_file.open(vox_path, File.READ)
+	
 	if result["error"] == OK:
-		result = read(vox_file)
+		result = _read(vox_file)
+		
+		if merge_voxels:
+			result["voxels"] = _merge_voxels(result["tree"])
+			result.erase("tree")
+		else:
+			result.erase("voxels")
+	
 	if vox_file.is_open():
 		vox_file.close()
+	
 	return result

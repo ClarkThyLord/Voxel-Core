@@ -9,6 +9,7 @@ enum VoxelCore {
 	VOXEL_SET,
 	VOXEL_OBJECT,
 	VOXEL_MESH,
+	VOXEL_SCENE
 }
 
 
@@ -39,6 +40,8 @@ var VoxelObjects := preload("res://addons/voxel-core/engine/importers/voxel_obje
 
 var VoxelSets := preload("res://addons/voxel-core/engine/importers/voxel_sets.gd").new()
 
+var VoxelScenes := preload("res://addons/voxel-core/engine/importers/vox_scenes.gd").new()
+
 
 
 ## Built-In Virtual Methods
@@ -46,6 +49,7 @@ func _enter_tree():
 	add_import_plugin(Meshes)
 	add_import_plugin(VoxelObjects)
 	add_import_plugin(VoxelSets)
+	add_import_plugin(VoxelScenes)
 	
 	connect("scene_closed", self, "_on_scene_closed")
 	connect("main_screen_changed", self, "_on_main_screen_changed")
@@ -57,6 +61,7 @@ func _exit_tree():
 	remove_import_plugin(Meshes)
 	remove_import_plugin(VoxelObjects)
 	remove_import_plugin(VoxelSets)
+	remove_import_plugin(VoxelScenes)
 	
 	close_voxel_set_editor()
 	close_voxel_object_editor()
@@ -121,6 +126,7 @@ func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 
 
 func close_voxel_set_editor() -> void:
+	print("close")
 	if is_instance_valid(voxel_set_editor):
 		remove_control_from_bottom_panel(voxel_set_editor)
 		voxel_set_editor.queue_free()

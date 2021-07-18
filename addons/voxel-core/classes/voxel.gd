@@ -51,9 +51,6 @@ const Faces := {
 	Vector3.BACK: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
 }
 
-# 0.5 means that voxels will have the dimensions of 0.5 x 0.5 x 0.5
-const VoxelWorldSize := 0.5
-
 
 
 ## Public Methods
@@ -311,20 +308,20 @@ static func clean(voxel : Dictionary) -> void:
 
 
 # Returns the world position as snapped world position
-static func world_to_snapped(world : Vector3) -> Vector3:
-	return (world / VoxelWorldSize).floor() * VoxelWorldSize
+static func world_to_snapped(world: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
+	return (world / voxelWorldSize).floor() * voxelWorldSize
 
 
 # Returns the snapped world position as voxel grid position
-static func snapped_to_grid(snapped : Vector3) -> Vector3:
-	return snapped / VoxelWorldSize
+static func snapped_to_grid(snapped: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
+	return snapped / voxelWorldSize
 
 
 # Returns world position as voxel grid position
-static func world_to_grid(world : Vector3) -> Vector3:
-	return snapped_to_grid(world_to_snapped(world))
+static func world_to_grid(world: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
+	return snapped_to_grid(world_to_snapped(world, voxelWorldSize), voxelWorldSize)
 
 
 # Returns voxel grid position as snapped world position
-static func grid_to_snapped(grid : Vector3) -> Vector3:
-	return grid * VoxelWorldSize
+static func grid_to_snapped(grid: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
+	return grid * voxelWorldSize

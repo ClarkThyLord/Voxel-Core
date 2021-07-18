@@ -34,6 +34,10 @@ func _ready() -> void:
 
 
 ## Public Methods
+func set_voxel_size(size: float) -> void:
+	_voxel_tool.set_voxel_size(size)
+
+
 func set_color(value : Color) -> void:
 	color = value
 	if is_instance_valid(material_override):

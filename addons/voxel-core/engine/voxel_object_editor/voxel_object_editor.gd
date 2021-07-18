@@ -164,6 +164,8 @@ onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
 
 onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
 
+onready var VoxelSize := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move2/Size")
+
 
 
 ## Built-In Virtual Methods
@@ -177,6 +179,7 @@ func _ready():
 	update_mirrors()
 	update_settings()
 	update_grid_mode()
+	update_object_params()
 	
 	load_config()
 
@@ -251,6 +254,12 @@ func update_settings() -> void:
 		var name : String = Settings.get_tab_title(tab)
 		Settings.set_tab_icon(tab, 
 				load("res://addons/voxel-core/assets/controls/" + name.to_lower() + ".png"))
+
+
+# updates voxel object parameters
+func update_object_params() -> void:
+	if is_instance_valid(voxel_object):
+		VoxelSize.value = voxel_object.voxel_size
 
 
 # Sets the cursor visibility
@@ -377,7 +386,13 @@ func get_selections() -> Array:
 	return selections
 
 
-# Sets the cursor's visiblity
+# Sets the cursors voxel size
+func set_cursors_voxel_size(size: float) -> void:
+	for cursor in _cursors:
+		_cursors[cursor].set_voxel_size(size)
+
+
+# Sets the cursors visiblity
 func set_cursors_visibility(visible := Editing.pressed) -> void:
 	_cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
 	var mirrors := get_mirrors()
@@ -430,6 +445,16 @@ func get_palette(palette : int = Palette.get_selected_id()) -> int:
 # Returns the voxel dictionary of palette
 func get_rpalette(palette : int = get_palette()) -> Dictionary:
 	return voxel_object.voxel_set.get_voxel(palette)
+
+
+func set_voxel_size(size: float) -> void:
+	if is_instance_valid(voxel_object):
+		voxel_object.set_voxel_size(size)
+	
+	set_cursors_voxel_size(size)
+	
+	if is_instance_valid(_grid):
+		_grid.set_voxel_size(size)
 
 
 # Setter for voxel raycasting, saves to config
@@ -518,9 +543,13 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 				if target.is_a_parent_of(hit.collider):
 					if _grid.is_a_parent_of(hit.collider):
 						hit["normal"] = Vector3.ZERO
+						
 					hit["position"] = Voxel.world_to_grid(
-							voxel_object.to_local(
-									hit.position + -hit.normal * (Voxel.VoxelWorldSize / 2)))
+						voxel_object.to_local(
+							hit.position + -hit.normal * (voxel_object.voxel_size / 2)),
+						voxel_object.voxel_size
+					)
+					
 					hit["normal"] = hit["normal"].round()
 					break
 				else:
@@ -602,13 +631,17 @@ func detach_editor_components() -> void:
 
 
 # Disconnect previous edited VoxelObject and starts editing the new one
-func start_editing(new_voxel_object : VoxelObject) -> void:
+func start_editing(new_voxel_object : VoxelObject) -> void:	
 	if new_voxel_object == voxel_object:
 		return
+	
+	_grid.set_voxel_size(new_voxel_object.voxel_size)
+	set_cursors_voxel_size(new_voxel_object.voxel_size)
 	
 	stop_editing()
 	
 	voxel_object = new_voxel_object
+	update_object_params()
 	
 	setup_voxel_set(voxel_object.voxel_set)
 	voxel_object.connect("set_voxel_set", self, "setup_voxel_set")
@@ -704,8 +737,14 @@ func _update_editing_hint() -> void:
 		voxel_object.edit_hint = flag
 
 
-func _on_Editing_toggled(editing : bool):
+func _on_Editing_toggled() -> void:
+	var editing = Editing.toggle_mode
+	
 	_update_editing_hint()
+	
+	if is_instance_valid(voxel_object):
+		_grid.set_voxel_size(voxel_object.voxel_size)
+		set_cursors_voxel_size(voxel_object.voxel_size)
 	
 	_grid.disabled = is_grid_disabled()
 	set_cursors_visibility(editing)
@@ -770,6 +809,15 @@ func _on_Center_Apply_pressed():
 	undo_redo.add_undo_method(voxel_object, "move", -translation)
 	undo_redo.add_do_method(voxel_object, "update_mesh")
 	undo_redo.add_undo_method(voxel_object, "update_mesh")
+	undo_redo.commit_action()
+
+
+func _on_Voxel_Size_Apply_pressed():
+	var old_vox_size = voxel_object.voxel_size
+	var new_vox_size = VoxelSize.value
+	undo_redo.create_action("VoxelObjectEditor : Resized voxels")
+	undo_redo.add_do_method(self, "set_voxel_size", new_vox_size)
+	undo_redo.add_undo_method(self, "set_voxel_size", old_vox_size)
 	undo_redo.commit_action()
 
 
