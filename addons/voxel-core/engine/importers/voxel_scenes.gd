@@ -1,13 +1,6 @@
 tool
-extends EditorImportPlugin
+extends VoxelImporter
 # Import vox files as scenes, maintaining seperate objects and offsets
-
-enum Presets {
-	DEFAULT,
-	CHARACTER,
-	CENTERED,
-	TERRAIN
-}
 
 ## Built-In Virtual Methods
 func get_visible_name() -> String:
@@ -30,24 +23,6 @@ func get_save_extension() -> String:
 	return "tscn"
 
 
-func get_preset_count() -> int:
-	return Presets.size()
-
-
-func get_preset_name(preset : int) -> String:
-	match preset:
-		Presets.DEFAULT:
-			return "Default"
-		Presets.CHARACTER:
-			return "Character"
-		Presets.CENTERED:
-			return "Centered"
-		Presets.TERRAIN:
-			return "Terrain"
-		_:
-			return "Unknown"
-
-
 func get_import_options(preset : int) -> Array:
 	var preset_options = [
 		{
@@ -56,68 +31,12 @@ func get_import_options(preset : int) -> Array:
 			"property_hint": PROPERTY_HINT_PLACEHOLDER_TEXT,
 			"hint_string": "use file name",
 			"usage": PROPERTY_USAGE_EDITOR
-		},
-		{
-			"name": "mesh_mode",
-			"default_value": VoxelMesh.MeshModes.GREEDY,
-			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": PoolStringArray(VoxelMesh.MeshModes.keys()).join(","),
-			"usage": PROPERTY_USAGE_EDITOR,
-		},
-		{
-			"name": "origin_x",
-			"default_value": 0,
-			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": "DONT CHANGE,CENTER,LEFT,RIGHT",
-			"usage": PROPERTY_USAGE_EDITOR,
-		},
-		{
-			"name": "origin_y",
-			"default_value": 0,
-			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": "DONT CHANGE,CENTER,BOTTOM,TOP",
-			"usage": PROPERTY_USAGE_EDITOR,
-		},
-		{
-			"name": "origin_z",
-			"default_value": 0,
-			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": "DONT CHANGE,CENTER,FRONT,BACK",
-			"usage": PROPERTY_USAGE_EDITOR,
-		},
-		{
-			"name": "voxel_size",
-			"default_value": 0.5,
-			"property_hint": PROPERTY_HINT_RANGE,
-			"hint_string": "0.01,1,0.01,or_greater",
-			"usage": PROPERTY_USAGE_EDITOR
 		}
 	]
 	
-	match preset:
-		Presets.DEFAULT:
-			pass
-		Presets.CHARACTER:
-			preset_options[2].default_value = 1
-			preset_options[3].default_value = 2
-			preset_options[4].default_value = 1
-			preset_options[5].default_value = 0.2
-		Presets.CENTERED:
-			preset_options[2].default_value = 1
-			preset_options[3].default_value = 1
-			preset_options[4].default_value = 1
-		Presets.TERRAIN:
-			preset_options[1].default_value = VoxelMesh.MeshModes.NAIVE
-			preset_options[2].default_value = 3
-			preset_options[3].default_value = 2
-			preset_options[4].default_value = 2
-			preset_options[5].default_value = 1
+	preset_options.append_array( get_shared_options(preset))
 	
 	return preset_options
-
-
-func get_option_visibility(option : String, options : Dictionary) -> bool:
-	return true
 
 
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
@@ -161,11 +80,9 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 			)
 		
 		# offset origin
-		var origin_x := _get_frac_for_origin(options.get("origin_x", 0))
-		var origin_y := _get_frac_for_origin(options.get("origin_y", 0))
-		var origin_z := _get_frac_for_origin(options.get("origin_z", 0))
+		var origin := get_origin_offset(options)
 		
-		_shift_origin(root_node, scene_aabb, Vector3(origin_x, origin_y, origin_z), voxel_size)
+		_shift_origin(root_node, scene_aabb, origin, voxel_size)
 		
 		# save scene
 		var scene := PackedScene.new()
@@ -179,7 +96,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	return error
 
 
-# recursivly builds scene from dict tree
+# recursively builds scene from dict tree
 func _build_scene(tree: Dictionary, voxel_set: VoxelSet, root_node: Spatial, parent_node: Spatial, mesh_mode, voxel_size) -> AABB:
 	var node: Spatial
 	var combined_aabb := AABB()
@@ -256,17 +173,6 @@ func _merge_aabb(aabb_a, aabb_b) -> Dictionary:
 	return aabb
 
 
-# gets the fraction needed to offset the origin
-# returns -1, for "no change"
-func _get_frac_for_origin(option_val: int) -> float:
-	match option_val:
-		0: return -1.0
-		1: return 0.5
-		2: return 0.0
-		3: return 1.0
-		_: return -1.0
-
-
 # Shifts a spatials origin, by moving all its children
 # origin in fraction. -1 for no change
 func _shift_origin(node: Spatial, node_aabb: AABB, new_origin: Vector3, voxel_size: float) -> Spatial:
@@ -274,8 +180,6 @@ func _shift_origin(node: Spatial, node_aabb: AABB, new_origin: Vector3, voxel_si
 		return node
 	
 	var offset := Vector3(0,0,0)
-	
-	print("combined aabb: ", node_aabb)
 	
 	# loop each axis
 	for i in 3:

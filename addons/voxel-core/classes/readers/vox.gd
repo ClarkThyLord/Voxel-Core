@@ -49,25 +49,18 @@ static func _skip_unimplemented(file: File, chunk_size: int):
 	var _val = file.get_buffer(chunk_size)
 
 
-static func _pool_array_to_int(array: PoolByteArray) -> int:
-	var val := 0
-	
-	for i in range(0, 4):
-		val = val | (array[i] << (i * 8))
-	
-	return val
-
-
 static func _unpack_transfom(rotation, translation) -> Transform:
-	var rot0 := Vector3(1, 0, 0)
-	var rot1 := Vector3(0, 1, 0)
-	var rot2 := Vector3(0, 0, 1)
+	var rotX := Vector3(1, 0, 0)
+	var rotY := Vector3(0, 1, 0)
+	var rotZ := Vector3(0, 0, 1)
 	
 	var origin := Vector3(0, 0, 0)
 	
 	if rotation != null:
 		# extract bits from pool array
-		var rotation_bits := _pool_array_to_int(rotation)
+		var rotation_bits := int(rotation.get_string_from_ascii())
+		
+		print(rotation_bits)
 		
 		# a untransformed rotation matrix
 		var rot_matrix := [
@@ -80,14 +73,33 @@ static func _unpack_transfom(rotation, translation) -> Transform:
 		var rot0_idx := rotation_bits & 3
 		var rot1_idx := (rotation_bits >> 2) & 3
 		
-		rot0 = rot_matrix[rot0_idx]
-		rot1 = rot_matrix[rot1_idx]
+		print(rot0_idx, rot1_idx)
+		
+		var row0 = rot_matrix[rot0_idx]
+		var row1 = rot_matrix[rot1_idx]
 		
 		# by process of elimination, find rot2
-		rot_matrix.remove(rot0_idx)
-		rot_matrix.remove(rot1_idx)
+		rot_matrix.erase(row0)
+		rot_matrix.erase(row1)
 		
-		rot2 = rot_matrix.front()
+		var row2 = rot_matrix.front()
+		
+		# unpack signs
+		if rotation_bits & (1 << 4):
+			row0 = -row0
+		if rotation_bits & (1 << 5):
+			row1 = -row1
+		if rotation_bits & (1 << 6):
+			row2 = -row2
+		
+		# correct rotation for godot
+		var eulerRot = Basis(row0, row1, row2).get_euler()
+		var correctedBasis = Basis(Vector3(eulerRot.x, -eulerRot.z, -eulerRot.y))
+		
+		rotX = correctedBasis.x
+		rotY = correctedBasis.y
+		rotZ = correctedBasis.z
+	
 	
 	if translation != null:
 		# extract string
@@ -96,7 +108,7 @@ static func _unpack_transfom(rotation, translation) -> Transform:
 		var translation_array := translation_string.split_floats(" ")
 		origin = Vector3(-translation_array[0], translation_array[2], translation_array[1])
 	
-	return Transform(rot0, rot1, rot2, origin)
+	return Transform(rotX, rotY, rotZ, origin)
 
 
 enum _Node_Type {
@@ -205,7 +217,7 @@ static func _read(file: File) -> Dictionary:
 				var _layer_id := file.get_32()
 				var _frames := file.get_32()
 				
-				# get the ndoes transforms
+				# get the nodes transforms
 				var transform_dict := _read_vox_dict(file)
 								
 				var rotation = null
@@ -356,7 +368,7 @@ static func _merge_voxels(tree: Dictionary) -> Dictionary:
 		var transformed_voxels := {}
 		var transform: Transform = tree.transform
 		
-		# magica voxel positions are calculated from the models centre
+		# magica voxel positions are calculated from the models center
 		# offset the transform to account for this
 		if tree.has("model"):
 			transform = transform.translated( -(tree.model.size / 2).floor() )

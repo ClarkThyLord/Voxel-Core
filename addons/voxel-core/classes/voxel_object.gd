@@ -49,7 +49,6 @@ export(Resource) var voxel_set = null setget set_voxel_set
 var edit_hint := 0 setget set_edit_hint
 
 
-
 # Public Methods
 # Sets the EditHint flag, calls update_mesh if needed and not told otherwise
 func set_edit_hint(value : int, update := is_inside_tree()) -> void:
@@ -246,7 +245,7 @@ func flip(x : bool, y : bool, z : bool, volume := get_voxels()) -> void:
 # return      :   Vector3          :   Translation necessary to center
 func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> Vector3:
 	var box := get_box(volume)
-	alignment = Vector3.ONE - Vector3(
+	alignment = Vector3(
 			clamp(alignment.x, 0.0, 1.0),
 			clamp(alignment.y, 0.0, 1.0),
 			clamp(alignment.z, 0.0, 1.0))

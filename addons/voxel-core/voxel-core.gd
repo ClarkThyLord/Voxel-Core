@@ -34,13 +34,13 @@ var voxel_set_editor
 
 var voxel_object_editor
 
-var Meshes := preload("res://addons/voxel-core/engine/importers/meshes.gd").new()
+var Meshes := preload("res://addons/voxel-core/engine/importers/voxel_meshes.gd").new()
 
 var VoxelObjects := preload("res://addons/voxel-core/engine/importers/voxel_objects.gd").new()
 
 var VoxelSets := preload("res://addons/voxel-core/engine/importers/voxel_sets.gd").new()
 
-var VoxelScenes := preload("res://addons/voxel-core/engine/importers/vox_scenes.gd").new()
+var VoxelScenes := preload("res://addons/voxel-core/engine/importers/voxel_scenes.gd").new()
 
 
 
@@ -126,7 +126,6 @@ func show_voxel_set_editor(voxel_set : VoxelSet) -> void:
 
 
 func close_voxel_set_editor() -> void:
-	print("close")
 	if is_instance_valid(voxel_set_editor):
 		remove_control_from_bottom_panel(voxel_set_editor)
 		voxel_set_editor.queue_free()
