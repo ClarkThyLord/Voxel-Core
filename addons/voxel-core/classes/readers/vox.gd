@@ -336,8 +336,6 @@ static func _unpack_transfom(rotation, translation) -> Transform:
 		# extract bits from pool array
 		var rotation_bits := int(rotation.get_string_from_ascii())
 		
-		print(rotation_bits)
-		
 		# a untransformed rotation matrix
 		var rot_matrix := [
 			Vector3(1, 0, 0),
@@ -348,8 +346,6 @@ static func _unpack_transfom(rotation, translation) -> Transform:
 		# unpack the rotation bits
 		var rot0_idx := rotation_bits & 3
 		var rot1_idx := (rotation_bits >> 2) & 3
-		
-		print(rot0_idx, rot1_idx)
 		
 		var row0 = rot_matrix[rot0_idx]
 		var row1 = rot_matrix[rot1_idx]
