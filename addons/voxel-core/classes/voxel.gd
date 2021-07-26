@@ -308,20 +308,21 @@ static func clean(voxel : Dictionary) -> void:
 
 
 # Returns the world position as snapped world position
-static func world_to_snapped(world: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
-	return (world / voxelWorldSize).floor() * voxelWorldSize
+static func world_to_snapped(world : Vector3, voxel_size : float = 0.5) -> Vector3:
+	return (world / voxel_size).floor() * voxel_size
 
 
 # Returns the snapped world position as voxel grid position
-static func snapped_to_grid(snapped: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
-	return snapped / voxelWorldSize
+static func snapped_to_grid(snapped : Vector3, voxel_size : float = 0.5) -> Vector3:
+	return snapped / voxel_size
 
 
 # Returns world position as voxel grid position
-static func world_to_grid(world: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
-	return snapped_to_grid(world_to_snapped(world, voxelWorldSize), voxelWorldSize)
+static func world_to_grid(world : Vector3, voxel_size : float = 0.5) -> Vector3:
+	return snapped_to_grid(
+				world_to_snapped(world, voxel_size), voxel_size)
 
 
 # Returns voxel grid position as snapped world position
-static func grid_to_snapped(grid: Vector3, voxelWorldSize: float = 0.5) -> Vector3:
-	return grid * voxelWorldSize
+static func grid_to_snapped(grid : Vector3, voxel_size : float = 0.5) -> Vector3:
+	return grid * voxel_size
