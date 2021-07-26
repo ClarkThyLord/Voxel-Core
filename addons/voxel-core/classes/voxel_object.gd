@@ -74,9 +74,9 @@ func set_uv_map(value : bool, update := is_inside_tree()) -> void:
 		update_mesh()
 
 
-# Sets the size of each voxel
-func set_voxel_size(size: float, update := is_inside_tree()) -> void:
-	voxel_size = size
+# Sets the size of each voxel, calls update_mesh if needed and not told otherwise
+func set_voxel_size(value : float, update := is_inside_tree()) -> void:
+	voxel_size = value
 	
 	if update:
 		update_mesh()
@@ -165,7 +165,11 @@ func erase_voxels() -> void:
 # volume   :   Array<Vector3>   :   Array of grid positions from which to calculate bounds
 # return   :   Dictionary       :   bounding box, contains: { position : Vector3, size: Vector3, end: Vector3 }
 func get_box(volume := get_voxels()) -> Dictionary:
-	var box := { "position": Vector3.ZERO, "size": Vector3.ZERO, "end": Vector3.ZERO }
+	var box := {
+		"position": Vector3.ZERO,
+		"size": Vector3.ZERO,
+		"end": Vector3.ZERO,
+	}
 	
 	if not volume.empty():
 		box["position"] = Vector3.INF
@@ -207,6 +211,7 @@ func get_box_transformed(volume := get_voxels()) -> Dictionary:
 	
 	return box
 
+
 # Moves voxels in given volume by given translation
 # translation   :   Vector3          :   translation to move voxels by
 # volume        :   Array<Vector3>   :   Array of grid positions representing voxels to move
@@ -231,9 +236,10 @@ func flip(x : bool, y : bool, z : bool, volume := get_voxels()) -> void:
 	var flipped := {}
 	for voxel_grid in volume:
 		flipped[Vector3(
-				(voxel_grid.x + (1 if z else 0)) * (-1 if z else 1),
-				(voxel_grid.y + (1 if y else 0)) * (-1 if y else 1),
-				(voxel_grid.z + (1 if x else 0)) * (-1 if x else 1))] = get_voxel_id(voxel_grid)
+			(voxel_grid.x + (1 if z else 0)) * (-1 if z else 1),
+			(voxel_grid.y + (1 if y else 0)) * (-1 if y else 1),
+			(voxel_grid.z + (1 if x else 0)) * (-1 if x else 1)
+		)] = get_voxel_id(voxel_grid)
 		erase_voxel(voxel_grid)
 	for voxel_grid in flipped:
 		set_voxel(voxel_grid, flipped[voxel_grid])
@@ -246,10 +252,12 @@ func flip(x : bool, y : bool, z : bool, volume := get_voxels()) -> void:
 func vec_to_center(alignment := Vector3(0.5, 0.5, 0.5), volume := get_voxels()) -> Vector3:
 	var box := get_box(volume)
 	alignment = Vector3(
-			clamp(alignment.x, 0.0, 1.0),
-			clamp(alignment.y, 0.0, 1.0),
-			clamp(alignment.z, 0.0, 1.0))
+		clamp(alignment.x, 0.0, 1.0),
+		clamp(alignment.y, 0.0, 1.0),
+		clamp(alignment.z, 0.0, 1.0)
+	)
 	return -box["position"] - (box["size"] * alignment).floor()
+
 
 # A Fast Voxel Traversal Algorithm for Ray Tracing, by John Amanatides
 # Algorithm paper: https://web.archive.org/web/20201108160724/http://www.cse.chalmers.se/edu/year/2010/course/TDA361/grid.pdf
@@ -383,7 +391,7 @@ func load_file(source_file : String, new_voxel_set := true) -> int:
 # volume   :   Array<Vector3>    :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
 # vt       :   VoxelTool         :   VoxelTool with which ArrayMesh will be built
 # return   :   ArrayMesh         :   Naive voxel mesh
-func naive_volume(volume: Array, vt: VoxelTool = null) -> ArrayMesh:
+func naive_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 	if not is_instance_valid(voxel_set):
 		return null
 	
@@ -405,7 +413,7 @@ func naive_volume(volume: Array, vt: VoxelTool = null) -> ArrayMesh:
 # volume   :   Array<Vector3>   :   Array of grid positions representing volume of voxels from which to buid ArrayMesh
 # vt       :   VoxelTool        :   VoxelTool with which ArrayMesh will be built
 # return   :   ArrayMesh        :   Greedy voxel mesh
-func greed_volume(volume: Array, vt: VoxelTool = null) -> ArrayMesh:
+func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 	if not is_instance_valid(voxel_set):
 		return null
 	

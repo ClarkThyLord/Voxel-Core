@@ -8,7 +8,7 @@ extends Reference
 enum NodeTypes {
 	TRANSFORM,
 	GROUP,
-	SHAPE
+	SHAPE,
 }
 
 
@@ -202,7 +202,7 @@ static func read(file : File) -> Dictionary:
 					"name": name,
 					"hidden": hidden,
 					"child_id": child_id,
-					"transform": transform
+					"transform": transform,
 				}
 			
 			# group. can hold shapes, and/or other groups
@@ -413,7 +413,7 @@ static func _make_tree_from_nodes(node_id: int, nodes: Dictionary, models: Array
 		tree_node = {
 			"type": "NONE",
 			"name": transform_node["name"],
-			"transform": transform_node["transform"]
+			"transform": transform_node["transform"],
 		}
 	else:
 		tree_node = {}
