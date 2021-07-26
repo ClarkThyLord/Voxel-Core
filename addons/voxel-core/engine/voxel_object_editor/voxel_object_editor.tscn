@@ -983,10 +983,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 40.0
-margin_top = 40.0
-margin_right = 355.0
-margin_bottom = 547.0
+margin_left = 44.0
+margin_top = 44.0
+margin_right = 359.0
+margin_bottom = 551.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -1013,7 +1013,7 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
+[connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Update" to="." method="_on_Update_pressed"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool" to="." method="_on_Tool_selected"]
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette" to="." method="_on_Palette_selected"]

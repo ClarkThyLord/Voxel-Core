@@ -737,9 +737,7 @@ func _update_editing_hint() -> void:
 		voxel_object.edit_hint = flag
 
 
-func _on_Editing_toggled() -> void:
-	var editing = Editing.toggle_mode
-	
+func _on_Editing_toggled(editing : bool):
 	_update_editing_hint()
 	
 	if is_instance_valid(voxel_object):
