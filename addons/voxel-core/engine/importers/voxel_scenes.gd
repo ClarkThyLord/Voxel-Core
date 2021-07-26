@@ -121,7 +121,10 @@ func _build_scene(tree : Dictionary, voxel_set : VoxelSet, root_node : Spatial, 
 			voxel_mesh.set_voxel(voxel_pos, tree.model.voxels[voxel_pos])
 		
 		# center voxels
-		voxel_mesh.move(-(tree.model.size / 2).floor())
+		var center = tree.model.size / 2
+		center = Vector3(ceil(center.x), floor(center.y), floor(center.z))
+		
+		voxel_mesh.move(-center)
 		voxel_mesh.update_mesh()
 		
 		node.mesh = voxel_mesh.mesh

@@ -457,10 +457,17 @@ static func _merge_voxels(tree: Dictionary) -> Dictionary:
 		# magica voxel positions are calculated from the models center
 		# offset the transform to account for this
 		if tree.has("model"):
-			transform = transform.translated(-(tree.model.size / 2).floor())
+			var center : Vector3 = tree.model.size / 2
+			center = Vector3(ceil(center.x), floor(center.y), floor(center.z))
+			
+			transform = transform.translated(-center)
 		
 		for key in voxels.keys():
-			var t_key = transform.xform(key)
+			# offset by 0.5 during transform, to get correct rotations
+			var t_key = key + Vector3(0.5, 0.5, 0.5)
+			t_key = transform.xform(t_key)
+			t_key -= Vector3(0.5, 0.5, 0.5)
+			
 			transformed_voxels[t_key] = voxels[key]
 		
 		voxels = transformed_voxels
