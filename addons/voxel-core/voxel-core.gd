@@ -9,7 +9,6 @@ enum VoxelCore {
 	VOXEL_SET,
 	VOXEL_OBJECT,
 	VOXEL_MESH,
-	VOXEL_SCENE
 }
 
 
