@@ -493,18 +493,18 @@ margin_bottom = 126.0
 hint_tooltip = "Removes all voxels"
 text = "Clear Voxels"
 
-[node name="Move2" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
+[node name="VoxelSize" type="HBoxContainer" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
 margin_top = 130.0
 margin_right = 335.0
 margin_bottom = 154.0
 
-[node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move2"]
+[node name="Label" type="Label" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize"]
 margin_top = 5.0
 margin_right = 69.0
 margin_bottom = 19.0
 text = "Voxel Size:"
 
-[node name="Size" type="SpinBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move2"]
+[node name="Size" type="SpinBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize"]
 margin_left = 73.0
 margin_right = 147.0
 margin_bottom = 24.0
@@ -515,7 +515,7 @@ step = 0.01
 value = 0.5
 allow_greater = true
 
-[node name="Apply" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move2"]
+[node name="Apply" type="Button" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize"]
 margin_left = 151.0
 margin_right = 335.0
 margin_bottom = 24.0
@@ -800,7 +800,6 @@ margin_right = 325.0
 margin_bottom = 24.0
 hint_tooltip = "Might significantly improve performance when editing Voxel Object
 !!! Warning Experimental !!!"
-pressed = true
 text = "Voxel Raycasting"
 
 [node name="CursorVisible" type="CheckBox" parent="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer"]
@@ -984,10 +983,10 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 36.0
-margin_top = 36.0
-margin_right = 351.0
-margin_bottom = 543.0
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 355.0
+margin_bottom = 547.0
 size_flags_vertical = 3
 edit_alpha = false
 
@@ -1031,7 +1030,7 @@ text = "Cancel"
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/Y" to="." method="_on_Flip_Y_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Flip/Z" to="." method="_on_Flip_Z_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Clear" to="." method="_on_Clear_pressed"]
-[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move2/Apply" to="." method="_on_Voxel_Size_Apply_pressed"]
+[connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize/Apply" to="." method="_on_Voxel_Size_Apply_pressed"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export/ExportFile" method="popup_centered"]
 [connection signal="file_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Export/ExportFile" to="." method="_on_ExportFile_file_selected"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import" to="VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile" method="popup_centered"]

@@ -3,6 +3,7 @@ extends VoxelImporter
 # Import files as static Mesh Resource, not to be confused with VoxelObjects
 
 
+
 ## Built-In Virtual Methods
 func get_visible_name() -> String:
 	return "MeshOfVoxels"
@@ -46,7 +47,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		var voxel_size = options.get("voxel_size", 0.5)
 		voxel_mesh.set_voxel_size(voxel_size)
 		
-		# origin shift		
+		# origin shift
 		var origin = get_origin_offset(options)
 		
 		# mult the offset with 0 for axis to be kept

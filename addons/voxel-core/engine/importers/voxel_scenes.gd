@@ -2,6 +2,8 @@ tool
 extends VoxelImporter
 # Import vox files as scenes, maintaining seperate objects and offsets
 
+
+
 ## Built-In Virtual Methods
 func get_visible_name() -> String:
 	return "MagicaVoxelScene"
@@ -30,7 +32,7 @@ func get_import_options(preset : int) -> Array:
 			"default_value": "",
 			"property_hint": PROPERTY_HINT_PLACEHOLDER_TEXT,
 			"hint_string": "use file name",
-			"usage": PROPERTY_USAGE_EDITOR
+			"usage": PROPERTY_USAGE_EDITOR,
 		}
 	]
 	
@@ -96,8 +98,10 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 	return error
 
 
+
+## Private Methods
 # recursively builds scene from dict tree
-func _build_scene(tree: Dictionary, voxel_set: VoxelSet, root_node: Spatial, parent_node: Spatial, mesh_mode, voxel_size) -> AABB:
+func _build_scene(tree : Dictionary, voxel_set : VoxelSet, root_node : Spatial, parent_node : Spatial, mesh_mode, voxel_size) -> AABB:
 	var node: Spatial
 	var combined_aabb := AABB()
 	
@@ -175,7 +179,7 @@ func _merge_aabb(aabb_a, aabb_b) -> Dictionary:
 
 # Shifts a spatials origin, by moving all its children
 # origin in fraction. -1 for no change
-func _shift_origin(node: Spatial, node_aabb: AABB, new_origin: Vector3, voxel_size: float) -> Spatial:
+func _shift_origin(node : Spatial, node_aabb : AABB, new_origin : Vector3, voxel_size : float) -> Spatial:
 	if new_origin == Vector3(-1.0, -1.0, -1.0):
 		return node
 	

@@ -34,8 +34,12 @@ func _ready() -> void:
 
 
 ## Public Methods
-func set_voxel_size(size: float) -> void:
-	_voxel_tool.set_voxel_size(size)
+func set_voxel_size(value : float, update := true) -> void:
+	if is_instance_valid(_voxel_tool):
+		_voxel_tool.set_voxel_size(value)
+	
+	if update:
+		self.update()
 
 
 func set_color(value : Color) -> void:

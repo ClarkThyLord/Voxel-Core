@@ -3,34 +3,37 @@ extends EditorImportPlugin
 class_name VoxelImporter
 # Base Class for 3d voxel importers
 
+
+
 ## Enums
 enum Presets {
 	DEFAULT,
 	CHARACTER,
 	CENTERED,
-	TERRAIN
+	TERRAIN,
 }
 
 enum OriginX {
 	DONT_CHANGE = -10,
 	CENTER = 05,
 	RIGHT = 10,
-	LEFT = 00
+	LEFT = 00,
 }
 
 enum OriginY {
 	DONT_CHANGE = -10,
 	CENTER = 05,
 	TOP = 10,
-	BOTTOM = 00
+	BOTTOM = 00,
 }
 
 enum OriginZ {
 	DONT_CHANGE = -10,
 	CENTER = 05,
 	BACK = 10,
-	FRONT = 00
+	FRONT = 00,
 }
+
 
 
 ## Built-In Virtual Methods
@@ -96,21 +99,24 @@ func get_shared_options(preset : int) -> Array:
 			"property_hint": PROPERTY_HINT_RANGE,
 			"hint_string": "0.01, 1, 0.01, or_greater",
 			"usage": PROPERTY_USAGE_EDITOR
-		}
+		},
 	]
 	
 	match preset:
 		Presets.DEFAULT:
 			pass
+		
 		Presets.CHARACTER:
 			preset_options[1].default_value = 1
 			preset_options[2].default_value = 3
 			preset_options[3].default_value = 1
 			preset_options[4].default_value = 0.2
+		
 		Presets.CENTERED:
 			preset_options[1].default_value = 1
 			preset_options[2].default_value = 1
 			preset_options[3].default_value = 1
+		
 		Presets.TERRAIN:
 			preset_options[0].default_value = VoxelMesh.MeshModes.NAIVE
 			preset_options[1].default_value = 2

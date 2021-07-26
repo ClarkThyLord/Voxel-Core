@@ -112,6 +112,8 @@ onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/O
 
 onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ")
 
+onready var VoxelSize := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize/Size")
+
 onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser")
 
 onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser/ColorPicked")
@@ -163,8 +165,6 @@ onready var ColorMenu := get_node("ColorMenu")
 onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
 
 onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
-
-onready var VoxelSize := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move2/Size")
 
 
 
