@@ -4,7 +4,7 @@ extends Reference
 
 
 
-# Public Methods
+## Public Methods
 # Reads GPL file, and returns voxel palette
 static func read(gpl_file : File) -> Dictionary:
 	var result := {

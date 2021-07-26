@@ -447,7 +447,7 @@ func get_rpalette(palette : int = get_palette()) -> Dictionary:
 	return voxel_object.voxel_set.get_voxel(palette)
 
 
-func set_voxel_size(size: float) -> void:
+func set_voxel_size(size : float) -> void:
 	if is_instance_valid(voxel_object):
 		voxel_object.set_voxel_size(size)
 	
@@ -533,7 +533,8 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 	var direction := camera.project_ray_normal(screen_position)
 	
 	if VoxelRaycasting.pressed:
-		hit = voxel_object.intersect_ray(from, direction, 64, funcref(self, "_raycast_stop"))
+		hit = voxel_object.intersect_ray(
+				from, direction, 64, funcref(self, "_raycast_stop"))
 	else:
 		var exclude := []
 		var to := from + direction * 1000
@@ -546,9 +547,9 @@ func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> D
 						
 					hit["position"] = Voxel.world_to_grid(
 						voxel_object.to_local(
-							hit.position + -hit.normal * (voxel_object.voxel_size / 2)),
-						voxel_object.voxel_size
-					)
+								hit.position + -hit.normal \
+								* (voxel_object.voxel_size / 2)),
+								voxel_object.voxel_size)
 					
 					hit["normal"] = hit["normal"].round()
 					break
@@ -631,7 +632,7 @@ func detach_editor_components() -> void:
 
 
 # Disconnect previous edited VoxelObject and starts editing the new one
-func start_editing(new_voxel_object : VoxelObject) -> void:	
+func start_editing(new_voxel_object : VoxelObject) -> void:
 	if new_voxel_object == voxel_object:
 		return
 	

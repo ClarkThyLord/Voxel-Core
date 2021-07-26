@@ -4,7 +4,7 @@ extends Reference
 
 
 
-# Enums
+## Enums
 enum NodeTypes {
 	TRANSFORM,
 	GROUP,
@@ -13,7 +13,7 @@ enum NodeTypes {
 
 
 
-# Constants
+## Constants
 const MagicaVoxelPalette := [
 	Color("00000000"), Color("ffffffff"), Color("ffccffff"), Color("ff99ffff"),
 	Color("ff66ffff"), Color("ff33ffff"), Color("ff00ffff"), Color("ffffccff"),
@@ -83,7 +83,7 @@ const MagicaVoxelPalette := [
 
 
 
-# Public Methods
+## Public Methods
 # Reads a vox file into a dict:
 # "error": OK if no Errors occured
 # "tree": Dict tree structure containing the vox files scenes contents
@@ -299,7 +299,7 @@ static func read_file(vox_path : String, merge_voxels := true) -> Dictionary:
 
 
 
-# Private Methods
+## Private Methods
 # Reads a key-value dictionary from a vox file
 static func _read_vox_dict(file: File) -> Dictionary:
 	# Dictionary containing data read from vox file
