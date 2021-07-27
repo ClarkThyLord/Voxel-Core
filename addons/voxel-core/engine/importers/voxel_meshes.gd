@@ -1,11 +1,6 @@
 tool
-extends EditorImportPlugin
+extends VoxelImporter
 # Import files as static Mesh Resource, not to be confused with VoxelObjects
-
-
-
-## Enums
-enum Presets { DEFAULT }
 
 
 
@@ -36,47 +31,6 @@ func get_save_extension() -> String:
 	return "mesh"
 
 
-func get_preset_count() -> int:
-	return Presets.size()
-
-
-func get_preset_name(preset : int) -> String:
-	match preset:
-		Presets.DEFAULT:
-			return "Default"
-		_:
-			return "Unknown"
-
-
-func get_import_options(preset : int) -> Array:
-	var preset_options = [
-		{
-			"name": "mesh_mode",
-			"default_value": VoxelMesh.MeshModes.GREEDY,
-			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": PoolStringArray(VoxelMesh.MeshModes.keys()).join(","),
-			"usage": PROPERTY_USAGE_EDITOR,
-		},
-		{
-			"name": "center",
-			"default_value": 0,
-			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": "NONE,CENTER,CENTER_ABOVE_AXIS",
-			"usage": PROPERTY_USAGE_EDITOR,
-		},
-	]
-	
-	match preset:
-		Presets.DEFAULT:
-			pass
-	
-	return preset_options
-
-
-func get_option_visibility(option : String, options : Dictionary) -> bool:
-	return true
-
-
 func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
 	var read := Reader.read_file(source_file)
 	var error = read.get("error", FAILED)
@@ -89,14 +43,24 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		for voxel_position in read["voxels"]:
 			voxel_mesh.set_voxel(voxel_position, read["voxels"][voxel_position])
 		
-		var center = options.get("center", 0)
-		if center > 0:
-			match center:
-				1:
-					center = Vector3(0.5, 0.5, 0.5)
-				2:
-					center = Vector3(0.5, 1.0, 0.5)
-			voxel_mesh.center(center)
+		# voxel size
+		var voxel_size = options.get("voxel_size", 0.5)
+		voxel_mesh.set_voxel_size(voxel_size)
+		
+		# origin shift
+		var origin = get_origin_offset(options)
+		
+		# mult the offset with 0 for axis to be kept
+		var offset_mult = Vector3(
+			clamp(origin.x + 1, 0, 1),
+			clamp(origin.y + 1, 0, 1),
+			clamp(origin.z + 1, 0, 1)
+		)
+		
+		var offset = voxel_mesh.vec_to_center(origin)
+		offset = offset * offset_mult
+		
+		voxel_mesh.move(offset)
 		
 		voxel_mesh.update_mesh()
 		

@@ -23,6 +23,7 @@ export var grid_size := Vector3(16, 16, 16) setget set_grid_size
 ## Private Variables
 var _surface_tool := SurfaceTool.new()
 
+var _voxel_size := 0.5
 
 
 ## Built-In Virtual Methods
@@ -41,6 +42,12 @@ func set_disabled(value : bool) -> void:
 	visible = not disabled
 	find_node("CollisionShape", true, false).disabled = disabled
 
+
+func set_voxel_size(value : float, update := true) -> void:
+	_voxel_size = value
+	
+	if update:
+		self.update()
 
 func set_modulate(value : Color) -> void:
 	color = value
@@ -78,9 +85,10 @@ func update() -> void:
 		GridModes.SOLID:
 			mesh = PlaneMesh.new()
 			scale = Vector3(
-					grid_size.x * Voxel.VoxelWorldSize,
+					grid_size.x * _voxel_size,
 					1,
-					grid_size.z * Voxel.VoxelWorldSize)
+					grid_size.z * _voxel_size)
+		
 		GridModes.WIRED:
 			scale = Vector3.ONE
 			_surface_tool.begin(Mesh.PRIMITIVE_LINES)
@@ -89,9 +97,13 @@ func update() -> void:
 			while x <= grid_size.x:
 				_surface_tool.add_normal(Vector3.UP)
 				_surface_tool.add_vertex(
-						Voxel.grid_to_snapped(Vector3(x, 0, -abs(grid_size.z))))
+					Voxel.grid_to_snapped(
+						Vector3(x, 0, -abs(grid_size.z)), _voxel_size)
+				)
 				_surface_tool.add_vertex(
-						Voxel.grid_to_snapped(Vector3(x, 0, abs(grid_size.z))))
+					Voxel.grid_to_snapped(
+						Vector3(x, 0, abs(grid_size.z)), _voxel_size)
+				)
 				
 				x += 1
 			
@@ -99,9 +111,13 @@ func update() -> void:
 			while z <= grid_size.z:
 				_surface_tool.add_normal(Vector3.UP)
 				_surface_tool.add_vertex(
-						Voxel.grid_to_snapped(Vector3(-abs(grid_size.x), 0, z)))
+					Voxel.grid_to_snapped(
+						Vector3(-abs(grid_size.x), 0, z), _voxel_size)
+				)
 				_surface_tool.add_vertex(
-						Voxel.grid_to_snapped(Vector3(abs(grid_size.x), 0, z)))
+					Voxel.grid_to_snapped(
+						Vector3(abs(grid_size.x), 0, z), _voxel_size)
+				)
 				
 				z += 1
 			

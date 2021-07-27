@@ -4,7 +4,7 @@ extends Reference
 
 
 
-# Public Methods
+## Public Methods
 # Reads var file, returns it's Variant content
 static func read(var_file : File) -> Dictionary:
 	var result := {
