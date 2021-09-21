@@ -8,6 +8,8 @@ enum Biomes { PLAIN, DRY, TUNDRA }
 
 
 ## Constants
+const voxel_size := 0.5
+
 const voxel_set := preload("res://examples/ProceduralWorld/TiledVoxelSet.tres")
 
 
@@ -216,7 +218,7 @@ func _generate_chunk(chunk : Vector3) -> void:
 	
 	chunk_node.translation = chunk * chunk_size
 	chunk_node.translation -= Vector3(1, 0, 1) * (chunk_size / 2)
-	chunk_node.translation *= Voxel.VoxelWorldSize
+	chunk_node.translation *= voxel_size
 	_chunks[chunk] = chunk_node
 
 

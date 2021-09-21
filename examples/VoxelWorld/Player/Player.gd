@@ -2,6 +2,11 @@ extends KinematicBody
 
 
 
+## Constants
+const voxel_size := 0.5
+
+
+
 ## Exported Variables
 export(float, 0.0, 100.0) var speed := 12.0
 
@@ -145,12 +150,12 @@ func set_world_path(path : NodePath) -> void:
 func _update_cursor_position() -> void:
 	var pos := raycast.get_collision_point()
 	_cursor_normal = raycast.get_collision_normal().round()
-	_cursor_position = pos - _cursor_normal * (Voxel.VoxelWorldSize / 2)
+	_cursor_position = pos - _cursor_normal * (voxel_size / 2)
 	
 	cursor.visible = raycast.is_colliding()
 	if cursor.visible:
 		var tran = Voxel.world_to_snapped(_cursor_position)
-		tran += Vector3.ONE * (Voxel.VoxelWorldSize / 2)
+		tran += Vector3.ONE * (voxel_size / 2)
 		tran = to_local(tran)
 		cursor.translation = tran
 
