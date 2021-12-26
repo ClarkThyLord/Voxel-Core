@@ -27,6 +27,8 @@ var _current_main_scene : String
 
 var _handling_voxel_set : VoxelSet
 
+var _editing_voxel_object : bool = false
+
 var _handling_voxel_object : VoxelObject
 
 var voxel_set_editor
@@ -69,15 +71,14 @@ func _exit_tree():
 
 
 func handles(object : Object) -> bool:
-	
 	if _current_main_scene != "3D":
 		close_voxel_object_editor()
 	if is_instance_valid(_handling_voxel_object):
 		var selections := get_editor_interface().get_selection().get_selected_nodes()
-		if selections.size() != 1 or not selections.has(_handling_voxel_object):
+		if not _editing_voxel_object\
+				and (selections.size() != 1 or not selections.has(_handling_voxel_object)):
 			_handling_voxel_object = null
 			close_voxel_object_editor()
-	
 	return true if typeof_voxel_core(object) > VoxelCore.OTHER else false
 
 
@@ -165,6 +166,7 @@ func _on_scene_closed(filepath : String) -> void:
 
 
 func _on_voxel_object_editor_editing_toggled(toggled : bool) -> void:
+	_editing_voxel_object = toggled
 	if is_instance_valid(voxel_object_editor) and voxel_object_editor.voxel_object == _handling_voxel_object:
 		if toggled:
 			get_editor_interface().get_selection().clear()
