@@ -464,6 +464,9 @@ func show_color_menu(color : Color) -> void:
 	if is_instance_valid(ColorMenu):
 		VoxelColor.color = color
 		ColorMenu.popup_centered()
+		ColorMenu.set_as_minsize()
+		ColorMenu.rect_size += Vector2(32, 32)
+		ColorMenu.rect_min_size = ColorMenu.rect_size
 
 
 # Closes the color menu
@@ -479,6 +482,9 @@ func show_texture_menu(uv : Vector2) -> void:
 		VoxelTexture.unselect_all()
 		VoxelTexture.select(uv)
 		TextureMenu.popup_centered()
+		TextureMenu.set_as_minsize()
+		TextureMenu.rect_size += Vector2(32, 32)
+		TextureMenu.rect_min_size = TextureMenu.rect_size
 
 
 # Closes the texture menu
@@ -499,6 +505,9 @@ func show_material_menu(voxel := get_viewing_voxel()) -> void:
 		Energy.value = Voxel.get_energy(voxel)
 		EnergyColor.color = Voxel.get_energy_color(voxel)
 		MaterialMenu.popup_centered()
+		MaterialMenu.set_as_minsize()
+		MaterialMenu.rect_size += Vector2(32, 32)
+		MaterialMenu.rect_min_size = MaterialMenu.rect_size
 
 
 # Closes the material menu
@@ -510,6 +519,9 @@ func hide_material_menu() -> void:
 
 func show_environment_change_menu() -> void:
 	EnvironmentMenu.popup_centered()
+	EnvironmentMenu.set_as_minsize()
+	EnvironmentMenu.rect_size += Vector2(32, 32)
+	EnvironmentMenu.rect_min_size = EnvironmentMenu.rect_size
 
 func hide_environment_change_menu() -> void:
 	EnvironmentMenu.hide()

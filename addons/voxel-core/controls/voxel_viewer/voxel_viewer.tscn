@@ -170,30 +170,25 @@ __meta__ = {
 }
 
 [node name="ColorMenu" type="PopupDialog" parent="."]
-margin_right = 324.0
-margin_bottom = 502.0
-rect_min_size = Vector2( 340, 525 )
+margin_right = 359.0
+margin_bottom = 495.0
 popup_exclusive = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.00003
-margin_bottom = -8.00003
+anchor_left = 0.0334262
+anchor_top = 0.0224299
+anchor_right = 0.969359
+anchor_bottom = 0.900935
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 60.0
-margin_top = 60.0
-margin_right = 384.0
-margin_bottom = 545.0
+margin_right = 336.0
+margin_bottom = 438.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 edit_alpha = false
@@ -201,20 +196,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="HSeparator" type="HSeparator" parent="ColorMenu/VBoxContainer"]
+margin_top = 442.0
+margin_right = 336.0
+margin_bottom = 446.0
+
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 489.0
-margin_right = 324.0
-margin_bottom = 509.0
+margin_top = 450.0
+margin_right = 336.0
+margin_bottom = 470.0
+size_flags_vertical = 3
 
 [node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_right = 160.0
+margin_right = 166.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 
 [node name="Confirm" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 164.0
-margin_right = 324.0
+margin_left = 170.0
+margin_right = 336.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"
@@ -226,14 +227,12 @@ rect_min_size = Vector2( 324, 260 )
 popup_exclusive = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.00003
-margin_bottom = -8.00003
+anchor_left = 0.0246914
+anchor_top = 0.0307692
+anchor_right = 0.975309
+anchor_bottom = 0.969231
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TextureMenu/VBoxContainer"]
@@ -281,14 +280,12 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.00003
-margin_bottom = -8.00003
+anchor_left = 0.032
+anchor_top = 0.0246154
+anchor_right = 0.968
+anchor_bottom = 0.975385
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MaterialMenu/VBoxContainer"]
@@ -443,6 +440,7 @@ rect_min_size = Vector2( 200, 350 )
 window_title = "Open a File"
 mode = 0
 filters = PoolStringArray( "*.tres; Environment files" )
+
 [connection signal="gui_input" from="View2D/Left" to="." method="_on_Face_gui_input" binds= [ Vector3( -1, 0, 0 ) ]]
 [connection signal="mouse_exited" from="View2D/Left" to="." method="_set_last_hovered_face" binds= [ Vector3( 0, 0, 0 ) ]]
 [connection signal="gui_input" from="View2D/Front" to="." method="_on_Face_gui_input" binds= [ Vector3( 0, 0, -1 ) ]]
