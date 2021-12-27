@@ -964,51 +964,48 @@ rounded = true
 allow_greater = true
 
 [node name="ColorMenu" type="WindowDialog" parent="."]
-margin_right = 325.0
-margin_bottom = 545.0
+margin_right = 359.0
+margin_bottom = 535.0
 window_title = "Color Picker"
+resizable = true
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = 5.0
-margin_right = -5.0
-margin_bottom = -5.0
+anchor_left = 0.0334262
+anchor_top = 0.0224299
+anchor_right = 0.972145
+anchor_bottom = 0.981308
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
 [node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_left = 44.0
-margin_top = 44.0
-margin_right = 359.0
-margin_bottom = 551.0
+margin_right = 337.0
+margin_bottom = 481.0
 size_flags_vertical = 3
 edit_alpha = false
 
-[node name="VSplitContainer" type="VSplitContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 511.0
-margin_right = 315.0
-margin_bottom = 511.0
+[node name="HSeparator" type="HSeparator" parent="ColorMenu/VBoxContainer"]
+margin_top = 485.0
+margin_right = 337.0
+margin_bottom = 489.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 515.0
-margin_right = 315.0
-margin_bottom = 535.0
+margin_top = 493.0
+margin_right = 337.0
+margin_bottom = 513.0
 
 [node name="Add" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_right = 155.0
+margin_right = 166.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Add To VoxelSet"
 
 [node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 159.0
-margin_right = 315.0
+margin_left = 170.0
+margin_right = 337.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"

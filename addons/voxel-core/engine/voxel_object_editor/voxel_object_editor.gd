@@ -701,6 +701,9 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 func show_color_menu(color := ColorPicked.color) -> void:
 	ColorMenuColor.color = color
 	ColorMenu.popup_centered()
+	ColorMenu.set_as_minsize()
+	ColorMenu.rect_size += Vector2(32, 32)
+	ColorMenu.rect_min_size = ColorMenu.rect_size
 
 
 # Hide color menu
