@@ -4,6 +4,11 @@ extends WindowDialog
 
 
 
+## Exported Variables
+export var keep_centered := true
+
+
+
 ## Built-In Virtual Methods
 func _ready() -> void:
 	set_as_minsize()
@@ -30,5 +35,5 @@ func popup_centered(size : Vector2 = Vector2( 0, 0 )) -> void:
 
 ## Private Methods
 func _on_SceneTree_screen_resized() -> void:
-	if visible:
+	if keep_centered and visible:
 		show_centered()
