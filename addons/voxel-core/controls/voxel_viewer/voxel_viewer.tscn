@@ -170,7 +170,6 @@ __meta__ = {
 }
 
 [node name="ColorMenu" type="WindowDialog" parent="."]
-visible = true
 margin_right = 359.0
 margin_bottom = 495.0
 popup_exclusive = true
@@ -190,8 +189,10 @@ __meta__ = {
 }
 
 [node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 336.0
-margin_bottom = 438.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 339.0
+margin_bottom = 442.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 edit_alpha = false
@@ -201,24 +202,24 @@ __meta__ = {
 
 [node name="HSeparator" type="HSeparator" parent="ColorMenu/VBoxContainer"]
 margin_top = 442.0
-margin_right = 336.0
+margin_right = 335.0
 margin_bottom = 446.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
 margin_top = 450.0
-margin_right = 336.0
+margin_right = 335.0
 margin_bottom = 470.0
 size_flags_vertical = 3
 
 [node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_right = 166.0
+margin_right = 165.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
 
 [node name="Confirm" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 170.0
-margin_right = 336.0
+margin_left = 169.0
+margin_right = 335.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Confirm"

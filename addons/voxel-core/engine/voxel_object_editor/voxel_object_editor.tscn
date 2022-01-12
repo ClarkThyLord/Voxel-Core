@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" type="Script" id=1]
 [ext_resource path="res://addons/voxel-core/assets/controls/grid.png" type="Texture" id=2]
@@ -24,6 +24,7 @@
 [ext_resource path="res://addons/voxel-core/assets/controls/individual.png" type="Texture" id=22]
 [ext_resource path="res://addons/voxel-core/assets/controls/area.png" type="Texture" id=23]
 [ext_resource path="res://addons/voxel-core/assets/controls/extrude.png" type="Texture" id=24]
+[ext_resource path="res://addons/voxel-core/controls/menus/color_picker_menu/color_picker_menu.tscn" type="PackedScene" id=25]
 [ext_resource path="res://addons/voxel-core/assets/controls/docs.png" type="Texture" id=31]
 [ext_resource path="res://addons/voxel-core/assets/logos/GitHub.png" type="Texture" id=32]
 [ext_resource path="res://addons/voxel-core/assets/controls/issues.png" type="Texture" id=33]
@@ -963,52 +964,10 @@ value = 16.0
 rounded = true
 allow_greater = true
 
-[node name="ColorMenu" type="WindowDialog" parent="."]
-margin_right = 359.0
-margin_bottom = 535.0
-window_title = "Color Picker"
+[node name="ColorPickerMenu" parent="." instance=ExtResource( 25 )]
+window_title = "Add Color Voxel To VoxelSet"
 resizable = true
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
-anchor_left = 0.0334262
-anchor_top = 0.0224299
-anchor_right = 0.972145
-anchor_bottom = 0.981308
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="Color" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 337.0
-margin_bottom = 481.0
-size_flags_vertical = 3
 edit_alpha = false
-
-[node name="HSeparator" type="HSeparator" parent="ColorMenu/VBoxContainer"]
-margin_top = 485.0
-margin_right = 337.0
-margin_bottom = 489.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 493.0
-margin_right = 337.0
-margin_bottom = 513.0
-
-[node name="Add" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_right = 166.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Add To VoxelSet"
-
-[node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 170.0
-margin_right = 337.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Cancel"
 
 [connection signal="toggled" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing" to="." method="_on_Editing_toggled"]
 [connection signal="pressed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Update" to="." method="_on_Update_pressed"]
@@ -1050,5 +1009,4 @@ text = "Cancel"
 [connection signal="item_selected" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode" to="." method="set_grid_mode"]
 [connection signal="value_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/X" to="." method="_on_Grid_Size_X_value_changed"]
 [connection signal="value_changed" from="VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/Z" to="." method="_on_Grid_Size_Z_value_changed"]
-[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Add" to="." method="_on_ColorMenu_Add_pressed"]
-[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="ColorMenu" method="hide"]
+[connection signal="color_picked" from="ColorPickerMenu" to="." method="_on_ColorPickerMenu_color_picked"]
