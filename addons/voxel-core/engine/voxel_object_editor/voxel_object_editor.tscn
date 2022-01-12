@@ -965,7 +965,10 @@ rounded = true
 allow_greater = true
 
 [node name="ColorPickerMenu" parent="." instance=ExtResource( 25 )]
-window_title = "Add Color Voxel To VoxelSet"
+visible = true
+margin_right = 326.0
+margin_bottom = 489.0
+window_title = "Add Colored Voxel To VoxelSet"
 resizable = true
 edit_alpha = false
 

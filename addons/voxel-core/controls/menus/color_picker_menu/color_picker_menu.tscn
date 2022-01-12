@@ -3,7 +3,6 @@
 [ext_resource path="res://addons/voxel-core/controls/menus/color_picker_menu/color_picker_menu.gd" type="Script" id=1]
 
 [node name="ColorPickerMenu" type="WindowDialog"]
-visible = true
 margin_right = 329.0
 margin_bottom = 514.0
 script = ExtResource( 1 )

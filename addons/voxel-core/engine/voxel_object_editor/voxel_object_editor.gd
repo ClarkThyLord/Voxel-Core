@@ -160,7 +160,7 @@ onready var GridSizeX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer
 
 onready var GridSizeZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/Z")
 
-onready var ColorMenu := get_node("ColorPickerMenu")
+onready var ColorPickerMenu := get_node("ColorPickerMenu")
 
 
 
@@ -695,13 +695,13 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 
 # Shows color menu centered
 func show_color_menu(color := ColorPicked.color) -> void:
-	ColorMenu.color = color
-	ColorMenu.show_centered()
+	ColorPickerMenu.color = color
+	ColorPickerMenu.popup_centered()
 
 
 # Hide color menu
 func hide_color_menu() -> void:
-	ColorMenu.hide()
+	ColorPickerMenu.hide()
 
 
 # Shows import menu centered
