@@ -42,6 +42,8 @@ func _ready() -> void:
 	set_deferred_mode(deferred_mode)
 	set_presets_enabled(presets_enabled)
 	set_presets_visible(presets_visible)
+	
+	update_rect_min()
 
 
 

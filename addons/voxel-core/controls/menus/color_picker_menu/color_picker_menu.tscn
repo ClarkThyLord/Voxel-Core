@@ -11,10 +11,10 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-anchor_left = 0.0334262
-anchor_top = 0.0224299
-anchor_right = 0.969359
-anchor_bottom = 0.900935
+anchor_left = 0.0334347
+anchor_top = 0.0233463
+anchor_right = 0.969605
+anchor_bottom = 0.984435
 __meta__ = {
 "_edit_use_anchors_": true
 }
