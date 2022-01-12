@@ -92,8 +92,8 @@ func set_presets_visible(value : bool) -> void:
 
 
 ## Private Methods
-func _on_ColorPicker_color_changed() -> void:
-	emit_signal("color_changed", color_picker.color)
+func _on_ColorPicker_color_changed(color : Color) -> void:
+	emit_signal("color_changed", color)
 
 
 func _on_Confirm_pressed() -> void:
