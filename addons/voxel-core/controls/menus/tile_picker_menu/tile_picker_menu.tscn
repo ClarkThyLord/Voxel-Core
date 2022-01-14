@@ -55,6 +55,3 @@ margin_right = 308.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
-
-[connection signal="selected_tile" from="VBoxContainer/ScrollContainer/TilesViewer" to="." method="_on_TilesViewer_selected_tile"]
-[connection signal="unselected_tile" from="VBoxContainer/ScrollContainer/TilesViewer" to="." method="_on_TilesViewer_unselected_tile"]

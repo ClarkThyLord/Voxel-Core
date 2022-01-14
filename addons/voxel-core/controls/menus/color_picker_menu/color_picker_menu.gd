@@ -31,6 +31,10 @@ export var presets_visible : bool = true setget set_presets_visible
 ## OnReady Variables
 onready var color_picker : ColorPicker = get_node("VBoxContainer/ColorPicker")
 
+onready var confirm : Button = get_node("VBoxContainer/HBoxContainer/Confirm")
+
+onready var cancel : Button = get_node("VBoxContainer/HBoxContainer/Cancel")
+
 
 
 ## Built-In Vritual Methods
@@ -44,6 +48,12 @@ func _ready() -> void:
 	set_presets_visible(presets_visible)
 	
 	update_rect_min()
+	
+	color_picker.connect("color_changed", self, "_on_ColorPicker_color_changed")
+	
+	confirm.connect("pressed", self, "_on_Confirm_pressed")
+	
+	cancel.connect("pressed", self, "_on_Cancel_pressed")
 
 
 
@@ -98,6 +108,7 @@ func _on_ColorPicker_color_changed(color : Color) -> void:
 
 func _on_Confirm_pressed() -> void:
 	emit_signal("color_picked", color_picker.color)
+	hide()
 
 
 func _on_Cancel_pressed():

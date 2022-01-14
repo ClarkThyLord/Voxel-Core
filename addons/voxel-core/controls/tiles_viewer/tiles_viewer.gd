@@ -41,6 +41,10 @@ var _selections := []
 
 
 ## Built-In Virtual Methods
+func _ready() -> void:
+	connect("mouse_exited", self, "_on_mouse_exited")
+
+
 func _gui_input(event : InputEvent):
 	if event is InputEventMouse:
 		_last_tile_hovered = world_to_tile(event.position)

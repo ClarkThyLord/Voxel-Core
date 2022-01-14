@@ -27,6 +27,10 @@ export(Resource) var voxel_set setget set_voxel_set
 ## OnReady Variables
 onready var tiles_viewer := get_node("VBoxContainer/ScrollContainer/TilesViewer")
 
+onready var confirm : Button = get_node("VBoxContainer/HBoxContainer/Confirm")
+
+onready var cancel : Button = get_node("VBoxContainer/HBoxContainer/Cancel")
+
 
 
 ## Built-In Virtual Methods
@@ -38,6 +42,13 @@ func _reay() -> void:
 	set_voxel_set(voxel_set)
 	
 	update_rect_min()
+	
+	tiles_viewer.connect("selected_tile", self, "_on_TilesViewer_selected_tile")
+	tiles_viewer.connect("unselected_tile", self, "_on_TilesViewer_unselected_tile")
+	
+	confirm.connect("pressed", self, "_on_Confirm_pressed")
+	
+	cancel.connect("pressed", self, "_on_Cancel_pressed")
 
 
 ## Public Methods
@@ -79,3 +90,11 @@ func _on_TilesViewer_selected_tile(tile : Vector2):
 
 func _on_TilesViewer_unselected_tile(tile : Vector2):
 	emit_signal("unselected_tile", tile)
+
+
+func _on_Confirm_pressed() -> void:
+	hide()
+
+
+func _on_Cancel_pressed():
+	hide()

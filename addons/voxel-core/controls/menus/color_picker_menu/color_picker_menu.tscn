@@ -3,8 +3,9 @@
 [ext_resource path="res://addons/voxel-core/controls/menus/color_picker_menu/color_picker_menu.gd" type="Script" id=1]
 
 [node name="ColorPickerMenu" type="WindowDialog"]
-margin_right = 329.0
-margin_bottom = 514.0
+margin_right = 340.0
+margin_bottom = 526.0
+rect_min_size = Vector2( 340, 526 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -20,8 +21,10 @@ __meta__ = {
 }
 
 [node name="ColorPicker" type="ColorPicker" parent="VBoxContainer"]
-margin_right = 308.0
-margin_bottom = 462.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 312.0
+margin_bottom = 466.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -51,7 +54,3 @@ margin_right = 308.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Cancel"
-
-[connection signal="color_changed" from="VBoxContainer/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Confirm" to="." method="_on_Confirm_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Cancel" to="." method="_on_Cancel_pressed"]
