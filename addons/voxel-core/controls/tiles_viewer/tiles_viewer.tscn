@@ -9,4 +9,5 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="mouse_exited" from="." to="." method="_on_TilesViewer_mouse_exited"]
+
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

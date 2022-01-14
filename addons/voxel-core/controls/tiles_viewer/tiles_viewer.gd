@@ -5,24 +5,25 @@ extends TextureRect
 
 
 ## Signals
-# Emitted when a uv position has been selected
-signal selected_uv(uv)
-# Emitted when a uv position has been unselected
-signal unselected_uv(uv)
+# Emitted when a tile position has been selected
+signal selected_tile(tile)
+
+# Emitted when a tile position has been unselected
+signal unselected_tile(tile)
 
 
 
 ## Exported Variables
-# Maximum number of uv positions that can be selected at any one time
+# Maximum number of tiles that can be selected at any one time
 export(int, -1, 256) var selection_max := 0 setget set_selection_max
 
-# Color to applyed to border of hovered uv position(s)
+# Color to applied to border of hovered tile
 export var hovered_color := Color(1, 1, 1, 0.6) setget set_hovered_color
 
-# Color to applyed to border of selected uv position(s)
+# Color to applied to border of selected tile
 export var selected_color := Color.white setget set_selection_color
 
-# Color to applyed to border of invalid uv position(s)
+# Color to applied to border of invalid tile
 export var invalid_color := Color.red setget set_invalid_color
 
 # VoxelSet being used
@@ -31,10 +32,10 @@ export(Resource) var voxel_set = null setget set_voxel_set
 
 
 ## Private Variables
-# Stores last uv position hovered
-var _last_uv_hovered := -Vector2.ONE
+# Stores last tile position hovered
+var _last_tile_hovered := -Vector2.ONE
 
-# Selected uv positions
+# Selected tile positions
 var _selections := []
 
 
@@ -42,18 +43,18 @@ var _selections := []
 ## Built-In Virtual Methods
 func _gui_input(event : InputEvent):
 	if event is InputEventMouse:
-		_last_uv_hovered = world_to_uv(event.position)
+		_last_tile_hovered = world_to_tile(event.position)
 		if selection_max != 0 and event is InputEventMouseButton:
-			if is_valid_uv(_last_uv_hovered) and event.button_index == BUTTON_LEFT and not event.is_pressed():
-				if _selections.has(_last_uv_hovered):
-					unselect(_last_uv_hovered)
+			if is_valid_tile(_last_tile_hovered) and event.button_index == BUTTON_LEFT and not event.is_pressed():
+				if _selections.has(_last_tile_hovered):
+					unselect(_last_tile_hovered)
 				else:
-					select(_last_uv_hovered)
+					select(_last_tile_hovered)
 		update()
 
 
 func _draw():
-	if is_instance_valid(voxel_set) and voxel_set.uv_ready():
+	if is_instance_valid(voxel_set) and voxel_set.tile_ready():
 		texture = voxel_set.tiles
 		if selection_max != 0:
 			for selection in _selections:
@@ -62,14 +63,14 @@ func _draw():
 								voxel_set.tile_size),
 						selected_color, false, 3)
 		
-		if _last_uv_hovered == -Vector2.ONE:
+		if _last_tile_hovered == -Vector2.ONE:
 			hint_tooltip = ""
 		else:
-			hint_tooltip = str(_last_uv_hovered)
+			hint_tooltip = str(_last_tile_hovered)
 			draw_rect(Rect2(
-							_last_uv_hovered * voxel_set.tile_size,
+							_last_tile_hovered * voxel_set.tile_size,
 							voxel_set.tile_size),
-					hovered_color if is_valid_uv(_last_uv_hovered) else invalid_color,
+					hovered_color if is_valid_tile(_last_tile_hovered) else invalid_color,
 					false, 3)
 
 
@@ -123,12 +124,12 @@ func set_voxel_set(value : Resource, update := true) -> void:
 		self.update()
 
 
-# Returns true if uv is selected
-func has_selected(uv : Vector2) -> bool:
-	return _selections.has(uv)
+# Returns true if tile is selected
+func has_selected(tile : Vector2) -> bool:
+	return _selections.has(tile)
 
 
-# Returns uv selected at given index
+# Returns tile selected at given index
 func get_selected(index : int) -> Vector2:
 	return _selections[index]
 
@@ -143,49 +144,49 @@ func get_selected_size() -> int:
 	return _selections.size()
 
 
-# Returns world position as uv position
-func world_to_uv(world : Vector2) -> Vector2:
-	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.uv_ready() else -Vector2.ONE
+# Returns world position as tile position
+func world_to_tile(world : Vector2) -> Vector2:
+	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.tile_ready() else -Vector2.ONE
 
 
-# Returns true if uv position is valid
-func is_valid_uv(uv : Vector2) -> bool:
-	if is_instance_valid(voxel_set) and voxel_set.uv_ready():
+# Returns true if tile position is valid
+func is_valid_tile(tile : Vector2) -> bool:
+	if is_instance_valid(voxel_set) and voxel_set.tile_ready():
 		var bounds = voxel_set.tiles.get_size() / voxel_set.tile_size
-		return uv.x >= 0 and uv.y >= 0 and uv.x < bounds.x and uv.y < bounds.y
+		return tile.x >= 0 and tile.y >= 0 and tile.x < bounds.x and tile.y < bounds.y
 	return false
 
 
-# Returns true if world position is valid uv position
+# Returns true if world position is valid tile position
 func is_valid_world(world : Vector2) -> bool:
-	return is_valid_uv(world_to_uv(world))
+	return is_valid_tile(world_to_tile(world))
 
 
-# Selects given uv position, and emits selected_uv
-func select(uv : Vector2, emit := true) -> void:
-	# TODO UV within bounds
+# Selects given tile position, and emits selected_tile
+func select(tile : Vector2, emit := true) -> void:
+	# TODO tile within bounds
 	if selection_max != 0:
 		unselect_shrink(selection_max - 1)
-		_selections.append(uv)
+		_selections.append(tile)
 		if emit:
-			emit_signal("selected_uv", uv)
+			emit_signal("selected_tile", tile)
 
 
-# Unselects given uv position, and emits unselected_uv
-func unselect(uv : Vector2, emit := true) -> void:
-	if _selections.has(uv):
-		_selections.erase(uv)
+# Unselects given tile position, and emits unselected_tile
+func unselect(tile : Vector2, emit := true) -> void:
+	if _selections.has(tile):
+		_selections.erase(tile)
 		if emit:
-			emit_signal("unselected_uv", uv)
+			emit_signal("unselected_tile", tile)
 
 
-# Unselects all uv position
+# Unselects all tile position
 func unselect_all() -> void:
 	while not _selections.empty():
 		unselect(_selections.back())
 
 
-# Unselects all uv position until given size is met
+# Unselects all tile position until given size is met
 func unselect_shrink(size := selection_max, emit := true) -> void:
 	if size >= 0:
 		while _selections.size() > size:
@@ -194,6 +195,6 @@ func unselect_shrink(size := selection_max, emit := true) -> void:
 
 
 ## Private Methods
-func _on_TilesViewer_mouse_exited():
-	_last_uv_hovered = -Vector2.ONE
+func _on_mouse_exited():
+	_last_tile_hovered = -Vector2.ONE
 	update()
