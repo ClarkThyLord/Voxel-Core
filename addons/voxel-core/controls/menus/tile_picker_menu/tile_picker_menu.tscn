@@ -20,33 +20,38 @@ __meta__ = {
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 margin_right = 308.0
-margin_bottom = 220.0
+margin_bottom = 212.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VoxelTexture" parent="VBoxContainer/ScrollContainer" instance=ExtResource( 2 )]
+[node name="TilesViewer" parent="VBoxContainer/ScrollContainer" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 308.0
-margin_bottom = 220.0
+margin_bottom = 212.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 selection_max = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 216.0
+margin_right = 308.0
+margin_bottom = 220.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 224.0
 margin_right = 308.0
 margin_bottom = 244.0
 
-[node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Confirm" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_right = 152.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "Cancel"
+text = "Confirm"
 
-[node name="Confirm" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_left = 156.0
 margin_right = 308.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-text = "Confirm"
+text = "Cancel"
