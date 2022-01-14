@@ -5,9 +5,9 @@ extends "res://addons/voxel-core/controls/menus/menu.gd"
 
 
 ## Signals
-signal selected_tile(uv)
+signal selected_tile(tile)
 
-signal unselected_tile(uv)
+signal unselected_tile(tile)
 
 
 
@@ -69,3 +69,13 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	voxel_set = value
 	if is_instance_valid(tiles_viewer):
 		tiles_viewer.set_voxel_set(value, update)
+
+
+
+## Private Methods
+func _on_TilesViewer_selected_tile(tile : Vector2):
+	emit_signal("selected_tile", tile)
+
+
+func _on_TilesViewer_unselected_tile(tile : Vector2):
+	emit_signal("unselected_tile", tile)
