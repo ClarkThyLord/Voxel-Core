@@ -6,10 +6,10 @@ extends TextureRect
 
 ## Signals
 # Emitted when a tile position has been selected
-signal selected_tile(tile)
+signal tile_selected(tile)
 
 # Emitted when a tile position has been unselected
-signal unselected_tile(tile)
+signal tile_unselected(tile)
 
 
 
@@ -58,7 +58,7 @@ func _gui_input(event : InputEvent):
 
 
 func _draw():
-	if is_instance_valid(voxel_set) and voxel_set.tile_ready():
+	if is_instance_valid(voxel_set) and voxel_set.uv_ready():
 		texture = voxel_set.tiles
 		if selection_max != 0:
 			for selection in _selections:
@@ -150,12 +150,12 @@ func get_selected_size() -> int:
 
 # Returns world position as tile position
 func world_to_tile(world : Vector2) -> Vector2:
-	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.tile_ready() else -Vector2.ONE
+	return (world / voxel_set.tile_size).floor() if is_instance_valid(voxel_set) and voxel_set.uv_ready() else -Vector2.ONE
 
 
 # Returns true if tile position is valid
 func is_valid_tile(tile : Vector2) -> bool:
-	if is_instance_valid(voxel_set) and voxel_set.tile_ready():
+	if is_instance_valid(voxel_set) and voxel_set.uv_ready():
 		var bounds = voxel_set.tiles.get_size() / voxel_set.tile_size
 		return tile.x >= 0 and tile.y >= 0 and tile.x < bounds.x and tile.y < bounds.y
 	return false
@@ -173,7 +173,7 @@ func select(tile : Vector2, emit := true) -> void:
 		unselect_shrink(selection_max - 1)
 		_selections.append(tile)
 		if emit:
-			emit_signal("selected_tile", tile)
+			emit_signal("tile_selected", tile)
 
 
 # Unselects given tile position, and emits unselected_tile
@@ -181,7 +181,7 @@ func unselect(tile : Vector2, emit := true) -> void:
 	if _selections.has(tile):
 		_selections.erase(tile)
 		if emit:
-			emit_signal("unselected_tile", tile)
+			emit_signal("tile_unselected", tile)
 
 
 # Unselects all tile position

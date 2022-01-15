@@ -3,7 +3,6 @@
 [ext_resource path="res://addons/voxel-core/classes/voxel_set.gd" type="Script" id=1]
 [ext_resource path="res://examples/VoxelWorld/kenney_voxels.jpg" type="Texture" id=2]
 
-
 [sub_resource type="SpatialMaterial" id=1]
 
 [resource]
@@ -13,7 +12,12 @@ tiles = ExtResource( 2 )
 materials = [ SubResource( 1 ) ]
 VOXELS = [ {
 "color": Color( 1, 1, 1, 1 ),
-"uv": Vector2( 0, 0 )
+"colors": {
+Vector3( 0, 0, 1 ): Color( 0.581902, 0.0997428, 0.0997428, 1 )
+},
+"uvs": {
+Vector3( 0, 0, -1 ): Vector2( 1, 0 )
+}
 }, {
 "color": Color( 1, 1, 1, 1 ),
 "uv": Vector2( 1, 0 ),

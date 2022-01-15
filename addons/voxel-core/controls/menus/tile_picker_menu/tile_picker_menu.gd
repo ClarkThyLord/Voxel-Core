@@ -5,9 +5,11 @@ extends "res://addons/voxel-core/controls/menus/menu.gd"
 
 
 ## Signals
-signal selected_tile(tile)
+signal tile_selected(tile)
 
-signal unselected_tile(tile)
+signal tile_unselected(tile)
+
+signal tile_picked(tiles)
 
 
 
@@ -34,7 +36,7 @@ onready var cancel : Button = get_node("VBoxContainer/HBoxContainer/Cancel")
 
 
 ## Built-In Virtual Methods
-func _reay() -> void:
+func _ready() -> void:
 	set_selection_max(selection_max)
 	set_hovered_color(hovered_color)
 	set_selection_color(selected_color)
@@ -43,8 +45,8 @@ func _reay() -> void:
 	
 	update_rect_min()
 	
-	tiles_viewer.connect("selected_tile", self, "_on_TilesViewer_selected_tile")
-	tiles_viewer.connect("unselected_tile", self, "_on_TilesViewer_unselected_tile")
+	tiles_viewer.connect("tile_selected", self, "_on_TilesViewer_selected_tile")
+	tiles_viewer.connect("tile_unselected", self, "_on_TilesViewer_unselected_tile")
 	
 	confirm.connect("pressed", self, "_on_Confirm_pressed")
 	
@@ -85,14 +87,15 @@ func set_voxel_set(value : Resource, update := true) -> void:
 
 ## Private Methods
 func _on_TilesViewer_selected_tile(tile : Vector2):
-	emit_signal("selected_tile", tile)
+	emit_signal("tile_selected", tile)
 
 
 func _on_TilesViewer_unselected_tile(tile : Vector2):
-	emit_signal("unselected_tile", tile)
+	emit_signal("tile_unselected", tile)
 
 
 func _on_Confirm_pressed() -> void:
+	emit_signal("tile_picked", tiles_viewer.get_selections())
 	hide()
 
 

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://addons/voxel-core/controls/voxel_viewer/voxel_viewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/voxel-core/controls/voxel_button/voxel_button.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/voxel-core/controls/tiles_viewer/tiles_viewer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/voxel-core/controls/menus/tile_picker_menu/tile_picker_menu.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/voxel-core/controls/voxel_viewer/voxel_viewer_env.tres" type="Environment" id=4]
 [ext_resource path="res://addons/voxel-core/controls/menus/color_picker_menu/color_picker_menu.tscn" type="PackedScene" id=5]
 
@@ -171,61 +171,18 @@ __meta__ = {
 }
 
 [node name="ColorPickerMenu" parent="." instance=ExtResource( 5 )]
-margin_right = 340.0
-margin_bottom = 526.0
-rect_min_size = Vector2( 340, 526 )
+margin_bottom = 502.0
+rect_min_size = Vector2( 340, 502 )
 resizable = true
 edit_alpha = false
 
-[node name="TextureMenu" type="WindowDialog" parent="."]
-margin_right = 324.0
-margin_bottom = 260.0
-rect_min_size = Vector2( 324, 260 )
-popup_exclusive = true
-window_title = "Texture Picker"
+[node name="TilePickerMenu" parent="." instance=ExtResource( 3 )]
+visible = true
+margin_right = 380.0
+margin_bottom = 320.0
+rect_min_size = Vector2( 380, 320 )
 resizable = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
-anchor_left = 0.0246914
-anchor_top = 0.0307692
-anchor_right = 0.975309
-anchor_bottom = 0.969231
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TextureMenu/VBoxContainer"]
-margin_right = 307.0
-margin_bottom = 219.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VoxelTexture" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 307.0
-margin_bottom = 219.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 selection_max = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
-margin_top = 223.0
-margin_right = 307.0
-margin_bottom = 243.0
-
-[node name="Cancel" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
-margin_right = 151.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Cancel"
-
-[node name="Confirm" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
-margin_left = 155.0
-margin_right = 307.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Confirm"
 
 [node name="MaterialMenu" type="WindowDialog" parent="."]
 margin_right = 250.0
@@ -416,9 +373,9 @@ filters = PoolStringArray( "*.tres; Environment files" )
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
 [connection signal="color_changed" from="ColorPickerMenu" to="." method="_on_ColorPickerMenu_color_changed"]
 [connection signal="color_picked" from="ColorPickerMenu" to="." method="_on_ColorPickerMenu_color_picked"]
-[connection signal="selected_uv" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_VoxelTexture_selected_uv"]
-[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_TextureMenu_Cancel_pressed"]
-[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
+[connection signal="tile_picked" from="TilePickerMenu" to="." method="_on_TilePickerMenu_tile_picked"]
+[connection signal="tile_selected" from="TilePickerMenu" to="." method="_on_TilePickerMenu_tile_selected"]
+[connection signal="tile_unselected" from="TilePickerMenu" to="." method="_on_TilePickerMenu_tile_unselected"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material" to="." method="_on_Material_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic" to="." method="_on_Metallic_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular" to="." method="_on_Specular_value_changed"]
