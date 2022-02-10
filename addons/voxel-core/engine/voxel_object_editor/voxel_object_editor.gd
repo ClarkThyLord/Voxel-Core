@@ -166,11 +166,7 @@ var import_file_path := ""
 
 @onready var GridSizeZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/Z")
 
-@onready var ColorMenu := get_node("ColorMenu")
-
-@onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
-
-@onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
+@onready var ColorPickerMenu := get_node("ColorPickerMenu")
 
 
 
@@ -705,16 +701,13 @@ func handle_input(camera : Camera3D, event : InputEvent) -> bool:
 
 # Shows color menu centered
 func show_color_menu(color: Color = ColorPicked.color) -> void:
-	ColorMenuColor.color = color
-	ColorMenu.popup_centered()
-	ColorMenu.set_as_minsize()
-	ColorMenu.rect_size += Vector2(32, 32)
-	ColorMenu.rect_min_size = ColorMenu.rect_size
+	ColorPickerMenu.color = color
+	ColorPickerMenu.popup_centered()
 
 
 # Hide color menu
 func hide_color_menu() -> void:
-	ColorMenu.hide()
+	ColorPickerMenu.hide()
 
 
 # Shows import menu centered
@@ -763,10 +756,10 @@ func _on_Editing_toggled(editing : bool):
 	emit_signal("editing", editing)
 
 
-func _on_ColorMenu_Add_pressed():
+func _on_ColorPickerMenu_color_picked(color : Color):
 	var voxel_id = voxel_object.voxel_set.size()
 	undo_redo.create_action("VoxelObjectEditor : Add voxel to used VoxeSet")
-	undo_redo.add_do_method(voxel_object.voxel_set, "add_voxel", Voxel.colored(ColorMenuColor.color))
+	undo_redo.add_do_method(voxel_object.voxel_set, "add_voxel", Voxel.colored(color))
 	undo_redo.add_undo_method(voxel_object.voxel_set, "erase_voxel", voxel_id)
 	undo_redo.add_do_method(voxel_object.voxel_set, "request_refresh")
 	undo_redo.add_undo_method(voxel_object.voxel_set, "request_refresh")

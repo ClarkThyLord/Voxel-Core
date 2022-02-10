@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/voxel-core/controls/voxel_viewer/voxel_viewer.gd" type="Script" id=1]
 [ext_resource path="res://addons/voxel-core/controls/voxel_button/voxel_button.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/voxel-core/controls/tiles_viewer/tiles_viewer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/voxel-core/controls/menus/tile_picker_menu/tile_picker_menu.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/voxel-core/controls/voxel_viewer/voxel_viewer_env.tres" type="Environment" id=4]
+[ext_resource path="res://addons/voxel-core/controls/menus/color_picker_menu/color_picker_menu.tscn" type="PackedScene" id=5]
 
 [sub_resource type="World" id=1]
 environment = ExtResource( 4 )
@@ -169,109 +170,19 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="ColorMenu" type="WindowDialog" parent="."]
-visible = true
-margin_right = 359.0
-margin_bottom = 495.0
-popup_exclusive = true
-window_title = "Color Picker"
+[node name="ColorPickerMenu" parent="." instance=ExtResource( 5 )]
+margin_bottom = 502.0
+rect_min_size = Vector2( 340, 502 )
 resizable = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorMenu"]
-anchor_left = 0.0334262
-anchor_top = 0.0224299
-anchor_right = 0.969359
-anchor_bottom = 0.900935
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="VoxelColor" type="ColorPicker" parent="ColorMenu/VBoxContainer"]
-margin_right = 336.0
-margin_bottom = 438.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 edit_alpha = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="HSeparator" type="HSeparator" parent="ColorMenu/VBoxContainer"]
-margin_top = 442.0
-margin_right = 336.0
-margin_bottom = 446.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ColorMenu/VBoxContainer"]
-margin_top = 450.0
-margin_right = 336.0
-margin_bottom = 470.0
-size_flags_vertical = 3
-
-[node name="Cancel" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_right = 166.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Cancel"
-
-[node name="Confirm" type="Button" parent="ColorMenu/VBoxContainer/HBoxContainer"]
-margin_left = 170.0
-margin_right = 336.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Confirm"
-
-[node name="TextureMenu" type="WindowDialog" parent="."]
-margin_right = 324.0
-margin_bottom = 260.0
-rect_min_size = Vector2( 324, 260 )
-popup_exclusive = true
-window_title = "Texture Picker"
+[node name="TilePickerMenu" parent="." instance=ExtResource( 3 )]
+visible = true
+margin_right = 380.0
+margin_bottom = 320.0
+rect_min_size = Vector2( 380, 320 )
 resizable = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TextureMenu"]
-anchor_left = 0.0246914
-anchor_top = 0.0307692
-anchor_right = 0.975309
-anchor_bottom = 0.969231
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TextureMenu/VBoxContainer"]
-margin_right = 307.0
-margin_bottom = 219.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VoxelTexture" parent="TextureMenu/VBoxContainer/ScrollContainer" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 307.0
-margin_bottom = 219.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 selection_max = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TextureMenu/VBoxContainer"]
-margin_top = 223.0
-margin_right = 307.0
-margin_bottom = 243.0
-
-[node name="Cancel" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
-margin_right = 151.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Cancel"
-
-[node name="Confirm" type="Button" parent="TextureMenu/VBoxContainer/HBoxContainer"]
-margin_left = 155.0
-margin_right = 307.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "Confirm"
 
 [node name="MaterialMenu" type="WindowDialog" parent="."]
 margin_right = 250.0
@@ -460,12 +371,11 @@ filters = PoolStringArray( "*.tres; Environment files" )
 [connection signal="gui_input" from="View3D" to="." method="_on_View3D_gui_input"]
 [connection signal="item_selected" from="ToolBar/ViewMode" to="." method="set_view_mode"]
 [connection signal="id_pressed" from="ContextMenu" to="." method="_on_ContextMenu_id_pressed"]
-[connection signal="color_changed" from="ColorMenu/VBoxContainer/VoxelColor" to="." method="_on_ColorPicker_color_changed"]
-[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_ColorMenu_Cancel_pressed"]
-[connection signal="pressed" from="ColorMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_ColorMenu_Confirm_pressed"]
-[connection signal="selected_uv" from="TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture" to="." method="_on_VoxelTexture_selected_uv"]
-[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_TextureMenu_Cancel_pressed"]
-[connection signal="pressed" from="TextureMenu/VBoxContainer/HBoxContainer/Confirm" to="." method="_on_TextureMenu_Confirm_pressed"]
+[connection signal="color_changed" from="ColorPickerMenu" to="." method="_on_ColorPickerMenu_color_changed"]
+[connection signal="color_picked" from="ColorPickerMenu" to="." method="_on_ColorPickerMenu_color_picked"]
+[connection signal="tile_picked" from="TilePickerMenu" to="." method="_on_TilePickerMenu_tile_picked"]
+[connection signal="tile_selected" from="TilePickerMenu" to="." method="_on_TilePickerMenu_tile_selected"]
+[connection signal="tile_unselected" from="TilePickerMenu" to="." method="_on_TilePickerMenu_tile_unselected"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material" to="." method="_on_Material_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic" to="." method="_on_Metallic_value_changed"]
 [connection signal="value_changed" from="MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular" to="." method="_on_Specular_value_changed"]
