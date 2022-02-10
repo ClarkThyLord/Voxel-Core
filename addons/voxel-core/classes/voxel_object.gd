@@ -82,26 +82,32 @@ var edit_hint: int:
 
 
 # Public Methods
-# Sets the EditHint flag, calls update_mesh if needed and not told otherwise
 # Sets voxel_set, calls update_mesh if needed and not told otherwise
 func set_voxel_set(value: Resource, update := is_inside_tree()) -> void:
+	
+	
 	if not (typeof(value) == TYPE_NIL or value is VoxelSet):
 		printerr("Invalid Resource given expected VoxelSet")
 		return
+	
 	
 	if is_instance_valid(voxel_set):
 		if voxel_set.is_connected("requested_refresh", update_mesh):
 			voxel_set.disconnect("requested_refresh", update_mesh)
 	
-	voxel_set = value
+	
+	_voxel_set = value
 	if is_instance_valid(voxel_set):
 		if not voxel_set.is_connected("requested_refresh", update_mesh):
 			voxel_set.connect("requested_refresh", update_mesh)
 	
+	
 	if update:
 		update_mesh()
-	emit_signal("set_voxel_set", voxel_set)
+	emit_signal("on_voxel_set_changed", voxel_set)
 
+
+# Sets the EditHint flag, calls update_mesh if needed and not told otherwise
 func set_edit_hint(value : int, update := is_inside_tree()) -> void:
 	_edit_hint = value
 	
@@ -111,7 +117,7 @@ func set_edit_hint(value : int, update := is_inside_tree()) -> void:
 
 # Sets the mesh_mode, calls update_mesh if needed and not told otherwise
 func set_mesh_mode(value : int, update := is_inside_tree()) -> void:
-	mesh_mode = value
+	_mesh_mode = value
 	
 	if update:
 		update_mesh()
@@ -119,7 +125,7 @@ func set_mesh_mode(value : int, update := is_inside_tree()) -> void:
 
 # Sets the uv_map, calls update_mesh if needed and not told otherwise
 func set_uv_map(value : bool, update := is_inside_tree()) -> void:
-	uv_map = value
+	_uv_map = value
 	
 	if update:
 		update_mesh()
@@ -127,7 +133,7 @@ func set_uv_map(value : bool, update := is_inside_tree()) -> void:
 
 # Sets the size of each voxel, calls update_mesh if needed and not told otherwise
 func set_voxel_size(value : float, update := is_inside_tree()) -> void:
-	voxel_size = value
+	_voxel_size = value
 	
 	if update:
 		update_mesh()
@@ -135,7 +141,7 @@ func set_voxel_size(value : float, update := is_inside_tree()) -> void:
 
 # Sets static_body, calls update_static_body if needed and not told otherwise
 func set_static_body(value : bool, update := is_inside_tree()) -> void:
-	static_body = value
+	_static_body = value
 	
 	if update:
 		update_static_body()
@@ -354,7 +360,7 @@ func intersect_ray(
 func select_flood(target : Vector3, selected := []) -> Array:
 	selected.append(get_voxel_id(target))
 	
-	for direction in Voxel.Faces:
+	for direction in Voxel.get_faces():
 		var next = target + direction
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if not selected.has(next):
@@ -371,7 +377,7 @@ func select_flood(target : Vector3, selected := []) -> Array:
 func select_face(target : Vector3, face_normal : Vector3, selected := []) -> Array:
 	selected.append(target)
 	
-	for direction in Voxel.Faces[face_normal]:
+	for direction in Voxel.get_faces()[face_normal]:
 		var next = target + direction
 		if get_voxel_id(next) > -1:
 			if get_voxel_id(next + face_normal) == -1:
@@ -389,7 +395,7 @@ func select_face(target : Vector3, face_normal : Vector3, selected := []) -> Arr
 func select_face_similar(target : Vector3, face_normal : Vector3, selected := []) -> Array:
 	selected.append(target)
 	
-	for direction in Voxel.Faces[face_normal]:
+	for direction in Voxel.get_faces()[face_normal]:
 		var next = target + direction
 		if get_voxel_id(next) == get_voxel_id(selected[0]):
 			if get_voxel_id(next + face_normal) == -1:
@@ -435,7 +441,7 @@ func naive_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 	vtool.begin(voxel_set, uv_map)
 	
 	for position in volume:
-		for direction in Voxel.Faces:
+		for direction in Voxel.get_faces():
 			if get_voxel_id(position + direction) == -1:
 				vtool.add_face(get_voxel(position), direction, position)
 	
@@ -458,7 +464,8 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 	
 	vtool.begin(voxel_set, uv_map)
 	
-	var faces = Voxel.Faces.duplicate()
+	# var faces = Voxel.get_faces().duplicate()
+	var faces = Voxel.get_faces()
 	for face in faces:
 		faces[face] = []
 		for position in volume:
@@ -466,7 +473,7 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 				faces[face].append(position)
 	
 	for face in faces:
-		while not faces[face].empty():
+		while not faces[face].is_empty():
 			var bottom_right : Vector3 = faces[face].pop_front()
 			var bottom_left : Vector3 = bottom_right
 			var top_right : Vector3 = bottom_right
@@ -478,56 +485,59 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 				var width := 1
 				
 				while true:
-					var index = faces[face].find(top_right + Voxel.Faces[face][1])
+					var index = faces[face].find(top_right + Voxel.get_faces()[face][1])
+					print("Top right index", index)
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							width += 1
-							faces[face].remove(index)
-							top_right += Voxel.Faces[face][1]
-							bottom_right += Voxel.Faces[face][1]
+							faces[face].remove_at(index)
+							top_right += Voxel.get_faces()[face][1]
+							bottom_right += Voxel.get_faces()[face][1]
 						else:
 							break
 					else:
 						break
 				
 				while true:
-					var index = faces[face].find(top_left + Voxel.Faces[face][0])
+					print("Top left")
+					var index = faces[face].find(top_left + Voxel.get_faces()[face][0])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
 							width += 1
-							faces[face].remove(index)
-							top_left += Voxel.Faces[face][0]
-							bottom_left += Voxel.Faces[face][0]
+							faces[face].remove_at(index)
+							top_left += Voxel.get_faces()[face][0]
+							bottom_left += Voxel.get_faces()[face][0]
 						else:
 							break
 					else:
 						break
 				
 				while true:
+					print("Top right 2")
 					var used := []
 					var current := top_right
-					var index = faces[face].find(current + Voxel.Faces[face][3])
+					var index = faces[face].find(current + Voxel.get_faces()[face][3])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-							current += Voxel.Faces[face][3]
+							current += Voxel.get_faces()[face][3]
 							used.append(current)
 							while true:
-								index = faces[face].find(current + Voxel.Faces[face][0])
+								index = faces[face].find(current + Voxel.get_faces()[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
 									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-										current += Voxel.Faces[face][0]
+										current += Voxel.get_faces()[face][0]
 										used.append(current)
 									else:
 										break
 								else:
 									break
 							if used.size() == width:
-								top_right += Voxel.Faces[face][3]
-								top_left += Voxel.Faces[face][3]
+								top_right += Voxel.get_faces()[face][3]
+								top_left += Voxel.get_faces()[face][3]
 								for use in used:
 									faces[face].erase(use)
 							else:
@@ -538,28 +548,29 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 						break
 				
 				while true:
+					print("Bottom right")
 					var used := []
 					var current := bottom_right
-					var index = faces[face].find(current + Voxel.Faces[face][2])
+					var index = faces[face].find(current + Voxel.get_faces()[face][2])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-							current += Voxel.Faces[face][2]
+							current += Voxel.get_faces()[face][2]
 							used.append(current)
 							while true:
-								index = faces[face].find(current + Voxel.Faces[face][0])
+								index = faces[face].find(current + Voxel.get_faces()[face][0])
 								if index > -1:
 									_voxel = get_voxel(faces[face][index])
 									if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
-										current += Voxel.Faces[face][0]
+										current += Voxel.get_faces()[face][0]
 										used.append(current)
 									else:
 										break
 								else:
 									break
 							if used.size() == width:
-								bottom_right += Voxel.Faces[face][2]
-								bottom_left += Voxel.Faces[face][2]
+								bottom_right += Voxel.get_faces()[face][2]
+								bottom_left += Voxel.get_faces()[face][2]
 								for use in used:
 									faces[face].erase(use)
 							else:

@@ -30,7 +30,7 @@ func _get_save_extension() -> String:
 	return "tscn"
 
 
-func _get_import_options(preset : int) -> Array:
+func _get_import_options(path: String, preset : int) -> Array:
 	var preset_options = [
 		{
 			"name": "name",
@@ -46,7 +46,7 @@ func _get_import_options(preset : int) -> Array:
 		}
 	]
 	
-	preset_options.append_array(_get_shared_options(preset))
+	preset_options.append_array(get_shared_options(preset))
 	
 	return preset_options
 
@@ -57,10 +57,10 @@ func _import(source_file : String, save_path : String, options : Dictionary, r_p
 		_: voxel_object = VoxelMesh.new()
 	var error = voxel_object.load_file(source_file)
 	if error == OK:
-		voxel_object.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["name"].empty() else options["name"])
+		print("Object check 1")
+		voxel_object.set_name(source_file.get_file().replace("." + source_file.get_extension(), "") if options["name"].is_empty() else options["name"])
 		voxel_object.set_mesh_mode(options.get("mesh_mode", VoxelMesh.MeshModes.NAIVE))
 		
-		# voxel size
 		var voxel_size = options.get("voxel_size", 0.5)
 		voxel_object.set_voxel_size(voxel_size)
 		
@@ -73,17 +73,18 @@ func _import(source_file : String, save_path : String, options : Dictionary, r_p
 			clamp(origin.y + 1, 0, 1),
 			clamp(origin.z + 1, 0, 1)
 		)
-		
+		print("Object check 2")
 		var offset = voxel_object.vec_to_center(origin)
 		offset = offset * offset_mult
 		
 		voxel_object.move(offset)
 		
 		voxel_object.update_mesh()
-		
+		print("Object check3")
 		var scene = PackedScene.new()
 		error = scene.pack(voxel_object)
 		if error == OK:
 			error = ResourceSaver.save("%s.%s" % [save_path, _get_save_extension()], scene)
+		print("Object check 4")
 	voxel_object.free()
 	return error

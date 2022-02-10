@@ -103,7 +103,7 @@ func _draw():
 ## Public Methods
 # Sets selection_max, shrinks _selections to new maximum if needed and calls on update by default
 func set_selection_max(value : int, update := true) -> void:
-	selection_max = clamp(value, -1, 256)
+	_selection_max = clamp(value, -1, 256)
 	unselect_shrink()
 	if update:
 		self.update()
@@ -111,21 +111,21 @@ func set_selection_max(value : int, update := true) -> void:
 
 # Sets hovered_color, and calls on update by default
 func set_hovered_color(value : Color, update := true) -> void:
-	hovered_color = value
+	_hovered_color = value
 	if update:
 		self.update()
 
 
 # Sets selected_color, and calls on update by default
 func set_selection_color(value : Color, update := true) -> void:
-	selected_color = value
+	_selected_color = value
 	if update:
 		self.update()
 
 
 # Sets invalid_color, and calls on update by default
 func set_invalid_color(value : Color, update := true) -> void:
-	invalid_color = value
+	_invalid_color = value
 	if update:
 		self.update()
 
@@ -138,12 +138,12 @@ func set_voxel_set(value : Resource, update_mesh := true) -> void:
 	
 	if is_instance_valid(voxel_set):
 		if voxel_set.is_connected("requested_refresh", update):
-			voxel_set.disconnect("requested_refresh", update)
+			_voxel_set.disconnect("requested_refresh", update)
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
 		if not voxel_set.is_connected("requested_refresh", update):
-			voxel_set.connect("requested_refresh", update)
+			_voxel_set.connect("requested_refresh", update)
 	
 	if update_mesh:
 		self.update()

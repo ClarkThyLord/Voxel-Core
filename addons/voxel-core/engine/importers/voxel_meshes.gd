@@ -21,7 +21,7 @@ func _get_recognized_extensions() -> Array:
 		#"qbt",
 		#"vxm",
 	]
-
+	
 
 func _get_resource_type() -> String:
 	return "Mesh"
@@ -35,9 +35,10 @@ func _import(source_file : String, save_path : String, options : Dictionary, r_p
 	var read := Reader.read_file(source_file)
 	var error = read.get("error", FAILED)
 	if error == OK:
+		
 		var voxel_mesh = VoxelMesh.new()
 		voxel_mesh.voxel_set = VoxelSet.new()
-		
+		print(voxel_mesh.mesh)
 		voxel_mesh.set_mesh_mode(options.get("mesh_mode", VoxelMesh.MeshModes.GREEDY))
 		voxel_mesh.voxel_set.set_voxels(read["palette"])
 		for voxel_position in read["voxels"]:
@@ -46,7 +47,6 @@ func _import(source_file : String, save_path : String, options : Dictionary, r_p
 		# voxel size
 		var voxel_size = options.get("voxel_size", 0.5)
 		voxel_mesh.set_voxel_size(voxel_size)
-		
 		# origin shift
 		var origin = get_origin_offset(options)
 		
@@ -56,17 +56,15 @@ func _import(source_file : String, save_path : String, options : Dictionary, r_p
 			clamp(origin.y + 1, 0, 1),
 			clamp(origin.z + 1, 0, 1)
 		)
-		
 		var offset = voxel_mesh.vec_to_center(origin)
 		offset = offset * offset_mult
-		
 		voxel_mesh.move(offset)
-		
 		voxel_mesh.update_mesh()
-		
+		print('%s.%s' % [save_path, _get_save_extension()], voxel_mesh.mesh)
 		error = ResourceSaver.save(
 			'%s.%s' % [save_path, _get_save_extension()],
 			voxel_mesh.mesh)
-		
+		print("Mesh checkpoint 4")
+		print(voxel_mesh.mesh)
 		voxel_mesh.free()
 	return error

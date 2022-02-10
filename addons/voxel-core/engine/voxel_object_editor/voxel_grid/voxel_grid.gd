@@ -58,7 +58,7 @@ func _ready() -> void:
 
 ## Public Methods
 func set_disabled(value : bool) -> void:
-	disabled = value
+	_disabled = value
 	visible = not disabled
 	find_node("CollisionShape", true, false).disabled = disabled
 
@@ -70,20 +70,20 @@ func set_voxel_size(value : float, update := true) -> void:
 		self.update()
 
 func set_modulate(value : Color) -> void:
-	color = value
+	_color = value
 	
 	material_override.albedo_color = color
 
 
 func set_grid_mode(value : int, update := true) -> void:
-	grid_mode = value
+	_grid_mode = value
 	
 	if update:
 		self.update()
 
 
 func set_grid_size(value : Vector3, update := true) -> void:
-	grid_size = Vector3(
+	_grid_size = Vector3(
 			clamp(value.x, 1, 100),
 			clamp(value.y, 1, 100),
 			clamp(value.z, 1, 100))

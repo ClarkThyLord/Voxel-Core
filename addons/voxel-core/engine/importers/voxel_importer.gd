@@ -50,15 +50,21 @@ func _get_preset_name(preset : int) -> String:
 		return preset_names[preset]
 
 
-func _get_import_options(preset: int) -> Array:
-	return _get_shared_options(preset)
+func _get_import_options(path: String, preset: int) -> Array:
+	return get_shared_options(preset)
 
+func _get_priority() -> float:
+	return 0.8
 
 func _get_preset_count() -> int:
 	return Presets.size()
 
 
-func _get_option_visibility(option : String, options : Dictionary) -> bool:
+func _get_import_order() -> int:
+	return ResourceImporter.IMPORT_ORDER_DEFAULT
+
+
+func _get_option_visibility(path: String, option_name : String, options : Dictionary) -> bool:
 	return true
 
 
@@ -70,34 +76,34 @@ func join(arr: Array, delim: String):
 		res += a + delim
 
 # All "hint_string" keys where changed to be inferred arrays because of GDscript 2
-func _get_shared_options(preset : int) -> Array:
+func get_shared_options(preset : int) -> Array:
 	var preset_options = [
 		{
 			"name": "mesh_mode",
 			"default_value": VoxelMesh.MeshModes.GREEDY,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": join(VoxelMesh.MeshModes.keys(), ","),
+			"hint_string": ",".join(PackedStringArray(VoxelMesh.MeshModes.keys())),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
 			"name": "origin_x",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
-			#"hint_string": Array[String](OriginX.keys()).join(","),
+			"hint_string": ",".join(PackedStringArray(OriginX.keys())),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
 			"name": "origin_y",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": join(OriginY.keys(), ","),
+			"hint_string": ",".join(PackedStringArray(OriginY.keys())),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
 			"name": "origin_z",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": join(OriginZ.keys(), ","),
+			"hint_string": ",".join(PackedStringArray(OriginZ.keys())),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{

@@ -53,13 +53,13 @@ func set_voxel_size(value : float, update := true) -> void:
 
 
 func set_color(value : Color) -> void:
-	color = value
+	_color = value
 	if is_instance_valid(material_override):
 		material_override.albedo_color = color
 
 
 func set_selections(value : Array, update := true) -> void:
-	selections = value
+	_selections = value
 	
 	if update:
 		self.update()

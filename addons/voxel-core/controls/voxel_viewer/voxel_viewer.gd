@@ -224,7 +224,7 @@ func reset_environment() -> void:
 
 
 func set_selection_max(value : int, update := true) -> void:
-	selection_max = clamp(value, 0, 6)
+	_selection_max = clamp(value, 0, 6)
 	unselect_shrink()
 	if update:
 		self.update()
@@ -232,13 +232,13 @@ func set_selection_max(value : int, update := true) -> void:
 
 # Sets allow_edit
 func set_allow_edit(value : bool) -> void:
-	allow_edit = value
+	_allow_edit = value
 
 
 # Sets view_mode
 func set_view_mode(value : int) -> void:
 	_last_hovered_face = Vector3.ZERO
-	view_mode = int(clamp(value, 0, ViewModes.size()))
+	_view_mode = int(clamp(value, 0, ViewModes.size()))
 	
 	if is_instance_valid(ViewModeRef):
 		ViewModeRef.selected = view_mode
@@ -250,7 +250,7 @@ func set_view_mode(value : int) -> void:
 
 # Sets voxel_id, calls on update_view by defalut
 func set_voxel_id(value : int, update := true) -> void:
-	voxel_id = value
+	_voxel_id = value
 	if update:
 		update_view()
 
@@ -283,9 +283,9 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	if is_instance_valid(voxel_set):
 		if voxel_set.is_connected("requested_refresh", update_view):
-			voxel_set.disconnect("requested_refresh", update_view) 
+			_voxel_set.disconnect("requested_refresh", update_view) 
 	
-	voxel_set = value
+	_voxel_set = value
 	if is_instance_valid(voxel_set):
 		if not voxel_set.is_connected("requested_refresh", update_view):
 			voxel_set.connect("requested_refresh", update_view)
@@ -297,7 +297,7 @@ func set_voxel_set(value : Resource, update := true) -> void:
 
 
 func set_environment(value : Environment) -> void:
-	environment = value
+	_environment = value
 	if is_instance_valid(ViewPort):
 		ViewPort.transparent_bg = environment == DefaultEnv
 		ViewPort.world.environment = environment

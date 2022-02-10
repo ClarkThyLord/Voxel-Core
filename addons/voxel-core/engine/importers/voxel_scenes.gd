@@ -25,7 +25,7 @@ func _get_save_extension() -> String:
 	return "tscn"
 
 
-func _get_import_options(preset : int) -> Array:
+func _get_import_options(path: String, preset : int) -> Array:
 	var preset_options = [
 		{
 			"name": "root_name",
@@ -36,7 +36,7 @@ func _get_import_options(preset : int) -> Array:
 		}
 	]
 	
-	preset_options.append_array(_get_shared_options(preset))
+	preset_options.append_array(get_shared_options(preset))
 	
 	return preset_options
 

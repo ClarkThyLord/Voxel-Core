@@ -76,38 +76,44 @@ func update_mesh() -> void:
 	if not _voxels.is_empty():
 		var vt := VoxelTool.new()
 		vt.set_voxel_size(voxel_size)
-		
 		var materials := {}
 		if is_instance_valid(mesh) and mesh is ArrayMesh:
 			for index in get_surface_override_material_count():
 				var material := get_surface_override_material(index)
 				if is_instance_valid(material):
 					materials[mesh.surface_get_name(index)] = material
-		
 		match MeshModes.NAIVE if edit_hint > 0 else mesh_mode:
 			MeshModes.GREEDY:
 				mesh = greed_volume(_voxels.keys(), vt)
 			_:
 				mesh = naive_volume(_voxels.keys(), vt)
-		
 		for material_name in materials:
 			var material_index = mesh.surface_find_by_name(material_name)
 			if material_index > -1:
 				set_surface_override_material(material_index, materials[material_name])
 	else:
+		print("Update mesh check NULL")
 		mesh = null
-	update_mesh()
+	super.update_mesh()
 
 
 func update_static_body() -> void:
+	print("Update mesh check 1")
 	var staticBody = get_node_or_null("StaticBody")
+	print(staticBody)
+	print(edit_hint)
+	print(is_instance_valid(mesh))
+	print(is_instance_valid(staticBody))
+	print("Update mesh check 2")
 	
 	if (edit_hint >= 2 or static_body) and is_instance_valid(mesh):
 		if not is_instance_valid(staticBody):
+			print("Update mesh check 3")
 			staticBody = StaticBody3D.new()
 			staticBody.set_name("StaticBody")
 			add_child(staticBody)
 		
+		print("Update mesh check 4")
 		var collisionShape
 		if staticBody.has_node("CollisionShape"):
 			collisionShape = staticBody.get_node("CollisionShape")
@@ -116,7 +122,6 @@ func update_static_body() -> void:
 			collisionShape.set_name("CollisionShape")
 			staticBody.add_child(collisionShape)
 		collisionShape.shape = mesh.create_trimesh_shape()
-		
 		if static_body and not staticBody.owner:
 			staticBody.set_owner(get_tree().get_edited_scene_root())
 		elif not static_body and staticBody.owner:
@@ -126,5 +131,7 @@ func update_static_body() -> void:
 		elif not static_body and staticBody.owner:
 			collisionShape.set_owner(null)
 	elif is_instance_valid(staticBody):
+		print("Update mesh check NULL")
 		remove_child(staticBody)
 		staticBody.queue_free()
+	print("Update mesh check FINAL")

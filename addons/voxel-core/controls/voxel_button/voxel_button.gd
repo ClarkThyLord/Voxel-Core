@@ -58,7 +58,7 @@ func _ready():
 ## Public Methods
 # Sets voxel_color
 func set_voxel_color(value : Color) -> void:
-	voxel_color = value
+	_voxel_color = value
 	
 	$VoxelColor.color = voxel_color
 	$VoxelColor.emit_changed()
@@ -66,7 +66,7 @@ func set_voxel_color(value : Color) -> void:
 
 # Sets voxel_texture
 func set_voxel_texture(value : Texture) -> void:
-	voxel_texture = value
+	_voxel_texture = value
 	
 	$VoxelColor/VoxelTexture.texture = voxel_texture
 	$VoxelColor/VoxelTexture.emit_changed()
@@ -77,7 +77,7 @@ func set_voxel_id(value : int, update := true) -> void:
 	if value < -1:
 		return
 	
-	voxel_id = value
+	_voxel_id = value
 	
 	if update:
 		update_view()
@@ -85,7 +85,7 @@ func set_voxel_id(value : int, update := true) -> void:
 
 # Sets voxel_face, and calls on update_view by default
 func set_voxel_face(value : Vector3, update := true) -> void:
-	voxel_face = value
+	_voxel_face = value
 	if update:
 		update_view()
 
@@ -96,7 +96,7 @@ func set_voxel_set(value : Resource, update := true) -> void:
 		printerr("Invalid Resource given expected VoxelSet")
 		return
 	
-	voxel_set = value
+	_voxel_set = value
 	if update:
 		update_view()
 

@@ -29,8 +29,8 @@ var _tiles: Texture = null
 		set_tiles(value)
 
 # Materials used by voxels
-var _materials: Array[Material] = [ StandardMaterial3D.new() ]
-@export var materials: Array[Material]:
+var _materials: Array = [ StandardMaterial3D.new() ]
+@export var materials: Array:
 	get:
 		return _materials
 	set(value):
@@ -88,7 +88,7 @@ func _get_property_list():
 ## Public Methods
 # Sets tile_size, calls on request_refresh by default
 func set_tile_size(value : Vector2, refresh := true) -> void:
-	tile_size = Vector2(
+	_tile_size = Vector2(
 			floor(clamp(value.x, 1, 256)),
 			floor(clamp(value.y, 1, 256)))
 	
@@ -98,7 +98,7 @@ func set_tile_size(value : Vector2, refresh := true) -> void:
 
 # Sets tiles, calls on request_refresh by default
 func set_tiles(value : Texture, refresh := true) -> void:
-	tiles = value
+	_tiles = value
 	
 	if refresh:
 		request_refresh()
@@ -113,9 +113,9 @@ func set_materials(values : Array, refresh := true) -> void:
 			values[index] = null
 	
 	if values.is_empty():
-		materials.resize(1)
+		_materials.resize(1)
 	else:
-		materials = values
+		_materials = values
 	emit_changed()
 	
 	if refresh:

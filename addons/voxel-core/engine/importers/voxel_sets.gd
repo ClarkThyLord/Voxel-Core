@@ -2,7 +2,6 @@
 extends EditorImportPlugin
 
 
-
 ## Enums
 enum Presets { DEFAULT }
 
@@ -23,6 +22,10 @@ func _get_recognized_extensions() -> Array:
 		"vox",
 		"gpl",
 	]
+	
+	
+func _get_priority() -> float:
+	return 0.8
 
 
 func _get_resource_type() -> String:
@@ -45,7 +48,7 @@ func _get_preset_name(preset : int) -> String:
 			return "Unknown"
 
 
-func _get_import_options(preset : int) -> Array:
+func _get_import_options(path: String, preset : int) -> Array:
 	var preset_options = [
 		
 	]
@@ -53,7 +56,7 @@ func _get_import_options(preset : int) -> Array:
 	return preset_options
 
 
-func _get_option_visibility(option : String, options : Dictionary) -> bool:
+func _get_option_visibility(path: String, option : String, options : Dictionary) -> bool:
 	return true
 
 

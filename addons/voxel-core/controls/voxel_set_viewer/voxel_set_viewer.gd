@@ -99,7 +99,7 @@ func _ready():
 ## Public Methods
 # Sets search, and calls on update_view by default
 func set_search(value : String, update := true) -> void:
-	search = value
+	_search = value
 	
 	if is_instance_valid(Search):
 		Search.text = search
@@ -109,18 +109,18 @@ func set_search(value : String, update := true) -> void:
 
 # Sets allow_edit
 func set_edit_mode(value : bool, update := true) -> void:
-	allow_edit = value
+	_allow_edit = value
 
 
 # Sets selection_max, and shrinks _selections to new maximum if needed
 func set_selection_max(value : int) -> void:
-	selection_max = clamp(value, -1, 256)
+	_selection_max = clamp(value, -1, 256)
 	unselect_shrink()
 
 
 # Setter for show_hints
 func set_show_hints(value := show_hints) -> void:
-	show_hints = value
+	_show_hints = value
 	
 	if is_instance_valid(Hints):
 		Hints.visible = show_hints and (allow_edit or selection_max)
@@ -140,9 +140,9 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	if is_instance_valid(voxel_set):
 		if voxel_set.is_connected("requested_refresh", update_view):
-			voxel_set.disconnect("requested_refresh", update_view) 
+			_voxel_set.disconnect("requested_refresh", update_view) 
 	
-	voxel_set = value
+	_voxel_set = value
 	if is_instance_valid(voxel_set):
 		if not voxel_set.is_connected("requested_refresh", update_view):
 			voxel_set.connect("requested_refresh", update_view, [true])

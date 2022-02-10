@@ -70,12 +70,12 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	
 	if is_instance_valid(voxel_set):
 		if voxel_set.is_connected("requested_refresh", update_view):
-			voxel_set.disconnect("requested_refresh", update_view) 
+			_voxel_set.disconnect("requested_refresh", update_view) 
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
 		if not voxel_set.is_connected("requested_refresh", update_view):
-			voxel_set.connect("requested_refresh", update_view)
+			_voxel_set.connect("requested_refresh", update_view)
 	if is_instance_valid(VoxelSetViewer):
 		VoxelSetViewer.voxel_set = voxel_set
 	
