@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/voxel-core/controls/menus/color_picker_menu/color_picker_menu.gd" type="Script" id=1]
+
+[node name="ColorPickerMenu" type="WindowDialog"]
+margin_right = 340.0
+margin_bottom = 526.0
+rect_min_size = Vector2( 340, 526 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.0334347
+anchor_top = 0.0233463
+anchor_right = 0.969605
+anchor_bottom = 0.984435
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ColorPicker" type="ColorPicker" parent="VBoxContainer"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 312.0
+margin_bottom = 466.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 466.0
+margin_right = 308.0
+margin_bottom = 470.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 474.0
+margin_right = 308.0
+margin_bottom = 494.0
+size_flags_vertical = 3
+
+[node name="Confirm" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_right = 152.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
+
+[node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 156.0
+margin_right = 308.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"

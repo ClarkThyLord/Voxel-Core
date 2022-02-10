@@ -1,0 +1,61 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/voxel-core/controls/menus/tile_picker_menu/tile_picker_menu.gd" type="Script" id=1]
+[ext_resource path="res://addons/voxel-core/controls/tiles_viewer/tiles_viewer.tscn" type="PackedScene" id=2]
+
+[node name="TilePickerMenu" type="WindowDialog"]
+margin_right = 365.0
+margin_bottom = 306.0
+rect_min_size = Vector2( 324, 260 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.0246914
+anchor_top = 0.0307692
+anchor_right = 0.975309
+anchor_bottom = 0.969231
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_right = 348.0
+margin_bottom = 256.0
+rect_min_size = Vector2( 348, 256 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TilesViewer" parent="VBoxContainer/ScrollContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 348.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+selection_max = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+margin_top = 260.0
+margin_right = 348.0
+margin_bottom = 264.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 268.0
+margin_right = 348.0
+margin_bottom = 288.0
+
+[node name="Confirm" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_right = 172.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Confirm"
+
+[node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 176.0
+margin_right = 348.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
