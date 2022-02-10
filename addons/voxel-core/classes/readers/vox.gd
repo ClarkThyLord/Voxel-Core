@@ -1,5 +1,5 @@
 class_name VoxReader, "res://addons/voxel-core/assets/logos/MagicaVoxel.png"
-extends Reference
+extends RefCounted
 # MagicaVoxel file reader
 
 
@@ -113,7 +113,7 @@ static func read(file : File) -> Dictionary:
 	# to be consumed by the next node
 	var _size := Vector3()
 	
-	while file.get_position() < file.get_len():
+	while file.get_position() < file.get_length():
 		# common fields, present in all chunks
 		var chunk_id: String = file.get_buffer(4).get_string_from_ascii()
 		var chunk_size := file.get_32()
@@ -213,7 +213,7 @@ static func read(file : File) -> Dictionary:
 				var _node_dict := _read_vox_dict(file)
 				
 				var child_count := file.get_32()
-				var child_ids := PoolIntArray()
+				var child_ids := PackedInt32Array()
 				
 				child_ids.resize(child_count)
 				
@@ -325,7 +325,7 @@ static func _skip_unimplemented(file : File, chunk_size : int):
 	var _val = file.get_buffer(chunk_size)
 
 
-static func _unpack_transfom(rotation, translation) -> Transform:
+static func _unpack_transfom(rotation, translation) -> Transform3D:
 	var rotX := Vector3(1, 0, 0)
 	var rotY := Vector3(0, 1, 0)
 	var rotZ := Vector3(0, 0, 1)
@@ -365,13 +365,23 @@ static func _unpack_transfom(rotation, translation) -> Transform:
 			row2 = -row2
 		
 		# correct rotation for godot
+#		var eulerRot = Basis(row0, row1, row2).get_euler()
+#		var correctedBasis = Basis(
+#			Vector3(
+#				eulerRot.x,
+#				-eulerRot.z,
+#				-eulerRot.y
+#			)
+#		)
+
 		var eulerRot = Basis(row0, row1, row2).get_euler()
 		var correctedBasis = Basis(
 			Vector3(
 				eulerRot.x,
 				-eulerRot.z,
 				-eulerRot.y
-			)
+			),
+			0
 		)
 		
 		rotX = correctedBasis.x
@@ -390,7 +400,7 @@ static func _unpack_transfom(rotation, translation) -> Transform:
 			translation_array[1]
 		)
 	
-	return Transform(rotX, rotY, rotZ, origin)
+	return Transform3D(rotX, rotY, rotZ, origin)
 
 
 # transforms the node dict into a tree structure,
@@ -452,7 +462,7 @@ static func _merge_voxels(tree: Dictionary) -> Dictionary:
 	# transform voxels
 	if tree.has("transform"):
 		var transformed_voxels := {}
-		var transform: Transform = tree.transform
+		var transform: Transform3D = tree.transform
 		
 		# magica voxel positions are calculated from the models center
 		# offset the transform to account for this
@@ -465,7 +475,7 @@ static func _merge_voxels(tree: Dictionary) -> Dictionary:
 		for key in voxels.keys():
 			# offset by 0.5 during transform, to get correct rotations
 			var t_key = key + Vector3(0.5, 0.5, 0.5)
-			t_key = transform.xform(t_key)
+			t_key = transform * t_key
 			t_key -= Vector3(0.5, 0.5, 0.5)
 			
 			transformed_voxels[t_key] = voxels[key]

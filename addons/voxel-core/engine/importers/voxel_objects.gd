@@ -1,18 +1,18 @@
-tool
+@tool
 extends VoxelImporter
 # Import files as VoxelObjects
 
 
 ## Built-In Virtual Methods
-func get_visible_name() -> String:
+func _get_visible_name() -> String:
 	return "VoxelObject"
 
 
-func get_importer_name() -> String:
+func _get_importer_name() -> String:
 	return "VoxelCore.VoxelObject"
 
 
-func get_recognized_extensions() -> Array:
+func _get_recognized_extensions() -> Array:
 	return [
 		"png", "jpg",
 		"vox",
@@ -22,15 +22,15 @@ func get_recognized_extensions() -> Array:
 	]
 
 
-func get_resource_type() -> String:
+func _get_resource_type() -> String:
 	return "PackedScene"
 
 
-func get_save_extension() -> String:
+func _get_save_extension() -> String:
 	return "tscn"
 
 
-func get_import_options(preset : int) -> Array:
+func _get_import_options(preset : int) -> Array:
 	var preset_options = [
 		{
 			"name": "name",
@@ -46,12 +46,12 @@ func get_import_options(preset : int) -> Array:
 		}
 	]
 	
-	preset_options.append_array( get_shared_options(preset))
+	preset_options.append_array(_get_shared_options(preset))
 	
 	return preset_options
 
 
-func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
+func _import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
 	var voxel_object
 	match options.get("voxel_object", 0):
 		_: voxel_object = VoxelMesh.new()
@@ -84,6 +84,6 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		var scene = PackedScene.new()
 		error = scene.pack(voxel_object)
 		if error == OK:
-			error = ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], scene)
+			error = ResourceSaver.save("%s.%s" % [save_path, _get_save_extension()], scene)
 	voxel_object.free()
 	return error

@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selection.gd"
 
 
@@ -24,13 +24,13 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 			_selection.append(editor.get_selection())
 			_selection.append(editor.get_selection())
 		else:
-			if not _selection.empty():
+			if not _selection.is_empty():
 				editor.work_tool()
 				_selection.clear()
 	elif event is InputEventMouseMotion:
 		if not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):
 			if not editor.last_hit.empty():
-				if _selection.empty():
+				if _selection.is_empty():
 					editor.set_cursors_selections([editor.get_selection()])
 				else:
 					_selection[1] = editor.get_selection()

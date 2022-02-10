@@ -1,5 +1,5 @@
-tool
-extends Reference
+@tool
+extends RefCounted
 
 
 
@@ -11,7 +11,7 @@ var name := ""
 var tool_normal := 0
 
 # Types of selection modes
-var selection_modes := PoolStringArray([
+var selection_modes := PackedStringArray([
 	"individual",
 	"area",
 	"extrude",

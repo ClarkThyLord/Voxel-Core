@@ -1,4 +1,4 @@
-tool
+@tool
 extends Button
 # Button representing a voxel's face
 
@@ -6,19 +6,45 @@ extends Button
 
 ## Exported Variables
 # Color of voxel
-export var voxel_color := Color.black setget set_voxel_color
+var _voxel_color: Color = Color.BLACK
+@export var voxel_color: Color:
+	get:
+		return _voxel_color
+	set(value):
+		set_voxel_color(value)
 
 # Texture of voxel
-export var voxel_texture : Texture = null setget set_voxel_texture
+var _voxel_texture: Texture = null
+@export var voxel_texture: Texture:
+	get:
+		return _voxel_texture
+	set(value):
+		set_voxel_texture(value)
 
 # ID of voxel to represented
-export(int, -1, 100000) var voxel_id := -1 setget set_voxel_id
+# Range disabled due to GDScript 2 bug
+var _voxel_id: int = -1
+@export var voxel_id: int:
+	get:
+		return _voxel_id
+	set(value):
+		set_voxel_id(value)
 
 # Voxel's face to represent
-export var voxel_face := Vector3.ZERO setget set_voxel_face
+var _voxel_face: Vector3 = Vector3.ZERO
+@export var voxel_face: Vector3:
+	get:
+		return _voxel_face
+	set(value):
+		set_voxel_face(value)
 
 # VoxelSet being used
-export(Resource) var voxel_set = null setget set_voxel_set
+var _voxel_set: Resource = null
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
 
 
 
@@ -35,7 +61,7 @@ func set_voxel_color(value : Color) -> void:
 	voxel_color = value
 	
 	$VoxelColor.color = voxel_color
-	property_list_changed_notify()
+	$VoxelColor.emit_changed()
 
 
 # Sets voxel_texture
@@ -43,7 +69,7 @@ func set_voxel_texture(value : Texture) -> void:
 	voxel_texture = value
 	
 	$VoxelColor/VoxelTexture.texture = voxel_texture
-	property_list_changed_notify()
+	$VoxelColor/VoxelTexture.emit_changed()
 
 
 # Sets voxel_id, and calls on update_view by default

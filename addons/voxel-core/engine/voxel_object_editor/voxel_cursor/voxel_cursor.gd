@@ -1,12 +1,17 @@
-tool
-extends MeshInstance
+@tool
+extends MeshInstance3D
 # Mesh used to highlight voxel grid selections
 
 
 
 ## Exported Variables
 # Highlight color
-export var color := Color(1, 1, 1, 0.75) setget set_color
+var _color: Color = Color(1, 1, 1, 0.75)
+@export var color: Color: 
+	get:
+		return _color
+	set(value):
+		set_color(value)
 
 
 
@@ -15,7 +20,12 @@ export var color := Color(1, 1, 1, 0.75) setget set_color
 # A Vector3 highlights a single grid position
 # [Vector3, Vector3] highlights the area between two grid positions
 # Many type of selections can be mixed and selected at a time
-var selections := [] setget set_selections
+var _selections: Array = []
+var selections: Array:
+	get:
+		return _selections
+	set(value):
+		set_selections(value)
 
 
 
@@ -58,7 +68,7 @@ func set_selections(value : Array, update := true) -> void:
 # Setup the material if not already done
 func setup() -> void:
 	if not is_instance_valid(material_override):
-		material_override = SpatialMaterial.new()
+		material_override = StandardMaterial3D.new()
 	material_override.flags_transparent = true
 	material_override.flags_unshaded = true
 	material_override.params_grow = true
@@ -69,7 +79,7 @@ func setup() -> void:
 
 # Update highlighted position(s) / area(s)
 func update() -> void:
-	if not selections.empty():
+	if not selections.is_empty():
 		_voxel_tool.begin()
 		var voxel := Voxel.colored(color)
 		for selection in selections:

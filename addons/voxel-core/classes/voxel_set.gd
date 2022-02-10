@@ -1,4 +1,4 @@
-tool
+@tool
 class_name VoxelSet, "res://addons/voxel-core/assets/classes/voxel_set.png"
 extends Resource
 # Library of Voxels used by VoxelObjects.
@@ -13,15 +13,28 @@ signal requested_refresh
 
 ## Exported Variables
 # Size of each tile in tiles in pixels
-export var tile_size := Vector2(32.0, 32.0) setget set_tile_size
+var _tile_size: Vector2 = Vector2(32.0, 32.0)
+@export var tile_size: Vector2:
+	get:
+		return _tile_size
+	set(value):
+		set_tile_size(value)
 
 # Texture used for tiles / uv mapping
-export var tiles : Texture = null setget set_tiles
+var _tiles: Texture = null
+@export var tiles: Texture:
+	get:
+		return _tiles
+	set(value):
+		set_tiles(value)
 
 # Materials used by voxels
-export(Array, Material) var materials := [
-	SpatialMaterial.new(),
-] setget set_materials
+var _materials: Array[Material] = [ StandardMaterial3D.new() ]
+@export var materials: Array[Material]:
+	get:
+		return _materials
+	set(value):
+		set_materials(value)
 
 
 
@@ -95,15 +108,15 @@ func set_tiles(value : Texture, refresh := true) -> void:
 func set_materials(values : Array, refresh := true) -> void:
 	for index in range(values.size()):
 		var material = values[index]
-		if is_instance_valid(material) and not (material is SpatialMaterial or material is ShaderMaterial):
+		if is_instance_valid(material) and not (material is StandardMaterial3D or material is ShaderMaterial):
 			printerr("VoxelSet : Expected Spatial or Shader material got " + str(material))
 			values[index] = null
 	
-	if values.empty():
+	if values.is_empty():
 		materials.resize(1)
 	else:
 		materials = values
-	property_list_changed_notify()
+	emit_changed()
 	
 	if refresh:
 		request_refresh()
@@ -121,7 +134,7 @@ func size() -> int:
 
 # Returns true if VoxelSet has no voxels
 func empty() -> bool:
-	return _voxels.empty()
+	return _voxels.is_empty()
 
 
 # Returns true if VoxelSet has voxel with given id
@@ -199,7 +212,7 @@ func get_voxel(id : int) -> Dictionary:
 
 # Erase voxel from VoxelSet
 func erase_voxel(id : int) -> void:
-	_voxels.remove(id)
+	_voxels.remove_at(id)
 
 
 # Erases all voxels in VoxelSet

@@ -1,5 +1,5 @@
 class_name Reader
-extends Reference
+extends RefCounted
 # Makeshift interface class inhereted by all file readers.
 
 

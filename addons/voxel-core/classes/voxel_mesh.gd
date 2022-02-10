@@ -1,4 +1,4 @@
-tool
+@tool
 class_name VoxelMesh, "res://addons/voxel-core/assets/classes/voxel_mesh.png"
 extends "res://addons/voxel-core/classes/voxel_object.gd"
 # The most basic voxel visualization object, for a moderate amount of voxels.
@@ -40,7 +40,7 @@ func _get_property_list():
 
 ## Public Methods
 func empty() -> bool:
-	return _voxels.empty()
+	return _voxels.is_empty()
 
 
 func set_voxel(grid : Vector3, voxel : int) -> void:
@@ -73,14 +73,14 @@ func erase_voxels() -> void:
 
 
 func update_mesh() -> void:
-	if not _voxels.empty():
+	if not _voxels.is_empty():
 		var vt := VoxelTool.new()
 		vt.set_voxel_size(voxel_size)
 		
 		var materials := {}
 		if is_instance_valid(mesh) and mesh is ArrayMesh:
-			for index in get_surface_material_count():
-				var material := get_surface_material(index)
+			for index in get_surface_override_material_count():
+				var material := get_surface_override_material(index)
 				if is_instance_valid(material):
 					materials[mesh.surface_get_name(index)] = material
 		
@@ -93,10 +93,10 @@ func update_mesh() -> void:
 		for material_name in materials:
 			var material_index = mesh.surface_find_by_name(material_name)
 			if material_index > -1:
-				set_surface_material(material_index, materials[material_name])
+				set_surface_override_material(material_index, materials[material_name])
 	else:
 		mesh = null
-	.update_mesh()
+	update_mesh()
 
 
 func update_static_body() -> void:
@@ -104,7 +104,7 @@ func update_static_body() -> void:
 	
 	if (edit_hint >= 2 or static_body) and is_instance_valid(mesh):
 		if not is_instance_valid(staticBody):
-			staticBody = StaticBody.new()
+			staticBody = StaticBody3D.new()
 			staticBody.set_name("StaticBody")
 			add_child(staticBody)
 		
@@ -112,7 +112,7 @@ func update_static_body() -> void:
 		if staticBody.has_node("CollisionShape"):
 			collisionShape = staticBody.get_node("CollisionShape")
 		else:
-			collisionShape = CollisionShape.new()
+			collisionShape = CollisionShape3D.new()
 			collisionShape.set_name("CollisionShape")
 			staticBody.add_child(collisionShape)
 		collisionShape.shape = mesh.create_trimesh_shape()

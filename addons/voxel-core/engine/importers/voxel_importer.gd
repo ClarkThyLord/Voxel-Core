@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorImportPlugin
 class_name VoxelImporter
 # Base Class for 3d voxel importers
@@ -37,7 +37,7 @@ enum OriginZ {
 
 
 ## Built-In Virtual Methods
-func get_preset_name(preset : int) -> String:
+func _get_preset_name(preset : int) -> String:
 	var preset_keys = Presets.keys()
 	var preset_names = []
 	
@@ -50,47 +50,54 @@ func get_preset_name(preset : int) -> String:
 		return preset_names[preset]
 
 
-func get_import_options(preset: int) -> Array:
-	return get_shared_options(preset)
+func _get_import_options(preset: int) -> Array:
+	return _get_shared_options(preset)
 
 
-func get_preset_count() -> int:
+func _get_preset_count() -> int:
 	return Presets.size()
 
 
-func get_option_visibility(option : String, options : Dictionary) -> bool:
+func _get_option_visibility(option : String, options : Dictionary) -> bool:
 	return true
 
 
 ## Base Class Methods
-func get_shared_options(preset : int) -> Array:
+# Helper method since join() no longer exists on arrays
+func join(arr: Array, delim: String):
+	var res = ""
+	for a in arr:
+		res += a + delim
+
+# All "hint_string" keys where changed to be inferred arrays because of GDscript 2
+func _get_shared_options(preset : int) -> Array:
 	var preset_options = [
 		{
 			"name": "mesh_mode",
 			"default_value": VoxelMesh.MeshModes.GREEDY,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": PoolStringArray(VoxelMesh.MeshModes.keys()).join(","),
+			"hint_string": join(VoxelMesh.MeshModes.keys(), ","),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
 			"name": "origin_x",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": PoolStringArray(OriginX.keys()).join(","),
+			#"hint_string": Array[String](OriginX.keys()).join(","),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
 			"name": "origin_y",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": PoolStringArray(OriginY.keys()).join(","),
+			"hint_string": join(OriginY.keys(), ","),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{
 			"name": "origin_z",
 			"default_value": 0,
 			"property_hint": PROPERTY_HINT_ENUM,
-			"hint_string": PoolStringArray(OriginZ.keys()).join(","),
+			"hint_string": join(OriginZ.keys(), ","),
 			"usage": PROPERTY_USAGE_EDITOR,
 		},
 		{

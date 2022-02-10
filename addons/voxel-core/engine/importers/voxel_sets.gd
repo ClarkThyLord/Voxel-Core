@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorImportPlugin
 
 
@@ -9,15 +9,15 @@ enum Presets { DEFAULT }
 
 
 ## Built-In Virtual Methods
-func get_visible_name() -> String:
+func _get_visible_name() -> String:
 	return "VoxelSet"
 
 
-func get_importer_name() -> String:
+func _get_importer_name() -> String:
 	return "VoxelCore.VoxelSet"
 
 
-func get_recognized_extensions() -> Array:
+func _get_recognized_extensions() -> Array:
 	return [
 		"png", "jpg",
 		"vox",
@@ -25,19 +25,19 @@ func get_recognized_extensions() -> Array:
 	]
 
 
-func get_resource_type() -> String:
+func _get_resource_type() -> String:
 	return "Resource"
 
 
-func get_save_extension() -> String:
+func _get_save_extension() -> String:
 	return "tres"
 
 
-func get_preset_count() -> int:
+func _get_preset_count() -> int:
 	return Presets.size()
 
 
-func get_preset_name(preset : int) -> String:
+func _get_preset_name(preset : int) -> String:
 	match preset:
 		Presets.DEFAULT:
 			return "Default"
@@ -45,7 +45,7 @@ func get_preset_name(preset : int) -> String:
 			return "Unknown"
 
 
-func get_import_options(preset : int) -> Array:
+func _get_import_options(preset : int) -> Array:
 	var preset_options = [
 		
 	]
@@ -53,14 +53,14 @@ func get_import_options(preset : int) -> Array:
 	return preset_options
 
 
-func get_option_visibility(option : String, options : Dictionary) -> bool:
+func _get_option_visibility(option : String, options : Dictionary) -> bool:
 	return true
 
 
-func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
+func _import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
 	var voxel_set := VoxelSet.new()
 	var error = voxel_set.load_file(source_file)
 	if error == OK:
 		voxel_set.request_refresh()
-		error = ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], voxel_set)
+		error = ResourceSaver.save("%s.%s" % [save_path, _get_save_extension()], voxel_set)
 	return error

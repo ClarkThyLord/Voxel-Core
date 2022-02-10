@@ -1,4 +1,4 @@
-tool
+@tool
 extends TextureRect
 # Shows tiles of VoxelSet and allows for the selection of Tile(s)
 
@@ -14,19 +14,45 @@ signal unselected_uv(uv)
 
 ## Exported Variables
 # Maximum number of uv positions that can be selected at any one time
-export(int, -1, 256) var selection_max := 0 setget set_selection_max
+# Range disabled because of bug in GDScript 2
+var _selection_max: int = 0
+@export var selection_max: int:
+	get:
+		return _selection_max
+	set(value):
+		set_selection_max(value)
 
 # Color to applyed to border of hovered uv position(s)
-export var hovered_color := Color(1, 1, 1, 0.6) setget set_hovered_color
+var _hovered_color: Color = Color(1, 1, 1, 0.6)
+@export var hovered_color: Color:
+	get:
+		return _hovered_color
+	set(value):
+		set_hovered_color(value)
 
 # Color to applyed to border of selected uv position(s)
-export var selected_color := Color.white setget set_selection_color
+var _selected_color: Color = Color.WHITE
+@export var selected_color: Color:
+	get:
+		return _selected_color
+	set(value):
+		set_selection_color(value)
 
 # Color to applyed to border of invalid uv position(s)
-export var invalid_color := Color.red setget set_invalid_color
+var _invalid_color: Color = Color.RED
+@export var invalid_color: Color:
+	get:
+		return _invalid_color
+	set(value):
+		set_invalid_color(value)
 
 # VoxelSet being used
-export(Resource) var voxel_set = null setget set_voxel_set
+var _voxel_set: Resource = null
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
 
 
 
@@ -44,7 +70,7 @@ func _gui_input(event : InputEvent):
 	if event is InputEventMouse:
 		_last_uv_hovered = world_to_uv(event.position)
 		if selection_max != 0 and event is InputEventMouseButton:
-			if is_valid_uv(_last_uv_hovered) and event.button_index == BUTTON_LEFT and not event.is_pressed():
+			if is_valid_uv(_last_uv_hovered) and event.button_index == MOUSE_BUTTON_LEFT and not event.is_pressed():
 				if _selections.has(_last_uv_hovered):
 					unselect(_last_uv_hovered)
 				else:
@@ -105,21 +131,21 @@ func set_invalid_color(value : Color, update := true) -> void:
 
 
 # Sets voxel_set, calls update_mesh if needed and not told otherwise
-func set_voxel_set(value : Resource, update := true) -> void:
+func set_voxel_set(value : Resource, update_mesh := true) -> void:
 	if not (typeof(value) == TYPE_NIL or value is VoxelSet):
 		printerr("Invalid Resource given expected VoxelSet")
 		return
 	
 	if is_instance_valid(voxel_set):
-		if voxel_set.is_connected("requested_refresh", self, "update"):
-			voxel_set.disconnect("requested_refresh", self, "update")
+		if voxel_set.is_connected("requested_refresh", update):
+			voxel_set.disconnect("requested_refresh", update)
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
-		if not voxel_set.is_connected("requested_refresh", self, "update"):
-			voxel_set.connect("requested_refresh", self, "update")
+		if not voxel_set.is_connected("requested_refresh", update):
+			voxel_set.connect("requested_refresh", update)
 	
-	if update:
+	if update_mesh:
 		self.update()
 
 
@@ -181,7 +207,7 @@ func unselect(uv : Vector2, emit := true) -> void:
 
 # Unselects all uv position
 func unselect_all() -> void:
-	while not _selections.empty():
+	while not _selections.is_empty():
 		unselect(_selections.back())
 
 

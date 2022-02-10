@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tool.gd"
 
 
@@ -6,7 +6,7 @@ extends "res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_t
 ## Built-In Virtual Methods
 func _init():
 	name = "pick"
-	selection_modes = PoolStringArray([
+	selection_modes = PackedStringArray([
 		"individual"
 	])
 	mirror_modes = Vector3.ZERO

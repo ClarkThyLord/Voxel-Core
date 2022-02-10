@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selection.gd"
 
 
@@ -15,7 +15,7 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	
 	if (event is InputEventMouseButton and not event.pressed) and not editor.last_hit.empty():
 		editor.work_tool()
-	elif Input.is_mouse_button_pressed(BUTTON_LEFT) and Input.is_key_pressed(KEY_SHIFT):
+	elif Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_key_pressed(KEY_SHIFT):
 		editor.work_tool()
 	
 	if not (editor.last_hit.get("position") == prev_hit.get("position") and editor.last_hit.get("normal") == prev_hit.get("normal")):

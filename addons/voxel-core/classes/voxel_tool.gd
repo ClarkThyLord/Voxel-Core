@@ -1,6 +1,6 @@
-tool
+@tool
 class_name VoxelTool
-extends Reference
+extends RefCounted
 # Used to construct a Mesh with provided VoxelSet 
 # and by specifying voxel faces individually.
 
@@ -11,7 +11,7 @@ class Surface:
 	# Index of the last vertex in Mesh being constructed
 	var index : int
 	
-	var material : SpatialMaterial
+	var material : StandardMaterial3D
 	
 	# SurfaceTool used to construct Mesh
 	var surface_tool : SurfaceTool
@@ -87,13 +87,13 @@ func add_face(
 		voxel : Dictionary,
 		face : Vector3,
 		bottom_right : Vector3,
-		bottom_left := Vector3.INF,
-		top_right := Vector3.INF,
-		top_left := Vector3.INF) -> void:
+		bottom_left := Vector3(INF, INF, INF),
+		top_right := Vector3(INF, INF, INF),
+		top_left := Vector3(INF, INF, INF)) -> void:
 	bottom_right = bottom_right
-	if bottom_left == Vector3.INF: bottom_left = bottom_right
-	if top_right == Vector3.INF: top_right = bottom_right
-	if top_left == Vector3.INF: top_left = bottom_right
+	if bottom_left == Vector3(INF, INF, INF): bottom_left = bottom_right
+	if top_right == Vector3(INF, INF, INF): top_right = bottom_right
+	if top_left == Vector3(INF, INF, INF): top_left = bottom_right
 	
 	var color := Voxel.get_face_color(voxel, face)
 	var uv := Voxel.get_face_uv(voxel, face) if _uv_voxels else -Vector2.ONE
@@ -118,7 +118,7 @@ func add_face(
 		if is_instance_valid(surface.material):
 			surface.material = surface.material.duplicate()
 		else:
-			surface.material = SpatialMaterial.new()
+			surface.material = StandardMaterial3D.new()
 			
 			surface.material.metallic = metal
 			surface.material.metallic_specular = specular
@@ -128,7 +128,7 @@ func add_face(
 				surface.material.emission = energy_color
 				surface.material.emission_energy = energy
 		
-		if surface.material is SpatialMaterial:
+		if surface.material is StandardMaterial3D:
 			surface.material.vertex_color_use_as_albedo = true
 			surface.material.vertex_color_is_srgb = true
 			if uv_surface:

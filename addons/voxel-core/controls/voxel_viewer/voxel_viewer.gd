@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 # 2D / 3D preview of a voxel, that allows for selection and editing of faces.
 
@@ -26,25 +26,63 @@ var DefaultEnv := preload("res://addons/voxel-core/controls/voxel_viewer/voxel_v
 
 ## Exported Variables
 # Number of uv positions that can be selected at any one time
-export(int, 0, 6) var selection_max := 0 setget set_selection_max
+# Range disabled because of bug in GDScript 2
+var _selection_max: int = 0
+@export var selection_max: int:
+	get:
+		return _selection_max
+	set(value):
+		set_selection_max(value)
 
 # Flag indicating whether edits are allowed
-export var allow_edit := false setget set_allow_edit
+var _allow_edit: bool = false
+@export var allow_edit: bool:
+	get:
+		return _allow_edit
+	set(value):
+		set_allow_edit(value)
 
 # Current view being shown
-export(ViewModes) var view_mode := ViewModes.VIEW_3D setget set_view_mode
+var _view_mode: ViewModes = ViewModes.VIEW_3D
+@export var view_mode: ViewModes:
+	get:
+		return _view_mode
+	set(value):
+		set_view_mode(value)
 
 # View sensitivity for the 3D view
-export(int, 0, 100) var camera_sensitivity := 8
+var _camera_sensitivity: int = 8
+@export_range(1, 100) var camera_sensitivity: int:
+	get:
+		return _camera_sensitivity
+	set(value):
+		_camera_sensitivity = value
 
 # ID of voxel to represented
-export var voxel_id : int setget set_voxel_id
+# Range disabled due to GDScript 2 bug
+var _voxel_id: int = 0
+@export var voxel_id: int:
+	get:
+		return _voxel_id
+	set(value):
+		set_voxel_id(value)
 
 # VoxelSet beings used
-export(Resource) var voxel_set = null setget set_voxel_set
+# VoxelSet being used
+var _voxel_set: Resource = null
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
 
 # Environment used in 3D view
-export(Environment) var environment := DefaultEnv setget set_environment
+var _environment: Environment = DefaultEnv
+@export var environment: Environment:
+	get:
+		return _environment
+	set(value):
+		set_environment(value)
 
 
 
@@ -82,49 +120,49 @@ var _editing_multiple := false
 
 
 ## OnReady Variables
-onready var View2D := get_node("View2D")
+@onready var View2D := get_node("View2D")
 
-onready var View3D := get_node("View3D")
+@onready var View3D := get_node("View3D")
 
-onready var ViewPort := get_node("View3D/Viewport")
+@onready var ViewPort := get_node("View3D/Viewport")
 
-onready var CameraPivot := get_node("View3D/Viewport/CameraPivot")
+@onready var CameraPivot := get_node("View3D/Viewport/CameraPivot")
 
-onready var CameraRef := get_node("View3D/Viewport/CameraPivot/Camera")
+@onready var CameraRef := get_node("View3D/Viewport/CameraPivot/Camera")
 
-onready var VoxelPreview := get_node("View3D/Viewport/VoxelPreview")
+@onready var VoxelPreview := get_node("View3D/Viewport/VoxelPreview")
 
-onready var Select := get_node("View3D/Viewport/Select")
+@onready var Select := get_node("View3D/Viewport/Select")
 
-onready var ViewModeRef := get_node("ToolBar/ViewMode")
+@onready var ViewModeRef := get_node("ToolBar/ViewMode")
 
-onready var ViewerHint := get_node("ToolBar/Hint")
+@onready var ViewerHint := get_node("ToolBar/Hint")
 
-onready var ContextMenu := get_node("ContextMenu")
+@onready var ContextMenu := get_node("ContextMenu")
 
-onready var ColorMenu := get_node("ColorMenu")
+@onready var ColorMenu := get_node("ColorMenu")
 
-onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
+@onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
 
-onready var TextureMenu := get_node("TextureMenu")
+@onready var TextureMenu := get_node("TextureMenu")
 
-onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
+@onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
 
-onready var MaterialMenu := get_node("MaterialMenu")
+@onready var MaterialMenu := get_node("MaterialMenu")
 
-onready var MaterialRef := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material")
+@onready var MaterialRef := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer6/Material")
 
-onready var Metallic := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic")
+@onready var Metallic := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer/Metallic")
 
-onready var Specular := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular")
+@onready var Specular := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer2/Specular")
 
-onready var Roughness := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3/Roughness")
+@onready var Roughness := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer3/Roughness")
 
-onready var Energy := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4/Energy")
+@onready var Energy := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer4/Energy")
 
-onready var EnergyColor := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5/EnergyColor")
+@onready var EnergyColor := get_node("MaterialMenu/VBoxContainer/VBoxContainer/HBoxContainer5/EnergyColor")
 
-onready var EnvironmentMenu := get_node("EnvironmentMenu")
+@onready var EnvironmentMenu := get_node("EnvironmentMenu")
 
 
 
@@ -244,13 +282,13 @@ func set_voxel_set(value : Resource, update := true) -> void:
 		return
 	
 	if is_instance_valid(voxel_set):
-		if voxel_set.is_connected("requested_refresh", self, "update_view"):
-			voxel_set.disconnect("requested_refresh", self, "update_view") 
+		if voxel_set.is_connected("requested_refresh", update_view):
+			voxel_set.disconnect("requested_refresh", update_view) 
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
-		if not voxel_set.is_connected("requested_refresh", self, "update_view"):
-			voxel_set.connect("requested_refresh", self, "update_view")
+		if not voxel_set.is_connected("requested_refresh", update_view):
+			voxel_set.connect("requested_refresh", update_view)
 	if is_instance_valid(VoxelTexture):
 		VoxelTexture.voxel_set = voxel_set
 	
@@ -346,7 +384,7 @@ func unselect(face : Vector3, emit := true) -> void:
 
 # Unselects all the faces
 func unselect_all() -> void:
-	while not _selections.empty():
+	while not _selections.is_empty():
 		unselect(_selections.back())
 
 
@@ -362,7 +400,7 @@ func update_hint() -> void:
 	if is_instance_valid(ViewerHint):
 		ViewerHint.text = ""
 		
-		if not _selections.empty():
+		if not _selections.is_empty():
 			for i in range(len(_selections)):
 				if i > 0:
 					ViewerHint.text += ", "
@@ -554,7 +592,7 @@ func _voxel_restore() -> void:
 func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 	_last_hovered_face = normal
 	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == BUTTON_LEFT:
+		if event.button_index == MOUSE_BUTTON_LEFT:
 			if selection_max > 0:
 				if _selections.has(normal):
 					unselect(normal)
@@ -563,7 +601,7 @@ func _on_Face_gui_input(event : InputEvent, normal : Vector3) -> void:
 				accept_event()
 			else:
 				get_voxle_button(normal).pressed = false
-		elif event.button_index == BUTTON_RIGHT:
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			if allow_edit:
 				show_context_menu(event.global_position, _last_hovered_face)
 	update_hint()
@@ -586,7 +624,7 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 				CameraPivot.rotation_degrees.x += -motion.y * camera_sensitivity
 				CameraPivot.rotation_degrees.y += -motion.x * camera_sensitivity
 		elif event is InputEventMouseButton:
-			if event.button_index == BUTTON_LEFT:
+			if event.button_index == MOUSE_BUTTON_LEFT:
 				if event.doubleclick:
 					if not hit.empty() and selection_max > 0:
 						if _selections.has(hit["normal"]):
@@ -597,7 +635,7 @@ func _on_View3D_gui_input(event : InputEvent) -> void:
 					_is_dragging = true
 				else:
 					_is_dragging = false
-			elif event.button_index == BUTTON_RIGHT and not event.is_pressed():
+			elif event.button_index == MOUSE_BUTTON_RIGHT and not event.is_pressed():
 				show_context_menu(event.global_position, _last_hovered_face)
 		
 		if _is_dragging:
@@ -842,5 +880,5 @@ func _on_EnvironmentMenu_file_selected(path):
 	var _environment = load(path)
 	if _environment is Environment:
 		set_environment(_environment)
-		property_list_changed_notify()
+		# property_list_changed_notify()
 		save_environment()

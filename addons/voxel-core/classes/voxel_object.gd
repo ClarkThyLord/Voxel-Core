@@ -1,12 +1,12 @@
-tool
-extends MeshInstance
+@tool
+extends MeshInstance3D
 # Makeshift interface class inhereted by all voxel visualization objects.
 
 
 
 ## Signals
 # Emitted when VoxelSet is changed
-signal set_voxel_set(voxel_set)
+signal on_voxel_set_changed(voxel_set)
 
 
 
@@ -23,36 +23,87 @@ enum MeshModes {
 	#TRANSVOXEL,
 }
 
-
-
 ## Exported Variables
 # The meshing mode by which Mesh is generated
-export(MeshModes) var mesh_mode := MeshModes.NAIVE setget set_mesh_mode
+var _mesh_mode: MeshModes = MeshModes.NAIVE
+@export var mesh_mode: MeshModes:  
+	get:
+		return _mesh_mode
+	set(value):
+		set_mesh_mode(value)
+	
 
 # Flag indicating that UV Mapping should be applied when generating meshes if applicable
-export var uv_map := false setget set_uv_map
+var _uv_map: bool = false
+@export var uv_map: bool:
+	get:
+		return _uv_map
+	set(value):
+		set_uv_map(value)
 
 # Flag indicating the persitant attachment and maintenance of a StaticBody
-export var static_body := false setget set_static_body
+var _static_body: bool = false
+@export var static_body: bool:
+	get:
+		return _static_body
+	set(value):
+		set_static_body(value)
 
 # Size of each voxel in object
-export var voxel_size := 0.5 setget set_voxel_size
+var _voxel_size: float = 0.5
+@export var voxel_size: float:
+	get:
+		return _voxel_size
+	set(value):
+		set_voxel_size(value)
+	
 
 # The VoxelSet for this VoxelObject
-export(Resource) var voxel_set = null setget set_voxel_set
+var _voxel_set: Resource = null
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
+		
 
 
 
 ## Public Variables
 # Flag indicating that edits to voxel data will be frequent
 # NOTE: When true will only allow naive meshing
-var edit_hint := 0 setget set_edit_hint
+var _edit_hint: int = 0
+var edit_hint: int:
+	get:
+		return _edit_hint
+	set(value):
+		set_edit_hint(value)
+
 
 
 # Public Methods
 # Sets the EditHint flag, calls update_mesh if needed and not told otherwise
+# Sets voxel_set, calls update_mesh if needed and not told otherwise
+func set_voxel_set(value: Resource, update := is_inside_tree()) -> void:
+	if not (typeof(value) == TYPE_NIL or value is VoxelSet):
+		printerr("Invalid Resource given expected VoxelSet")
+		return
+	
+	if is_instance_valid(voxel_set):
+		if voxel_set.is_connected("requested_refresh", update_mesh):
+			voxel_set.disconnect("requested_refresh", update_mesh)
+	
+	voxel_set = value
+	if is_instance_valid(voxel_set):
+		if not voxel_set.is_connected("requested_refresh", update_mesh):
+			voxel_set.connect("requested_refresh", update_mesh)
+	
+	if update:
+		update_mesh()
+	emit_signal("set_voxel_set", voxel_set)
+
 func set_edit_hint(value : int, update := is_inside_tree()) -> void:
-	edit_hint = value
+	_edit_hint = value
 	
 	if update:
 		update_mesh()
@@ -88,26 +139,6 @@ func set_static_body(value : bool, update := is_inside_tree()) -> void:
 	
 	if update:
 		update_static_body()
-
-
-# Sets voxel_set, calls update_mesh if needed and not told otherwise
-func set_voxel_set(value : Resource, update := is_inside_tree()) -> void:
-	if not (typeof(value) == TYPE_NIL or value is VoxelSet):
-		printerr("Invalid Resource given expected VoxelSet")
-		return
-	
-	if is_instance_valid(voxel_set):
-		if voxel_set.is_connected("requested_refresh", self, "update_mesh"):
-			voxel_set.disconnect("requested_refresh", self, "update_mesh")
-	
-	voxel_set = value
-	if is_instance_valid(voxel_set):
-		if not voxel_set.is_connected("requested_refresh", self, "update_mesh"):
-			voxel_set.connect("requested_refresh", self, "update_mesh")
-	
-	if update:
-		update_mesh()
-	emit_signal("set_voxel_set", voxel_set)
 
 
 # Return true if no voxels are present
@@ -171,9 +202,9 @@ func get_box(volume := get_voxels()) -> Dictionary:
 		"end": Vector3.ZERO,
 	}
 	
-	if not volume.empty():
-		box["position"] = Vector3.INF
-		box["size"] = -Vector3.INF
+	if not volume.is_empty():
+		box["position"] = Vector3(INF, INF, INF)
+		box["size"] = -Vector3(INF, INF, INF)
 		
 		for voxel_grid in volume:
 			if voxel_grid.x < box["position"].x:
@@ -205,8 +236,8 @@ func get_box_transformed(volume := get_voxels()) -> Dictionary:
 	box.position = box.position * voxel_size
 	box.end = box.end * voxel_size
 	
-	box.position = global_transform.xform(box.position)
-	box.end = global_transform.xform(box.end)
+	box.position = global_transform * box.position
+	box.end = global_transform * box.end
 	box.size = box.end - box.position
 	
 	return box
@@ -270,7 +301,7 @@ func intersect_ray(
 		from : Vector3,
 		direction : Vector3,
 		max_distance := 64,
-		stop : FuncRef = null) -> Dictionary:
+		stop : Callable = Callable()) -> Dictionary:
 	var hit := {
 		"normal": Vector3(),
 	}
@@ -291,11 +322,11 @@ func intersect_ray(
 		hit["normal"].x = -step.x if step_index == 0 else 0
 		hit["normal"].y = -step.y if step_index == 1 else 0
 		hit["normal"].z = -step.z if step_index == 2 else 0
-		if get_voxel_id(grid) > -1 or (is_instance_valid(stop) and stop.call_func(hit)):
+		if get_voxel_id(grid) > -1 or (is_instance_valid(stop) and stop.call(hit)):
 			valid = true
 			break
 		
-		match t_max.min_axis():
+		match t_max.min_axis_index():
 			Vector3.AXIS_X:
 				grid.x += step.x
 				t = t_max.x
@@ -395,18 +426,20 @@ func naive_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 	if not is_instance_valid(voxel_set):
 		return null
 	
-	if not vt:
-		vt = VoxelTool.new()
-		vt.set_voxel_size(voxel_size)
+	var vtool = vt
 	
-	vt.begin(voxel_set, uv_map)
+	if not vtool:
+		vtool = VoxelTool.new()
+		vtool.set_voxel_size(voxel_size)
+	
+	vtool.begin(voxel_set, uv_map)
 	
 	for position in volume:
 		for direction in Voxel.Faces:
 			if get_voxel_id(position + direction) == -1:
-				vt.add_face(get_voxel(position), direction, position)
+				vtool.add_face(get_voxel(position), direction, position)
 	
-	return vt.commit()
+	return vtool.commit()
 
 
 # Greedy meshing
@@ -417,11 +450,13 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 	if not is_instance_valid(voxel_set):
 		return null
 	
-	if not vt:
-		vt = VoxelTool.new()
-		vt.set_voxel_size(voxel_size)
+	var vtool = vt
 	
-	vt.begin(voxel_set, uv_map)
+	if not vtool:
+		vtool = VoxelTool.new()
+		vtool.set_voxel_size(voxel_size)
+	
+	vtool.begin(voxel_set, uv_map)
 	
 	var faces = Voxel.Faces.duplicate()
 	for face in faces:

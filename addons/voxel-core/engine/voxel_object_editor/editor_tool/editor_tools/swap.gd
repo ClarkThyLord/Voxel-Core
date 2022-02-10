@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tool.gd"
 
 

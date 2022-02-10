@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selection.gd"
 
 
@@ -29,7 +29,7 @@ func select(editor, event : InputEventMouse, prev_hit : Dictionary) -> bool:
 	
 	if event is InputEventMouseButton:
 		if event.is_pressed():
-			if not _face.empty():
+			if not _face.is_empty():
 				_extruding = true
 				_extrude_normal = editor.last_hit["normal"]
 		else:

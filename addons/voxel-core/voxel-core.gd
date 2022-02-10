@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 
@@ -52,8 +52,8 @@ func _enter_tree():
 	add_import_plugin(VoxelSets)
 	add_import_plugin(VoxelScenes)
 	
-	connect("scene_closed", self, "_on_scene_closed")
-	connect("main_screen_changed", self, "_on_main_screen_changed")
+	connect("scene_closed", _on_scene_closed)
+	connect("main_screen_changed", _on_main_screen_changed)
 	
 	print("Voxel-Core is active...")
 
@@ -96,7 +96,7 @@ func edit(object):
 			return true
 
 
-func forward_spatial_gui_input(camera : Camera, event : InputEvent) -> bool:
+func forward_spatial_gui_input(camera : Camera3D, event : InputEvent) -> bool:
 	return voxel_object_editor.handle_input(camera, event) if is_instance_valid(voxel_object_editor) else false
 
 

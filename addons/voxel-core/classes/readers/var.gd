@@ -1,5 +1,5 @@
 class_name VarReader
-extends Reference
+extends RefCounted
 # Var file reader
 
 

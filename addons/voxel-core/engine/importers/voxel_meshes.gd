@@ -1,19 +1,19 @@
-tool
+@tool
 extends VoxelImporter
 # Import files as static Mesh Resource, not to be confused with VoxelObjects
 
 
 
 ## Built-In Virtual Methods
-func get_visible_name() -> String:
+func _get_visible_name() -> String:
 	return "MeshOfVoxels"
 
 
-func get_importer_name() -> String:
+func _get_importer_name() -> String:
 	return "VoxelCore.MeshOfVoxels"
 
 
-func get_recognized_extensions() -> Array:
+func _get_recognized_extensions() -> Array:
 	return [
 		"png", "jpg",
 		"vox",
@@ -23,15 +23,15 @@ func get_recognized_extensions() -> Array:
 	]
 
 
-func get_resource_type() -> String:
+func _get_resource_type() -> String:
 	return "Mesh"
 
 
-func get_save_extension() -> String:
+func _get_save_extension() -> String:
 	return "mesh"
 
 
-func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
+func _import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
 	var read := Reader.read_file(source_file)
 	var error = read.get("error", FAILED)
 	if error == OK:
@@ -65,7 +65,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		voxel_mesh.update_mesh()
 		
 		error = ResourceSaver.save(
-			'%s.%s' % [save_path, get_save_extension()],
+			'%s.%s' % [save_path, _get_save_extension()],
 			voxel_mesh.mesh)
 		
 		voxel_mesh.free()

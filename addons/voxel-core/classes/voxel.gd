@@ -1,4 +1,4 @@
-tool
+@tool
 class_name Voxel, "res://addons/voxel-core/assets/classes/voxel.png"
 extends Object
 # Utility class containing various properties and methods to do with voxels.
@@ -42,14 +42,16 @@ extends Object
 
 ## Constants
 # Lists of all voxel faces, and their adjacent directions
-const Faces := {
-	Vector3.RIGHT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
-	Vector3.UP: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
-	Vector3.FORWARD: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
-	Vector3.LEFT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
-	Vector3.DOWN: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
-	Vector3.BACK: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
-}
+# This is declared NOT as constant due to this 4.0 bug: https://github.com/godotengine/godot/issues/50285
+static func get_faces() -> Dictionary:
+	return {
+		Vector3.RIGHT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
+		Vector3.UP: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
+		Vector3.FORWARD: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
+		Vector3.LEFT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
+		Vector3.DOWN: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
+		Vector3.BACK: [ Vector3.LEFT, Vector3.RIGHT, Vector3.DOWN, Vector3.UP ],
+	}
 
 
 
@@ -61,7 +63,7 @@ const Faces := {
 static func colored(color : Color, colors := {}) -> Dictionary:
 	var voxel = {}
 	voxel["color"] = color
-	if not colors.empty():
+	if not colors.is_empty():
 		voxel["colors"] = colors.duplicate()
 	return voxel
 
@@ -73,7 +75,7 @@ static func has_color(voxel : Dictionary) -> bool:
 
 # Returns the defined color within given voxel if present, otherwise returns transparent color
 static func get_color(voxel : Dictionary) -> Color:
-	return voxel.get("color", Color.transparent)
+	return voxel.get("color", Color.TRANSPARENT)
 
 
 # Sets the given color to the given voxel
@@ -111,10 +113,10 @@ static func remove_face_color(voxel : Dictionary, face : Vector3) -> void:
 # color      :   Color                          :   color to set
 # colors     :   Dictionary<Vector3, Color>     :   face colors to set
 # return     :   Dictionary<String, Variant>    :   Dictionary representing voxel
-static func uvd(uv : Vector2, uvs := {}, color := Color.white, colors := {}) -> Dictionary:
+static func uvd(uv : Vector2, uvs := {}, color := Color.WHITE, colors := {}) -> Dictionary:
 	var voxel = colored(color, colors)
 	voxel["uv"] = uv
-	if not uvs.empty():
+	if not uvs.is_empty():
 		voxel["uvs"] = uvs
 	return voxel
 
@@ -166,7 +168,7 @@ static func remove_face_uv(voxel : Dictionary, face : Vector3) -> void:
 
 # Returns true if given name is valid
 static func is_valid_name(name : String) -> bool:
-	return not name.empty()
+	return not name.is_empty()
 
 
 # Returns the defined name within given voxel if present, otherwise returns an empty string
@@ -246,7 +248,7 @@ static func remove_energy(voxel : Dictionary) -> void:
 
 # Returns the defined energy_color within given voxel if present, otherwise returns Color.white
 static func get_energy_color(voxel : Dictionary) -> Color:
-	return voxel.get("energy_color", Color.white)
+	return voxel.get("energy_color", Color.WHITE)
 
 
 # Sets the given energy_color to the given voxel
@@ -282,7 +284,7 @@ static func clean(voxel : Dictionary) -> void:
 	if get_uv(voxel) == get_uv({}):
 		remove_uv(voxel)
 	
-	for face in Faces:
+	for face in get_faces:
 		if get_face_color(voxel, face) == get_color({}):
 			remove_face_color(voxel, face)
 		if get_face_uv(voxel, face) == get_uv({}):

@@ -1,31 +1,31 @@
-tool
+@tool
 extends VoxelImporter
 # Import vox files as scenes, maintaining seperate objects and offsets
 
 
 
 ## Built-In Virtual Methods
-func get_visible_name() -> String:
+func _get_visible_name() -> String:
 	return "MagicaVoxelScene"
 
 
-func get_importer_name() -> String:
+func _get_importer_name() -> String:
 	return "VoxelCore.MagicaVoxelScene"
 
 
-func get_recognized_extensions() -> Array:
+func _get_recognized_extensions() -> Array:
 	return ["vox"]
 
 
-func get_resource_type() -> String:
+func _get_resource_type() -> String:
 	return "PackedScene"
 
 
-func get_save_extension() -> String:
+func _get_save_extension() -> String:
 	return "tscn"
 
 
-func get_import_options(preset : int) -> Array:
+func _get_import_options(preset : int) -> Array:
 	var preset_options = [
 		{
 			"name": "root_name",
@@ -36,12 +36,12 @@ func get_import_options(preset : int) -> Array:
 		}
 	]
 	
-	preset_options.append_array( get_shared_options(preset))
+	preset_options.append_array(_get_shared_options(preset))
 	
 	return preset_options
 
 
-func import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
+func _import(source_file : String, save_path : String, options : Dictionary, r_platform_variants : Array, r_gen_files : Array) -> int:
 	# read file without merging voxels
 	var read := VoxReader.read_file(source_file, false)
 	var error = read.get("error", FAILED)
@@ -51,7 +51,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		var voxel_set = VoxelSet.new()
 		voxel_set.set_voxels(read["palette"])
 		
-		var root_node = Spatial.new()
+		var root_node = Node3D.new()
 		var voxel_size = options.get("voxel_size", 0.5)
 		
 		# name root node
@@ -91,7 +91,7 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 		error = scene.pack(root_node)
 		
 		if error == OK:
-			error = ResourceSaver.save("%s.%s" % [save_path, get_save_extension()], scene)
+			error = ResourceSaver.save("%s.%s" % [save_path, _get_save_extension()], scene)
 		
 		root_node.queue_free()
 	
@@ -101,15 +101,15 @@ func import(source_file : String, save_path : String, options : Dictionary, r_pl
 
 ## Private Methods
 # recursively builds scene from dict tree
-func _build_scene(tree : Dictionary, voxel_set : VoxelSet, root_node : Spatial, parent_node : Spatial, mesh_mode, voxel_size) -> AABB:
-	var node: Spatial
+func _build_scene(tree : Dictionary, voxel_set : VoxelSet, root_node : Node3D, parent_node : Node3D, mesh_mode, voxel_size) -> AABB:
+	var node: Node3D
 	var combined_aabb := AABB()
 	
 	if tree.type == "GROUP":
-		node = Spatial.new()
+		node = Node3D.new()
 		node.name = "Group"
 	elif tree.type == "SHAPE":
-		node = MeshInstance.new()
+		node = MeshInstance3D.new()
 		node.name = "Shape"
 		
 		var voxel_mesh = VoxelMesh.new()
@@ -146,7 +146,7 @@ func _build_scene(tree : Dictionary, voxel_set : VoxelSet, root_node : Spatial, 
 		node.transform = tree.transform
 		node.translation = node.translation * voxel_size
 	
-	if node is MeshInstance:
+	if node is MeshInstance3D:
 		combined_aabb = node.get_aabb()
 		combined_aabb.position += node.translation
 	
@@ -182,7 +182,7 @@ func _merge_aabb(aabb_a, aabb_b) -> Dictionary:
 
 # Shifts a spatials origin, by moving all its children
 # origin in fraction. -1 for no change
-func _shift_origin(node : Spatial, node_aabb : AABB, new_origin : Vector3, voxel_size : float) -> Spatial:
+func _shift_origin(node : Node3D, node_aabb : AABB, new_origin : Vector3, voxel_size : float) -> Node3D:
 	if new_origin == Vector3(-1.0, -1.0, -1.0):
 		return node
 	

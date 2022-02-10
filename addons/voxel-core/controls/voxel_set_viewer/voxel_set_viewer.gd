@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 # Listing of voxels in VoxelSet, with the ability to search, select and edit voxels.
 
@@ -19,19 +19,45 @@ const VoxelButton := preload("res://addons/voxel-core/controls/voxel_button/voxe
 
 ## Exported Variables
 # Search being done
-export var search := "" setget set_search
+var _search: String = ""
+@export var search: String:
+	get:
+		return _search
+	set(value):
+		set_search(value)
 
 # Flag indicating whether edits are allowed
-export var allow_edit := false setget set_edit_mode
+var _allow_edit: bool = false
+@export var allow_edit: bool:
+	get:
+		return _allow_edit
+	set(value):
+		set_edit_mode(value)
 
 # Number of uv positions that can be selected at any one time
-export(int, -1, 256) var selection_max := 0 setget set_selection_max
+# Range disabled because of bug in GDScript 2
+var _selection_max: int = 0
+@export var selection_max: int:
+	get:
+		return _selection_max
+	set(value):
+		set_selection_max(value)
 
 # Flag indicating whether Hints is visible
-export var show_hints := false setget set_show_hints
+var _show_hints: bool = false
+@export var show_hints: bool:
+	get:
+		return _show_hints
+	set(value):
+		set_show_hints(value)
 
 # VoxelSet being used
-export(Resource) var voxel_set = null setget set_voxel_set
+var _voxel_set: Resource = null
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
 
 
 
@@ -48,15 +74,15 @@ var _selections := []
 
 
 ## OnReady Variables
-onready var Search := get_node("VBoxContainer/Search")
+@onready var Search := get_node("VBoxContainer/Search")
 
-onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
+@onready var Voxels := get_node("VBoxContainer/ScrollContainer/Voxels")
 
-onready var Hints := get_node("VBoxContainer/Hints")
+@onready var Hints := get_node("VBoxContainer/Hints")
 
-onready var Hint := get_node("VBoxContainer/Hints/Hint")
+@onready var Hint := get_node("VBoxContainer/Hints/Hint")
 
-onready var ContextMenu := get_node("ContextMenu")
+@onready var ContextMenu := get_node("ContextMenu")
 
 
 
@@ -113,13 +139,13 @@ func set_voxel_set(value : Resource, update := true) -> void:
 		return
 	
 	if is_instance_valid(voxel_set):
-		if voxel_set.is_connected("requested_refresh", self, "update_view"):
-			voxel_set.disconnect("requested_refresh", self, "update_view") 
+		if voxel_set.is_connected("requested_refresh", update_view):
+			voxel_set.disconnect("requested_refresh", update_view) 
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
-		if not voxel_set.is_connected("requested_refresh", self, "update_view"):
-			voxel_set.connect("requested_refresh", self, "update_view", [true])
+		if not voxel_set.is_connected("requested_refresh", update_view):
+			voxel_set.connect("requested_refresh", update_view, [true])
 	elif is_instance_valid(Voxels):
 		for child in Voxels.get_children():
 			Voxels.remove_child(child)
@@ -174,7 +200,7 @@ func unselect(voxel_id : int, emit := true) -> void:
 	if index == -1:
 		return
 	
-	_selections.remove(index)
+	_selections.remove_at(index)
 	var voxel_button = get_voxel_button(voxel_id)
 	if is_instance_valid(voxel_button):
 		voxel_button.pressed = false
@@ -184,7 +210,7 @@ func unselect(voxel_id : int, emit := true) -> void:
 
 # Unselects all selected voxel ids
 func unselect_all(emit := true) -> void:
-	while not _selections.empty():
+	while not _selections.is_empty():
 		unselect(_selections[-1], emit)
 
 
@@ -205,7 +231,7 @@ func update_view(redraw := false) -> void:
 				child.queue_free()
 			
 			for id in voxel_set.get_ids():
-				var voxel_button := VoxelButton.instance()
+				var voxel_button := VoxelButton.instance() as Object
 				voxel_button.name = str(id)
 				voxel_button.set_voxel_id(id, false)
 				voxel_button.set_voxel_set(voxel_set, false)
@@ -213,14 +239,14 @@ func update_view(redraw := false) -> void:
 				voxel_button.toggle_mode = true
 				voxel_button.pressed = _selections.has(id)
 				voxel_button.mouse_filter = Control.MOUSE_FILTER_PASS
-				voxel_button.connect("pressed", self, "_on_VoxelButton_pressed", [voxel_button])
+				voxel_button.connect("pressed", _on_VoxelButton_pressed, [voxel_button])
 				Voxels.add_child(voxel_button)
 		
 		var keys := search.split(",", false)
 		for id in voxel_set.get_ids():
 			var show = true
 			for key in keys:
-				if (key.is_valid_integer() and id == key.to_int()) or voxel_set.id_to_name(id).find(key) > -1:
+				if (key.is_valid_int() and id == key.to_int()) or voxel_set.id_to_name(id).find(key) > -1:
 					show = true
 					break
 				show = false
@@ -240,7 +266,7 @@ func correct() -> void:
 
 ## Private Methods
 func _on_Voxels_gui_input(event):
-	if allow_edit and event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
+	if allow_edit and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		ContextMenu.clear()
 		if _selections.size() > 1:
 			ContextMenu.add_icon_item(
@@ -273,7 +299,7 @@ func _on_Voxels_gui_input(event):
 func _on_VoxelButton_pressed(voxel_button) -> void:
 	if selection_max != 0:
 		if voxel_button.pressed:
-			if not Input.is_key_pressed(KEY_CONTROL):
+			if not Input.is_key_pressed(KEY_CTRL):
 				unselect_all()
 			select(voxel_button.voxel_id)
 		else:
@@ -290,7 +316,7 @@ func _on_ContextMenu_id_pressed(_id : int):
 		0:
 			var id = voxel_set.size()
 			undo_redo.create_action("VoxelSetViewer : Add voxel")
-			undo_redo.add_do_method(voxel_set, "add_voxel", Voxel.colored(Color.white))
+			undo_redo.add_do_method(voxel_set, "add_voxel", Voxel.colored(Color.WHITE))
 			undo_redo.add_undo_method(voxel_set, "erase_voxel", id)
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")

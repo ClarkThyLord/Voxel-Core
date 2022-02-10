@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 
@@ -26,14 +26,15 @@ const VoxelCursor := preload("res://addons/voxel-core/engine/voxel_object_editor
 const VoxelObject := preload("res://addons/voxel-core/classes/voxel_object.gd")
 
 # Default editor config
-const ConfigDefault := {
+# CHANGED TO VAR BECAUSE OF GDScript 2
+var ConfigDefault := {
 	"cursor.visible": true,
 	"cursor.dynamic": true,
 	"cursor.voxel_raycasting": false,
-	"cursor.color": Color.white,
+	"cursor.color": Color.WHITE,
 	"grid.visible": true,
 	"grid.mode": VoxelGrid.GridModes.WIRED,
-	"grid.color": Color.white,
+	"grid.color": Color.WHITE,
 	"grid.constant": true,
 	"grid.size": Vector2(16, 16),
 }
@@ -51,7 +52,12 @@ var last_hit := {}
 var config := {}
 
 # Reference to VoxelObject being edited
-var voxel_object : VoxelObject setget start_editing
+var _voxel_object: VoxelObject
+var voxel_object: VoxelObject:
+	get:
+		return _voxel_object
+	set(value):
+		start_editing(value)
 
 
 
@@ -61,9 +67,9 @@ var _grid := VoxelGrid.new()
 
 # Colletions of loaded editor selection modes
 var _selection_modes := [
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selections/individual.gd").new(),
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selections/area.gd").new(),
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selections/extrude.gd").new(),
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selections/individual.gd").new() as Object,
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selections/area.gd").new() as Object,
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_selection/editor_selections/extrude.gd").new() as Object,
 ]
 
 # Refrence to editor's voxel cursors
@@ -80,11 +86,11 @@ var _cursors := {
 
 # Collection of loaded editor tools
 var _tools := [
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/add.gd").new(),
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/sub.gd").new(),
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/swap.gd").new(),
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/fill.gd").new(),
-	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/pick.gd").new(),
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/add.gd").new() as Object,
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/sub.gd").new() as Object,
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/swap.gd").new() as Object,
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/fill.gd").new() as Object,
+	preload("res://addons/voxel-core/engine/voxel_object_editor/editor_tool/editor_tools/pick.gd").new() as Object,
 ]
 
 # Voxel id of each palette
@@ -96,75 +102,75 @@ var import_file_path := ""
 
 
 ## OnReady Variables
-onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing")
+@onready var Editing := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/HBoxContainer/Editing")
 
-onready var Options := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options")
+@onready var Options := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options")
 
-onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool")
+@onready var Tool := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Tool")
 
-onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette")
+@onready var Palette := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/Palette")
 
-onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode")
+@onready var SelectionMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer/SelectionMode")
 
-onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorX")
+@onready var MirrorX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorX")
 
-onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorY")
+@onready var MirrorY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorY")
 
-onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ")
+@onready var MirrorZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/HBoxContainer2/MirrorZ")
 
-onready var VoxelSize := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize/Size")
+@onready var VoxelSize := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/VoxelSize/Size")
 
-onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser")
+@onready var ColorChooser := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser")
 
-onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser/ColorPicked")
+@onready var ColorPicked := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VBoxContainer/ColorChooser/ColorPicked")
 
-onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VoxelSetViewer")
+@onready var VoxelSetViewer := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Options/VoxelSetViewer")
 
-onready var Notice := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice")
+@onready var Notice := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer/Notice")
 
-onready var MoveX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/X")
+@onready var MoveX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/X")
 
-onready var MoveY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Y")
+@onready var MoveY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Y")
 
-onready var MoveZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Z")
+@onready var MoveZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Move/Z")
 
-onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/X")
+@onready var CenterX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/X")
 
-onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
+@onready var CenterY := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Y")
 
-onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
+@onready var CenterZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/Center/Z")
 
-onready var ImportMenu := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile")
+@onready var ImportMenu := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportFile")
 
-onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow")
+@onready var ImportHow := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/File/Import/ImportHow")
 
-onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
+@onready var Settings := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings")
 
-onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible")
+@onready var CursorVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorVisible")
 
-onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
+@onready var CursorDynamic := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/CursorDynamic")
 
-onready var VoxelRaycasting := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/VoxelRaycasting")
+@onready var VoxelRaycasting := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/VoxelRaycasting")
 
-onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
+@onready var CursorColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Cursor/ScrollContainer/VBoxContainer/HBoxContainer/CursorColor")
 
-onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
+@onready var GridVisible := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridVisible")
 
-onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
+@onready var GridConstant := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridConstant")
 
-onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
+@onready var GridMode := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/GridMode")
 
-onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
+@onready var GridColor := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/HBoxContainer2/GridColor")
 
-onready var GridSizeX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/X")
+@onready var GridSizeX := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/X")
 
-onready var GridSizeZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/Z")
+@onready var GridSizeZ := get_node("VoxelObjectEditor/HBoxContainer/VBoxContainer3/Settings/Grid/ScrollContainer/VBoxContainer/VBoxContainer/Size/Z")
 
-onready var ColorMenu := get_node("ColorMenu")
+@onready var ColorMenu := get_node("ColorMenu")
 
-onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
+@onready var ColorMenuColor := get_node("ColorMenu/VBoxContainer/Color")
 
-onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
+@onready var ColorMenuAdd := get_node("ColorMenu/VBoxContainer/HBoxContainer/Add")
 
 
 
@@ -375,7 +381,7 @@ func get_mirrors() -> Array:
 
 # Gets the user's current voxel grid selection
 func get_selection() -> Vector3:
-	return Vector3.INF if last_hit.empty() else (last_hit["position"] + last_hit["normal"] * _tools[Tool.get_selected_id()].tool_normal)
+	return Vector3(INF, INF, INF) if last_hit.is_empty() else (last_hit["position"] + last_hit["normal"] * _tools[Tool.get_selected_id()].tool_normal)
 
 
 # Gets each of the user's voxel grid selection with mirror applied
@@ -393,7 +399,7 @@ func set_cursors_voxel_size(size: float) -> void:
 
 
 # Sets the cursors visiblity
-func set_cursors_visibility(visible := Editing.pressed) -> void:
+func set_cursors_visibility(visible: bool = Editing.pressed) -> void:
 	_cursors[Vector3.ZERO].visible = visible and CursorVisible.pressed
 	var mirrors := get_mirrors()
 	for cursor in _cursors:
@@ -403,7 +409,7 @@ func set_cursors_visibility(visible := Editing.pressed) -> void:
 
 # Sets the cursors selection
 func set_cursors_selections(
-		selections := [last_hit["position"] + last_hit["normal"] * _tools[Tool.get_selected_id()].tool_normal] if not last_hit.empty() else []
+		selections := [last_hit["position"] + last_hit["normal"] * _tools[Tool.get_selected_id()].tool_normal] if not last_hit.is_empty() else []
 	) -> void:
 	_cursors[Vector3.ZERO].selections = selections
 	var mirrors := get_mirrors()
@@ -527,20 +533,20 @@ func reset_config() -> void:
 
 
 # Attempts to raycast for the VoxelObject
-func raycast_for(camera : Camera, screen_position : Vector2, target : Node) -> Dictionary:
+func raycast_for(camera : Camera3D, screen_position : Vector2, target : Node) -> Dictionary:
 	var hit := {}
 	var from := camera.project_ray_origin(screen_position)
 	var direction := camera.project_ray_normal(screen_position)
 	
 	if VoxelRaycasting.pressed:
 		hit = voxel_object.intersect_ray(
-				from, direction, 64, funcref(self, "_raycast_stop"))
+				from, direction, 64, _raycast_stop)
 	else:
 		var exclude := []
 		var to := from + direction * 1000
 		while true:
 			hit = camera.get_world().direct_space_state.intersect_ray(from, to, exclude)
-			if not hit.empty():
+			if not hit.is_empty():
 				if target.is_a_parent_of(hit.collider):
 					if _grid.is_a_parent_of(hit.collider):
 						hit["normal"] = Vector3.ZERO
@@ -645,8 +651,8 @@ func start_editing(new_voxel_object : VoxelObject) -> void:
 	update_object_params()
 	
 	setup_voxel_set(voxel_object.voxel_set)
-	voxel_object.connect("set_voxel_set", self, "setup_voxel_set")
-	voxel_object.connect("tree_exiting", self, "stop_editing", [true])
+	voxel_object.connect("on_voxel_set_changed", setup_voxel_set)
+	voxel_object.connect("tree_exiting", stop_editing, [true])
 
 
 # Disconnect currently edited VoxelObject
@@ -656,8 +662,8 @@ func stop_editing(close := false) -> void:
 		
 		detach_editor_components()
 		
-		voxel_object.disconnect("set_voxel_set", self, "setup_voxel_set")
-		voxel_object.disconnect("tree_exiting", self, "stop_editing")
+		voxel_object.disconnect("on_voxel_set_changed", setup_voxel_set)
+		voxel_object.disconnect("tree_exiting", stop_editing)
 	
 	Editing.pressed = false
 	voxel_object = null
@@ -675,13 +681,13 @@ func work_tool() -> void:
 
 
 # Handles editor input
-func handle_input(camera : Camera, event : InputEvent) -> bool:
+func handle_input(camera : Camera3D, event : InputEvent) -> bool:
 	if is_instance_valid(voxel_object):
 		if event is InputEventMouse:
 			var prev_hit = last_hit
 			last_hit = raycast_for(camera, event.position, voxel_object)
 			if Editing.pressed:
-				if event.button_mask & ~BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == BUTTON_LEFT):
+				if event.button_mask & ~MOUSE_BUTTON_MASK_LEFT > 0 or (event is InputEventMouseButton and not event.button_index == MOUSE_BUTTON_LEFT):
 					set_cursors_visibility(false)
 					return false
 				
@@ -698,7 +704,7 @@ func handle_input(camera : Camera, event : InputEvent) -> bool:
 
 
 # Shows color menu centered
-func show_color_menu(color := ColorPicked.color) -> void:
+func show_color_menu(color: Color = ColorPicked.color) -> void:
 	ColorMenuColor.color = color
 	ColorMenu.popup_centered()
 	ColorMenu.set_as_minsize()

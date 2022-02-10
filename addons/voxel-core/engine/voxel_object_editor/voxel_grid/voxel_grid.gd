@@ -1,5 +1,5 @@
-tool
-extends MeshInstance
+@tool
+extends MeshInstance3D
 # Grid Mesh used by VoxelObjectEditor
 
 
@@ -10,13 +10,33 @@ enum GridModes { SOLID, WIRED }
 
 
 ## Exported Variables
-export var disabled := false setget set_disabled
+var _disabled: bool = false
+@export var disabled: bool:
+	get:
+		return _disabled
+	set(value):
+		set_disabled(value)
 
-export(Color, RGB) var color := Color.white setget set_modulate
+var _color: Color = Color.WHITE
+@export var color: Color:
+	get:
+		return _color
+	set(value):
+		set_modulate(value)
 
-export(GridModes) var grid_mode := GridModes.WIRED setget set_grid_mode
+var _grid_mode: GridModes = GridModes.WIRED
+@export var grid_mode: GridModes:
+	get:
+		return _grid_mode
+	set(value):
+		set_grid_mode(value)
 
-export var grid_size := Vector3(16, 16, 16) setget set_grid_size
+var _grid_size: Vector3 = Vector3(16, 16, 16)
+@export var grid_size: Vector3:
+	get:
+		return _grid_size
+	set(value):
+		set_grid_size(value)
 
 
 
@@ -74,7 +94,7 @@ func set_grid_size(value : Vector3, update := true) -> void:
 
 func setup() -> void:
 	if not is_instance_valid(material_override):
-		material_override = SpatialMaterial.new()
+		material_override = StandardMaterial3D.new()
 	material_override.albedo_color = color
 	material_override.set_cull_mode(2)
 	update()

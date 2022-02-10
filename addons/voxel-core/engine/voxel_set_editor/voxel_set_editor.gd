@@ -1,4 +1,4 @@
-tool
+@tool
 extends ScrollContainer
 
 
@@ -10,8 +10,12 @@ signal close
 
 
 ## Exported Variables
-export(Resource) var voxel_set = null setget set_voxel_set
-
+var _voxel_set: Resource = null
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
 
 
 ## Public Variables
@@ -25,25 +29,25 @@ var import_file_path := ""
 
 
 ## OnReady Variables
-onready var ImportMenu := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile")
+@onready var ImportMenu := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportFile")
 
-onready var ImportHow := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow")
+@onready var ImportHow := get_node("HBoxContainer/VBoxContainer/HBoxContainer/HBoxContainer/Import/ImportHow")
 
-onready var VoxelSetInfo := get_node("HBoxContainer/VBoxContainer/VoxelSetInfo")
+@onready var VoxelSetInfo := get_node("HBoxContainer/VBoxContainer/VoxelSetInfo")
 
-onready var VoxelInfo := get_node("HBoxContainer/VBoxContainer/VoxelInfo")
+@onready var VoxelInfo := get_node("HBoxContainer/VBoxContainer/VoxelInfo")
 
-onready var VoxelID := get_node("HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID")
+@onready var VoxelID := get_node("HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelID")
 
-onready var VoxelName := get_node("HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName")
+@onready var VoxelName := get_node("HBoxContainer/VBoxContainer/VoxelInfo/HBoxContainer/VoxelName")
 
-onready var VoxelData := get_node("HBoxContainer/VBoxContainer/VoxelInfo/VoxelData")
+@onready var VoxelData := get_node("HBoxContainer/VBoxContainer/VoxelInfo/VoxelData")
 
-onready var VoxelSetViewer := get_node("HBoxContainer/VBoxContainer2/VoxelSetViewer")
+@onready var VoxelSetViewer := get_node("HBoxContainer/VBoxContainer2/VoxelSetViewer")
 
-onready var VoxelInspector := get_node("HBoxContainer/VoxelInspector")
+@onready var VoxelInspector := get_node("HBoxContainer/VoxelInspector")
 
-onready var VoxelViewer := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
+@onready var VoxelViewer := get_node("HBoxContainer/VoxelInspector/VoxelViewer")
 
 
 
@@ -65,13 +69,13 @@ func set_voxel_set(value : Resource, update := true) -> void:
 		return
 	
 	if is_instance_valid(voxel_set):
-		if voxel_set.is_connected("requested_refresh", self, "update_view"):
-			voxel_set.disconnect("requested_refresh", self, "update_view") 
+		if voxel_set.is_connected("requested_refresh", update_view):
+			voxel_set.disconnect("requested_refresh", update_view) 
 	
 	voxel_set = value
 	if is_instance_valid(voxel_set):
-		if not voxel_set.is_connected("requested_refresh", self, "update_view"):
-			voxel_set.connect("requested_refresh", self, "update_view")
+		if not voxel_set.is_connected("requested_refresh", update_view):
+			voxel_set.connect("requested_refresh", update_view)
 	if is_instance_valid(VoxelSetViewer):
 		VoxelSetViewer.voxel_set = voxel_set
 	
@@ -188,7 +192,7 @@ func _on_VoxelName_text_entered(new_name : String):
 		return
 	
 	var _voxel = voxel.duplicate(true)
-	if new_name.empty():
+	if new_name.is_empty():
 		undo_redo.create_action("VoxelSetEditor : Remove voxel name")
 		Voxel.remove_name(_voxel)
 	else:

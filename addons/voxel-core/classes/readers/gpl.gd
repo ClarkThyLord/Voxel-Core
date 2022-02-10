@@ -1,5 +1,5 @@
 class_name GPLReader
-extends Reference
+extends RefCounted
 # GIMP palette file reader
 
 
