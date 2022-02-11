@@ -471,9 +471,12 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 		for position in volume:
 			if get_voxel_id(position + face) == -1:
 				faces[face].append(position)
-	
+	# TO BE DELETED
+	var count = 0
 	for face in faces:
 		while not faces[face].is_empty():
+			count += 1
+			print(count, " done. Remaining: ", faces[face].size())
 			var bottom_right : Vector3 = faces[face].pop_front()
 			var bottom_left : Vector3 = bottom_right
 			var top_right : Vector3 = bottom_right
@@ -486,7 +489,7 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 				
 				while true:
 					var index = faces[face].find(top_right + Voxel.get_faces()[face][1])
-					print("Top right index", index)
+					#print("Top right index", index)
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
 						if Voxel.get_face_color(_voxel, face) == Voxel.get_face_color(voxel, face) and (not uv_map or Voxel.get_face_uv(_voxel, face) == -Vector2.ONE):
@@ -500,7 +503,7 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 						break
 				
 				while true:
-					print("Top left")
+					#print("Top left")
 					var index = faces[face].find(top_left + Voxel.get_faces()[face][0])
 					if index > -1:
 						var _voxel = get_voxel(faces[face][index])
@@ -515,7 +518,7 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 						break
 				
 				while true:
-					print("Top right 2")
+					#print("Top right 2")
 					var used := []
 					var current := top_right
 					var index = faces[face].find(current + Voxel.get_faces()[face][3])
@@ -548,7 +551,7 @@ func greed_volume(volume : Array, vt : VoxelTool = null) -> ArrayMesh:
 						break
 				
 				while true:
-					print("Bottom right")
+					#print("Bottom right")
 					var used := []
 					var current := bottom_right
 					var index = faces[face].find(current + Voxel.get_faces()[face][2])

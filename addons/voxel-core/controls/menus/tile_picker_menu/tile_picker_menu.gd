@@ -1,4 +1,4 @@
-tool
+@tool
 extends "res://addons/voxel-core/controls/menus/menu.gd"
 ## Color Picker Menu Class
 
@@ -14,24 +14,50 @@ signal tile_picked(tiles)
 
 
 ## Exported Variables
-export(int, -1, 256) var selection_max := 0 setget set_selection_max
+# Range temporarily disabled for 4.0
+var _selection_max: int = 10
+@export var selection_max: int:
+	get:
+		return _selection_max
+	set(value):
+		set_selection_max(value)
 
-export var hovered_color := Color(1, 1, 1, 0.6) setget set_hovered_color
+var _hovered_color: Color = Color(1, 1, 1, 0.6)
+@export var hovered_color: Color:
+	get:
+		return _hovered_color
+	set(value):
+		set_hovered_color(value)
 
-export var selected_color := Color.white setget set_selection_color
+var _selected_color: Color = Color.WHITE
+@export var selected_color: Color:
+	get:
+		return _selected_color
+	set(value):
+		set_selection_color(value)
 
-export var invalid_color := Color.red setget set_invalid_color
+var _invalid_color: Color = Color.RED
+@export var invalid_color: Color:
+	get:
+		return _invalid_color
+	set(value):
+		set_invalid_color(value)
 
-export(Resource) var voxel_set setget set_voxel_set
+var _voxel_set: Resource
+@export var voxel_set: Resource:
+	get:
+		return _voxel_set
+	set(value):
+		set_voxel_set(value)
 
 
 
 ## OnReady Variables
-onready var tiles_viewer := get_node("VBoxContainer/ScrollContainer/TilesViewer")
+@onready var tiles_viewer := get_node("VBoxContainer/ScrollContainer/TilesViewer")
 
-onready var confirm : Button = get_node("VBoxContainer/HBoxContainer/Confirm")
+@onready var confirm : Button = get_node("VBoxContainer/HBoxContainer/Confirm")
 
-onready var cancel : Button = get_node("VBoxContainer/HBoxContainer/Cancel")
+@onready var cancel : Button = get_node("VBoxContainer/HBoxContainer/Cancel")
 
 
 
@@ -45,41 +71,41 @@ func _ready() -> void:
 	
 	update_rect_min()
 	
-	tiles_viewer.connect("tile_selected", self, "_on_TilesViewer_selected_tile")
-	tiles_viewer.connect("tile_unselected", self, "_on_TilesViewer_unselected_tile")
+	tiles_viewer.connect("tile_selected", _on_TilesViewer_selected_tile)
+	tiles_viewer.connect("tile_unselected", _on_TilesViewer_unselected_tile)
 	
-	confirm.connect("pressed", self, "_on_Confirm_pressed")
+	confirm.connect("pressed", _on_Confirm_pressed)
 	
-	cancel.connect("pressed", self, "_on_Cancel_pressed")
+	cancel.connect("pressed", _on_Cancel_pressed)
 
 
 ## Public Methods
 func set_selection_max(value : int, update := true) -> void:
-	selection_max = value
+	_selection_max = value
 	if is_instance_valid(tiles_viewer):
 		tiles_viewer.set_selection_max(value, update)
 
 
 func set_hovered_color(value : Color, update := true) -> void:
-	hovered_color = value
+	_hovered_color = value
 	if is_instance_valid(tiles_viewer):
 		tiles_viewer.set_hovered_color(value, update)
 
 
 func set_selection_color(value : Color, update := true) -> void:
-	selected_color = value
+	_selected_color = value
 	if is_instance_valid(tiles_viewer):
 		tiles_viewer.set_selection_color(value, update)
 
 
 func set_invalid_color(value : Color, update := true) -> void:
-	invalid_color = value
+	_invalid_color = value
 	if is_instance_valid(tiles_viewer):
 		tiles_viewer.set_invalid_color(value, update)
 
 
 func set_voxel_set(value : Resource, update := true) -> void:
-	voxel_set = value
+	_voxel_set = value
 	if is_instance_valid(tiles_viewer):
 		tiles_viewer.set_voxel_set(value, update)
 

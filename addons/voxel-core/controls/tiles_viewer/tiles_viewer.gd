@@ -68,7 +68,7 @@ var _selections := []
 
 ## Built-In Virtual Methods
 func _ready() -> void:
-	connect("mouse_exited", self, "_on_mouse_exited")
+	connect("mouse_exited", _on_mouse_exited)
 
 
 func _gui_input(event : InputEvent):

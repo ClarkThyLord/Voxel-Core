@@ -1,4 +1,4 @@
-extends WindowDialog
+extends PopupMenu
 
 
 # Declare member variables here. Examples:
