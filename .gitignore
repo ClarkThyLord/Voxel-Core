@@ -3,8 +3,8 @@
 export.cfg
 export_presets.cfg
 
+# Godot 4+ specific ignores
+.godot/
+
 # Mono-specific ignores
 .mono/
-
-addons/voxel-core/**/*.var
-testing/

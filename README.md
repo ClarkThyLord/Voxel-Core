@@ -1,16 +1,14 @@
-<p align="center">
-	<a>
-		<img width="128px" src="./assets/VoxelCore.svg?sanitize=true" alt="" />
-		<h1 align="center">
-			Voxel-Core
-		</h1>
+<h1 align="center">
+	<a href="https://github.com/ClarkThyLord/Voxel-Core">
+		<img width="128px" src="./icon.svg?sanitize=true" alt="" />
+		<br />
+		Voxel-Core
 	</a>
-</p>
-
+</h1>
 
 <p align="center">
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/releases">
-		<img src="https://img.shields.io/badge/Version-3.2.0-green.svg" alt="Version">
+		<img src="https://img.shields.io/badge/Version-4.0.0-green.svg" alt="Version">
 	</a>
 	<a href="https://godotengine.org/asset-library/asset/465">
 		<img src="https://img.shields.io/badge/Godot-AssetLibrary-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAACZSURBVDhPzYzBDYMwEAQt0VjCJxWkq1TBkybyIU3kw58iAJ1vF1bmUBLEIyONbN/tOp3O7fGcTDwz0WwXhiMR2cJlWYjU/EIZ+sZ721aoH/sAVYfD7j1MhgapMcoOVYfD66XOGizx5I5ZVB0OGdQ37/qxiarD4S+i6uSvAQPNq1/kTEHV0QDvkbpHdUWDn0RlSxQuRfRvSGkGI8iOwHqmdCcAAAAASUVORK5CYII=" alt="AssetLibrary">
@@ -27,7 +25,7 @@
 
 ---
 <p align="center">
-<img src="./assets/promo.jpg" alt="" />
+	<img src="./promo.jpg" alt="" />
 </p>
 
 # About
@@ -79,10 +77,13 @@ If for whatever reason you don't want to or can't download Voxel-Core via the in
 ---
 
 <p align="center">
-	<a href="https://godotengine.org/asset-library/asset/465" style="vertical-align: middle;">
-		Asset Library
+	<a href="https://github.com/ClarkThyLord/Voxel-Core" style="vertical-align: middle;">
+		GitHub
 	</a>
 	<a href="https://github.com/ClarkThyLord/Voxel-Core/blob/master/LICENSE" style="vertical-align: middle;">
 		MIT LICENSE
+	</a>
+	<a href="https://godotengine.org/asset-library/asset/465" style="vertical-align: middle;">
+		Godot Asset Library
 	</a>
 </p>

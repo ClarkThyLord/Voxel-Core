@@ -6,116 +6,14 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "Reference",
-"class": "GPLReader",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/readers/gpl.gd"
-}, {
-"base": "Reference",
-"class": "ImageReader",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/readers/image.gd"
-}, {
-"base": "Reference",
-"class": "Reader",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/reader.gd"
-}, {
-"base": "Reference",
-"class": "VarReader",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/readers/var.gd"
-}, {
-"base": "Reference",
-"class": "VoxReader",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/readers/vox.gd"
-}, {
-"base": "Object",
-"class": "Voxel",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/voxel.gd"
-}, {
-"base": "EditorImportPlugin",
-"class": "VoxelImporter",
-"language": "GDScript",
-"path": "res://addons/voxel-core/engine/importers/voxel_importer.gd"
-}, {
-"base": "MeshInstance",
-"class": "VoxelMesh",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/voxel_mesh.gd"
-}, {
-"base": "Resource",
-"class": "VoxelSet",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/voxel_set.gd"
-}, {
-"base": "Reference",
-"class": "VoxelTool",
-"language": "GDScript",
-"path": "res://addons/voxel-core/classes/voxel_tool.gd"
-} ]
-_global_script_class_icons={
-"GPLReader": "",
-"ImageReader": "res://addons/voxel-core/assets/logos/MagicaVoxel.png",
-"Reader": "",
-"VarReader": "",
-"VoxReader": "res://addons/voxel-core/assets/logos/MagicaVoxel.png",
-"Voxel": "res://addons/voxel-core/assets/classes/voxel.png",
-"VoxelImporter": "",
-"VoxelMesh": "res://addons/voxel-core/assets/classes/voxel_mesh.png",
-"VoxelSet": "res://addons/voxel-core/assets/classes/voxel_set.png",
-"VoxelTool": ""
-}
+config_version=5
 
 [application]
 
 config/name="Voxel-Core"
-boot_splash/image="res://assets/VoxelCore.splash.png"
-boot_splash/bg_color=Color( 1, 1, 1, 1 )
-config/icon="res://icon.png"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "voxel-core" )
-
-[input]
-
-ui_left={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777231,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":14,"pressure":0.0,"pressed":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":65,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
-}
-ui_right={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777233,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":15,"pressure":0.0,"pressed":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":68,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
-}
-ui_up={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777232,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":12,"pressure":0.0,"pressed":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":87,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
-}
-ui_down={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777234,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":13,"pressure":0.0,"pressed":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
-}
+config/features=PackedStringArray("4.0", "Mobile")
+config/icon="res://icon.svg"
 
 [rendering]
 
-vram_compression/import_etc=true
-vram_compression/import_etc2=false
-environment/default_environment="res://default_env.tres"
+renderer/rendering_method="mobile"
