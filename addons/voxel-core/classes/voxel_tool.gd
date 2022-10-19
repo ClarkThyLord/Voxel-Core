@@ -96,7 +96,7 @@ func add_face(
 	if top_left == Vector3.INF: top_left = bottom_right
 	
 	var color := Voxel.get_face_color(voxel, face)
-	var uv := Voxel.get_face_uv(voxel, face) if _uv_voxels else -Vector2.ONE
+	var uv : Vector2 = Voxel.get_face_uv(voxel, face) if _uv_voxels else -Vector2.ONE
 	var uv_surface := uv != -Vector2.ONE
 	
 	var material := Voxel.get_material(voxel)

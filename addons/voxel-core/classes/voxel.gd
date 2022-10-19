@@ -1,18 +1,30 @@
 tool
 class_name Voxel, "res://addons/voxel-core/assets/classes/voxel.png"
 extends Object
-# Utility class containing various properties and methods to do with voxels.
+# Utility class containing various helpful static values and methods that have 
+# to do with voxels.
+#
+# NOTE: As this is a utility class, it is not designed to be instantiated. 
+# Instead, access all of its values and methods from anywhere like so:
+#	for face in Voxel.Faces:
+#		Voxel.get_face_color(..., face)
+#
+# Voxel-Core represents all voxels with dictionaries, however that doesn't mean
+# that every dictionary is a voxel. Only when a dictionary follows the schema
+# defined below is it a valid voxel. The voxel schema is intended to allow the
+# creation of a wide variety of voxels, each with its own color,
+# texture, material, and more.
+#
+# In addition, being as voxels are represented as dictionaries it allows you
+# to easily extend their data structure. However, any extension must be done in
+# such a way that it respects the original structure so as to avoid conflicts
+# with the existing Voxel-Core logic.
 #
 # Voxel Schema:
-# Every voxel is a Dictionary, not every Dictionary is a voxel, only by following
-# the voxel scheme indicated below can wide varieties of voxels be produced. 
-# Note that voxel dictionaries may have additions, but they must be done in such
-# a way as to respect the original structure so as to avoid conflicts.
-#
 # {
-#   name                 :   String           ~   Used in VoxelSets, should always be lowercase
-#   color                :   Color            ~   Default color used for all voxel faces, if not present fallback is Transparent color
-#   colors               :   Dictionary = {   ~   Color used on a per face bases, if not present fallback is voxel color
+#   name                 :   String           ~   Lowercase string, used as identifier by VoxelSet
+#   color                :   Color            ~   RGB color, default color used for all voxel Faces
+#   colors               :   Dictionary = {   ~   Dictionary, contains RGB Color values paired with their respective Vector2 voxel face key
 #      Vector3.UP        :   Color
 #      Vector3.DOWN      :   Color
 #      Vector3.RIGHT     :   Color
@@ -20,8 +32,8 @@ extends Object
 #      Vector3.FORWARD   :   Color
 #      Vector3.BACK      :   Color
 #   }
-#   uv                   :   Vector2          ~   Default uv position used for all voxel faces, if not present fallback is (-1.0, -1.0)
-#   uvs                  :   Dictionary = {   ~   uv position used on a per face bases, if not present fallback to voxel uv
+#   uv                 :   Vector2          ~   Vector2, default uv used for all the voxel Faces
+#   uvs                :   Dictionary = {   ~   uv position used on a per face bases, if not present fallback to voxel uv
 #      Vector3.UP        :   Vector2
 #      Vector3.DOWN      :   Vector2
 #      Vector3.RIGHT     :   Vector2
@@ -30,18 +42,17 @@ extends Object
 #      Vector3.BACK      :   Vector2
 #   }
 #   metallic             :   float            ~   Metallic value used for all voxel face's material, must be between 0.0 and 1.0 and if not present fallback is 0.0
-#   specular             :   float            ~   Specular value used for all voxel faces, must be between 0.0 and 1.0 and if not present fallback is 0.5
-#   roughness            :   float            ~   Roughness value used for all voxel faces, must be between 0.0 and 1.0 and if not present fallback is 1.0
-#   energy               :   float            ~   Emission energy value used for all voxel faces, must be between 0.0 and 16.0 and if not present fallback is 0.0
-#   energy_color         :   Color            ~   Emission color used for all voxel faces, if not present fallback is white
+#   specular             :   float            ~   Specular value used for all voxel Faces, must be between 0.0 and 1.0 and if not present fallback is 0.5
+#   roughness            :   float            ~   Roughness value used for all voxel Faces, must be between 0.0 and 1.0 and if not present fallback is 1.0
+#   energy               :   float            ~   Emission energy value used for all voxel Faces, must be between 0.0 and 16.0 and if not present fallback is 0.0
+#   energy_color         :   Color            ~   Emission color used for all voxel Faces, if not present fallback is white
 #   material             :   int              ~   ID of the VoxelSet material used for this voxel, if not present fallback is -1
 # }
-#
 
 
 
 ## Constants
-# Lists of all voxel faces, and their adjacent directions
+# Lists of all voxel Faces, and their adjacent directions
 const Faces := {
 	Vector3.RIGHT: [ Vector3.FORWARD, Vector3.BACK, Vector3.DOWN, Vector3.UP ],
 	Vector3.UP: [ Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK ],
@@ -54,7 +65,7 @@ const Faces := {
 
 
 ## Public Methods
-# Returns Dictionary representation of a colored voxel
+# Returns dictionary representation of a colored voxel.
 # color    :   Color                        :   color to set
 # colors   :   Dictionary<Vector3, Color>   :   face colors to set
 # return   :   Dictionary<String, Variant>  :   Dictionary representing voxel
@@ -105,7 +116,7 @@ static func remove_face_color(voxel : Dictionary, face : Vector3) -> void:
 			voxel.erase("colors")
 
 
-# Returns Dictionary representation of a uvd voxel
+# Returns Dictionary representation of a uv voxel
 # uv         :   Vector2                        :   uv to set
 # uvs        :   Dictionary<Vector3, Vector2>   :   face uv to set
 # color      :   Color                          :   color to set

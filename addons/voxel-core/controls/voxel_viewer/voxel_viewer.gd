@@ -102,13 +102,9 @@ onready var ViewerHint := get_node("ToolBar/Hint")
 
 onready var ContextMenu := get_node("ContextMenu")
 
-onready var ColorMenu := get_node("ColorMenu")
+onready var ColorPickerMenu := get_node("ColorPickerMenu")
 
-onready var VoxelColor := get_node("ColorMenu/VBoxContainer/VoxelColor")
-
-onready var TextureMenu := get_node("TextureMenu")
-
-onready var VoxelTexture := get_node("TextureMenu/VBoxContainer/ScrollContainer/VoxelTexture")
+onready var TilePickerMenu := get_node("TilePickerMenu")
 
 onready var MaterialMenu := get_node("MaterialMenu")
 
@@ -251,8 +247,8 @@ func set_voxel_set(value : Resource, update := true) -> void:
 	if is_instance_valid(voxel_set):
 		if not voxel_set.is_connected("requested_refresh", self, "update_view"):
 			voxel_set.connect("requested_refresh", self, "update_view")
-	if is_instance_valid(VoxelTexture):
-		VoxelTexture.voxel_set = voxel_set
+	if is_instance_valid(TilePickerMenu):
+		TilePickerMenu.voxel_set = voxel_set
 	
 	if update:
 		update_view()
@@ -460,43 +456,34 @@ func show_context_menu(global_position : Vector2, face := _last_hovered_face) ->
 
 
 # Shows the color menu centered with given color
-func show_color_menu(color : Color) -> void:
-	if is_instance_valid(ColorMenu):
-		VoxelColor.color = color
-		ColorMenu.show()
-		ColorMenu.set_as_minsize()
-		ColorMenu.rect_size += Vector2(32, 32)
-		ColorMenu.rect_min_size = ColorMenu.rect_size
-		
-		ColorMenu.set_position(
-				(get_viewport_rect().size / 2) - (ColorMenu.rect_min_size / 2))
+func show_color_picker_menu(title : String, color : Color) -> void:
+	if is_instance_valid(ColorPickerMenu):
+		ColorPickerMenu.window_title = title
+		ColorPickerMenu.color = color
+		ColorPickerMenu.show_centered()
 
 
 # Closes the color menu
-func hide_color_menu() -> void:
-	if is_instance_valid(ColorMenu):
-		ColorMenu.hide()
+func hide_color_picker_menu() -> void:
+	if is_instance_valid(ColorPickerMenu):
+		ColorPickerMenu.hide()
 	update_view()
 
 
 # Shows the texture menu centered with given color
-func show_texture_menu(uv : Vector2) -> void:
-	if is_instance_valid(TextureMenu):
-		VoxelTexture.unselect_all()
-		VoxelTexture.select(uv)
-		TextureMenu.show()
-		TextureMenu.set_as_minsize()
-		TextureMenu.rect_size += Vector2(32, 32)
-		TextureMenu.rect_min_size = TextureMenu.rect_size
+func show_tile_picker_menu(title : String, tile : Vector2) -> void:
+	if is_instance_valid(TilePickerMenu):
+		TilePickerMenu.tiles_viewer.unselect_all()
+		TilePickerMenu.tiles_viewer.select(tile)
 		
-		TextureMenu.set_position(
-				(get_viewport_rect().size / 2) - (TextureMenu.rect_min_size / 2))
+		TilePickerMenu.window_title = title
+		TilePickerMenu.show_centered()
 
 
 # Closes the texture menu
-func hide_texture_menu() -> void:
-	if is_instance_valid(TextureMenu):
-		TextureMenu.hide()
+func hide_tile_picker_menu() -> void:
+	if is_instance_valid(TilePickerMenu):
+		TilePickerMenu.hide()
 	update_view()
 
 
@@ -616,7 +603,9 @@ func _on_ContextMenu_id_pressed(id : int):
 	_voxel_backup()
 	match id:
 		0: # Color editing face
-			show_color_menu(Voxel.get_face_color(get_viewing_voxel(), _editing_face))
+			show_color_picker_menu(
+					"Edit Voxel's Face Color",
+					Voxel.get_face_color(get_viewing_voxel(), _editing_face))
 		1: # Remove editing face color
 			var voxel = get_viewing_voxel()
 			Voxel.remove_face_color(voxel, _editing_face)
@@ -629,7 +618,9 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 		2: # Texture editing face
-			show_texture_menu(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
+			show_tile_picker_menu(
+					"Select Voxel's Face Texture",
+					Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
 		3: # Remove editing face uv
 			var voxel := get_viewing_voxel()
 			Voxel.remove_face_uv(voxel, _editing_face)
@@ -643,7 +634,9 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.commit_action()
 		7: # Color selected faces
 			_editing_multiple = true
-			show_color_menu(Voxel.get_face_color(get_viewing_voxel(), _editing_face))
+			show_color_picker_menu(
+					"Edit Voxel's Face(s) Color",
+					Voxel.get_face_color(get_viewing_voxel(), _editing_face))
 		8: # Remove selected faces color
 			_editing_multiple = true
 			var voxel = get_viewing_voxel()
@@ -659,7 +652,9 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.commit_action()
 		9: # Texture selected face
 			_editing_multiple = true
-			show_texture_menu(Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
+			show_tile_picker_menu(
+					"Edit Voxel's Face(s) Texture",
+					Voxel.get_face_uv(get_viewing_voxel(), _editing_face))
 		10: # Remove selected face uv
 			_editing_multiple = true
 			var voxel := get_viewing_voxel()
@@ -674,9 +669,13 @@ func _on_ContextMenu_id_pressed(id : int):
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
 		4: # Set voxel color
-			show_color_menu(Voxel.get_color(get_viewing_voxel()))
+			show_color_picker_menu(
+					"Edit Voxel's Color",
+					Voxel.get_color(get_viewing_voxel()))
 		5: # Set voxel uv
-			show_texture_menu(Voxel.get_uv(get_viewing_voxel()))
+			show_tile_picker_menu(
+					"Edit Voxel's Texture",
+					Voxel.get_uv(get_viewing_voxel()))
 		6: # Remove voxel uv
 			var voxel = voxel_set.get_voxel(voxel_id)
 			Voxel.remove_uv(voxel)
@@ -702,7 +701,7 @@ func _on_ContextMenu_id_pressed(id : int):
 			reset_environment()
 
 
-func _on_ColorPicker_color_changed(color : Color):
+func _on_ColorPickerMenu_color_changed(color : Color):
 	match _editing_action:
 		0, 7:
 			for selection in (_selections if _editing_multiple else [_editing_face]):
@@ -711,13 +710,7 @@ func _on_ColorPicker_color_changed(color : Color):
 	update_view()
 
 
-func _on_ColorMenu_Cancel_pressed():
-	_voxel_restore()
-	
-	hide_color_menu()
-
-
-func _on_ColorMenu_Confirm_pressed():
+func _on_ColorPickerMenu_color_picked(color : Color):
 	match _editing_action:
 		0, 7:
 			var voxel = get_viewing_voxel()
@@ -739,25 +732,24 @@ func _on_ColorMenu_Confirm_pressed():
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-	hide_color_menu()
+	hide_color_picker_menu()
 
 
-func _on_VoxelTexture_selected_uv(uv : Vector2):
+func _on_TilePickerMenu_tile_selected(tile : Vector2) -> void:
 	match _editing_action:
 		2, 9: 
 			for selection in (_selections if _editing_multiple else [_editing_face]):
-				Voxel.set_face_uv(get_viewing_voxel(), selection, uv)
-		5: Voxel.set_uv(get_viewing_voxel(), uv)
+				Voxel.set_face_uv(get_viewing_voxel(), selection, tile)
+		5:
+			Voxel.set_uv(get_viewing_voxel(), tile)
 	update_view()
 
 
-func _on_TextureMenu_Cancel_pressed():
-	_voxel_restore()
-	
-	hide_texture_menu()
+func _on_TilePickerMenu_tile_unselected(tile : Vector2) -> void:
+	pass # Replace with function body.
 
 
-func _on_TextureMenu_Confirm_pressed():
+func _on_TilePickerMenu_tile_picked(tiles : Array):
 	match _editing_action:
 		2, 9:
 			var voxel = get_viewing_voxel()
@@ -779,7 +771,7 @@ func _on_TextureMenu_Confirm_pressed():
 			undo_redo.add_do_method(voxel_set, "request_refresh")
 			undo_redo.add_undo_method(voxel_set, "request_refresh")
 			undo_redo.commit_action()
-	hide_texture_menu()
+	hide_tile_picker_menu()
 
 
 func _on_Metallic_value_changed(metallic : float):

@@ -95,7 +95,6 @@ transform = Transform( -2.58096e-08, -0.5, 0.866025, -1.49012e-08, 0.866025, 0.5
 
 [node name="Terrain" type="MeshInstance" parent="."]
 mesh = SubResource( 6 )
-material/0 = null
 script = ExtResource( 2 )
 uv_map = true
 static_body = true

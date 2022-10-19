@@ -12,4 +12,7 @@ dest_files=[ "res://.import/chr_knight.vox-9ecfe1f935c0befeef21e71c4b021771.mesh
 [params]
 
 mesh_mode=1
-center=2
+origin_x=0
+origin_y=0
+origin_z=0
+voxel_size=0.5
