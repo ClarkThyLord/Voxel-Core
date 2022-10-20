@@ -11,8 +11,11 @@ config_version=5
 [application]
 
 config/name="Voxel-Core"
+config/description="Voxel plugin for the Godot game engine!"
 config/features=PackedStringArray("4.0", "Mobile")
-config/icon="res://icon.svg"
+boot_splash/image="res://images/voxel-core.splash.png"
+boot_splash/bg_color=Color(1, 1, 1, 1)
+config/icon="res://images/voxel-core.png"
 
 [editor_plugins]
 

@@ -25,7 +25,7 @@
 
 ---
 <p align="center">
-	<img src="./promo.jpg" alt="" />
+	<img src="./images/voxel-core.promo.jpg" alt="" />
 </p>
 
 # About
@@ -73,17 +73,3 @@ Preferably, Voxel-Core is available in the [Godot Asset Library](https://godoten
 If for whatever reason you don't want to or can't download Voxel-Core via the in-engine Godot asset library, then you can always clone or download this repository directly. Once you've cloned or downloaded this repository, you can import it directly into Godot as a project to view the various examples and edit them directly. You may as well move the plugin's folder directly into your own project’s `addons` folder.
 
 **NOTE:** *After adding Voxel-Core to your project you'll need to activate it in your project's `Plugins` configuration!*
-
----
-
-<p align="center">
-	<a href="https://github.com/ClarkThyLord/Voxel-Core" style="vertical-align: middle;">
-		GitHub
-	</a>
-	<a href="https://github.com/ClarkThyLord/Voxel-Core/blob/master/LICENSE" style="vertical-align: middle;">
-		MIT LICENSE
-	</a>
-	<a href="https://godotengine.org/asset-library/asset/465" style="vertical-align: middle;">
-		Godot Asset Library
-	</a>
-</p>
