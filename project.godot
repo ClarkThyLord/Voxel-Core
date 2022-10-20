@@ -14,6 +14,10 @@ config/name="Voxel-Core"
 config/features=PackedStringArray("4.0", "Mobile")
 config/icon="res://icon.svg"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/voxel-core/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="mobile"
