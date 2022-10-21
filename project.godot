@@ -8,6 +8,16 @@
 
 config_version=5
 
+_global_script_classes=[{
+"base": "MeshInstance3D",
+"class": &"VoxelMesh",
+"language": &"GDScript",
+"path": "res://addons/voxel-core/classes/voxel_mesh/voxel_mesh.gd"
+}]
+_global_script_class_icons={
+"VoxelMesh": "res://addons/voxel-core/classes/voxel_mesh/voxel_mesh.svg"
+}
+
 [application]
 
 config/name="Voxel-Core"

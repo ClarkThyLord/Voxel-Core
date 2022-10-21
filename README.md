@@ -1,6 +1,6 @@
 <h1 align="center">
 	<a href="https://github.com/ClarkThyLord/Voxel-Core">
-		<img width="128px" src="./icon.svg?sanitize=true" alt="" />
+		<img width="128px" src="./addons/voxel-core/voxel-core.svg?sanitize=true" alt="" />
 		<br />
 		Voxel-Core
 	</a>

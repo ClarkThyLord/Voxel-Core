@@ -2,11 +2,11 @@
 extends EditorPlugin
 
 
+
+# Built-In Virtual Methods
 func _enter_tree():
-	# Initialization of the plugin goes here.
-	pass
+	print("Voxel-Core is active!")
 
 
 func _exit_tree():
-	# Clean-up of the plugin goes here.
-	pass
+	print("Voxel-Core is inactive!")
