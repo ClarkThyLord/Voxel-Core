@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dd2oq275rya4s"
-path="res://.godot/imported/voxel_mesh.svg-8dcbd248baeb4610fed2c1095dda9e7d.ctex"
+uid="uid://xlyg0voolpap"
+path="res://.godot/imported/voxel_set.svg-6cd00a7bb0a163c5bae6ff947c293bfa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/voxel-core/classes/voxel_mesh/voxel_mesh.svg"
-dest_files=["res://.godot/imported/voxel_mesh.svg-8dcbd248baeb4610fed2c1095dda9e7d.ctex"]
+source_file="res://addons/voxel-core/classes/voxel_set/voxel_set.svg"
+dest_files=["res://.godot/imported/voxel_set.svg-6cd00a7bb0a163c5bae6ff947c293bfa.ctex"]
 
 [params]
 
