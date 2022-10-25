@@ -61,6 +61,7 @@ func get_tiles() -> Texture:
 
 func set_tiles(new_tiles) -> void:
 	tiles = new_tiles
+	emit_changed()
 
 
 func get_tile_dimensions() -> Vector2i:
@@ -69,6 +70,7 @@ func get_tile_dimensions() -> Vector2i:
 
 func set_tile_dimensions(new_tile_dimensions : Vector2i) -> void:
 	tile_dimensions = new_tile_dimensions.abs()
+	emit_changed()
 
 
 func get_material() -> StandardMaterial3D:
@@ -79,6 +81,7 @@ func set_material(new_material) -> void:
 	if not is_instance_valid(new_material):
 		return
 	material = new_material
+	emit_changed()
 
 
 func get_materials() -> Array[BaseMaterial3D]:
@@ -87,47 +90,76 @@ func get_materials() -> Array[BaseMaterial3D]:
 
 func set_materials(new_materials : Array[BaseMaterial3D]) -> void:
 	materials = new_materials
+	emit_changed()
 
 
 func get_voxel_ids() -> Array[int]:
-	return []
+	return _voxels.keys()
 
 
 func get_voxel_names() -> Array[String]:
-	return []
+	var names : Array[String] = []
+	for voxel_id in _voxels:
+		if not _voxels[voxel_id].name.is_empty():
+			names.append(_voxels[voxel_id].name)
+	return names
 
 
 func get_voxel_ids_and_names() -> Dictionary:
-	return {}
+	var ids_and_names : Dictionary = {}
+	for voxel_id in _voxels:
+		ids_and_names[voxel_id] = _voxels[voxel_id].name
+	return ids_and_names
 
 
 func get_voxel(id : int) -> Voxel:
-	return null
+	return _voxels.get(id, null)
 
 
 func add_voxel(voxel : Voxel) -> int:
-	return -1
+	_id += 1
+	_voxels[_id] = voxel
+	return _id
 
 
 func update_voxel(id : int, voxel : Voxel) -> void:
-	return
+	if not _voxels.has(id):
+		printerr("Error: Can't get voxel with id `%s` in VoxelSet" % id)
+		return
+	_voxels[id] = voxel
 
 
 func remove_voxel(id : int) -> void:
-	return
+	_voxels.erase(id)
 
 
 func get_voxel_id_by_name(name : String) -> int:
+	for voxel_id in _voxels:
+		if _voxels[voxel_id].name == name:
+			return voxel_id
+	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
 	return -1
 
 
 func get_voxel_by_name(name : String) -> Voxel:
+	for voxel_id in _voxels:
+		if _voxels[voxel_id].name == name:
+			return _voxels[voxel_id]
+	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
 	return null
 
 
 func update_voxel_by_name(name : String, voxel : Voxel) -> void:
-	return
+	for voxel_id in _voxels:
+		if _voxels[voxel_id].name == name:
+			_voxels[voxel_id] = voxel
+			return
+	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
 
 
 func remove_voxel_by_name(name : String) -> void:
-	return
+	for voxel_id in _voxels.keys():
+		if _voxels[voxel_id].name == name:
+			_voxels.erase(voxel_id)
+			return
+	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
