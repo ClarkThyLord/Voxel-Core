@@ -10,10 +10,11 @@ extends Resource
 ## var voxel_set = VoxelSet.new()
 ## 
 ## var voxel = Voxel.new()
+## voxel.name = "dirt grass"
 ## voxel.color = Color.BROWN
 ## voxel.color_up = Color.GREEN
 ##
-## var voxel_id = voxel_set.add_voxel(voxel, "dirt grass")
+## var voxel_id = voxel_set.add_voxel(voxel)
 ## [/codeblock]
 
 
@@ -43,8 +44,6 @@ var materials : Array[BaseMaterial3D] = [] :
 
 # Private Variables
 var _id : int = -1
-
-var _names : Dictionary = {}
 
 var _voxels : Dictionary = {}
 
@@ -85,11 +84,23 @@ func set_materials(new_materials : Array[BaseMaterial3D]) -> void:
 	materials = new_materials
 
 
+func get_voxel_ids() -> Array[int]:
+	return []
+
+
+func get_voxel_names() -> Array[String]:
+	return []
+
+
+func get_voxel_ids_and_names() -> Dictionary:
+	return {}
+
+
 func get_voxel(id : int) -> Voxel:
 	return null
 
 
-func add_voxel(voxel : Voxel, name : String = "") -> int:
+func add_voxel(voxel : Voxel) -> int:
 	return -1
 
 
@@ -101,17 +112,17 @@ func remove_voxel(id : int) -> void:
 	return
 
 
-func set_voxel_name(id : int, name : String) -> void:
-	pass
+func get_voxel_id_by_name(name : String) -> int:
+	return -1
 
 
-func remove_voxel_name(id : int) -> void:
-	pass
-
-
-func get_voxel_from_name(name : String) -> Voxel:
+func get_voxel_by_name(name : String) -> Voxel:
 	return null
 
 
-func find(query : String) -> Array[int]:
-	return []
+func update_voxel_by_name(name : String, voxel : Voxel) -> void:
+	return
+
+
+func remove_voxel_by_name(name : String) -> void:
+	return
