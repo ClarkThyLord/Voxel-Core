@@ -54,6 +54,41 @@ var _voxels : Dictionary = {}
 
 
 
+# Built-In Virtual Methods
+func _get(property : StringName):
+	match property:
+		"id":
+			return _id
+		"voxels":
+			return _voxels
+	return null
+
+
+func _set(property : StringName, value):
+	match property:
+		"id":
+			_id = value
+			return true
+		"voxels":
+			_voxels = value
+			return true
+	return false
+
+
+func _get_property_list():
+	return [
+		{
+			"name": "id",
+			"usage": PROPERTY_USAGE_STORAGE,
+		},
+		{
+			"name": "voxels",
+			"usage": PROPERTY_USAGE_STORAGE,
+		},
+	]
+
+
+
 # Public Methods
 func get_tiles() -> Texture:
 	return tiles
