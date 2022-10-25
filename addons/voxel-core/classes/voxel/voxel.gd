@@ -10,7 +10,6 @@ extends RefCounted
 ##
 ## [codeblock]
 ## var voxel = Voxel.new()
-## voxel.name = "grass_dirt"
 ## voxel.color = Color.BROWN
 ## voxel.color_up = Color.GREEN
 ## [/codeblock]
@@ -35,11 +34,11 @@ const FACE_BACK = Vector3.BACK
 # Public Variables
 ## The lowercase name of the voxel.
 var name : String = "" :
-	set(new_name): name = new_name.to_lower()
+	set = set_name
 
 ## The index of the material, in refrence to [member VoxelSet.materials].
 var material_index : int = -1 :
-	set(new_material_index): material_index = clamp(new_material_index, -1, 1024)
+	set = set_material_index
 
 ## The color applied to all faces of the voxel by default.
 var color : Color = Color.WHITE
@@ -130,9 +129,39 @@ func _to_string() -> String:
 
 
 # Public Methods
-## Returns true if voxel has a defined color.
+## Returns [member name].
+func get_name() -> String:
+	return name
+
+
+## Sets [member name].
+func set_name(new_name : String) -> void:
+	name = new_name.to_lower()
+
+
+## Returns [member material_index].
+func get_material_index() -> int:
+	return material_index
+
+
+## Set [member material_index]
+func set_material_index(new_material_index : int) -> void:
+	material_index = clamp(new_material_index, -1, 1024)
+
+
+## Returns true if voxel [member color] is not transparent.
 func has_color() -> bool:
 	return color.a > 0
+
+
+## Returns [member color] applied to all faces of the voxel by default.
+func get_color() -> Color:
+	return color
+
+
+## Sets [member color] applied to all faces of the voxel by default.
+func set_color(new_color : Color) -> void:
+	color = new_color
 
 
 ## Returns true if voxel [code]face[/code] has a defined color.
@@ -150,13 +179,8 @@ func has_face_color(face : Vector3) -> bool:
 			return color_forward.a > 0
 		FACE_BACK:
 			return color_back.a > 0
-	printerr("Error: Bad argument `%s` isn't a valid Voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
 	return has_color()
-
-
-## Returns color applied to all faces of the voxel by default.
-func get_color() -> Color:
-	return color
 
 
 ## Returns color applied to the [code]face[/code] of the voxel, if transparent returns [member color].
@@ -174,13 +198,41 @@ func get_face_color(face : Vector3) -> Color:
 			return color_forward
 		FACE_BACK:
 			return color_back
-	printerr("Error: Bad argument `%s` isn't a valid Voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
 	return get_color()
+
+
+## Sets color applied to the [code]face[/code] of the voxel.
+func set_face_color(face : Vector3, new_color : Color) -> void:
+	match face:
+		FACE_RIGHT:
+			color_right = new_color
+		FACE_LEFT:
+			color_left = new_color
+		FACE_UP:
+			color_up = new_color
+		FACE_DOWN:
+			color_down = new_color
+		FACE_FORWARD:
+			color_forward = new_color
+		FACE_BACK:
+			color_back = new_color
+	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
 
 
 ## Returns true if voxel has a defined tile.
 func has_tile() -> bool:
 	return tile != Vector2.ONE
+
+
+## Returns position of the tile applied to all faces of the voxel by default.
+func get_tile() -> Vector2:
+	return tile
+
+
+## Sets position of the tile applied to all faces of the voxel by default.
+func set_tile(new_tile : Vector2) -> void:
+	tile = new_tile
 
 
 ## Returns true if voxel [code]face[/code] has a defined tile.
@@ -198,13 +250,8 @@ func has_face_tile(face : Vector3) -> bool:
 			return tile_forward != -Vector2.ONE
 		FACE_BACK:
 			return tile_back != -Vector2.ONE
-	printerr("Error: Bad argument `%s` isn't a valid Voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
 	return has_tile()
-
-
-## Returns position of the tile applied to all faces of the voxel by default.
-func get_tile() -> Vector2:
-	return tile
 
 
 ## Returns the position of the tile applied to the [code]face[/code] of the
@@ -223,5 +270,47 @@ func get_face_tile(face : Vector3) -> Vector2:
 			return tile_forward
 		FACE_BACK:
 			return tile_back
-	printerr("Error: Bad argument `%s` isn't a valid Voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
 	return get_tile()
+
+
+## Sets the position of the tile applied to the [code]face[/code] of the voxel.
+func set_face_tile(face : Vector3, new_tile : Vector2) -> void:
+	match face:
+		FACE_RIGHT:
+			tile_right = new_tile
+		FACE_LEFT:
+			tile_left = new_tile
+		FACE_UP:
+			tile_up = new_tile
+		FACE_DOWN:
+			tile_down = new_tile
+		FACE_FORWARD:
+			tile_forward = new_tile
+		FACE_BACK:
+			tile_back = new_tile
+	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+
+
+## Duplicates the voxel, returning a new voxel.
+func duplicate() -> Voxel:
+	var voxel : Voxel = Voxel.new()
+	voxel.name = name
+	voxel.material_index = material_index
+	
+	voxel.color = color
+	voxel.color_right = color_right
+	voxel.color_left = color_left
+	voxel.color_up = color_up
+	voxel.color_down = color_down
+	voxel.color_forward = color_forward
+	voxel.color_back = color_back
+	
+	voxel.tile = tile
+	voxel.tile_right = tile_right
+	voxel.tile_left = tile_left
+	voxel.tile_up = tile_up
+	voxel.tile_down = tile_down
+	voxel.tile_forward = tile_forward
+	voxel.tile_back = tile_back
+	return voxel
