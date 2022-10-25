@@ -56,7 +56,7 @@ var _voxels : Dictionary = {}
 
 # Built-In Virtual Methods
 func _get(property : StringName):
-	match property:
+	match str(property):
 		"id":
 			return _id
 		"voxels":
@@ -65,7 +65,7 @@ func _get(property : StringName):
 
 
 func _set(property : StringName, value):
-	match property:
+	match str(property):
 		"id":
 			_id = value
 			return true
@@ -79,10 +79,12 @@ func _get_property_list():
 	return [
 		{
 			"name": "id",
+			"type": TYPE_INT,
 			"usage": PROPERTY_USAGE_STORAGE,
 		},
 		{
 			"name": "voxels",
+			"type": TYPE_DICTIONARY,
 			"usage": PROPERTY_USAGE_STORAGE,
 		},
 	]
