@@ -6,7 +6,7 @@ extends RefCounted
 ##
 ## Structure that's used to define individual voxel data, allows for the
 ## creation of a wide variety of voxels having their own names, materials,
-## colors, textures and etc.
+## colors, tiles and etc.
 ##
 ## [codeblock]
 ## var voxel = Voxel.new()
@@ -33,19 +33,11 @@ const FACE_BACK = Vector3.BACK
 
 # Public Variables
 ## The index of the material, in refrence to [member VoxelSet.materials].
-var material_index : int = 0 :
-	set(new_material_index): material_index = clamp(new_material_index, 0, 1024)
+var material_index : int = -1 :
+	set(new_material_index): material_index = clamp(new_material_index, -1, 1024)
 
 ## The color applied to all faces of the voxel by default.
 var color : Color = Color.WHITE
-
-## The color applied to the top face of the voxel, if transparent returns [member color].
-var color_up : Color = Color.TRANSPARENT :
-	get: return color if color_up.a == 0 else color_up
-
-## The color applied to the bottom face of the voxel, if transparent returns [member color].
-var color_down : Color = Color.TRANSPARENT :
-	get: return color if color_down.a == 0 else color_down
 
 ## The color applied to the right face of the voxel, if transparent returns [member color].
 var color_right : Color = Color.TRANSPARENT :
@@ -55,6 +47,14 @@ var color_right : Color = Color.TRANSPARENT :
 var color_left : Color = Color.TRANSPARENT :
 	get: return color if color_left.a == 0 else color_left
 
+## The color applied to the top face of the voxel, if transparent returns [member color].
+var color_up : Color = Color.TRANSPARENT :
+	get: return color if color_up.a == 0 else color_up
+
+## The color applied to the bottom face of the voxel, if transparent returns [member color].
+var color_down : Color = Color.TRANSPARENT :
+	get: return color if color_down.a == 0 else color_down
+
 ## The color applied to the front face of the voxel, if transparent returns [member color].
 var color_forward : Color = Color.TRANSPARENT :
 	get: return color if color_forward.a == 0 else color_forward
@@ -63,39 +63,39 @@ var color_forward : Color = Color.TRANSPARENT :
 var color_back : Color = Color.TRANSPARENT :
 	get: return color if color_back.a == 0 else color_back
 
-## The position of the texture applied to all faces of the voxel by default, in
-## refrence to [member VoxelSet.texture].
-var texture : Vector2 = -Vector2.ONE
+## The position of the tile applied to all faces of the voxel by default, in
+## refrence to [member VoxelSet.tiles].
+var tile : Vector2 = -Vector2.ONE
 
-## The position of the texture applied to the top face of the voxel, in
-## refrence to [member VoxelSet.texture]; if negative returns [member texture].
-var texture_up : Vector2 = -Vector2.ONE :
-	get: return texture if texture_up == -Vector2.ONE else texture_up
+## The position of the tile applied to the right face of the voxel, in
+## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
+var tile_right : Vector2 = -Vector2.ONE :
+	get: return tile if tile_right == -Vector2.ONE else tile_right
 
-## The position of the texture applied to the bottom face of the voxel, in
-## refrence to [member VoxelSet.texture]; if negative returns [member texture].
-var texture_down : Vector2 = -Vector2.ONE :
-	get: return texture if texture_down == -Vector2.ONE else texture_down
+## The position of the tile applied to the left face of the voxel, in
+## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
+var tile_left : Vector2 = -Vector2.ONE :
+	get: return tile if tile_left == -Vector2.ONE else tile_left
 
-## The position of the texture applied to the right face of the voxel, in
-## refrence to [member VoxelSet.texture]; if negative returns [member texture].
-var texture_right : Vector2 = -Vector2.ONE :
-	get: return texture if texture_right == -Vector2.ONE else texture_right
+## The position of the tile applied to the top face of the voxel, in
+## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
+var tile_up : Vector2 = -Vector2.ONE :
+	get: return tile if tile_up == -Vector2.ONE else tile_up
 
-## The position of the texture applied to the left face of the voxel, in
-## refrence to [member VoxelSet.texture]; if negative returns [member texture].
-var texture_left : Vector2 = -Vector2.ONE :
-	get: return texture if texture_left == -Vector2.ONE else texture_left
+## The position of the tile applied to the bottom face of the voxel, in
+## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
+var tile_down : Vector2 = -Vector2.ONE :
+	get: return tile if tile_down == -Vector2.ONE else tile_down
 
-## The position of the texture applied to the front face of the voxel, in
-## refrence to [member VoxelSet.texture]; if negative returns [member texture].
-var texture_forward : Vector2 = -Vector2.ONE :
-	get: return texture if texture_forward == -Vector2.ONE else texture_forward
+## The position of the tile applied to the front face of the voxel, in
+## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
+var tile_forward : Vector2 = -Vector2.ONE :
+	get: return tile if tile_forward == -Vector2.ONE else tile_forward
 
-## The position of the texture applied to the back face of the voxel, in
-## refrence to [member VoxelSet.texture]; if negative returns [member texture].
-var texture_back : Vector2 = -Vector2.ONE :
-	get: return texture if texture_back == -Vector2.ONE else texture_back
+## The position of the tile applied to the back face of the voxel, in
+## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
+var tile_back : Vector2 = -Vector2.ONE :
+	get: return tile if tile_back == -Vector2.ONE else tile_back
 
 
 
@@ -105,20 +105,20 @@ func _to_string() -> String:
 		"material_index": material_index,
 		
 		"color": color,
-		"color_up": color_up,
-		"color_down": color_down,
 		"color_right": color_right,
 		"color_left": color_left,
+		"color_up": color_up,
+		"color_down": color_down,
 		"color_forward": color_forward,
 		"color_back": color_back,
 		
-		"texture": texture,
-		"texture_up": texture_up,
-		"texture_down": texture_down,
-		"texture_right": texture_right,
-		"texture_left": texture_left,
-		"texture_forward": texture_forward,
-		"texture_back": texture_back,
+		"tile": tile,
+		"tile_right": tile_right,
+		"tile_left": tile_left,
+		"tile_up": tile_up,
+		"tile_down": tile_down,
+		"tile_forward": tile_forward,
+		"tile_back": tile_back,
 	})
 
 
@@ -172,50 +172,50 @@ func get_face_color(face : Vector3) -> Color:
 	return get_color()
 
 
-## Returns true if voxel has a defined texture.
-func has_texture() -> bool:
-	return texture != Vector2.ONE
+## Returns true if voxel has a defined tile.
+func has_tile() -> bool:
+	return tile != Vector2.ONE
 
 
-## Returns true if voxel [code]face[/code] has a defined texture.
-func has_face_texture(face : Vector3) -> bool:
+## Returns true if voxel [code]face[/code] has a defined tile.
+func has_face_tile(face : Vector3) -> bool:
 	match face:
 		FACE_RIGHT:
-			return texture_right != -Vector2.ONE
+			return tile_right != -Vector2.ONE
 		FACE_LEFT:
-			return texture_left != -Vector2.ONE
+			return tile_left != -Vector2.ONE
 		FACE_UP:
-			return texture_up != -Vector2.ONE
+			return tile_up != -Vector2.ONE
 		FACE_DOWN:
-			return texture_down != -Vector2.ONE
+			return tile_down != -Vector2.ONE
 		FACE_FORWARD:
-			return texture_forward != -Vector2.ONE
+			return tile_forward != -Vector2.ONE
 		FACE_BACK:
-			return texture_back != -Vector2.ONE
+			return tile_back != -Vector2.ONE
 	printerr("Error: Bad argument `%s` isn't a valid Voxel face" % face)
-	return has_texture()
+	return has_tile()
 
 
-## Returns position of the texture applied to all faces of the voxel by default.
-func get_texture() -> Vector2:
-	return texture
+## Returns position of the tile applied to all faces of the voxel by default.
+func get_tile() -> Vector2:
+	return tile
 
 
-## Returns the position of the texture applied to the [code]face[/code] of the
-## voxel, if negative returns [member texture].
-func get_face_texture(face : Vector3) -> Vector2:
+## Returns the position of the tile applied to the [code]face[/code] of the
+## voxel, if negative returns [member tile].
+func get_face_tile(face : Vector3) -> Vector2:
 	match face:
 		FACE_RIGHT:
-			return texture_right
+			return tile_right
 		FACE_LEFT:
-			return texture_left
+			return tile_left
 		FACE_UP:
-			return texture_up
+			return tile_up
 		FACE_DOWN:
-			return texture_down
+			return tile_down
 		FACE_FORWARD:
-			return texture_forward
+			return tile_forward
 		FACE_BACK:
-			return texture_back
+			return tile_back
 	printerr("Error: Bad argument `%s` isn't a valid Voxel face" % face)
-	return get_texture()
+	return get_tile()
