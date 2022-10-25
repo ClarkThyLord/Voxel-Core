@@ -119,6 +119,7 @@ func get_voxel(id : int) -> Voxel:
 func add_voxel(voxel : Voxel) -> int:
 	_id += 1
 	_voxels[_id] = voxel
+	emit_changed()
 	return _id
 
 
@@ -127,10 +128,12 @@ func update_voxel(id : int, voxel : Voxel) -> void:
 		printerr("Error: Can't get voxel with id `%s` in VoxelSet" % id)
 		return
 	_voxels[id] = voxel
+	emit_changed()
 
 
 func remove_voxel(id : int) -> void:
 	_voxels.erase(id)
+	emit_changed()
 
 
 func get_voxel_id_by_name(name : String) -> int:
@@ -153,6 +156,7 @@ func update_voxel_by_name(name : String, voxel : Voxel) -> void:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == name:
 			_voxels[voxel_id] = voxel
+			emit_changed()
 			return
 	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
 
@@ -161,5 +165,6 @@ func remove_voxel_by_name(name : String) -> void:
 	for voxel_id in _voxels.keys():
 		if _voxels[voxel_id].name == name:
 			_voxels.erase(voxel_id)
+			emit_changed()
 			return
 	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
