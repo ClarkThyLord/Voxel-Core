@@ -10,7 +10,6 @@ extends RefCounted
 ##
 ## [codeblock]
 ## var voxel = Voxel.new()
-## voxel.name = "grass_dirt"
 ## voxel.color = Color.BROWN
 ## voxel.color_up = Color.GREEN
 ## [/codeblock]
@@ -33,10 +32,6 @@ const FACE_BACK = Vector3.BACK
 
 
 # Public Variables
-## The lowercase name of the voxel.
-var name : String = "" :
-	set(new_name): name = new_name.to_lower()
-
 ## The index of the material, in refrence to [member VoxelSet.materials].
 var material_index : int = 0 :
 	set(new_material_index): material_index = clamp(new_material_index, 0, 1024)
@@ -107,7 +102,6 @@ var texture_back : Vector2 = -Vector2.ONE :
 # Built-In Virtual Methods
 func _to_string() -> String:
 	return str({
-		"name": name,
 		"material_index": material_index,
 		
 		"color": color,
