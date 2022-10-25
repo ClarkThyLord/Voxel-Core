@@ -2,11 +2,11 @@
 class_name Voxel
 extends RefCounted
 @icon("res://addons/voxel-core/classes/voxel/voxel.svg")
-## Used to define individual voxel data used by Voxel-Core.
+## Used to define individual voxel data; used by Voxel-Core.
 ##
-## Structure that's used to define individual voxel data, allows for the
-## creation of a wide variety of voxels having their own names, materials,
-## colors, tiles and etc.
+## A Voxel is a simple class that's used to define individual voxel data, 
+## allowing for the definition of a wide variety of voxels having their own
+## names, materials, colors, tiles and etc.
 ##
 ## [codeblock]
 ## var voxel = Voxel.new()
@@ -17,16 +17,22 @@ extends RefCounted
 
 
 # Constants
+## Represents voxel's right face.
 const FACE_RIGHT = Vector3.RIGHT
 
+## Represents voxel's left face.
 const FACE_LEFT = Vector3.LEFT
 
+## Represents voxel's top face.
 const FACE_UP = Vector3.UP
 
+## Represents voxel's bottom face.
 const FACE_DOWN = Vector3.DOWN
 
+## Represents voxel's front face.
 const FACE_FORWARD = Vector3.FORWARD
 
+## Represents voxel's back face.
 const FACE_BACK = Vector3.BACK
 
 

@@ -2,17 +2,22 @@
 class_name VoxelSet
 extends Resource
 @icon("res://addons/voxel-core/classes/voxel_set/voxel_set.svg")
-## Voxel library used by Voxel-Core.
+## Used to store a collection of voxels, textures, materials and etc.;
+## used by Voxel-Core.
 ##
-## A VoxelSet is a library of [Voxel](s).
+## A VoxelSet is a collection of [Voxel](s), alongside textures and materials
+## which voxels may reference.
 ##
 ## [codeblock]
 ## var voxel_set = VoxelSet.new()
+## voxel_set.tiles = preload("res://texture.png")
 ## 
 ## var voxel = Voxel.new()
 ## voxel.name = "dirt grass"
 ## voxel.color = Color.BROWN
 ## voxel.color_up = Color.GREEN
+## voxel.tile = Vector2(0, 0)
+## voxel.tile_up = Vector2(1, 0)
 ##
 ## var voxel_id = voxel_set.add_voxel(voxel)
 ## [/codeblock]
