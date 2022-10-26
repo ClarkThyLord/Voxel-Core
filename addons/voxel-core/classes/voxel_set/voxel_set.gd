@@ -25,21 +25,42 @@ extends Resource
 
 
 # Exported Variables
+## Texture used for [member BaseMaterial3D.albedo_texture] in [member material]
+## and all applicable [member materials].
+## Think of the texture as a grid with which its cells or "tiles" can be
+## referenced by their position. Using this "tile position" voxels can specify
+## what texture is applied to their faces via [member Voxel.tile],
+## [member Voxel.tile_right], [member Voxel.tile_left], [member Voxel.tile_up],
+## [member Voxel.tile_down], [member Voxel.tile_forward] and [member Voxel.tile_back].
+## Usage:
+## [codeblock]
+## var voxel_set = VoxelSet.new()
+## voxel_set.tiles = preload("res://texture.png")
+## var voxel = Voxel.new()
+## voxel.name = "dirt grass"
+## voxel.tile = Vector2(0, 0)
+## voxel.tile_up = Vector2(1, 0)
+## var voxel_id = voxel_set.add_voxel(voxel)
+## [/codeblock]
 @export
-var tiles : Texture = null :
+var tiles : Texture2D = null :
 	get = get_tiles,
 	set = set_tiles
 
+## Defines the pixel width and height for a "tile" within [member tiles].
 @export
 var tile_dimensions : Vector2i = Vector2i(32, 32) :
 	get = get_tile_dimensions,
 	set = set_tile_dimensions
 
+## Material applied to all voxels by default.
 @export
 var material : StandardMaterial3D = StandardMaterial3D.new() :
 	get = get_material,
 	set = set_material
 
+## Collection of materials that can be referenced by and applied to voxels via
+## [member Voxel.material_index].
 @export
 var materials : Array[BaseMaterial3D] = [] :
 	get = get_materials,
@@ -92,11 +113,11 @@ func _get_property_list():
 
 
 # Public Methods
-func get_tiles() -> Texture:
+func get_tiles() -> Texture2D:
 	return tiles
 
 
-func set_tiles(new_tiles) -> void:
+func set_tiles(new_tiles : Texture2D) -> void:
 	tiles = new_tiles
 	emit_changed()
 
