@@ -122,13 +122,18 @@ func _get_property_list():
 
 
 # Public Methods
+func emit_changes() -> void:
+	_format_materials()
+	emit_changed()
+
+
 func get_tiles() -> Texture2D:
 	return tiles
 
 
 func set_tiles(new_tiles : Texture2D) -> void:
 	tiles = new_tiles
-	emit_changed()
+	emit_changes()
 
 
 func get_tile_dimensions() -> Vector2i:
@@ -148,7 +153,7 @@ func set_default_material(new_default_material) -> void:
 	if not is_instance_valid(new_default_material):
 		return
 	default_material = new_default_material
-	emit_changed()
+	emit_changes()
 
 
 func get_indexed_materials() -> Array[BaseMaterial3D]:
@@ -157,12 +162,12 @@ func get_indexed_materials() -> Array[BaseMaterial3D]:
 
 func set_indexed_materials(new_indexed_materials : Array[BaseMaterial3D]) -> void:
 	indexed_materials = new_indexed_materials
-	emit_changed()
+	emit_changes()
 
 
 func add_material(new_material : BaseMaterial3D) -> int:
 	indexed_materials.append(new_material)
-	emit_changed()
+	emit_changes()
 	return indexed_materials.size() - 1
 
 
@@ -178,7 +183,7 @@ func set_material_by_index(material_index : int, new_material : BaseMaterial3D) 
 		printerr("Error: Material index `%s` out of range" % material_index)
 		return
 	indexed_materials[material_index] = new_material
-	emit_changed()
+	emit_changes()
 
 
 func remove_material_by_index(material_index : int) -> void:
@@ -288,3 +293,15 @@ func remove_voxel_by_name(name : String) -> void:
 			emit_changed()
 			return
 	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
+
+
+## Private Methods
+func _format_material(material : BaseMaterial3D) -> void:
+	material.vertex_color_use_as_albedo = true
+	material.albedo_texture = tiles
+
+
+func _format_materials() -> void:
+	_format_material(default_material)
+	for indexed_material in indexed_materials:
+		_format_material(indexed_material)
