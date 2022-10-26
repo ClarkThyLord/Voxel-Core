@@ -55,7 +55,7 @@ var tile_dimensions : Vector2i = Vector2i(32, 32) :
 
 ## Material applied to all VoxelSet voxels by default.
 @export
-var default_material : StandardMaterial3D = StandardMaterial3D.new() :
+var default_material : BaseMaterial3D = StandardMaterial3D.new() :
 	get = get_default_material,
 	set = set_default_material
 
@@ -123,7 +123,7 @@ func _get_property_list():
 
 # Public Methods
 func emit_changes() -> void:
-	_format_materials()
+	format_materials()
 	emit_changed()
 
 
@@ -295,13 +295,12 @@ func remove_voxel_by_name(name : String) -> void:
 	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
 
 
-## Private Methods
-func _format_material(material : BaseMaterial3D) -> void:
+func format_material(material : BaseMaterial3D) -> void:
 	material.vertex_color_use_as_albedo = true
 	material.albedo_texture = tiles
 
 
-func _format_materials() -> void:
-	_format_material(default_material)
+func format_materials() -> void:
+	format_material(default_material)
 	for indexed_material in indexed_materials:
-		_format_material(indexed_material)
+		format_material(indexed_material)
