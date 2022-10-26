@@ -153,16 +153,35 @@ func get_voxel(id : int) -> Voxel:
 	return _voxels.get(id, null)
 
 
+func get_voxels() -> Dictionary:
+	return _voxels.duplicate(true)
+
+
 func add_voxel(voxel : Voxel) -> int:
 	_id += 1
+	if _voxels.has(_id):
+		return add_voxel(voxel)
 	_voxels[_id] = voxel
 	emit_changed()
 	return _id
 
 
+func set_voxel(id : int, voxel : Voxel) -> void:
+	if _voxels.has(id):
+		printerr("Error: Voxel with id `%s` in VoxelSet already exist" % id)
+		return
+	_voxels[_id] = voxel
+	emit_changed()
+
+
+func set_voxels(voxels : Dictionary) -> void:
+	_voxels = voxels
+	emit_changed()
+
+
 func update_voxel(id : int, voxel : Voxel) -> void:
 	if not _voxels.has(id):
-		printerr("Error: Can't get voxel with id `%s` in VoxelSet" % id)
+		printerr("Error: No voxel with id `%s` in VoxelSet" % id)
 		return
 	_voxels[id] = voxel
 	emit_changed()
@@ -170,6 +189,11 @@ func update_voxel(id : int, voxel : Voxel) -> void:
 
 func remove_voxel(id : int) -> void:
 	_voxels.erase(id)
+	emit_changed()
+
+
+func remove_voxels() -> void:
+	_voxels.clear()
 	emit_changed()
 
 
