@@ -53,29 +53,27 @@ var tile_dimensions : Vector2i = Vector2i(32, 32) :
 	get = get_tile_dimensions,
 	set = set_tile_dimensions
 
-## Material applied to all voxels by default.
+## Material applied to all VoxelSet voxels by default.
 @export
-var material_default : StandardMaterial3D = StandardMaterial3D.new() :
-	get = get_material_default,
-	set = set_material_default
+var default_material : StandardMaterial3D = StandardMaterial3D.new() :
+	get = get_default_material,
+	set = set_default_material
 
 ## Collection of materials that can be referenced by and applied to voxels via
 ## [member Voxel.material_index].
 ## Usage:
 ## [codeblock]
-## var voxel_set = VoxelSet.new()
-## voxel_set.materials = [
-##    preload("res://glass_material.tres"),
-## ]
+## var voxel_set : VoxelSet = VoxelSet.new()
+## var material_index : int = voxel_set.add_material(preload("res://glass_material.tres"))
 ## var voxel = Voxel.new()
 ## voxel.name = "glass"
-## voxel.material_index = 0
+## voxel.material_index = material_index
 ## var voxel_id = voxel_set.add_voxel(voxel)
 ## [/codeblock]
 @export
-var material_indexes : Array[BaseMaterial3D] = [] :
-	get = get_material_indexes,
-	set = set_material_indexes
+var indexed_materials : Array[BaseMaterial3D] = [] :
+	get = get_indexed_materials,
+	set = set_indexed_materials
 
 
 
@@ -142,52 +140,52 @@ func set_tile_dimensions(new_tile_dimensions : Vector2i) -> void:
 	emit_changed()
 
 
-func get_material_default() -> StandardMaterial3D:
-	return material_default
+func get_default_material() -> StandardMaterial3D:
+	return default_material
 
 
-func set_material_default(new_material_default) -> void:
-	if not is_instance_valid(new_material_default):
+func set_default_material(new_default_material) -> void:
+	if not is_instance_valid(new_default_material):
 		return
-	material_default = new_material_default
+	default_material = new_default_material
 	emit_changed()
 
 
-func get_material_indexes() -> Array[BaseMaterial3D]:
-	return material_indexes
+func get_indexed_materials() -> Array[BaseMaterial3D]:
+	return indexed_materials
 
 
-func set_material_indexes(new_material_indexes : Array[BaseMaterial3D]) -> void:
-	material_indexes = new_material_indexes
+func set_indexed_materials(new_indexed_materials : Array[BaseMaterial3D]) -> void:
+	indexed_materials = new_indexed_materials
 	emit_changed()
 
 
-func add_material_index(new_material : BaseMaterial3D) -> int:
-	material_indexes.append(new_material)
+func add_material(new_material : BaseMaterial3D) -> int:
+	indexed_materials.append(new_material)
 	emit_changed()
-	return material_indexes.size() - 1
+	return indexed_materials.size() - 1
 
 
 func get_material_by_index(material_index : int) -> BaseMaterial3D:
-	if material_index >= material_indexes.size():
+	if material_index >= indexed_materials.size():
 		printerr("Error: Material index `%s` out of range" % material_index)
-		return material_default
-	return material_default if material_index == -1 else material_indexes[material_index]
+		return default_material
+	return default_material if material_index == -1 else indexed_materials[material_index]
 
 
 func set_material_by_index(material_index : int, new_material : BaseMaterial3D) -> void:
-	if material_index <= -1 or material_index >= material_indexes.size():
+	if material_index <= -1 or material_index >= indexed_materials.size():
 		printerr("Error: Material index `%s` out of range" % material_index)
 		return
-	material_indexes[material_index] = new_material
+	indexed_materials[material_index] = new_material
 	emit_changed()
 
 
 func remove_material_by_index(material_index : int) -> void:
-	if material_index <= -1 or material_index >= material_indexes.size():
+	if material_index <= -1 or material_index >= indexed_materials.size():
 		printerr("Error: Material index `%s` out of range" % material_index)
 		return
-	material_indexes.remove_at(material_index)
+	indexed_materials.remove_at(material_index)
 	emit_changed()
 
 
