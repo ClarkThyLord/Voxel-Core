@@ -53,7 +53,7 @@ var tile_dimensions : Vector2i = Vector2i(32, 32) :
 	get = get_tile_dimensions,
 	set = set_tile_dimensions
 
-## Material applied to all VoxelSet voxels by default.
+## Material applied to all VoxelSet voxels by default, can't be [code]null[/code].
 @export
 var default_material : BaseMaterial3D = StandardMaterial3D.new() :
 	get = get_default_material,
@@ -122,33 +122,42 @@ func _get_property_list():
 
 
 # Public Methods
+## This method must be called whenever the state of this resource has changed 
+## (such as modification of materials).
 func emit_changes() -> void:
 	format_materials()
 	emit_changed()
 
 
+## Returns [member tiles].
 func get_tiles() -> Texture2D:
 	return tiles
 
 
+## Sets [member tiles] and calls on [method emit_changes].
 func set_tiles(new_tiles : Texture2D) -> void:
 	tiles = new_tiles
 	emit_changes()
 
 
+## Returns [member tile_dimensions].
 func get_tile_dimensions() -> Vector2i:
 	return tile_dimensions
 
 
+## Sets [member tile_dimensions] and calls on [method emit_changed].
 func set_tile_dimensions(new_tile_dimensions : Vector2i) -> void:
 	tile_dimensions = new_tile_dimensions.abs()
 	emit_changed()
 
 
+## Returns [member default_material].
 func get_default_material() -> StandardMaterial3D:
 	return default_material
 
 
+## Sets [member default_material] and calls on [method emit_changes]; can't 
+## be set to [code]null[/code].
 func set_default_material(new_default_material) -> void:
 	if not is_instance_valid(new_default_material):
 		return
@@ -156,21 +165,27 @@ func set_default_material(new_default_material) -> void:
 	emit_changes()
 
 
+## Returns [member indexed_materials].
 func get_indexed_materials() -> Array[BaseMaterial3D]:
 	return indexed_materials
 
 
+## Sets [member indexed_materials] and call on [method emit_changes].
 func set_indexed_materials(new_indexed_materials : Array[BaseMaterial3D]) -> void:
 	indexed_materials = new_indexed_materials
 	emit_changes()
 
 
+## Adds given [BaseMaterial3D] to [member indexed_materials], calls on
+## [method emit_changes] and returns material's index.
 func add_material(new_material : BaseMaterial3D) -> int:
 	indexed_materials.append(new_material)
 	emit_changes()
 	return indexed_materials.size() - 1
 
 
+## Returns material by index from [member indexed_materials], if invalid index
+## returns [member default_material].
 func get_material_by_index(material_index : int) -> BaseMaterial3D:
 	if material_index >= indexed_materials.size():
 		printerr("Error: Material index `%s` out of range" % material_index)
@@ -178,6 +193,8 @@ func get_material_by_index(material_index : int) -> BaseMaterial3D:
 	return default_material if material_index == -1 else indexed_materials[material_index]
 
 
+## Replaces material at given index in [member indexed_materials] by given
+## material and calls on [method emit_changes].
 func set_material_by_index(material_index : int, new_material : BaseMaterial3D) -> void:
 	if material_index <= -1 or material_index >= indexed_materials.size():
 		printerr("Error: Material index `%s` out of range" % material_index)
@@ -186,6 +203,8 @@ func set_material_by_index(material_index : int, new_material : BaseMaterial3D) 
 	emit_changes()
 
 
+## Removes material at given index in [member indexed_materials] and calls on 
+## [method emit_changed].
 func remove_material_by_index(material_index : int) -> void:
 	if material_index <= -1 or material_index >= indexed_materials.size():
 		printerr("Error: Material index `%s` out of range" % material_index)
@@ -194,10 +213,12 @@ func remove_material_by_index(material_index : int) -> void:
 	emit_changed()
 
 
+## Returns array populated by all used voxel ids.
 func get_voxel_ids() -> Array[int]:
 	return _voxels.keys()
 
 
+## Returns array populated by all used [member Voxel.name](s).
 func get_voxel_names() -> Array[String]:
 	var names : Array[String] = []
 	for voxel_id in _voxels:
@@ -206,6 +227,8 @@ func get_voxel_names() -> Array[String]:
 	return names
 
 
+## Returns dictionary populated by keys being all used voxel ids and values 
+## being all respectively used [member Voxel.name](s).
 func get_voxel_ids_and_names() -> Dictionary:
 	var ids_and_names : Dictionary = {}
 	for voxel_id in _voxels:
@@ -213,14 +236,18 @@ func get_voxel_ids_and_names() -> Dictionary:
 	return ids_and_names
 
 
-func get_voxel(id : int) -> Voxel:
-	return _voxels.get(id, null)
+## Returns [Voxel] pertaining to given voxel id, if not found returns 
+## [code]null[/code].
+func get_voxel(voxel_id : int) -> Voxel:
+	return _voxels.get(voxel_id, null)
 
 
+## Returns dictionary populated by all used voxels.
 func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
+## Adds [Voxel] to VoxelSet, calls on [method emit_changed] and returns voxel id.
 func add_voxel(voxel : Voxel) -> int:
 	_id += 1
 	if _voxels.has(_id):
@@ -230,6 +257,9 @@ func add_voxel(voxel : Voxel) -> int:
 	return _id
 
 
+## Sets the given [Voxel] at given voxel id in VoxelSet, calls on
+## [method emit_changed].
+## NOTE: Use this only if you really know what you are doing!
 func set_voxel(id : int, voxel : Voxel) -> void:
 	if _voxels.has(id):
 		printerr("Error: Voxel with id `%s` in VoxelSet already exist" % id)
@@ -238,11 +268,15 @@ func set_voxel(id : int, voxel : Voxel) -> void:
 	emit_changed()
 
 
+## Replaces all voxels used by VoxelSet, calls on [method emit_changed].
+## NOTE: Use this only if you really know what you are doing!
 func set_voxels(voxels : Dictionary) -> void:
 	_voxels = voxels
 	emit_changed()
 
 
+## Replaces voxel with given [Voxel] at given voxel id in VoxelSet, calls on
+## [method emit_changed].
 func update_voxel(id : int, voxel : Voxel) -> void:
 	if not _voxels.has(id):
 		printerr("Error: No voxel with id `%s` in Vo xelSet" % id)
@@ -251,55 +285,67 @@ func update_voxel(id : int, voxel : Voxel) -> void:
 	emit_changed()
 
 
+## Removes voxel with given voxel id from VoxelSet and calls on
+## [method emit_changed].
 func remove_voxel(id : int) -> void:
 	_voxels.erase(id)
 	emit_changed()
 
 
+## Removes all voxels from VoxelSet and calls on [method emit_changed].
 func remove_voxels() -> void:
 	_voxels.clear()
 	emit_changed()
 
 
-func get_voxel_id_by_name(name : String) -> int:
+## Returns voxel id of voxel in VoxelSet matching given voxel name.
+func get_voxel_id_by_name(voxel_name : String) -> int:
 	for voxel_id in _voxels:
-		if _voxels[voxel_id].name == name:
+		if _voxels[voxel_id].name == voxel_name:
 			return voxel_id
-	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
+	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 	return -1
 
 
-func get_voxel_by_name(name : String) -> Voxel:
+## Returns [Voxel] of VoxelSet matching given voxel name.
+func get_voxel_by_name(voxel_name : String) -> Voxel:
 	for voxel_id in _voxels:
-		if _voxels[voxel_id].name == name:
+		if _voxels[voxel_id].name == voxel_name:
 			return _voxels[voxel_id]
-	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
+	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 	return null
 
 
-func update_voxel_by_name(name : String, voxel : Voxel) -> void:
+## Replaces voxel with given [Voxel] that matches given voxel name in VoxelSet,
+## calls on [method emit_changed].
+func update_voxel_by_name(voxel_name : String, voxel : Voxel) -> void:
 	for voxel_id in _voxels:
-		if _voxels[voxel_id].name == name:
+		if _voxels[voxel_id].name == voxel_name:
 			_voxels[voxel_id] = voxel
 			emit_changed()
 			return
-	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
+	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 
 
-func remove_voxel_by_name(name : String) -> void:
+## Removes voxel that matches given voxel name in VoxelSet and
+## calls on [method emit_changed].
+func remove_voxel_by_name(voxel_name : String) -> void:
 	for voxel_id in _voxels.keys():
-		if _voxels[voxel_id].name == name:
+		if _voxels[voxel_id].name == voxel_name:
 			_voxels.erase(voxel_id)
 			emit_changed()
 			return
-	printerr("Error: Can't get voxel with name `%s` in VoxelSet" % name)
+	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 
 
+## Helper function used to correctly format given [BaseMaterial3D] to conform
+## with VoxelSet.
 func format_material(material : BaseMaterial3D) -> void:
 	material.vertex_color_use_as_albedo = true
 	material.albedo_texture = tiles
 
 
+## Helper function used to correctly format all attached VoxelSet materials.
 func format_materials() -> void:
 	format_material(default_material)
 	for indexed_material in indexed_materials:
