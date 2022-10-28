@@ -9,7 +9,7 @@ extends RefCounted
 ## names, materials, colors, tiles and etc.
 ##
 ## [codeblock]
-## var voxel = Voxel.new()
+## var voxel : Voxel = Voxel.new()
 ## voxel.color = Color.BROWN
 ## voxel.color_up = Color.GREEN
 ## [/codeblock]

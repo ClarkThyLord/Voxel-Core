@@ -9,17 +9,17 @@ extends Resource
 ## which voxels may reference.
 ##
 ## [codeblock]
-## var voxel_set = VoxelSet.new()
+## var voxel_set : VoxelSet = VoxelSet.new()
 ## voxel_set.tiles = preload("res://texture.png")
 ## 
-## var voxel = Voxel.new()
+## var voxel : Voxel = Voxel.new()
 ## voxel.name = "dirt grass"
 ## voxel.color = Color.BROWN
 ## voxel.color_up = Color.GREEN
 ## voxel.tile = Vector2(0, 0)
 ## voxel.tile_up = Vector2(1, 0)
 ##
-## var voxel_id = voxel_set.add_voxel(voxel)
+## var voxel_id : int = voxel_set.add_voxel(voxel)
 ## [/codeblock]
 
 
