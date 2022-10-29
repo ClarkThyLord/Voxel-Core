@@ -25,10 +25,10 @@ extends MeshInstance3D
 ## var voxel_mesh : VoxelMeshInstance3D = VoxelMeshInstance3D.new()
 ## voxel_mesh.voxel_set = voxel_set
 ##
-## voxel_mesh.add_voxel(Vector3(0, 0, 0), voxel_id)
-## voxel_mesh.add_voxel(Vector3(1, 0, 0), voxel_id)
-## voxel_mesh.add_voxel(Vector3(1, 0, 1), voxel_id)
-## voxel_mesh.add_voxel(Vector3(0, 0, 1), voxel_id)
+## voxel_mesh.add_voxel(Vector3i(0, 0, 0), voxel_id)
+## voxel_mesh.add_voxel(Vector3i(1, 0, 0), voxel_id)
+## voxel_mesh.add_voxel(Vector3i(1, 0, 1), voxel_id)
+## voxel_mesh.add_voxel(Vector3i(0, 0, 1), voxel_id)
 ##
 ## voxel_mesh.update()
 ## [/codeblock]
@@ -116,7 +116,7 @@ func get_voxels() -> Dictionary:
 
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 	if not voxel_set.has_voxel_id(voxel_id):
-		printerr("Error: VoxelSet doesn't have given voxel id `%s`" % voxel_id)
+		printerr("Error: Invalid voxel_id `%s` to set" % voxel_id)
 		return
 	
 	_voxels[voxel_position] = voxel_id
@@ -126,14 +126,16 @@ func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 func set_voxels(new_voxels : Dictionary) -> void:
 	for voxel_position in new_voxels:
 		if not voxel_position is Vector3i:
+			printerr("Error: Given voxels aren't formatted correctly")
 			return
 		if not new_voxels[voxel_position] is int:
+			printerr("Error: Given voxels aren't formatted correctly")
 			return
 	_voxels = new_voxels
 	update()
 
 
-func erase_voxel(voxel_position : Vector3) -> void:
+func erase_voxel(voxel_position : Vector3i) -> void:
 	_voxels.erase(voxel_position)
 	update()
 
