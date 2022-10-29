@@ -213,7 +213,8 @@ func remove_material_by_index(material_index : int) -> void:
 	emit_changed()
 
 
-## Returns [code]true[/code] if voxel with given voxel id is present in VoxelSet.
+## Returns [code]true[/code] if voxel with given [code]voxel_id[/code] is
+## present in VoxelSet, otherwise [code]false[/code].
 func has_voxel_id(voxel_id : int) -> bool:
 	return _voxels.has(voxel_id)
 
@@ -232,7 +233,7 @@ func get_voxel_names() -> Array[String]:
 	return names
 
 
-## Returns dictionary populated by keys being all used voxel ids and values 
+## Returns dictionary populated with keys being all used voxel ids and values 
 ## being all respectively used [member Voxel.name](s).
 func get_voxel_ids_and_names() -> Dictionary:
 	var ids_and_names : Dictionary = {}
@@ -241,8 +242,8 @@ func get_voxel_ids_and_names() -> Dictionary:
 	return ids_and_names
 
 
-## Returns [Voxel] pertaining to given voxel id, if not found returns 
-## [code]null[/code].
+## Returns [Voxel] associated to given [code]voxel_id[/code], if not found 
+## returns [code]null[/code].
 func get_voxel(voxel_id : int) -> Voxel:
 	return _voxels.get(voxel_id, null)
 
@@ -252,7 +253,8 @@ func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
-## Adds [Voxel] to VoxelSet, calls on [method emit_changed] and returns voxel id.
+## Adds [Voxel] to VoxelSet, calls on [method emit_changed] and returns 
+## [code]voxel_id[/code].
 func add_voxel(voxel : Voxel) -> int:
 	_id += 1
 	if _voxels.has(_id):
@@ -262,8 +264,8 @@ func add_voxel(voxel : Voxel) -> int:
 	return _id
 
 
-## Sets the given [Voxel] at given voxel id in VoxelSet, calls on
-## [method emit_changed].
+## Assigns given [code]voxel[/voxel] to the given [code]voxel_id[/code] in
+## VoxelSet, calls on [method emit_changed].
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if _voxels.has(voxel_id):
@@ -280,8 +282,8 @@ func set_voxels(voxels : Dictionary) -> void:
 	emit_changed()
 
 
-## Replaces voxel with given [Voxel] at given voxel id in VoxelSet, calls on
-## [method emit_changed].
+## Replaces voxel associated with given [code]voxel_id[/code] with the given 
+## [code]voxel[/code] in VoxelSet, calls on [method emit_changed].
 func update_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if not _voxels.has(voxel_id):
 		printerr("Error: No voxel with id `%s` in VoxelSet" % voxel_id)
@@ -290,7 +292,7 @@ func update_voxel(voxel_id : int, voxel : Voxel) -> void:
 	emit_changed()
 
 
-## Removes voxel with given voxel id from VoxelSet and calls on
+## Removes voxel with given [code]voxel_id[/code] from VoxelSet and calls on
 ## [method emit_changed].
 func remove_voxel(voxel_id : int) -> void:
 	_voxels.erase(voxel_id)
@@ -303,7 +305,9 @@ func remove_voxels() -> void:
 	emit_changed()
 
 
-## Returns voxel id of voxel in VoxelSet matching given voxel name.
+## Returns [code]voxel_id[/code] of voxel in VoxelSet matching given 
+## [code]voxel_name[/code], returns [code]-1[/code] if no voxel matching name
+## is found.
 func get_voxel_id_by_name(voxel_name : String) -> int:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == voxel_name:
@@ -312,7 +316,8 @@ func get_voxel_id_by_name(voxel_name : String) -> int:
 	return -1
 
 
-## Returns [Voxel] of VoxelSet matching given voxel name.
+## Returns [Voxel] of VoxelSet matching given [code]voxel_name[/code], returns 
+## [code]null[/code] if no voxel matching name is found.
 func get_voxel_by_name(voxel_name : String) -> Voxel:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == voxel_name:
@@ -321,8 +326,8 @@ func get_voxel_by_name(voxel_name : String) -> Voxel:
 	return null
 
 
-## Replaces voxel with given [Voxel] that matches given voxel name in VoxelSet,
-## calls on [method emit_changed].
+## Replaces voxel associated with given [code]voxel_name[/code] with the given 
+## [code]voxel[/code] in VoxelSet, calls on [method emit_changed].
 func update_voxel_by_name(voxel_name : String, voxel : Voxel) -> void:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == voxel_name:
@@ -332,7 +337,7 @@ func update_voxel_by_name(voxel_name : String, voxel : Voxel) -> void:
 	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 
 
-## Removes voxel that matches given voxel name in VoxelSet and
+## Removes voxel that matches given [code]voxel_name[/code] in VoxelSet and
 ## calls on [method emit_changed].
 func remove_voxel_by_name(voxel_name : String) -> void:
 	for voxel_id in _voxels.keys():
@@ -343,8 +348,8 @@ func remove_voxel_by_name(voxel_name : String) -> void:
 	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 
 
-## Helper function used to correctly format given [BaseMaterial3D] to conform
-## with VoxelSet.
+## Helper function used to correctly format given [code]material[/code] to
+## conform with VoxelSet.
 func format_material(material : BaseMaterial3D) -> void:
 	material.vertex_color_use_as_albedo = true
 	material.albedo_texture = tiles
