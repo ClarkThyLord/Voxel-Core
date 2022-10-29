@@ -47,11 +47,11 @@ enum MeshModes {
 @export
 var mesh_mode : MeshModes = MeshModes.NAIVE
 
-@export
-var tiled_faces : bool = true
-
 @export_range(0.01, 1.0, 0.01,"or_greater")
 var voxel_size : float = 0.25
+
+@export
+var voxels_tiled : bool = true
 
 @export
 var voxel_set : VoxelSet = null :
@@ -102,19 +102,19 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	update()
 
 
-func get_voxel(position : Vector3) -> Voxel:
 	return null
+func get_voxel_id(voxel_position : Vector3i) -> int:
 
 
-func get_voxel_id(position : Vector3) -> int:
 	return -1
+func get_voxel(voxel_position : Vector3i) -> Voxel:
 
 
 func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
-func set_voxel(position : Vector3, voxel_id : int) -> void:
+func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 	update()
 
 
@@ -122,7 +122,7 @@ func set_voxels(new_voxels : Dictionary) -> void:
 	update()
 
 
-func erase_voxel(position : Vector3) -> void:
+func erase_voxel(voxel_position : Vector3) -> void:
 	update()
 
 

@@ -260,9 +260,9 @@ func add_voxel(voxel : Voxel) -> int:
 ## Sets the given [Voxel] at given voxel id in VoxelSet, calls on
 ## [method emit_changed].
 ## NOTE: Use this only if you really know what you are doing!
-func set_voxel(id : int, voxel : Voxel) -> void:
-	if _voxels.has(id):
-		printerr("Error: Voxel with id `%s` in VoxelSet already exist" % id)
+func set_voxel(voxel_id : int, voxel : Voxel) -> void:
+	if _voxels.has(voxel_id):
+		printerr("Error: Voxel with id `%s` in VoxelSet already exist" % voxel_id)
 		return
 	_voxels[_id] = voxel
 	emit_changed()
@@ -277,18 +277,18 @@ func set_voxels(voxels : Dictionary) -> void:
 
 ## Replaces voxel with given [Voxel] at given voxel id in VoxelSet, calls on
 ## [method emit_changed].
-func update_voxel(id : int, voxel : Voxel) -> void:
-	if not _voxels.has(id):
-		printerr("Error: No voxel with id `%s` in Vo xelSet" % id)
+func update_voxel(voxel_id : int, voxel : Voxel) -> void:
+	if not _voxels.has(voxel_id):
+		printerr("Error: No voxel with id `%s` in VoxelSet" % voxel_id)
 		return
-	_voxels[id] = voxel
+	_voxels[voxel_id] = voxel
 	emit_changed()
 
 
 ## Removes voxel with given voxel id from VoxelSet and calls on
 ## [method emit_changed].
-func remove_voxel(id : int) -> void:
-	_voxels.erase(id)
+func remove_voxel(voxel_id : int) -> void:
+	_voxels.erase(voxel_id)
 	emit_changed()
 
 
