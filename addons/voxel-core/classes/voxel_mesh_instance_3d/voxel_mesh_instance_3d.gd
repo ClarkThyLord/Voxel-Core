@@ -102,12 +102,12 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	update()
 
 
-	return null
 func get_voxel_id(voxel_position : Vector3i) -> int:
+	return _voxels.get(voxel_position, -1)
 
 
-	return -1
 func get_voxel(voxel_position : Vector3i) -> Voxel:
+	return voxel_set.get_voxel(get_voxel_id(voxel_position))
 
 
 func get_voxels() -> Dictionary:
@@ -115,18 +115,31 @@ func get_voxels() -> Dictionary:
 
 
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
+	if not voxel_set.has_voxel_id(voxel_id):
+		printerr("Error: VoxelSet doesn't have given voxel id `%s`" % voxel_id)
+		return
+	
+	_voxels[voxel_position] = voxel_id
 	update()
 
 
 func set_voxels(new_voxels : Dictionary) -> void:
+	for voxel_position in new_voxels:
+		if not voxel_position is Vector3i:
+			return
+		if not new_voxels[voxel_position] is int:
+			return
+	_voxels = new_voxels
 	update()
 
 
 func erase_voxel(voxel_position : Vector3) -> void:
+	_voxels.erase(voxel_position)
 	update()
 
 
 func erase_voxels() -> void:
+	_voxels.clear()
 	update()
 
 

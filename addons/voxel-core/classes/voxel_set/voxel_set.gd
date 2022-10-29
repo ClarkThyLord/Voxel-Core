@@ -213,6 +213,11 @@ func remove_material_by_index(material_index : int) -> void:
 	emit_changed()
 
 
+## Returns [code]true[/code] if voxel with given voxel id is present in VoxelSet.
+func has_voxel_id(voxel_id : int) -> bool:
+	return _voxels.has(voxel_id)
+
+
 ## Returns array populated by all used voxel ids.
 func get_voxel_ids() -> Array[int]:
 	return _voxels.keys()
