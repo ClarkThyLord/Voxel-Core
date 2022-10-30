@@ -5,9 +5,8 @@ extends MeshInstance3D
 ## The most basic voxel visualization object, for a moderate amount of voxels;
 ## used by Voxel-Core.
 ##
-## A VoxelMeshInstance3D is the most basic voxel visualization object to be used
-## with a moderate amount of voxels, depending on the hardware a couple
-## of thousand~.
+## A VoxelMeshInstance3D is the most basic voxel visualization object provided 
+## by Voxel-Core, and is intended to be used for a moderate amount of voxels.
 ##
 ## [codeblock]
 ## var voxel_set : VoxelSet = VoxelSet.new()
@@ -36,7 +35,22 @@ extends MeshInstance3D
 
 
 # Enums
+## Approaches for generating voxel meshes, each approach has its own advantage 
+## and disadvantage; for more information visit:
+## [url=http://web.archive.org/web/20200428085802/https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/]Voxel Meshing[/url],
+## [url=http://web.archive.org/web/20201112011204/https://www.gedge.ca/dev/2014/08/17/greedy-voxel-meshing]Greedy Voxel Meshing[/url]
+## [br]
+## - Brute meshing, no culling of voxel faces; renders all voxel faces
+## regardless of obstruction. (worst optimized approach)
+## [br]
+## - Naive meshing, simple culling of voxel faces; only renders all non
+## obstructed voxels. (best optimized approach for its execution cost)
+## [br]
+## - Greedy meshing, culls and merges similar voxel faces; renders all non
+## obstructed voxels while reducing face count. (best used for static content,
+## as its very costly to execute)
 enum MeshModes {
+	BRUTE,
 	NAIVE,
 	GREEDY,
 }
