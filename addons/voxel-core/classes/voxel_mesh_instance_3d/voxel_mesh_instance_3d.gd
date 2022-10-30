@@ -130,7 +130,7 @@ func get_voxels() -> Dictionary:
 
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 	if not voxel_set.has_voxel_id(voxel_id):
-		printerr("Error: Invalid voxel_id `%s` to set" % voxel_id)
+		printerr("Error: Invalid voxel_id `%s` to be set" % voxel_id)
 		return
 	
 	_voxels[voxel_position] = voxel_id
@@ -140,10 +140,10 @@ func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 func set_voxels(new_voxels : Dictionary) -> void:
 	for voxel_position in new_voxels:
 		if not voxel_position is Vector3i:
-			printerr("Error: Given voxels aren't formatted correctly")
+			printerr("Error: Invalid voxel_position to be set")
 			return
 		if not new_voxels[voxel_position] is int:
-			printerr("Error: Given voxels aren't formatted correctly")
+			printerr("Error: Invalid voxel_id to be set")
 			return
 	_voxels = new_voxels
 	update()
