@@ -58,15 +58,19 @@ enum MeshModes {
 
 
 # Exported Variables
+## Approach to be used when generating voxel mesh.
 @export
 var mesh_mode : MeshModes = MeshModes.NAIVE
 
+## Size of voxels.
 @export_range(0.01, 1.0, 0.01,"or_greater")
 var voxel_size : float = 0.25
 
+## Toggle to generate voxel mesh with UV mapping.
 @export
 var voxels_tiled : bool = true
 
+## VoxelSet used to generate voxel mesh.
 @export
 var voxel_set : VoxelSet = null :
 	get = get_voxel_set,
@@ -107,36 +111,47 @@ func _get_property_list():
 
 
 # Public Methods
+## Returns [member voxel_set].
 func get_voxel_set():
 	return voxel_set
 
 
+## Sets [member voxel_set] and calls on [method update].
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
 	update()
 
 
+## Returns [code]voxel_id[/code] at given [code]voxel_position[/code] if not
+## found returns [code]-1[/code].
 func get_voxel_id(voxel_position : Vector3i) -> int:
 	return _voxels.get(voxel_position, -1)
 
 
+## Returns [Voxel] at given [code]voxel_position[/code] if not found returns
+## [code]null[/code].
 func get_voxel(voxel_position : Vector3i) -> Voxel:
 	return voxel_set.get_voxel(get_voxel_id(voxel_position))
 
 
+## Returns [Dictionary] with all used [code]voxel_position[/code](s) being the
+## keys and their respective [code]voxel_id[/code] being their value.
 func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
+## Sets the given [code]voxel_id[/code] at given [code]voxel_position[/code] and
+## calls on [method update].
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 	if not voxel_set.has_voxel_id(voxel_id):
 		printerr("Error: Invalid voxel_id `%s` to be set" % voxel_id)
 		return
-	
 	_voxels[voxel_position] = voxel_id
 	update()
 
 
+## Replaces all voxels with given [code]new_voxels[/code] and calls on 
+## [method update].
 func set_voxels(new_voxels : Dictionary) -> void:
 	for voxel_position in new_voxels:
 		if not voxel_position is Vector3i:
@@ -149,23 +164,31 @@ func set_voxels(new_voxels : Dictionary) -> void:
 	update()
 
 
+## Erase voxel at given [code]voxel_position[/code] and calls on [method update].
 func erase_voxel(voxel_position : Vector3i) -> void:
+	if not _voxels.has(voxel_position):
+		printerr("Error: Invalid voxel_position to erase")
+		return
 	_voxels.erase(voxel_position)
 	update()
 
 
+## Erases all voxels and calls on [method update].
 func erase_voxels() -> void:
 	_voxels.clear()
 	update()
 
 
+## Returns [code]true[/code] if voxels are present, else [code]false[/code].
 func has_voxels() -> bool:
 	return not _voxels.is_empty()
 
 
+## Returns amount of voxels present.
 func get_voxel_count() -> int:
 	return _voxels.size()
 
 
+## Updates voxel mesh with current data.
 func update() -> void:
 	pass
