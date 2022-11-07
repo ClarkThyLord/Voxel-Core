@@ -14,6 +14,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/voxel-core/classes/voxel/voxel.gd"
 }, {
+"base": "Object",
+"class": &"VoxelDataTool",
+"language": &"GDScript",
+"path": "res://addons/voxel-core/classes/voxel_data_tool/voxel_data_tool.gd"
+}, {
 "base": "MeshInstance3D",
 "class": &"VoxelMeshInstance3D",
 "language": &"GDScript",
@@ -31,6 +36,7 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "Voxel": "res://addons/voxel-core/classes/voxel/voxel.svg",
+"VoxelDataTool": "res://addons/voxel-core/classes/voxel_data_tool/voxel_data_tool.svg",
 "VoxelMeshInstance3D": "res://addons/voxel-core/classes/voxel_mesh_instance_3d/voxel_mesh_instance_3d.svg",
 "VoxelSet": "res://addons/voxel-core/classes/voxel_set/voxel_set.svg",
 "VoxelSurfaceTool": "res://addons/voxel-core/classes/voxel_surface_tool/voxel_surface_tool.svg"
