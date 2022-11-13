@@ -77,4 +77,5 @@ func add_faces() -> void:
 ## Creates a vertex array from an existing voxel visualization object. 
 ## (e.g. [VoxelMeshInstance3D]).
 func create_from(voxel_object, voxel_mesh_mode : VoxelMeshType, voxel_positions : Array = []) -> void:
+func create_from(voxel_object, voxel_mesh_type : VoxelMeshType, voxel_positions : Array = []) -> void:
 	pass

@@ -38,9 +38,9 @@ extends MeshInstance3D
 ## Approach to be used when generating voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
 @export
-var mesh_mode : VoxelSurfaceTool.VoxelMeshType = VoxelSurfaceTool.VoxelMeshType.NAIVE :
-	get = get_mesh_mode,
-	set = set_mesh_mode
+var voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType = VoxelSurfaceTool.VoxelMeshType.NAIVE :
+	get = get_voxel_mesh_type,
+	set = set_voxel_mesh_type
 
 ## Size of voxels.
 @export_range(0.01, 1.0, 0.01,"or_greater")
@@ -95,14 +95,14 @@ func _get_property_list():
 
 
 # Public Methods
-## Returns [member mesh_mode].
-func get_mesh_mode() -> VoxelSurfaceTool.VoxelMeshType:
-	return mesh_mode
+## Returns [member voxel_mesh_type].
+func get_voxel_mesh_type() -> VoxelSurfaceTool.VoxelMeshType:
+	return voxel_mesh_type
 
 
-## Sets [member mesh_mode] and calls on [method update].
-func set_mesh_mode(new_mesh_mode : VoxelSurfaceTool.VoxelMeshType) -> void:
-	mesh_mode = new_mesh_mode
+## Sets [member voxel_mesh_type] and calls on [method update].
+func set_voxel_mesh_type(new_voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType) -> void:
+	voxel_mesh_type = new_voxel_mesh_type
 	update()
 
 
