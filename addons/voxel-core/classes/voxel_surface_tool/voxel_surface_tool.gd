@@ -38,17 +38,29 @@ var _voxel_size : float
 
 var _voxels_tiled : bool
 
+var _voxel_uv_scale : Vector2
+
 var _surfaces : Dictionary
 
 
 
 # Public Methods
 ## Called before passing in any information.
-func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool = true) -> void:
+func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool = false) -> void:
 	clear()
 	_voxel_set = voxel_set
 	_voxel_size = voxel_size
 	_voxels_tiled = voxels_tiled
+	if _voxels_tiled:
+		if is_instance_valid(voxel_set.tiles):
+			if voxel_set.tile_dimensions == Vector2i.ZERO:
+				_voxels_tiled = false
+				printerr("Error: VoxelSet passed to VoxelSurfaceTool has invalid `tile_dimensions`")
+			else:
+				_voxel_uv_scale = Vector2.ONE / (voxel_set.tiles.get_size() / Vector2(voxel_set.tile_dimensions))
+		else:
+			_voxels_tiled = false
+			printerr("Error: VoxelSet passed to VoxelSurfaceTool is missing `tiles`")
 	_began = true
 
 
@@ -56,7 +68,8 @@ func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool 
 func clear() -> void:
 	_voxel_set = null
 	_voxel_size = 0.25
-	_voxels_tiled = true
+	_voxels_tiled = false
+	_voxel_uv_scale = Vector2.ZERO
 	_surfaces.clear()
 	_began = false
 
@@ -86,9 +99,10 @@ func add_faces() -> void:
 ## [code]voxel_visualization_object[/code](e.g. [VoxelMeshInstance3D]) and
 ## returns a constructed [ArrayMesh]. Voxel mesh is generated using a
 ## [member VoxelMeshType] passed via [code]voxel_mesh_mode[/code]. Can
-## delimitate voxels passed from voxel visualization object by passing a array
-## of targeted [code]voxel_positions[/code](e.g. Array[ Vector3i ]).
-## NOTE: Internally calls on [method clear].
+## delimitate voxels passed from [code]voxel_visualization_object[/code] by
+## passing a array of targeted [code]voxel_positions[/code]
+## (e.g. Array[ Vector3i ]).
+## NOTE: Internally calls on [method clear] first.
 func create_from(voxel_visualization_object, voxel_mesh_type : VoxelMeshType, voxel_positions : Array = []) -> ArrayMesh:
 	begin(
 			voxel_visualization_object.voxel_set,
