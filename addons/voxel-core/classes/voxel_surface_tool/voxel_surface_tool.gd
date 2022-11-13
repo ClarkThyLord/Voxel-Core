@@ -30,27 +30,19 @@ enum VoxelMeshType {
 
 
 # Private Variables
-var _surfaces : Array[SurfaceTool] = []
+var _surfaces : Array[SurfaceTool]
 
-var _voxel_size : float = 0.25
+var _voxel_size : float
 
-var _voxels_tiled : bool = true
+var _voxels_tiled : bool
 
 var _voxel_set : VoxelSet
 
 
 
 # Public Methods
-func set_voxel_size(new_voxel_size : float) -> void:
-	pass
-
-
-func set_voxels_tiled(new_voxels_tiled : bool) -> void:
-	pass
-
-
-## Called before adding any voxels.
-func begin(voxel_set : VoxelSet) -> void:
+## Called before passing in any information.
+func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool = true) -> void:
 	pass
 
 
@@ -59,9 +51,9 @@ func clear() -> void:
 	pass
 
 
-## Returns a constructed ArrayMesh from current information passed in. If an 
-## existing ArrayMesh is passed in as an argument, will add extra surface(s) to
-## the existing ArrayMesh.
+## Returns a constructed [ArrayMesh] from current information passed in. If an 
+## existing [ArrayMesh] is passed in as an argument, will add extra surface(s) to
+## the existing [ArrayMesh].
 func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
 	return null
 
@@ -74,8 +66,12 @@ func add_faces() -> void:
 	pass
 
 
-## Creates a vertex array from an existing voxel visualization object. 
-## (e.g. [VoxelMeshInstance3D]).
-func create_from(voxel_object, voxel_mesh_mode : VoxelMeshType, voxel_positions : Array = []) -> void:
-func create_from(voxel_object, voxel_mesh_type : VoxelMeshType, voxel_positions : Array = []) -> void:
-	pass
+## Passes in information from an existing voxel visualization object.
+## (e.g. [VoxelMeshInstance3D]) and returns a constructed [ArrayMesh].
+## Voxel mesh is generated using a [member VoxelMeshType] passed via
+## [code]voxel_mesh_mode[/code]. Can delimitate voxels passed from voxel
+## visualization object by passing a array of targeted 
+## [code]voxel_positions[/code](e.g. Array[ Vector3i ]).
+## NOTE: Internally calls on [method clear].
+func create_from(voxel_object, voxel_mesh_type : VoxelMeshType, voxel_positions : Array = []) -> ArrayMesh:
+	return null

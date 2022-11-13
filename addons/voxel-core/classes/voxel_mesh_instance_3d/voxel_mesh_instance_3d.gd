@@ -11,7 +11,7 @@ extends MeshInstance3D
 ## [codeblock]
 ## var voxel_set : VoxelSet = VoxelSet.new()
 ## voxel_set.tiles = preload("res://texture.png")
-## 
+##
 ## var voxel : Voxel = Voxel.new()
 ## voxel.name = "dirt grass"
 ## voxel.color = Color.BROWN
