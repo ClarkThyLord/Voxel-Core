@@ -29,7 +29,7 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/voxel-core/classes/voxel_set/voxel_set.gd"
 }, {
-"base": "SurfaceTool",
+"base": "RefCounted",
 "class": &"VoxelSurfaceTool",
 "language": &"GDScript",
 "path": "res://addons/voxel-core/classes/voxel_surface_tool/voxel_surface_tool.gd"
