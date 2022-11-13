@@ -38,15 +38,21 @@ extends MeshInstance3D
 ## Approach to be used when generating voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
 @export
-var mesh_mode : VoxelSurfaceTool.VoxelMeshType = VoxelSurfaceTool.VoxelMeshType.NAIVE
+var mesh_mode : VoxelSurfaceTool.VoxelMeshType = VoxelSurfaceTool.VoxelMeshType.NAIVE :
+	get = get_mesh_mode,
+	set = set_mesh_mode
 
 ## Size of voxels.
 @export_range(0.01, 1.0, 0.01,"or_greater")
-var voxel_size : float = 0.25
+var voxel_size : float = 0.25 :
+	get = get_voxel_size,
+	set = set_voxel_size
 
 ## Toggle to generate voxel mesh with UV mapping.
 @export
-var voxels_tiled : bool = true
+var voxels_tiled : bool = true :
+	get = get_voxels_tiled,
+	set = set_voxels_tiled
 
 ## VoxelSet used to generate voxel mesh.
 @export
@@ -89,6 +95,39 @@ func _get_property_list():
 
 
 # Public Methods
+## Returns [member mesh_mode].
+func get_mesh_mode() -> VoxelSurfaceTool.VoxelMeshType:
+	return mesh_mode
+
+
+## Sets [member mesh_mode] and calls on [method update].
+func set_mesh_mode(new_mesh_mode : VoxelSurfaceTool.VoxelMeshType) -> void:
+	mesh_mode = new_mesh_mode
+	update()
+
+
+## Returns [member voxel_size].
+func get_voxel_size() -> float:
+	return voxel_size
+
+
+## Sets [member voxel_size] and calls on [method update].
+func set_voxel_size(new_voxel_size : float) -> void:
+	voxel_size = new_voxel_size
+	update()
+
+
+## Returns [member voxels_tiled].
+func get_voxels_tiled() -> bool:
+	return voxels_tiled
+
+
+## Sets [member voxels_tiled] and calls on [method update].
+func set_voxels_tiled(new_voxels_tiled : bool) -> void:
+	voxels_tiled = new_voxels_tiled
+	update()
+
+
 ## Returns [member voxel_set].
 func get_voxel_set():
 	return voxel_set
