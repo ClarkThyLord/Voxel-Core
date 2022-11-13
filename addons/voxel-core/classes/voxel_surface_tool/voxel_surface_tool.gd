@@ -30,48 +30,68 @@ enum VoxelMeshType {
 
 
 # Private Variables
-var _surfaces : Array[SurfaceTool]
+var _began : bool = false
+
+var _voxel_set : VoxelSet
 
 var _voxel_size : float
 
 var _voxels_tiled : bool
 
-var _voxel_set : VoxelSet
+var _surfaces : Dictionary
 
 
 
 # Public Methods
 ## Called before passing in any information.
 func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool = true) -> void:
-	pass
+	clear()
+	_voxel_set = voxel_set
+	_voxel_size = voxel_size
+	_voxels_tiled = voxels_tiled
+	_began = true
 
 
 ## Clear all information passed into the voxel surface tool so far.
 func clear() -> void:
-	pass
+	_voxel_set = null
+	_voxel_size = 0.25
+	_voxels_tiled = true
+	_surfaces.clear()
+	_began = false
 
 
 ## Returns a constructed [ArrayMesh] from current information passed in. If an 
 ## existing [ArrayMesh] is passed in as an argument, will add extra surface(s) to
 ## the existing [ArrayMesh].
 func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
+	if not _began:
+		return
 	return null
 
 
 func add_face() -> void:
+	if not _began:
+		return
 	pass
 
 
 func add_faces() -> void:
+	if not _began:
+		return
 	pass
 
 
-## Passes in information from an existing voxel visualization object.
-## (e.g. [VoxelMeshInstance3D]) and returns a constructed [ArrayMesh].
-## Voxel mesh is generated using a [member VoxelMeshType] passed via
-## [code]voxel_mesh_mode[/code]. Can delimitate voxels passed from voxel
-## visualization object by passing a array of targeted 
-## [code]voxel_positions[/code](e.g. Array[ Vector3i ]).
+## Passes in information from an existing
+## [code]voxel_visualization_object[/code](e.g. [VoxelMeshInstance3D]) and
+## returns a constructed [ArrayMesh]. Voxel mesh is generated using a
+## [member VoxelMeshType] passed via [code]voxel_mesh_mode[/code]. Can
+## delimitate voxels passed from voxel visualization object by passing a array
+## of targeted [code]voxel_positions[/code](e.g. Array[ Vector3i ]).
 ## NOTE: Internally calls on [method clear].
-func create_from(voxel_object, voxel_mesh_type : VoxelMeshType, voxel_positions : Array = []) -> ArrayMesh:
+func create_from(voxel_visualization_object, voxel_mesh_type : VoxelMeshType, voxel_positions : Array = []) -> ArrayMesh:
+	begin(
+			voxel_visualization_object.voxel_set,
+			voxel_visualization_object.voxel_size,
+			voxel_visualization_object.voxels_tiled)
 	return null
