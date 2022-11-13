@@ -264,7 +264,7 @@ func add_voxel(voxel : Voxel) -> int:
 	return _id
 
 
-## Assigns given [code]voxel[/voxel] to the given [code]voxel_id[/code] in
+## Assigns given [code]voxel[/code] to the given [code]voxel_id[/code] in
 ## VoxelSet, calls on [method emit_changed].
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxel(voxel_id : int, voxel : Voxel) -> void:
