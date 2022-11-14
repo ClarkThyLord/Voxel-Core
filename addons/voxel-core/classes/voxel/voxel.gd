@@ -18,22 +18,61 @@ extends RefCounted
 
 # Constants
 ## Represents voxel's right face.
-const FACE_RIGHT = Vector3.RIGHT
+const FACE_RIGHT = Vector3i.RIGHT
 
 ## Represents voxel's left face.
-const FACE_LEFT = Vector3.LEFT
+const FACE_LEFT = Vector3i.LEFT
 
 ## Represents voxel's top face.
-const FACE_UP = Vector3.UP
+const FACE_UP = Vector3i.UP
 
 ## Represents voxel's bottom face.
-const FACE_DOWN = Vector3.DOWN
+const FACE_DOWN = Vector3i.DOWN
 
 ## Represents voxel's front face.
-const FACE_FORWARD = Vector3.FORWARD
+const FACE_FORWARD = Vector3i.FORWARD
 
 ## Represents voxel's back face.
-const FACE_BACK = Vector3.BACK
+const FACE_BACK = Vector3i.BACK
+
+const FACES = {
+	FACE_RIGHT: [
+		FACE_UP,
+		FACE_DOWN,
+		FACE_FORWARD,
+		FACE_BACK,
+	],
+	FACE_LEFT: [
+		FACE_UP,
+		FACE_DOWN,
+		FACE_FORWARD,
+		FACE_BACK,
+	],
+	FACE_UP: [
+		FACE_RIGHT,
+		FACE_LEFT,
+		FACE_FORWARD,
+		FACE_BACK,
+	],
+	FACE_DOWN: [
+		FACE_RIGHT,
+		FACE_LEFT,
+		FACE_FORWARD,
+		FACE_BACK,
+	],
+	FACE_FORWARD: [
+		FACE_RIGHT,
+		FACE_LEFT,
+		FACE_UP,
+		FACE_DOWN,
+	],
+	FACE_BACK: [
+		FACE_RIGHT,
+		FACE_LEFT,
+		FACE_UP,
+		FACE_DOWN,
+	],
+}
 
 
 

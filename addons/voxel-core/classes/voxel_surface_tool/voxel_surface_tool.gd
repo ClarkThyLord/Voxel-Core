@@ -83,16 +83,17 @@ func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
 	return null
 
 
-func add_face() -> void:
+func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) -> void:
 	if not _began:
 		return
 	pass
 
 
-func add_faces() -> void:
+func add_faces(voxel_position : Vector3i, voxel_id : int) -> void:
 	if not _began:
 		return
-	pass
+	for voxel_face in Voxel.FACES:
+		add_face(voxel_position, voxel_id, voxel_face)
 
 
 ## Passes in information from an existing
@@ -108,4 +109,18 @@ func create_from(voxel_visualization_object, voxel_mesh_type : VoxelMeshType, vo
 			voxel_visualization_object.voxel_set,
 			voxel_visualization_object.voxel_size,
 			voxel_visualization_object.voxels_tiled)
+	
+	if voxel_positions.is_empty():
+		voxel_positions = voxel_visualization_object.get_voxel_positions()
+	
+	match voxel_mesh_type:
+		VoxelMeshType.BRUTE:
+			for voxel_position in voxel_positions:
+				var voxel_id : int = voxel_visualization_object.get_voxel(voxel_position)
+				add_faces(voxel_position, voxel_id)
+		VoxelMeshType.NAIVE:
+			pass
+		VoxelMeshType.GREEDY:
+			pass
+	
 	return null
