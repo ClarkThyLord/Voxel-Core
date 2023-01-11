@@ -50,7 +50,7 @@ var voxel_size : float = 0.25 :
 
 ## Toggle to generate voxel mesh with UV mapping.
 @export
-var voxels_tiled : bool = true :
+var voxels_tiled : bool = false :
 	get = get_voxels_tiled,
 	set = set_voxels_tiled
 
@@ -157,6 +157,14 @@ func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
+func get_voxel_positions() -> Array[Vector3i]:
+	return _voxels.keys()
+
+
+func get_voxel_ids() -> Array[int]:
+	return _voxels.values()
+
+
 ## Sets the given [code]voxel_id[/code] at given [code]voxel_position[/code] and
 ## calls on [method update].
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
@@ -208,4 +216,7 @@ func get_voxel_count() -> int:
 
 ## Updates voxel mesh with current data.
 func update() -> void:
-	pass
+	var voxel_surface_tool : VoxelSurfaceTool = VoxelSurfaceTool.new()
+	voxel_surface_tool.begin(voxel_set, voxel_size, voxels_tiled)
+	voxel_surface_tool.create_from(self, VoxelSurfaceTool.VoxelMeshType.BRUTE)
+	mesh = voxel_surface_tool.commit()

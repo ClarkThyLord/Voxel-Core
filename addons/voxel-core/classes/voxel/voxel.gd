@@ -114,37 +114,37 @@ var color_back : Color = Color.TRANSPARENT :
 
 ## The position of the tile applied to all faces of the voxel by default, in
 ## refrence to [member VoxelSet.tiles].
-var tile : Vector2 = -Vector2.ONE
+var tile : Vector2i = -Vector2i.ONE
 
 ## The position of the tile applied to the right face of the voxel, in
 ## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
-var tile_right : Vector2 = -Vector2.ONE :
-	get: return tile if tile_right == -Vector2.ONE else tile_right
+var tile_right : Vector2i = -Vector2i.ONE :
+	get: return tile if tile_right == -Vector2i.ONE else tile_right
 
 ## The position of the tile applied to the left face of the voxel, in
 ## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
-var tile_left : Vector2 = -Vector2.ONE :
-	get: return tile if tile_left == -Vector2.ONE else tile_left
+var tile_left : Vector2i = -Vector2i.ONE :
+	get: return tile if tile_left == -Vector2i.ONE else tile_left
 
 ## The position of the tile applied to the top face of the voxel, in
 ## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
-var tile_up : Vector2 = -Vector2.ONE :
-	get: return tile if tile_up == -Vector2.ONE else tile_up
+var tile_up : Vector2i = -Vector2i.ONE :
+	get: return tile if tile_up == -Vector2i.ONE else tile_up
 
 ## The position of the tile applied to the bottom face of the voxel, in
 ## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
-var tile_down : Vector2 = -Vector2.ONE :
-	get: return tile if tile_down == -Vector2.ONE else tile_down
+var tile_down : Vector2i = -Vector2i.ONE :
+	get: return tile if tile_down == -Vector2i.ONE else tile_down
 
 ## The position of the tile applied to the front face of the voxel, in
 ## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
-var tile_forward : Vector2 = -Vector2.ONE :
-	get: return tile if tile_forward == -Vector2.ONE else tile_forward
+var tile_forward : Vector2i = -Vector2i.ONE :
+	get: return tile if tile_forward == -Vector2i.ONE else tile_forward
 
 ## The position of the tile applied to the back face of the voxel, in
 ## refrence to [member VoxelSet.tiles]; if negative returns [member tile].
-var tile_back : Vector2 = -Vector2.ONE :
-	get: return tile if tile_back == -Vector2.ONE else tile_back
+var tile_back : Vector2i = -Vector2i.ONE :
+	get: return tile if tile_back == -Vector2i.ONE else tile_back
 
 
 
@@ -209,9 +209,9 @@ func set_color(new_color : Color) -> void:
 	color = new_color
 
 
-## Returns true if voxel [code]face[/code] has a defined color.
-func has_face_color(face : Vector3) -> bool:
-	match face:
+## Returns true if voxel [code]voxel_face[/code] has a defined color.
+func has_face_color(voxel_face : Vector3i) -> bool:
+	match voxel_face:
 		FACE_RIGHT:
 			return color_right.a > 0
 		FACE_LEFT:
@@ -224,13 +224,13 @@ func has_face_color(face : Vector3) -> bool:
 			return color_forward.a > 0
 		FACE_BACK:
 			return color_back.a > 0
-	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return has_color()
 
 
-## Returns color applied to the [code]face[/code] of the voxel, if transparent returns [member color].
-func get_face_color(face : Vector3) -> Color:
-	match face:
+## Returns color applied to the [code]voxel_face[/code] of the voxel, if transparent returns [member color].
+func get_face_color(voxel_face : Vector3i) -> Color:
+	match voxel_face:
 		FACE_RIGHT:
 			return color_right
 		FACE_LEFT:
@@ -243,13 +243,13 @@ func get_face_color(face : Vector3) -> Color:
 			return color_forward
 		FACE_BACK:
 			return color_back
-	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return get_color()
 
 
-## Sets color applied to the [code]face[/code] of the voxel.
-func set_face_color(face : Vector3, new_color : Color) -> void:
-	match face:
+## Sets color applied to the [code]voxel_face[/code] of the voxel.
+func set_face_color(voxel_face : Vector3i, new_color : Color) -> void:
+	match voxel_face:
 		FACE_RIGHT:
 			color_right = new_color
 		FACE_LEFT:
@@ -262,47 +262,47 @@ func set_face_color(face : Vector3, new_color : Color) -> void:
 			color_forward = new_color
 		FACE_BACK:
 			color_back = new_color
-	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 
 
 ## Returns true if voxel has a defined tile.
 func has_tile() -> bool:
-	return tile != Vector2.ONE
+	return tile != -Vector2i.ONE
 
 
 ## Returns position of the tile applied to all faces of the voxel by default.
-func get_tile() -> Vector2:
+func get_tile() -> Vector2i:
 	return tile
 
 
 ## Sets position of the tile applied to all faces of the voxel by default.
-func set_tile(new_tile : Vector2) -> void:
+func set_tile(new_tile : Vector2i) -> void:
 	tile = new_tile
 
 
-## Returns true if voxel [code]face[/code] has a defined tile.
-func has_face_tile(face : Vector3) -> bool:
-	match face:
+## Returns true if voxel [code]voxel_face[/code] has a defined tile.
+func has_face_tile(voxel_face : Vector3i) -> bool:
+	match voxel_face:
 		FACE_RIGHT:
-			return tile_right != -Vector2.ONE
+			return tile_right != -Vector2i.ONE
 		FACE_LEFT:
-			return tile_left != -Vector2.ONE
+			return tile_left != -Vector2i.ONE
 		FACE_UP:
-			return tile_up != -Vector2.ONE
+			return tile_up != -Vector2i.ONE
 		FACE_DOWN:
-			return tile_down != -Vector2.ONE
+			return tile_down != -Vector2i.ONE
 		FACE_FORWARD:
-			return tile_forward != -Vector2.ONE
+			return tile_forward != -Vector2i.ONE
 		FACE_BACK:
-			return tile_back != -Vector2.ONE
-	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+			return tile_back != -Vector2i.ONE
+	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return has_tile()
 
 
-## Returns the position of the tile applied to the [code]face[/code] of the
+## Returns the position of the tile applied to the [code]voxel_face[/code] of the
 ## voxel, if negative returns [member tile].
-func get_face_tile(face : Vector3) -> Vector2:
-	match face:
+func get_face_tile(voxel_face : Vector3i) -> Vector2i:
+	match voxel_face:
 		FACE_RIGHT:
 			return tile_right
 		FACE_LEFT:
@@ -315,13 +315,13 @@ func get_face_tile(face : Vector3) -> Vector2:
 			return tile_forward
 		FACE_BACK:
 			return tile_back
-	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return get_tile()
 
 
-## Sets the position of the tile applied to the [code]face[/code] of the voxel.
-func set_face_tile(face : Vector3, new_tile : Vector2) -> void:
-	match face:
+## Sets the position of the tile applied to the [code]voxel_face[/code] of the voxel.
+func set_face_tile(voxel_face : Vector3i, new_tile : Vector2) -> void:
+	match voxel_face:
 		FACE_RIGHT:
 			tile_right = new_tile
 		FACE_LEFT:
@@ -334,7 +334,7 @@ func set_face_tile(face : Vector3, new_tile : Vector2) -> void:
 			tile_forward = new_tile
 		FACE_BACK:
 			tile_back = new_tile
-	printerr("Error: Bad argument `%s` isn't a valid voxel face" % face)
+	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 
 
 ## Duplicates the voxel, returning a new voxel.

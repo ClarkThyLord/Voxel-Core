@@ -1,8 +1,23 @@
 @tool
 class_name VoxelSurfaceTool
 extends RefCounted
-@icon("res://addons/voxel-core/classes/voxel_surface_tool/voxel_surface_tool.svg")
+@icon("res://addons/voxel-core/classes/voxel_surface/voxel_surface.svg")
 ## Helper tool to create voxel geometry; used by Voxel-Core.
+
+
+
+# Inner Classes
+class Surface extends SurfaceTool:
+	# Public Variables
+	## Index of the last vertex added.
+	var index : int
+	
+	
+	
+	# Built-In Virtual Methods
+	func _init() -> void:
+		index = 0
+		begin(Mesh.PRIMITIVE_TRIANGLES)
 
 
 
@@ -86,7 +101,120 @@ func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
 func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) -> void:
 	if not _began:
 		return
-	pass
+	
+	var voxel : Voxel = _voxel_set.get_voxel(voxel_id)
+	
+	# Surface ID(e.g. "1")
+	var surface_id : String = str(voxel.material_index)
+	
+	# Should Surface be tiled?
+	var surface_tiled : bool = _voxels_tiled and voxel.has_face_tile(voxel_face)
+	if surface_tiled:
+		# Mark Surface ID as tiled(e.g. "1_tiled")
+		surface_id += "_tiled"
+	
+	# Surface to which to add face to
+	var surface : Surface
+	if _surfaces.has(surface_id):
+		surface = _surfaces[surface_id]
+	else:
+		surface = Surface.new()
+		_voxel_set.format_material(
+				_voxel_set.get_material_by_index(voxel.material_index))
+		surface.set_material(
+				_voxel_set.get_material_by_index(voxel.material_index))
+		_surfaces[surface_id] = surface
+	
+	surface.set_normal(voxel_face)
+	surface.set_color(voxel.color)
+	
+	match voxel_face:
+		Voxel.FACE_RIGHT:
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.ONE) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
+		Voxel.FACE_LEFT:
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.UP) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.BACK) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) * _voxel_size)
+		Voxel.FACE_UP:
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) *_voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.UP) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.ONE) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
+		Voxel.FACE_DOWN:
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.BACK) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position) * _voxel_size)
+		Voxel.FACE_FORWARD:
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.UP) * _voxel_size)
+		Voxel.FACE_BACK:
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.ONE) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) * _voxel_size)
+			if surface_tiled:
+				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			surface.add_vertex((voxel_position + Vector3i.BACK) * _voxel_size)
+	
+	surface.index += 4
+	surface.add_index(surface.index - 4)
+	surface.add_index(surface.index - 3)
+	surface.add_index(surface.index - 2)
+	surface.add_index(surface.index - 3)
+	surface.add_index(surface.index - 1)
+	surface.add_index(surface.index - 2)
 
 
 func add_faces(voxel_position : Vector3i, voxel_id : int) -> void:
@@ -116,7 +244,7 @@ func create_from(voxel_visualization_object, voxel_mesh_type : VoxelMeshType, vo
 	match voxel_mesh_type:
 		VoxelMeshType.BRUTE:
 			for voxel_position in voxel_positions:
-				var voxel_id : int = voxel_visualization_object.get_voxel(voxel_position)
+				var voxel_id : int = voxel_visualization_object.get_voxel_id(voxel_position)
 				add_faces(voxel_position, voxel_id)
 		VoxelMeshType.NAIVE:
 			pass

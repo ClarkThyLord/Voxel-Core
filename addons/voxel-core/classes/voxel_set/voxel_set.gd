@@ -348,6 +348,10 @@ func remove_voxel_by_name(voxel_name : String) -> void:
 	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 
 
+func get_voxel_count() -> int:
+	return _voxels.size()
+
+
 ## Helper function used to correctly format given [code]material[/code] to
 ## conform with VoxelSet.
 func format_material(material : BaseMaterial3D) -> void:
