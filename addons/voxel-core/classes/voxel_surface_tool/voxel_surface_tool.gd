@@ -95,7 +95,15 @@ func clear() -> void:
 func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
 	if not _began:
 		return
-	return null
+	
+	if not is_instance_valid(existing):
+		existing = ArrayMesh.new()
+	
+	for surface_id in _surfaces:
+		var surface : Surface = _surfaces[surface_id]
+		surface.commit(existing, flags)
+	
+	return existing
 
 
 func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) -> void:
