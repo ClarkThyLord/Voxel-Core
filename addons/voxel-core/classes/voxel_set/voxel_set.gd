@@ -1,7 +1,7 @@
 @tool
+@icon("res://addons/voxel-core/classes/voxel_set/voxel_set.svg")
 class_name VoxelSet
 extends Resource
-@icon("res://addons/voxel-core/classes/voxel_set/voxel_set.svg")
 ## Used to store a collection of voxels, textures, materials and etc.;
 ## used by Voxel-Core.
 ##

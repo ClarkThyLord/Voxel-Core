@@ -1,7 +1,7 @@
 @tool
+@icon("res://addons/voxel-core/classes/voxel/voxel.svg")
 class_name Voxel
 extends RefCounted
-@icon("res://addons/voxel-core/classes/voxel/voxel.svg")
 ## Used to define individual voxel data; used by Voxel-Core.
 ##
 ## A Voxel is a simple class that's used to define individual voxel data, 

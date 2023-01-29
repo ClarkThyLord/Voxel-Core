@@ -1,7 +1,7 @@
 @tool
+@icon("res://addons/voxel-core/classes/voxel_mesh_instance_3d/voxel_mesh_instance_3d.svg")
 class_name VoxelMeshInstance3D
 extends MeshInstance3D
-@icon("res://addons/voxel-core/classes/voxel_mesh_instance_3d/voxel_mesh_instance_3d.svg")
 ## The most basic voxel visualization object, for a moderate amount of voxels;
 ## used by Voxel-Core.
 ##
@@ -136,7 +136,6 @@ func get_voxel_set():
 ## Sets [member voxel_set] and calls on [method update].
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
-	update()
 
 
 ## Returns [code]voxel_id[/code] at given [code]voxel_position[/code] if not
@@ -217,6 +216,5 @@ func get_voxel_count() -> int:
 ## Updates voxel mesh with current data.
 func update() -> void:
 	var voxel_surface_tool : VoxelSurfaceTool = VoxelSurfaceTool.new()
-	voxel_surface_tool.begin(voxel_set, voxel_size, voxels_tiled)
 	voxel_surface_tool.create_from(self, VoxelSurfaceTool.VoxelMeshType.BRUTE)
 	mesh = voxel_surface_tool.commit()
