@@ -255,7 +255,11 @@ func create_from(voxel_visualization_object, voxel_mesh_type : VoxelMeshType, vo
 				var voxel_id : int = voxel_visualization_object.get_voxel_id(voxel_position)
 				add_faces(voxel_position, voxel_id)
 		VoxelMeshType.NAIVE:
-			pass
+			for voxel_position in voxel_positions:
+				var voxel_id : int = voxel_visualization_object.get_voxel_id(voxel_position)
+				for voxel_face in Voxel.FACES:
+					if not voxel_positions.has(voxel_position + voxel_face):
+						add_face(voxel_position, voxel_id, voxel_face)
 		VoxelMeshType.GREEDY:
 			pass
 	

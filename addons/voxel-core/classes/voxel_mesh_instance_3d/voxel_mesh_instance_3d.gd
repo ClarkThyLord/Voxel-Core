@@ -216,5 +216,5 @@ func get_voxel_count() -> int:
 ## Updates voxel mesh with current data.
 func update() -> void:
 	var voxel_surface_tool : VoxelSurfaceTool = VoxelSurfaceTool.new()
-	voxel_surface_tool.create_from(self, VoxelSurfaceTool.VoxelMeshType.BRUTE)
+	voxel_surface_tool.create_from(self, voxel_mesh_type)
 	mesh = voxel_surface_tool.commit()
