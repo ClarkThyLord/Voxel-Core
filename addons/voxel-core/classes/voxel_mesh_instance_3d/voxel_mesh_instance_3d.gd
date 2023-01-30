@@ -103,7 +103,8 @@ func get_voxel_mesh_type() -> VoxelSurfaceTool.VoxelMeshType:
 ## Sets [member voxel_mesh_type] and calls on [method update].
 func set_voxel_mesh_type(new_voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType) -> void:
 	voxel_mesh_type = new_voxel_mesh_type
-	update()
+	if Engine.is_editor_hint():
+		update()
 
 
 ## Returns [member voxel_size].
@@ -114,7 +115,8 @@ func get_voxel_size() -> float:
 ## Sets [member voxel_size] and calls on [method update].
 func set_voxel_size(new_voxel_size : float) -> void:
 	voxel_size = new_voxel_size
-	update()
+	if Engine.is_editor_hint():
+		update()
 
 
 ## Returns [member voxels_tiled].
@@ -125,7 +127,8 @@ func get_voxels_tiled() -> bool:
 ## Sets [member voxels_tiled] and calls on [method update].
 func set_voxels_tiled(new_voxels_tiled : bool) -> void:
 	voxels_tiled = new_voxels_tiled
-	update()
+	if Engine.is_editor_hint():
+		update()
 
 
 ## Returns [member voxel_set].
@@ -136,6 +139,8 @@ func get_voxel_set():
 ## Sets [member voxel_set] and calls on [method update].
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
+	if Engine.is_editor_hint():
+		update()
 
 
 ## Returns [code]voxel_id[/code] at given [code]voxel_position[/code] if not
@@ -171,7 +176,6 @@ func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 		printerr("Error: Invalid voxel_id `%s` to be set" % voxel_id)
 		return
 	_voxels[voxel_position] = voxel_id
-	update()
 
 
 ## Replaces all voxels with given [code]new_voxels[/code] and calls on 
@@ -185,7 +189,6 @@ func set_voxels(new_voxels : Dictionary) -> void:
 			printerr("Error: Invalid voxel_id to be set")
 			return
 	_voxels = new_voxels
-	update()
 
 
 ## Erase voxel at given [code]voxel_position[/code] and calls on [method update].
@@ -194,13 +197,11 @@ func erase_voxel(voxel_position : Vector3i) -> void:
 		printerr("Error: Invalid voxel_position to erase")
 		return
 	_voxels.erase(voxel_position)
-	update()
 
 
 ## Erases all voxels and calls on [method update].
 func erase_voxels() -> void:
 	_voxels.clear()
-	update()
 
 
 ## Returns [code]true[/code] if voxels are present, else [code]false[/code].
