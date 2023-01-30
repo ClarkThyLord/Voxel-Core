@@ -224,7 +224,7 @@ func has_face_color(voxel_face : Vector3i) -> bool:
 			return color_forward.a > 0
 		FACE_BACK:
 			return color_back.a > 0
-	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
+	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return has_color()
 
 
@@ -243,7 +243,7 @@ func get_face_color(voxel_face : Vector3i) -> Color:
 			return color_forward
 		FACE_BACK:
 			return color_back
-	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
+	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return get_color()
 
 
@@ -262,7 +262,7 @@ func set_face_color(voxel_face : Vector3i, new_color : Color) -> void:
 			color_forward = new_color
 		FACE_BACK:
 			color_back = new_color
-	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
+	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 
 
 ## Returns true if voxel has a defined tile.
@@ -295,7 +295,7 @@ func has_face_tile(voxel_face : Vector3i) -> bool:
 			return tile_forward != -Vector2i.ONE
 		FACE_BACK:
 			return tile_back != -Vector2i.ONE
-	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
+	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return has_tile()
 
 
@@ -315,7 +315,7 @@ func get_face_tile(voxel_face : Vector3i) -> Vector2i:
 			return tile_forward
 		FACE_BACK:
 			return tile_back
-	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
+	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 	return get_tile()
 
 
@@ -334,7 +334,7 @@ func set_face_tile(voxel_face : Vector3i, new_tile : Vector2) -> void:
 			tile_forward = new_tile
 		FACE_BACK:
 			tile_back = new_tile
-	printerr("Error: Bad argument `%s` isn't a valid voxel_face" % voxel_face)
+	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 
 
 ## Duplicates the voxel, returning a new voxel.

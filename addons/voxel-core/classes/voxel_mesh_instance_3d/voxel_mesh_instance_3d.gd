@@ -172,9 +172,6 @@ func get_voxel_ids() -> Array[int]:
 ## Sets the given [code]voxel_id[/code] at given [code]voxel_position[/code] and
 ## calls on [method update].
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
-	if not voxel_set.has_voxel_id(voxel_id):
-		printerr("Error: Invalid voxel_id `%s` to be set" % voxel_id)
-		return
 	_voxels[voxel_position] = voxel_id
 
 
@@ -183,20 +180,17 @@ func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 func set_voxels(new_voxels : Dictionary) -> void:
 	for voxel_position in new_voxels:
 		if not voxel_position is Vector3i:
-			printerr("Error: Invalid voxel_position to be set")
+			push_error("Invalid voxel_position to be set")
 			return
 		if not new_voxels[voxel_position] is int:
-			printerr("Error: Invalid voxel_id to be set")
+			push_error("Invalid voxel_id to be set")
 			return
 	_voxels = new_voxels
 
 
 ## Erase voxel at given [code]voxel_position[/code] and calls on [method update].
-func erase_voxel(voxel_position : Vector3i) -> void:
-	if not _voxels.has(voxel_position):
-		printerr("Error: Invalid voxel_position to erase")
-		return
-	_voxels.erase(voxel_position)
+func erase_voxel(voxel_position : Vector3i) -> bool:
+	return _voxels.erase(voxel_position)
 
 
 ## Erases all voxels and calls on [method update].
@@ -216,6 +210,10 @@ func get_voxel_count() -> int:
 
 ## Updates voxel mesh with current data.
 func update() -> void:
+	if not is_instance_valid(voxel_set):
+		push_error("VoxelMeshInstance3D has no VoxelSet assigned!")
+		return
+	
 	var voxel_surface_tool : VoxelSurfaceTool = VoxelSurfaceTool.new()
 	voxel_surface_tool.create_from(self, voxel_mesh_type)
 	mesh = voxel_surface_tool.commit()

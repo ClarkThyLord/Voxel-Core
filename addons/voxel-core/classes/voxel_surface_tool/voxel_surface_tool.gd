@@ -70,12 +70,12 @@ func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool 
 		if is_instance_valid(voxel_set.tiles):
 			if voxel_set.tile_dimensions == Vector2i.ZERO:
 				_voxels_tiled = false
-				printerr("Error: VoxelSet passed to VoxelSurfaceTool has invalid `tile_dimensions`")
+				push_error("VoxelSet passed to VoxelSurfaceTool has invalid `tile_dimensions`")
 			else:
 				_voxel_uv_scale = Vector2.ONE / (voxel_set.tiles.get_size() / Vector2(voxel_set.tile_dimensions))
 		else:
 			_voxels_tiled = false
-			printerr("Error: VoxelSet passed to VoxelSurfaceTool is missing `tiles`")
+			push_error("VoxelSet passed to VoxelSurfaceTool is missing `tiles`")
 	_began = true
 
 

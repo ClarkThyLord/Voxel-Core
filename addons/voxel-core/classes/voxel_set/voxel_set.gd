@@ -188,7 +188,7 @@ func add_material(new_material : BaseMaterial3D) -> int:
 ## returns [member default_material].
 func get_material_by_index(material_index : int) -> BaseMaterial3D:
 	if material_index >= indexed_materials.size():
-		printerr("Error: Material index `%s` out of range" % material_index)
+		push_error("Material index `%s` out of range" % material_index)
 		return default_material
 	return default_material if material_index == -1 else indexed_materials[material_index]
 
@@ -197,7 +197,7 @@ func get_material_by_index(material_index : int) -> BaseMaterial3D:
 ## material and calls on [method emit_changes].
 func set_material_by_index(material_index : int, new_material : BaseMaterial3D) -> void:
 	if material_index <= -1 or material_index >= indexed_materials.size():
-		printerr("Error: Material index `%s` out of range" % material_index)
+		push_error("Material index `%s` out of range" % material_index)
 		return
 	indexed_materials[material_index] = new_material
 	emit_changes()
@@ -207,7 +207,7 @@ func set_material_by_index(material_index : int, new_material : BaseMaterial3D) 
 ## [method emit_changed].
 func remove_material_by_index(material_index : int) -> void:
 	if material_index <= -1 or material_index >= indexed_materials.size():
-		printerr("Error: Material index `%s` out of range" % material_index)
+		push_error("Material index `%s` out of range" % material_index)
 		return
 	indexed_materials.remove_at(material_index)
 	emit_changed()
@@ -269,7 +269,7 @@ func add_voxel(voxel : Voxel) -> int:
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if _voxels.has(voxel_id):
-		printerr("Error: Voxel with id `%s` in VoxelSet already exist" % voxel_id)
+		push_error("Voxel with given voxel_id `%s` already exist in VoxelSet" % voxel_id)
 		return
 	_voxels[_id] = voxel
 	emit_changed()
@@ -286,7 +286,7 @@ func set_voxels(voxels : Dictionary) -> void:
 ## [code]voxel[/code] in VoxelSet, calls on [method emit_changed].
 func update_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if not _voxels.has(voxel_id):
-		printerr("Error: No voxel with id `%s` in VoxelSet" % voxel_id)
+		push_error("No voxel with voxel_id `%s` in VoxelSet" % voxel_id)
 		return
 	_voxels[voxel_id] = voxel
 	emit_changed()
@@ -312,7 +312,6 @@ func get_voxel_id_by_name(voxel_name : String) -> int:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == voxel_name:
 			return voxel_id
-	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
 	return -1
 
 
@@ -322,7 +321,7 @@ func get_voxel_by_name(voxel_name : String) -> Voxel:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == voxel_name:
 			return _voxels[voxel_id]
-	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
+	push_error("No voxel with voxel_name `%s` in VoxelSet" % voxel_name)
 	return null
 
 
@@ -334,7 +333,7 @@ func update_voxel_by_name(voxel_name : String, voxel : Voxel) -> void:
 			_voxels[voxel_id] = voxel
 			emit_changed()
 			return
-	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
+	push_error("No voxel with voxel_name `%s` in VoxelSet" % voxel_name)
 
 
 ## Removes voxel that matches given [code]voxel_name[/code] in VoxelSet and
@@ -345,7 +344,7 @@ func remove_voxel_by_name(voxel_name : String) -> void:
 			_voxels.erase(voxel_id)
 			emit_changed()
 			return
-	printerr("Error: Can't get voxel with voxel name `%s` in VoxelSet" % voxel_name)
+	push_error("No voxel with voxel_name `%s` in VoxelSet" % voxel_name)
 
 
 func get_voxel_count() -> int:
