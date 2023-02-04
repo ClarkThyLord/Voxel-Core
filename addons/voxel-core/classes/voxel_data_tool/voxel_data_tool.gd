@@ -2,4 +2,4 @@
 @icon("res://addons/voxel-core/classes/voxel_data_tool/voxel_data_tool.svg")
 class_name VoxelDataTool
 extends Object
-## Helper tool to select, group and filter voxel data; used by Voxel-Core.
+## Helper tool to select, group and filter voxel data; a part of Voxel-Core.
