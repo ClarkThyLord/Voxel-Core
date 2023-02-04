@@ -2,57 +2,72 @@
 @icon("res://addons/voxel-core/classes/voxel_mesh_instance_3d/voxel_mesh_instance_3d.svg")
 class_name VoxelMeshInstance3D
 extends MeshInstance3D
-## The most basic voxel visualization object, for a moderate amount of voxels;
-## used by Voxel-Core.
+## Voxel visualization object, for a moderate amount of voxels;
+## a part of Voxel-Core.
 ##
-## A VoxelMeshInstance3D is the most basic voxel visualization object provided 
-## by Voxel-Core, and is intended to be used for a moderate amount of voxels.
-##
+## VoxelMeshInstance3D is the most basic voxel visualization object provided 
+## by Voxel-Core, and is intended to be used to visualize a moderate amount of 
+## voxels. Voxel visualization object work together with [VoxelSet]s and 
+## [Voxel]s to visualize any user defined content (e.g. terrain, characters, etc.)
+## [br]
 ## [codeblock]
+## # Create a new VoxelMeshInstance3D instance
+## var voxel_mesh : VoxelMeshInstance3D = VoxelMeshInstance3D.new()
+## 
+## # Create a new VoxelSet resource
 ## var voxel_set : VoxelSet = VoxelSet.new()
-## voxel_set.tiles = preload("res://texture.png")
-##
+## # Assign the VoxelSet a texture
+## voxel_set.texture = preload("res://texture.png")
+## 
+## # Create a new Voxel
 ## var voxel : Voxel = Voxel.new()
+## # Name the Voxel
 ## voxel.name = "dirt grass"
+## # Set the Voxel's faces color
 ## voxel.color = Color.BROWN
-## voxel.color_up = Color.GREEN
-## voxel.tile = Vector2(0, 0)
-## voxel.tile_up = Vector2(1, 0)
+## voxel.color_top = Color.GREEN
+## # Set the Voxel's faces texture uvs
+## voxel.texture_uv = Vector2(0, 0)
+## voxel.texture_uv_top = Vector2(1, 0)
 ##
+## # Add the Voxel to the VoxelSet
 ## var voxel_id : int = voxel_set.add_voxel(voxel)
 ##
-## var voxel_mesh : VoxelMeshInstance3D = VoxelMeshInstance3D.new()
+## # Assign VoxelSet to VoxelMeshInstance3D
 ## voxel_mesh.voxel_set = voxel_set
 ##
+## # Place a few voxels within the VoxelMeshInstance3D to visualize
 ## voxel_mesh.add_voxel(Vector3i(0, 0, 0), voxel_id)
 ## voxel_mesh.add_voxel(Vector3i(1, 0, 0), voxel_id)
 ## voxel_mesh.add_voxel(Vector3i(1, 0, 1), voxel_id)
 ## voxel_mesh.add_voxel(Vector3i(0, 0, 1), voxel_id)
 ##
+## # Update the VoxelMeshInstance3D's mesh
 ## voxel_mesh.update()
 ## [/codeblock]
 
 
 
 # Exported Variables
-## Approach to be used when generating voxel mesh, refrence 
+## Algorithm used to generate voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
 @export
 var voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType = VoxelSurfaceTool.VoxelMeshType.NAIVE :
 	get = get_voxel_mesh_type,
 	set = set_voxel_mesh_type
 
-## Size of voxels.
+## Size of voxels relative to the parents scale.
 @export_range(0.01, 1.0, 0.01,"or_greater")
 var voxel_size : float = 0.25 :
 	get = get_voxel_size,
 	set = set_voxel_size
 
-## Toggle to generate voxel mesh with UV mapping.
+## Enabled will generate textured voxels; disabled will only generate colored 
+## voxels.
 @export
-var voxels_tiled : bool = false :
-	get = get_voxels_tiled,
-	set = set_voxels_tiled
+var voxels_textured : bool = false :
+	get = get_voxels_textured,
+	set = set_voxels_textured
 
 ## VoxelSet used to generate voxel mesh.
 @export
@@ -63,6 +78,8 @@ var voxel_set : VoxelSet = null :
 
 
 # Private Variables
+## Collection of voxels within VoxelMeshInstance3D; key is voxel's position and 
+## value is voxel's id in reference to VoxelSet
 var _voxels : Dictionary = {}
 
 
@@ -100,7 +117,7 @@ func get_voxel_mesh_type() -> VoxelSurfaceTool.VoxelMeshType:
 	return voxel_mesh_type
 
 
-## Sets [member voxel_mesh_type] and calls on [method update].
+## Sets [member voxel_mesh_type]; and, if in engine, calls on [method update].
 func set_voxel_mesh_type(new_voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType) -> void:
 	voxel_mesh_type = new_voxel_mesh_type
 	if Engine.is_editor_hint():
@@ -112,21 +129,21 @@ func get_voxel_size() -> float:
 	return voxel_size
 
 
-## Sets [member voxel_size] and calls on [method update].
+## Sets [member voxel_size]; and, if in engine, calls on [method update].
 func set_voxel_size(new_voxel_size : float) -> void:
 	voxel_size = new_voxel_size
 	if Engine.is_editor_hint():
 		update()
 
 
-## Returns [member voxels_tiled].
-func get_voxels_tiled() -> bool:
-	return voxels_tiled
+## Returns [member voxels_textured].
+func get_voxels_textured() -> bool:
+	return voxels_textured
 
 
-## Sets [member voxels_tiled] and calls on [method update].
-func set_voxels_tiled(new_voxels_tiled : bool) -> void:
-	voxels_tiled = new_voxels_tiled
+## Sets [member voxels_textured]; and, if in engine, calls on [method update].
+func set_voxels_textured(new_voxels_textured : bool) -> void:
+	voxels_textured = new_voxels_textured
 	if Engine.is_editor_hint():
 		update()
 
@@ -136,47 +153,53 @@ func get_voxel_set():
 	return voxel_set
 
 
-## Sets [member voxel_set] and calls on [method update].
+## Sets [member voxel_set]; and, if in engine, calls on [method update].
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
 	if Engine.is_editor_hint():
 		update()
 
 
-## Returns [code]voxel_id[/code] at given [code]voxel_position[/code] if not
-## found returns [code]-1[/code].
+## Returns the corresponding voxel id at the given [code]voxel_position[/code] 
+## in the VoxelMeshInstance3D. If no voxel id is found at given 
+## [code]voxel_position[/code], returns [code]-1[/code].
 func get_voxel_id(voxel_position : Vector3i) -> int:
 	return _voxels.get(voxel_position, -1)
 
 
-## Returns [Voxel] at given [code]voxel_position[/code] if not found returns
-## [code]null[/code].
+## Returns the corresponding [Voxel] from the assigned [member voxel_set], 
+## in refrence to the voxel id at the given [code]voxel_position[/code] 
+## in the VoxelMeshInstance3D. If no [Voxel] is found at given 
+## [code]voxel_position[/code], returns [code]null[/code].
 func get_voxel(voxel_position : Vector3i) -> Voxel:
 	return voxel_set.get_voxel(get_voxel_id(voxel_position))
 
 
-## Returns [Dictionary] with all used [code]voxel_position[/code](s) being the
-## keys and their respective [code]voxel_id[/code] being their value.
+## Returns a [Dictionary] of all used voxel in VoxelMeshInstance3D; where, keys 
+## are voxel positions and voxel ids are values.
 func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
+## Returns a list of used voxel positions in VoxelMeshInstance3D.
 func get_voxel_positions() -> Array[Vector3i]:
 	return _voxels.keys()
 
 
+## Returns a list of used voxel ids in VoxelMeshInstance3D.
 func get_voxel_ids() -> Array[int]:
 	return _voxels.values()
 
 
-## Sets the given [code]voxel_id[/code] at given [code]voxel_position[/code] and
-## calls on [method update].
+## Assigns the given [code]voxel_id[/code] at the given 
+## [code]voxel_position[/code] in VoxelMeshInstance3D.
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 	_voxels[voxel_position] = voxel_id
 
 
-## Replaces all voxels with given [code]new_voxels[/code] and calls on 
-## [method update].
+## Replaces all voxels in VoxelMeshInstance3D with the given 
+## [code]new_voxels[/code]; where, keys are voxel positions and values are 
+## voxel ids.
 func set_voxels(new_voxels : Dictionary) -> void:
 	for voxel_position in new_voxels:
 		if not voxel_position is Vector3i:
@@ -188,27 +211,30 @@ func set_voxels(new_voxels : Dictionary) -> void:
 	_voxels = new_voxels
 
 
-## Erase voxel at given [code]voxel_position[/code] and calls on [method update].
+## Erases the voxel in VoxelMeshInstance3D at [code]voxel_position[/code] 
+## if exists. Returns [code]true[/code] if a voxel id existed at 
+## [code]voxel_position[/code]; otherwise, returns [code]false[/code].
 func erase_voxel(voxel_position : Vector3i) -> bool:
 	return _voxels.erase(voxel_position)
 
 
-## Erases all voxels and calls on [method update].
+## Erases all used voxel positions and voxel ids from VoxelMeshInstance3D.
 func erase_voxels() -> void:
 	_voxels.clear()
 
 
-## Returns [code]true[/code] if voxels are present, else [code]false[/code].
+## Returns [code]true[/code] if voxels are present in VoxelMeshInstance3D; 
+## otherwise, returns [code]false[/code].
 func has_voxels() -> bool:
 	return not _voxels.is_empty()
 
 
-## Returns amount of voxels present.
+## Returns amount of used voxels in VoxelMeshInstance3D.
 func get_voxel_count() -> int:
 	return _voxels.size()
 
 
-## Updates voxel mesh with current data.
+## Updates voxel mesh with currently used voxels in VoxelMeshInstance3D.
 func update() -> void:
 	if not is_instance_valid(voxel_set):
 		push_error("VoxelMeshInstance3D has no VoxelSet assigned!")
