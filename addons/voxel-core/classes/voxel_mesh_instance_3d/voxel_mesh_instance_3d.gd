@@ -78,7 +78,7 @@ var voxel_set : VoxelSet = null :
 
 
 # Private Variables
-## Collection of voxels within VoxelMeshInstance3D; key is voxel's position and 
+## Collection of used voxels; key is voxel's position and 
 ## value is voxel's id in reference to VoxelSet
 var _voxels : Dictionary = {}
 
@@ -160,46 +160,45 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 		update()
 
 
-## Returns the corresponding voxel id at the given [code]voxel_position[/code] 
-## in the VoxelMeshInstance3D. If no voxel id is found at given 
-## [code]voxel_position[/code], returns [code]-1[/code].
+## Returns the corresponding voxel id at the given [code]voxel_position[/code]. 
+## If no voxel id is found at given [code]voxel_position[/code], 
+## returns [code]-1[/code].
 func get_voxel_id(voxel_position : Vector3i) -> int:
 	return _voxels.get(voxel_position, -1)
 
 
 ## Returns the corresponding [Voxel] from the assigned [member voxel_set], 
-## in refrence to the voxel id at the given [code]voxel_position[/code] 
-## in the VoxelMeshInstance3D. If no [Voxel] is found at given 
-## [code]voxel_position[/code], returns [code]null[/code].
+## in refrence to the voxel id at the given [code]voxel_position[/code]. 
+## If no [Voxel] is found at given [code]voxel_position[/code], 
+## returns [code]null[/code].
 func get_voxel(voxel_position : Vector3i) -> Voxel:
 	return voxel_set.get_voxel(get_voxel_id(voxel_position))
 
 
-## Returns a [Dictionary] of all used voxel in VoxelMeshInstance3D; where, keys 
+## Returns a [Dictionary] of all used voxels; where, keys 
 ## are voxel positions and voxel ids are values.
 func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
-## Returns a list of used voxel positions in VoxelMeshInstance3D.
+## Returns a list of used voxel positions.
 func get_voxel_positions() -> Array[Vector3i]:
 	return _voxels.keys()
 
 
-## Returns a list of used voxel ids in VoxelMeshInstance3D.
+## Returns a list of used voxel ids.
 func get_voxel_ids() -> Array[int]:
 	return _voxels.values()
 
 
 ## Assigns the given [code]voxel_id[/code] at the given 
-## [code]voxel_position[/code] in VoxelMeshInstance3D.
+## [code]voxel_position[/code].
 func set_voxel(voxel_position : Vector3i, voxel_id : int) -> void:
 	_voxels[voxel_position] = voxel_id
 
 
-## Replaces all voxels in VoxelMeshInstance3D with the given 
-## [code]new_voxels[/code]; where, keys are voxel positions and values are 
-## voxel ids.
+## Replaces used voxels with the given [code]new_voxels[/code]; where, keys 
+## are voxel positions and values are voxel ids.
 func set_voxels(new_voxels : Dictionary) -> void:
 	for voxel_position in new_voxels:
 		if not voxel_position is Vector3i:
@@ -211,30 +210,30 @@ func set_voxels(new_voxels : Dictionary) -> void:
 	_voxels = new_voxels
 
 
-## Erases the voxel in VoxelMeshInstance3D at [code]voxel_position[/code] 
-## if exists. Returns [code]true[/code] if a voxel id existed at 
-## [code]voxel_position[/code]; otherwise, returns [code]false[/code].
+## Erases the voxel at [code]voxel_position[/code] if exists. Returns 
+## [code]true[/code] if a voxel id existed at [code]voxel_position[/code]; 
+## otherwise, returns [code]false[/code].
 func erase_voxel(voxel_position : Vector3i) -> bool:
 	return _voxels.erase(voxel_position)
 
 
-## Erases all used voxel positions and voxel ids from VoxelMeshInstance3D.
+## Erases all used voxels.
 func erase_voxels() -> void:
 	_voxels.clear()
 
 
-## Returns [code]true[/code] if voxels are present in VoxelMeshInstance3D; 
+## Returns [code]true[/code] if voxels are present; 
 ## otherwise, returns [code]false[/code].
 func has_voxels() -> bool:
 	return not _voxels.is_empty()
 
 
-## Returns amount of used voxels in VoxelMeshInstance3D.
+## Returns the number of voxels used.
 func get_voxel_count() -> int:
 	return _voxels.size()
 
 
-## Updates voxel mesh with currently used voxels in VoxelMeshInstance3D.
+## Updates voxel mesh with currently used voxels.
 func update() -> void:
 	if not is_instance_valid(voxel_set):
 		push_error("VoxelMeshInstance3D has no VoxelSet assigned!")
