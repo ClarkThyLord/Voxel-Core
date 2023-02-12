@@ -183,12 +183,12 @@ func get_voxels() -> Dictionary:
 
 
 ## Returns a list of used voxel positions.
-func get_voxel_positions() -> Array[Vector3i]:
+func get_voxel_positions():
 	return _voxels.keys()
 
 
 ## Returns a list of used voxel ids.
-func get_voxel_ids() -> Array[int]:
+func get_voxel_ids():
 	return _voxels.values()
 
 

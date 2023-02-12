@@ -55,7 +55,7 @@ var _voxel_set : VoxelSet
 var _voxel_size : float
 
 ## Flag signaling whether created voxel mesh is being uv mapped.
-var _voxels_tiled : bool
+var _voxels_textured : bool
 
 ## Scale of uv mapping used for voxel mesh being created.
 var _voxel_uv_scale : Vector2
@@ -68,21 +68,21 @@ var _surfaces : Dictionary
 # Public Methods
 ## Initiates the voxel mesh creation process, must be called before passing in 
 ## any information.
-func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool = false) -> void:
+func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_textured : bool = false) -> void:
 	clear()
 	_voxel_set = voxel_set
 	_voxel_size = voxel_size
-	_voxels_tiled = voxels_tiled
-	if _voxels_tiled:
-		if is_instance_valid(voxel_set.tiles):
-			if voxel_set.tile_dimensions == Vector2i.ZERO:
-				_voxels_tiled = false
-				push_error("VoxelSet passed to VoxelSurfaceTool has invalid `tile_dimensions`")
+	_voxels_textured = voxels_textured
+	if _voxels_textured:
+		if is_instance_valid(voxel_set.texture):
+			if voxel_set.texture_dimensions == Vector2i.ZERO:
+				_voxels_textured = false
+				push_error("VoxelSet passed to VoxelSurfaceTool has invalid `texture_dimensions`")
 			else:
-				_voxel_uv_scale = Vector2.ONE / (voxel_set.tiles.get_size() / Vector2(voxel_set.tile_dimensions))
+				_voxel_uv_scale = Vector2.ONE / (voxel_set.texture.get_size() / Vector2(voxel_set.texture_dimensions))
 		else:
-			_voxels_tiled = false
-			push_error("VoxelSet passed to VoxelSurfaceTool is missing `tiles`")
+			_voxels_textured = false
+			push_error("VoxelSet passed to VoxelSurfaceTool is missing `texture`")
 	_began = true
 
 
@@ -90,7 +90,7 @@ func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool 
 func clear() -> void:
 	_voxel_set = null
 	_voxel_size = 0.25
-	_voxels_tiled = false
+	_voxels_textured = false
 	_voxel_uv_scale = Vector2.ZERO
 	_surfaces.clear()
 	_began = false
@@ -124,11 +124,11 @@ func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) 
 	# Surface ID(e.g. "1")
 	var surface_id : String = str(voxel.material_index)
 	
-	# Should Surface be tiled?
-	var surface_tiled : bool = _voxels_tiled and voxel.has_face_tile(voxel_face)
-	if surface_tiled:
-		# Mark Surface ID as tiled(e.g. "1_tiled")
-		surface_id += "_tiled"
+	# Should Surface be textured?
+	var surface_textured : bool = _voxels_textured and voxel.has_face_texture(voxel_face)
+	if surface_textured:
+		# Mark Surface ID as textured(e.g. "1_textured")
+		surface_id += "_textured"
 	
 	# Surface to which to add face to
 	var surface : Surface
@@ -147,82 +147,82 @@ func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) 
 	
 	match voxel_face:
 		Voxel.FACE_RIGHT:
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face)) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.ONE) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
 		Voxel.FACE_LEFT:
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face)) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.BACK) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) * _voxel_size)
 		Voxel.FACE_TOP:
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) *_voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face)) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.ONE) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
 		Voxel.FACE_BOTTOM:
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face)) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.BACK) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position) * _voxel_size)
 		Voxel.FACE_FRONT:
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face)) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP) * _voxel_size)
 		Voxel.FACE_BACK:
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.ONE) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face)) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face)) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) * _voxel_size)
-			if surface_tiled:
-				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
+			if surface_textured:
+				surface.set_uv(Vector2(voxel.get_face_texture(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.BACK) * _voxel_size)
 	
 	surface.index += 4
@@ -254,7 +254,7 @@ func create_from(voxel_visualization_object, voxel_mesh_type : VoxelMeshType, vo
 	begin(
 			voxel_visualization_object.voxel_set,
 			voxel_visualization_object.voxel_size,
-			voxel_visualization_object.voxels_tiled)
+			voxel_visualization_object.voxels_textured)
 	
 	if voxel_positions.is_empty():
 		voxel_positions = voxel_visualization_object.get_voxel_positions()
