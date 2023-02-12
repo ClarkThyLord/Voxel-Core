@@ -2,74 +2,63 @@
 @icon("res://addons/voxel-core/classes/voxel_set/voxel_set.svg")
 class_name VoxelSet
 extends Resource
-## Used to store a collection of voxels, textures, materials and etc.;
-## used by Voxel-Core.
+## Stores a collection of voxels, textures, materials used by voxel 
+## visualization objects; part of Voxel-Core.
 ##
-## A VoxelSet is a collection of [Voxel](s), alongside textures and materials
-## which voxels may reference.
+## A VoxelSet is a collection of voxels, along with textures and materials that 
+## can be referenced by voxels.
 ##
 ## [codeblock]
+## # Create a new VoxelSet resource
 ## var voxel_set : VoxelSet = VoxelSet.new()
-## voxel_set.tiles = preload("res://texture.png")
-## 
-## var voxel : Voxel = Voxel.new()
-## voxel.name = "dirt grass"
-## voxel.color = Color.BROWN
-## voxel.color_up = Color.GREEN
-## voxel.tile = Vector2(0, 0)
-## voxel.tile_up = Vector2(1, 0)
 ##
+## # Assign the VoxelSet a texture
+## voxel_set.texture = preload("res://texture.png")
+## 
+## # Add materials to the VoxelSet
+## var material_id : int = voxel_set.add_material(preload("res://material.tres"))
+##
+## # Create a new Voxel
+## var voxel : Voxel = Voxel.new()
+## # Name the Voxel
+## voxel.name = "dirt grass"
+## # Set the Voxel's faces color
+## voxel.color = Color.BROWN
+## voxel.color_top = Color.GREEN
+## # Set the Voxel's faces texture uvs
+## voxel.texture_uv = Vector2(0, 0)
+## voxel.texture_uv_top = Vector2(1, 0)
+## # Set the Voxel's material
+## voxel.texture_uv = material_id
+##
+## # Add Voxel to VoxelSet
 ## var voxel_id : int = voxel_set.add_voxel(voxel)
 ## [/codeblock]
 
 
 
 # Exported Variables
-## Texture used for [member BaseMaterial3D.albedo_texture] in [member material]
-## and all applicable [member materials].
-## Think of the texture as a grid with which its cells or "tiles" can be
-## referenced by their position. Using this "tile position" voxels can specify
-## what texture is applied to their faces via [member Voxel.tile],
-## [member Voxel.tile_right], [member Voxel.tile_left], [member Voxel.tile_up],
-## [member Voxel.tile_down], [member Voxel.tile_forward] and [member Voxel.tile_back].
-## Usage:
-## [codeblock]
-## var voxel_set = VoxelSet.new()
-## voxel_set.tiles = preload("res://texture.png")
-## var voxel = Voxel.new()
-## voxel.name = "dirt grass"
-## voxel.tile = Vector2(0, 0)
-## voxel.tile_up = Vector2(1, 0)
-## var voxel_id = voxel_set.add_voxel(voxel)
-## [/codeblock]
+## Texture atlas containing sub-textures referenced by voxels; texture is 
+## assigned to all applicable [member materials] as 
+## [member BaseMaterial3D.albedo_texture].
 @export
-var tiles : Texture2D = null :
-	get = get_tiles,
-	set = set_tiles
+var texture : Texture2D = null :
+	get = get_texture,
+	set = set_texture
 
-## Defines the "tile" width and height in pixels used for [member tiles].
+## Rectangular shape of sub-textures within [member texture], in pixels.
 @export
-var tile_dimensions : Vector2i = Vector2i(32, 32) :
-	get = get_tile_dimensions,
-	set = set_tile_dimensions
+var texture_size : Vector2i = Vector2i(32, 32) :
+	get = get_texture_size,
+	set = set_texture_size
 
-## Material applied to all VoxelSet voxels by default, can't be [code]null[/code].
+## Material applied to all voxels by default, can't be [code]null[/code].
 @export
 var default_material : BaseMaterial3D = StandardMaterial3D.new() :
 	get = get_default_material,
 	set = set_default_material
 
-## Collection of materials that can be referenced by and applied to voxels via
-## [member Voxel.material_index].
-## Usage:
-## [codeblock]
-## var voxel_set : VoxelSet = VoxelSet.new()
-## var material_index : int = voxel_set.add_material(preload("res://glass_material.tres"))
-## var voxel = Voxel.new()
-## voxel.name = "glass"
-## voxel.material_index = material_index
-## var voxel_id = voxel_set.add_voxel(voxel)
-## [/codeblock]
+## Collection of materials; referenced by voxels via their index.
 @export
 var indexed_materials : Array[BaseMaterial3D] = [] :
 	get = get_indexed_materials,
@@ -78,8 +67,10 @@ var indexed_materials : Array[BaseMaterial3D] = [] :
 
 
 # Private Variables
+## Last assigned voxel id.
 var _id : int = -1
 
+## Collection of [Voxel]s; where keys are voxel ids and values are [Voxel]s.
 var _voxels : Dictionary = {}
 
 
@@ -129,25 +120,25 @@ func emit_changes() -> void:
 	emit_changed()
 
 
-## Returns [member tiles].
-func get_tiles() -> Texture2D:
-	return tiles
+## Returns [member texture].
+func get_texture() -> Texture2D:
+	return texture
 
 
-## Sets [member tiles] and calls on [method emit_changes].
-func set_tiles(new_tiles : Texture2D) -> void:
-	tiles = new_tiles
+## Sets [member texture] and calls on [method emit_changes].
+func set_texture(new_texture : Texture2D) -> void:
+	texture = new_texture
 	emit_changes()
 
 
-## Returns [member tile_dimensions].
-func get_tile_dimensions() -> Vector2i:
-	return tile_dimensions
+## Returns [member texture_size].
+func get_texture_size() -> Vector2i:
+	return texture_size
 
 
-## Sets [member tile_dimensions] and calls on [method emit_changed].
-func set_tile_dimensions(new_tile_dimensions : Vector2i) -> void:
-	tile_dimensions = new_tile_dimensions.abs()
+## Sets [member texture_size] and calls on [method emit_changed].
+func set_texture_size(new_texture_size : Vector2i) -> void:
+	texture_size = new_texture_size.abs()
 	emit_changed()
 
 
@@ -347,6 +338,7 @@ func remove_voxel_by_name(voxel_name : String) -> void:
 	push_error("No voxel with voxel_name `%s` in VoxelSet" % voxel_name)
 
 
+## Returns the number of voxels within VoxelSet.
 func get_voxel_count() -> int:
 	return _voxels.size()
 
@@ -355,10 +347,10 @@ func get_voxel_count() -> int:
 ## conform with VoxelSet.
 func format_material(material : BaseMaterial3D) -> void:
 	material.vertex_color_use_as_albedo = true
-	material.albedo_texture = tiles
+	material.albedo_texture = texture
 
 
-## Helper function used to correctly format all attached VoxelSet materials.
+## Helper function used to correctly format all attached [member material]s.
 func format_materials() -> void:
 	format_material(default_material)
 	for indexed_material in indexed_materials:
