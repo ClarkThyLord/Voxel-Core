@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cbl6ymyyxvq78"]
+
+[node name="VoxelObjectEditor" type="Control"]
+custom_minimum_size = Vector2(0, 256)
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 0.395062
+offset_bottom = -256.0
+grow_horizontal = 2
+metadata/_edit_use_anchors_ = true
