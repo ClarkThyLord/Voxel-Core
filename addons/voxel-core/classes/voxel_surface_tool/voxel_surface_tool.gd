@@ -2,7 +2,7 @@
 @icon("res://addons/voxel-core/classes/voxel_surface/voxel_surface.svg")
 class_name VoxelSurfaceTool
 extends RefCounted
-## Helper tool to create voxel geometry; used by Voxel-Core.
+## Helper tool to create voxel geometry; part of Voxel-Core.
 
 
 

@@ -3,7 +3,7 @@
 class_name VoxelMeshInstance3D
 extends MeshInstance3D
 ## Voxel visualization object, for a moderate amount of voxels;
-## a part of Voxel-Core.
+## part of Voxel-Core.
 ##
 ## VoxelMeshInstance3D is the most basic voxel visualization object provided 
 ## by Voxel-Core, and is intended to be used to visualize a moderate amount of 
@@ -16,6 +16,7 @@ extends MeshInstance3D
 ## 
 ## # Create a new VoxelSet resource
 ## var voxel_set : VoxelSet = VoxelSet.new()
+##
 ## # Assign the VoxelSet a texture
 ## voxel_set.texture = preload("res://texture.png")
 ## 
@@ -62,8 +63,8 @@ var voxel_size : float = 0.25 :
 	get = get_voxel_size,
 	set = set_voxel_size
 
-## Enabled will generate textured voxels; disabled will only generate colored 
-## voxels.
+## Enabled will generate uv textured voxels; disabled will generate voxels 
+## without uv texturing.
 @export
 var voxels_textured : bool = false :
 	get = get_voxels_textured,

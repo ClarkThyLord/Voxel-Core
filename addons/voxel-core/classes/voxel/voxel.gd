@@ -2,7 +2,7 @@
 @icon("res://addons/voxel-core/classes/voxel/voxel.svg")
 class_name Voxel
 extends RefCounted
-## Voxel datatype; a part of Voxel-Core.
+## Voxel datatype; part of Voxel-Core.
 ##
 ## A voxel represents a single sample, or data point, in a three-dimensional 
 ## space; that is to say, a voxel represents only a single point on a grid, and 
