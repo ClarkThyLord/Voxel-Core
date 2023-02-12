@@ -45,22 +45,29 @@ enum VoxelMeshType {
 
 
 # Private Variables
+## Flag signaling the start of meshing.
 var _began : bool = false
 
+## [VoxelSet] used to create voxel mesh.
 var _voxel_set : VoxelSet
 
+## Size of voxels being created.
 var _voxel_size : float
 
+## Flag signaling whether created voxel mesh is being uv mapped.
 var _voxels_tiled : bool
 
+## Scale of uv mapping used for voxel mesh being created.
 var _voxel_uv_scale : Vector2
 
+## Collection of [Surface]s being created.
 var _surfaces : Dictionary
 
 
 
 # Public Methods
-## Called before passing in any information.
+## Initiates the voxel mesh creation process, must be called before passing in 
+## any information.
 func begin(voxel_set : VoxelSet, voxel_size : float = 0.25, voxels_tiled : bool = false) -> void:
 	clear()
 	_voxel_set = voxel_set
@@ -90,8 +97,8 @@ func clear() -> void:
 
 
 ## Returns a constructed [ArrayMesh] from current information passed in. If an 
-## existing [ArrayMesh] is passed in as an argument, will add extra surface(s) to
-## the existing [ArrayMesh].
+## existing [ArrayMesh] is passed in as an argument, will add extra surface(s) 
+## to the existing [ArrayMesh].
 func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
 	if not _began:
 		return
@@ -106,6 +113,8 @@ func commit(existing : ArrayMesh = null, flags : int = 0) -> ArrayMesh:
 	return existing
 
 
+## Adds a voxel's face mesh at the given voxel postion using the specified 
+## [Voxel]s attributes.
 func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) -> void:
 	if not _began:
 		return
@@ -163,7 +172,7 @@ func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) 
 			if surface_tiled:
 				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) * _voxel_size)
-		Voxel.FACE_UP:
+		Voxel.FACE_TOP:
 			if surface_tiled:
 				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.UP + Vector3i.BACK) *_voxel_size)
@@ -176,7 +185,7 @@ func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) 
 			if surface_tiled:
 				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.UP) * _voxel_size)
-		Voxel.FACE_DOWN:
+		Voxel.FACE_BOTTOM:
 			if surface_tiled:
 				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.DOWN) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT + Vector3i.BACK) * _voxel_size)
@@ -189,7 +198,7 @@ func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) 
 			if surface_tiled:
 				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.RIGHT) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position) * _voxel_size)
-		Voxel.FACE_FORWARD:
+		Voxel.FACE_FRONT:
 			if surface_tiled:
 				surface.set_uv(Vector2(voxel.get_face_tile(voxel_face) + Vector2i.ONE) * _voxel_uv_scale)
 			surface.add_vertex((voxel_position + Vector3i.RIGHT) * _voxel_size)
@@ -225,6 +234,7 @@ func add_face(voxel_position : Vector3i, voxel_id : int, voxel_face : Vector3i) 
 	surface.add_index(surface.index - 2)
 
 
+## Adds all the faces of a [Voxel] at the given voxel postion.
 func add_faces(voxel_position : Vector3i, voxel_id : int) -> void:
 	if not _began:
 		return
