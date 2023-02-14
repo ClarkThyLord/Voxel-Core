@@ -187,24 +187,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="SelectToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_34hy0")
-text = "Select"
-icon = ExtResource("3_1wqt1")
-expand_icon = true
-
-[node name="PickToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_34hy0")
-text = "Pick"
-icon = ExtResource("4_pfo36")
-expand_icon = true
-
 [node name="AddToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
@@ -221,6 +203,24 @@ toggle_mode = true
 button_group = SubResource("ButtonGroup_34hy0")
 text = "Sub"
 icon = ExtResource("5_6bgmv")
+expand_icon = true
+
+[node name="SelectToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_34hy0")
+text = "Select"
+icon = ExtResource("3_1wqt1")
+expand_icon = true
+
+[node name="PickToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_34hy0")
+text = "Pick"
+icon = ExtResource("4_pfo36")
 expand_icon = true
 
 [node name="SwapToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
