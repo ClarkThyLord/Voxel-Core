@@ -79,8 +79,8 @@ var voxel_set : VoxelSet = null :
 
 
 # Private Variables
-## Collection of used voxels; key is voxel's position and 
-## value is voxel's id in reference to VoxelSet
+# Collection of used voxels; key is voxel's position and 
+# value is voxel's id in reference to VoxelSet
 var _voxels : Dictionary = {}
 
 

@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/voxel-core/classes/voxel_surface/voxel_surface.svg")
+@icon("res://addons/voxel-core/classes/voxel_surface_tool/voxel_surface_tool.svg")
 class_name VoxelSurfaceTool
 extends RefCounted
 ## Helper tool to create voxel geometry; part of Voxel-Core.
@@ -45,22 +45,22 @@ enum VoxelMeshType {
 
 
 # Private Variables
-## Flag signaling the start of meshing.
+# Flag signaling the start of meshing.
 var _began : bool = false
 
-## [VoxelSet] used to create voxel mesh.
+# [VoxelSet] used to create voxel mesh.
 var _voxel_set : VoxelSet
 
-## Size of voxels being created.
+# Size of voxels being created.
 var _voxel_size : float
 
-## Flag signaling whether created voxel mesh is being uv mapped.
+# Flag signaling whether created voxel mesh is being uv mapped.
 var _voxels_textured : bool
 
-## Scale of uv mapping used for voxel mesh being created.
+# Scale of uv mapping used for voxel mesh being created.
 var _voxel_uv_scale : Vector2
 
-## Collection of [Surface]s being created.
+# Collection of [Surface]s being created.
 var _surfaces : Dictionary
 
 

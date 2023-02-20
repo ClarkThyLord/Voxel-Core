@@ -67,10 +67,10 @@ var indexed_materials : Array[BaseMaterial3D] = [] :
 
 
 # Private Variables
-## Last assigned voxel id.
+# Last assigned voxel id.
 var _id : int = -1
 
-## Collection of [Voxel]s; where keys are voxel ids and values are [Voxel]s.
+# Collection of [Voxel]s; where keys are voxel ids and values are [Voxel]s.
 var _voxels : Dictionary = {}
 
 
