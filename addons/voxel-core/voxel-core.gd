@@ -33,6 +33,8 @@ func _enter_tree():
 
 
 func _exit_tree():
+	hide_voxel_object_editor()
+	
 	main_screen_changed.disconnect(_on_main_screen_changed)
 	
 	print("Voxel-Core is inactive!")
