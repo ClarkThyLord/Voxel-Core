@@ -1,18 +1,18 @@
 extends RefCounted
-## Abstract class for VoxelObject Editor Tools
+## Abstract class for VoxelObject Editor Edit Tools
 
 
 
 # Public Methods
-func get_tool_name() -> String:
+func get_edit_tool_name() -> String:
 	return ""
 
 
-func get_tool_visible_name() -> String:
+func get_edit_tool_visible_name() -> String:
 	return ""
 
 
-func get_tool_icon() -> Texture2D:
+func get_edit_tool_icon() -> Texture2D:
 	return null
 
 
