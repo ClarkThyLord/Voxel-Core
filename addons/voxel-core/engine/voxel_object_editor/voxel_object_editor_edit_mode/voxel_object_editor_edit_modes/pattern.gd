@@ -14,7 +14,7 @@ func get_edit_mode_visible_name() -> String:
 
 
 func get_edit_mode_icon() -> Texture2D:
-	return preload("res://addons/voxel-core/icons/pattern.svg")
+	return preload("res://addons/voxel-core/engine/icons/pattern.svg")
 
 
 func loaded(button : Button) -> void:
