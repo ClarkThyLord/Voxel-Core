@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bri07og48x7ca"
-path="res://.godot/imported/pattern.svg-7f585dcaef75a55fe782f714b579c5c4.ctex"
+uid="uid://dkkvkahp3qfgk"
+path="res://.godot/imported/mirror_z.svg-cf8cd7d6440e3bf98b1d99cd27464262.ctex"
 metadata={
 "editor_dark_theme": true,
 "editor_scale": 1.0,
@@ -13,8 +13,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/voxel-core/icons/pattern.svg"
-dest_files=["res://.godot/imported/pattern.svg-7f585dcaef75a55fe782f714b579c5c4.ctex"]
+source_file="res://addons/voxel-core/engine/icons/mirror_z.svg"
+dest_files=["res://.godot/imported/mirror_z.svg-cf8cd7d6440e3bf98b1d99cd27464262.ctex"]
 
 [params]
 

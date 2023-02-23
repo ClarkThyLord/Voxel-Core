@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="16" height="16" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+ <g transform="matrix(.14193 0 0 .14193 1.1906 1.1931)" stroke="#fff">
+  <g transform="matrix(1.0036 0 0 1.0036 .01775 -191.85)" stroke="#fff" stroke-width="7.0205">
+   <path d="m97.139 238.95v0c0 27.256-22.095 49.351-49.351 49.351s-49.351-22.095-49.351-49.351c-3e-6 -27.256 22.095-49.351 49.351-49.351 27.142 0 49.351 22.23 49.351 49.351z" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="7.0205" style="paint-order:markers fill stroke"/>
+  </g>
+  <path transform="matrix(6.6059,0,0,6.6059,-5.0577,-5.0577)" d="m9.1211 9.1211v-2.2422h-5.3457v5.3457h5.3457z" fill="#fff" stroke-linejoin="round" stroke-width="1.0666"/>
+  <path transform="matrix(6.6059,0,0,6.6059,-5.0577,-5.0577)" d="m6.8789 3.7754v3.1035h2.2422v2.2422h3.1035v-5.3457z" fill="none" stroke-linejoin="round" stroke-width="1.0666"/>
+ </g>
+</svg>

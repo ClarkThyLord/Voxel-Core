@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bprrno3u347pl"
-path="res://.godot/imported/mirror_y.svg-cd85b702f0c613e774690bdb2701dffd.ctex"
+uid="uid://b0gdrpf32ju38"
+path="res://.godot/imported/fill.svg-1321e50cbdbd0f8d948037aa57ef9041.ctex"
 metadata={
 "editor_dark_theme": true,
 "editor_scale": 1.0,
@@ -13,8 +13,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/voxel-core/icons/mirror_y.svg"
-dest_files=["res://.godot/imported/mirror_y.svg-cd85b702f0c613e774690bdb2701dffd.ctex"]
+source_file="res://addons/voxel-core/engine/icons/fill.svg"
+dest_files=["res://.godot/imported/fill.svg-1321e50cbdbd0f8d948037aa57ef9041.ctex"]
 
 [params]
 
@@ -33,7 +33,7 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=16
 detect_3d/compress_to=1
 svg/scale=3.0
 editor/scale_with_editor_scale=true

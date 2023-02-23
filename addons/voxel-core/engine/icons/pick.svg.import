@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://glf1drvbr4am"
-path="res://.godot/imported/add.svg-195c0c683a278cfa4ecb1a744598f972.ctex"
+uid="uid://b7ck7nr1fkyie"
+path="res://.godot/imported/pick.svg-1a3cf8ebd61b25be1babd61bda780b06.ctex"
 metadata={
 "editor_dark_theme": true,
 "editor_scale": 1.0,
@@ -13,8 +13,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/voxel-core/icons/add.svg"
-dest_files=["res://.godot/imported/add.svg-195c0c683a278cfa4ecb1a744598f972.ctex"]
+source_file="res://addons/voxel-core/engine/icons/pick.svg"
+dest_files=["res://.godot/imported/pick.svg-1a3cf8ebd61b25be1babd61bda780b06.ctex"]
 
 [params]
 
@@ -33,8 +33,8 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=0
+process/size_limit=16
+detect_3d/compress_to=1
 svg/scale=3.0
 editor/scale_with_editor_scale=true
 editor/convert_colors_with_editor_theme=true

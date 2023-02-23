@@ -1,17 +1,17 @@
-[gd_scene load_steps=14 format=3 uid="uid://w3my7q4r5k5e"]
+[gd_scene load_steps=14 format=3 uid="uid://ck5qw02fl5k2"]
 
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" id="1_mndkv"]
 [ext_resource type="Texture2D" uid="uid://42q0dxaqrd7i" path="res://addons/voxel-core/voxel-core.svg" id="1_ryfs5"]
-[ext_resource type="Texture2D" uid="uid://glf1drvbr4am" path="res://addons/voxel-core/icons/add.svg" id="2_lkmo4"]
-[ext_resource type="Texture2D" uid="uid://xdifjm44kct3" path="res://addons/voxel-core/icons/select.svg" id="3_1wqt1"]
-[ext_resource type="Texture2D" uid="uid://b7ck7nr1fkyie" path="res://addons/voxel-core/icons/pick.svg" id="4_pfo36"]
-[ext_resource type="Texture2D" uid="uid://dlptoetgsq0vp" path="res://addons/voxel-core/icons/sub.svg" id="5_6bgmv"]
-[ext_resource type="Texture2D" uid="uid://djgu5l5yxa7b3" path="res://addons/voxel-core/icons/swap.svg" id="6_xs4n6"]
-[ext_resource type="Texture2D" uid="uid://b1oy3ngqgq8qs" path="res://addons/voxel-core/icons/mirror_x.svg" id="7_hl8ih"]
-[ext_resource type="Texture2D" uid="uid://b0gdrpf32ju38" path="res://addons/voxel-core/icons/fill.svg" id="7_qta40"]
-[ext_resource type="Texture2D" uid="uid://bprrno3u347pl" path="res://addons/voxel-core/icons/mirror_y.svg" id="8_38p6d"]
-[ext_resource type="Texture2D" uid="uid://dkkvkahp3qfgk" path="res://addons/voxel-core/icons/mirror_z.svg" id="9_w1r5q"]
+[ext_resource type="Texture2D" uid="uid://b1oy3ngqgq8qs" path="res://addons/voxel-core/engine/icons/mirror_x.svg" id="3_ysyga"]
+[ext_resource type="Texture2D" uid="uid://bprrno3u347pl" path="res://addons/voxel-core/engine/icons/mirror_y.svg" id="4_8drke"]
+[ext_resource type="Texture2D" uid="uid://dkkvkahp3qfgk" path="res://addons/voxel-core/engine/icons/mirror_z.svg" id="5_3wg01"]
+[ext_resource type="Texture2D" uid="uid://glf1drvbr4am" path="res://addons/voxel-core/engine/icons/add.svg" id="6_l0h1v"]
+[ext_resource type="Texture2D" uid="uid://dlptoetgsq0vp" path="res://addons/voxel-core/engine/icons/sub.svg" id="7_u273i"]
+[ext_resource type="Texture2D" uid="uid://xdifjm44kct3" path="res://addons/voxel-core/engine/icons/select.svg" id="8_882oq"]
 [ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="9_whlw1"]
+[ext_resource type="Texture2D" uid="uid://b7ck7nr1fkyie" path="res://addons/voxel-core/engine/icons/pick.svg" id="9_yaimv"]
+[ext_resource type="Texture2D" uid="uid://djgu5l5yxa7b3" path="res://addons/voxel-core/engine/icons/swap.svg" id="10_qtywb"]
+[ext_resource type="Texture2D" uid="uid://b0gdrpf32ju38" path="res://addons/voxel-core/engine/icons/fill.svg" id="11_3u4ku"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_5pmmn"]
 
@@ -117,21 +117,21 @@ layout_mode = 2
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Mirror X"
-icon = ExtResource("7_hl8ih")
+icon = ExtResource("3_ysyga")
 expand_icon = true
 
 [node name="YMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Mirror Y"
-icon = ExtResource("8_38p6d")
+icon = ExtResource("4_8drke")
 expand_icon = true
 
 [node name="ZMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Mirror Z"
-icon = ExtResource("9_w1r5q")
+icon = ExtResource("5_3wg01")
 expand_icon = true
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
@@ -158,7 +158,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pmmn")
 text = "Add"
-icon = ExtResource("2_lkmo4")
+icon = ExtResource("6_l0h1v")
 expand_icon = true
 
 [node name="SubToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
@@ -167,7 +167,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pmmn")
 text = "Sub"
-icon = ExtResource("5_6bgmv")
+icon = ExtResource("7_u273i")
 expand_icon = true
 
 [node name="SelectToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
@@ -176,7 +176,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pmmn")
 text = "Select"
-icon = ExtResource("3_1wqt1")
+icon = ExtResource("8_882oq")
 expand_icon = true
 
 [node name="PickToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
@@ -185,7 +185,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pmmn")
 text = "Pick"
-icon = ExtResource("4_pfo36")
+icon = ExtResource("9_yaimv")
 expand_icon = true
 
 [node name="SwapToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
@@ -194,7 +194,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pmmn")
 text = "Swap"
-icon = ExtResource("6_xs4n6")
+icon = ExtResource("10_qtywb")
 expand_icon = true
 
 [node name="FillToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
@@ -203,7 +203,7 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pmmn")
 text = "Fill"
-icon = ExtResource("7_qta40")
+icon = ExtResource("11_3u4ku")
 expand_icon = true
 
 [node name="VSeparator" type="VSeparator" parent="."]
