@@ -1,23 +1,17 @@
-[gd_scene load_steps=19 format=3 uid="uid://cbl6ymyyxvq78"]
+[gd_scene load_steps=14 format=3 uid="uid://w3my7q4r5k5e"]
 
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" id="1_mndkv"]
 [ext_resource type="Texture2D" uid="uid://42q0dxaqrd7i" path="res://addons/voxel-core/voxel-core.svg" id="1_ryfs5"]
 [ext_resource type="Texture2D" uid="uid://glf1drvbr4am" path="res://addons/voxel-core/icons/add.svg" id="2_lkmo4"]
 [ext_resource type="Texture2D" uid="uid://xdifjm44kct3" path="res://addons/voxel-core/icons/select.svg" id="3_1wqt1"]
-[ext_resource type="Texture2D" uid="uid://bbras6fp72mq" path="res://addons/voxel-core/icons/individual.svg" id="3_myal8"]
-[ext_resource type="Texture2D" uid="uid://bc1vjqeme4bv6" path="res://addons/voxel-core/icons/area.svg" id="4_f10t4"]
 [ext_resource type="Texture2D" uid="uid://b7ck7nr1fkyie" path="res://addons/voxel-core/icons/pick.svg" id="4_pfo36"]
 [ext_resource type="Texture2D" uid="uid://dlptoetgsq0vp" path="res://addons/voxel-core/icons/sub.svg" id="5_6bgmv"]
-[ext_resource type="Texture2D" uid="uid://hoyy5nf5y0pt" path="res://addons/voxel-core/icons/extrude.svg" id="5_n8rvr"]
-[ext_resource type="Texture2D" uid="uid://bri07og48x7ca" path="res://addons/voxel-core/icons/brush.svg" id="6_u4r21"]
 [ext_resource type="Texture2D" uid="uid://djgu5l5yxa7b3" path="res://addons/voxel-core/icons/swap.svg" id="6_xs4n6"]
 [ext_resource type="Texture2D" uid="uid://b1oy3ngqgq8qs" path="res://addons/voxel-core/icons/mirror_x.svg" id="7_hl8ih"]
 [ext_resource type="Texture2D" uid="uid://b0gdrpf32ju38" path="res://addons/voxel-core/icons/fill.svg" id="7_qta40"]
 [ext_resource type="Texture2D" uid="uid://bprrno3u347pl" path="res://addons/voxel-core/icons/mirror_y.svg" id="8_38p6d"]
 [ext_resource type="Texture2D" uid="uid://dkkvkahp3qfgk" path="res://addons/voxel-core/icons/mirror_z.svg" id="9_w1r5q"]
 [ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="9_whlw1"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_ub8cb"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_5pmmn"]
 
@@ -88,106 +82,77 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="EditModes" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/EditModes"]
-layout_mode = 2
-text = "Edit Modes"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/VBoxContainer/EditModes"]
-layout_mode = 2
-
-[node name="IndividualEditModeButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/EditModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_ub8cb")
-text = "Individual"
-icon = ExtResource("3_myal8")
-expand_icon = true
-
-[node name="AreaEditModeButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/EditModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_ub8cb")
-text = "Area"
-icon = ExtResource("4_f10t4")
-expand_icon = true
-
-[node name="ExtrudeEditModeButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/EditModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_ub8cb")
-text = "Extrude"
-icon = ExtResource("5_n8rvr")
-expand_icon = true
-
-[node name="PatternEditModeButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/EditModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_ub8cb")
-text = "Pattern"
-icon = ExtResource("6_u4r21")
-expand_icon = true
-
-[node name="MirrorModes" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/MirrorModes"]
-layout_mode = 2
-text = "Mirror Modes"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/VBoxContainer/MirrorModes"]
-layout_mode = 2
-
-[node name="XMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/MirrorModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-text = "Mirror X"
-icon = ExtResource("7_hl8ih")
-expand_icon = true
-
-[node name="YMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/MirrorModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-text = "Mirror Y"
-icon = ExtResource("8_38p6d")
-expand_icon = true
-
-[node name="ZMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/MirrorModes"]
-custom_minimum_size = Vector2(128, 0)
-layout_mode = 2
-text = "Mirror Z"
-icon = ExtResource("9_w1r5q")
-expand_icon = true
-
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Tools"
+text = "Edit Modes"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Tools" type="HFlowContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+[node name="EditModes" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Mirror Modes"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="MirrorModes" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="XMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Mirror X"
+icon = ExtResource("7_hl8ih")
+expand_icon = true
+
+[node name="YMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Mirror Y"
+icon = ExtResource("8_38p6d")
+expand_icon = true
+
+[node name="ZMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Mirror Z"
+icon = ExtResource("9_w1r5q")
+expand_icon = true
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
+layout_mode = 2
+text = "Tools"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
+layout_mode = 2
+
+[node name="Tools" type="HFlowContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="AddToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+[node name="AddToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 toggle_mode = true
@@ -196,7 +161,7 @@ text = "Add"
 icon = ExtResource("2_lkmo4")
 expand_icon = true
 
-[node name="SubToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+[node name="SubToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 toggle_mode = true
@@ -205,7 +170,7 @@ text = "Sub"
 icon = ExtResource("5_6bgmv")
 expand_icon = true
 
-[node name="SelectToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+[node name="SelectToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 toggle_mode = true
@@ -214,7 +179,7 @@ text = "Select"
 icon = ExtResource("3_1wqt1")
 expand_icon = true
 
-[node name="PickToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+[node name="PickToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 toggle_mode = true
@@ -223,7 +188,7 @@ text = "Pick"
 icon = ExtResource("4_pfo36")
 expand_icon = true
 
-[node name="SwapToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+[node name="SwapToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 toggle_mode = true
@@ -232,7 +197,7 @@ text = "Swap"
 icon = ExtResource("6_xs4n6")
 expand_icon = true
 
-[node name="FillToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/Tools"]
+[node name="FillToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
 custom_minimum_size = Vector2(86, 0)
 layout_mode = 2
 toggle_mode = true
