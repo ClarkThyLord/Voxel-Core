@@ -12,9 +12,13 @@ const EditTool = preload("res://addons/voxel-core/engine/voxel_object_editor/vox
 
 
 # Private Variables
+var _current_edit_mode_name : String = ""
+
 var _edit_modes : Dictionary = {}
 
 var _edit_modes_button_group : ButtonGroup = ButtonGroup.new()
+
+var _current_edit_tool_name : String = ""
 
 var _edit_tools : Dictionary = {}
 
@@ -42,11 +46,15 @@ func _ready() -> void:
 			]:
 		add_edit_tool(edit_tool)
 	
-	get_edit_mode_button(_edit_modes.keys()[0]).button_pressed = true
+	get_edit_tool_button(_edit_tools.keys()[0]).button_pressed = true
 
 
 
 # Public Variables
+func get_current_edit_mode_name() -> String:
+	return _current_edit_mode_name
+
+
 func get_edit_mode(edit_mode_name : String) -> EditMode:
 	if edit_mode_name in _edit_modes:
 		return _edit_modes.get(edit_mode_name)[0]
@@ -102,6 +110,13 @@ func remove_edit_mode(edit_mode_name : String) -> void:
 func activate_edit_mode(edit_mode_name : String) -> void:
 	var edit_mode : EditMode = get_edit_mode(edit_mode_name)
 	if is_instance_valid(edit_mode):
+		var edit_mode_button : Button = get_edit_mode_button(edit_mode_name)
+		if not edit_mode_button.button_pressed:
+			edit_mode_button.button_pressed = true
+			return
+		
+		_current_edit_mode_name = edit_mode_name
+		
 		edit_mode.activate()
 
 
@@ -109,6 +124,22 @@ func deactivate_edit_mode(edit_mode_name : String) -> void:
 	var edit_mode : EditMode = get_edit_mode(edit_mode_name)
 	if is_instance_valid(edit_mode):
 		edit_mode.deactivate()
+
+
+func enable_edit_mode(edit_mode_name : String) -> void:
+	var edit_mode_button : Button = get_edit_mode_button(edit_mode_name)
+	if is_instance_valid(edit_mode_button):
+		edit_mode_button.disabled = false
+
+
+func disable_edit_mode(edit_mode_name : String) -> void:
+	var edit_mode_button : Button = get_edit_mode_button(edit_mode_name)
+	if is_instance_valid(edit_mode_button):
+		edit_mode_button.disabled = true
+
+
+func get_current_edit_tool_name() -> String:
+	return _current_edit_tool_name
 
 
 func get_edit_tool(edit_tool_name : String) -> EditTool:
@@ -167,6 +198,20 @@ func remove_edit_tool(edit_tool_name : String) -> void:
 func activate_edit_tool(edit_tool_name : String) -> void:
 	var edit_tool : EditTool = get_edit_tool(edit_tool_name)
 	if is_instance_valid(edit_tool):
+		var supported_edit_modes : Array[String] = \
+				edit_tool.get_supported_edit_modes()
+		
+		for edit_mode_name in _edit_modes.keys():
+			if edit_mode_name not in supported_edit_modes:
+				disable_edit_mode(edit_mode_name)
+			else:
+				enable_edit_mode(edit_mode_name)
+		
+		if get_current_edit_mode_name() not in supported_edit_modes:
+			activate_edit_mode(supported_edit_modes[0])
+		
+		_current_edit_tool_name = edit_tool_name
+		
 		edit_tool.activate()
 
 

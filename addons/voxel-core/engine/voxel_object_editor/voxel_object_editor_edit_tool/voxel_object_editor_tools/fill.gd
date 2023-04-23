@@ -16,7 +16,7 @@ func get_display_icon() -> Texture2D:
 	return preload("res://addons/voxel-core/engine/icons/fill.svg")
 
 
-func get_supported_edit_modes() -> Array:
+func get_supported_edit_modes() -> Array[String]:
 	return [
 		"voxelcore.individual",
 		"voxelcore.area",

@@ -21,9 +21,9 @@ func get_display_tooltip() -> String:
 	return ""
 
 
-func get_supported_edit_modes() -> Array:
+func get_supported_edit_modes() -> Array[String]:
 	return [
-		
+		"voxelcore.individual"
 	]
 
 
