@@ -5,15 +5,15 @@ extends "res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_
 
 # Public Methods
 func get_name() -> String:
-	return "voxelcore.swap"
+	return "voxelcore.fill"
 
 
 func get_display_name() -> String:
-	return "Swap"
+	return "Fill"
 
 
 func get_display_icon() -> Texture2D:
-	return preload("res://addons/voxel-core/engine/icons/swap.svg")
+	return preload("res://addons/voxel-core/engine/icons/fill.svg")
 
 
 func get_supported_edit_modes() -> Array:
