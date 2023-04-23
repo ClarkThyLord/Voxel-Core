@@ -1,19 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://ck5qw02fl5k2"]
+[gd_scene load_steps=7 format=3 uid="uid://ck5qw02fl5k2"]
 
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" id="1_mndkv"]
 [ext_resource type="Texture2D" uid="uid://42q0dxaqrd7i" path="res://addons/voxel-core/voxel-core.svg" id="1_ryfs5"]
 [ext_resource type="Texture2D" uid="uid://b1oy3ngqgq8qs" path="res://addons/voxel-core/engine/icons/mirror_x.svg" id="3_ysyga"]
 [ext_resource type="Texture2D" uid="uid://bprrno3u347pl" path="res://addons/voxel-core/engine/icons/mirror_y.svg" id="4_8drke"]
 [ext_resource type="Texture2D" uid="uid://dkkvkahp3qfgk" path="res://addons/voxel-core/engine/icons/mirror_z.svg" id="5_3wg01"]
-[ext_resource type="Texture2D" uid="uid://glf1drvbr4am" path="res://addons/voxel-core/engine/icons/add.svg" id="6_l0h1v"]
-[ext_resource type="Texture2D" uid="uid://dlptoetgsq0vp" path="res://addons/voxel-core/engine/icons/sub.svg" id="7_u273i"]
-[ext_resource type="Texture2D" uid="uid://xdifjm44kct3" path="res://addons/voxel-core/engine/icons/select.svg" id="8_882oq"]
 [ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="9_whlw1"]
-[ext_resource type="Texture2D" uid="uid://b7ck7nr1fkyie" path="res://addons/voxel-core/engine/icons/pick.svg" id="9_yaimv"]
-[ext_resource type="Texture2D" uid="uid://djgu5l5yxa7b3" path="res://addons/voxel-core/engine/icons/swap.svg" id="10_qtywb"]
-[ext_resource type="Texture2D" uid="uid://b0gdrpf32ju38" path="res://addons/voxel-core/engine/icons/fill.svg" id="11_3u4ku"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_5pmmn"]
 
 [node name="VoxelObjectEditor" type="HBoxContainer"]
 custom_minimum_size = Vector2(0, 232)
@@ -147,64 +139,11 @@ vertical_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
 layout_mode = 2
 
-[node name="Tools" type="HFlowContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
+[node name="EditTools" type="HFlowContainer" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
-
-[node name="AddToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_5pmmn")
-text = "Add"
-icon = ExtResource("6_l0h1v")
-expand_icon = true
-
-[node name="SubToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_5pmmn")
-text = "Sub"
-icon = ExtResource("7_u273i")
-expand_icon = true
-
-[node name="SelectToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_5pmmn")
-text = "Select"
-icon = ExtResource("8_882oq")
-expand_icon = true
-
-[node name="PickToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_5pmmn")
-text = "Pick"
-icon = ExtResource("9_yaimv")
-expand_icon = true
-
-[node name="SwapToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_5pmmn")
-text = "Swap"
-icon = ExtResource("10_qtywb")
-expand_icon = true
-
-[node name="FillToolButton" type="Button" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Tools"]
-custom_minimum_size = Vector2(86, 0)
-layout_mode = 2
-toggle_mode = true
-button_group = SubResource("ButtonGroup_5pmmn")
-text = "Fill"
-icon = ExtResource("11_3u4ku")
-expand_icon = true
 
 [node name="VSeparator" type="VSeparator" parent="."]
 layout_mode = 2

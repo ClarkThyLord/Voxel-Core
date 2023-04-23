@@ -18,6 +18,8 @@ var _edit_modes_button_group : ButtonGroup = ButtonGroup.new()
 
 var _edit_tools : Dictionary = {}
 
+var _edit_tools_button_group : ButtonGroup = ButtonGroup.new()
+
 
 
 # Built-In Virtual Methods
@@ -29,8 +31,14 @@ func _ready() -> void:
 				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_mode/voxel_object_editor_edit_modes/pattern.gd").new(),
 			]:
 		add_edit_mode(edit_mode)
+	
 	for edit_tool in [
-				
+				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_tools/add.gd").new(),
+				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_tools/sub.gd").new(),
+				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_tools/select.gd").new(),
+				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_tools/pick.gd").new(),
+				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_tools/swap.gd").new(),
+				preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_tools/fill.gd").new(),
 			]:
 		add_edit_tool(edit_tool)
 	
@@ -104,15 +112,68 @@ func deactivate_edit_mode(edit_mode_name : String) -> void:
 
 
 func get_edit_tool(edit_tool_name : String) -> EditTool:
-	return null
+	if edit_tool_name in _edit_tools:
+		return _edit_tools.get(edit_tool_name)[0]
+	else:
+		push_error("VoxelObjectEditor doesn't have EditTool with given name!")
+		return null
+
+
+func get_edit_tool_button(edit_tool_name : String) -> Button:
+	if edit_tool_name in _edit_tools:
+		return _edit_tools.get(edit_tool_name)[1]
+	else:
+		push_error("VoxelObjectEditor doesn't have EditTool with given name!")
+		return null
 
 
 func add_edit_tool(edit_tool : EditTool) -> void:
-	pass
+	if edit_tool.get_name() in _edit_tools:
+		push_error("VoxelObjectEditor already has EditTool with given name!")
+		return
+	
+	var edit_tool_button : Button = Button.new()
+	edit_tool_button.toggle_mode = true
+	edit_tool_button.custom_minimum_size = Vector2(86, 0)
+	edit_tool_button.button_group = _edit_tools_button_group
+	
+	edit_tool_button.text = edit_tool.get_display_name()
+	edit_tool_button.icon = edit_tool.get_display_icon()
+	edit_tool_button.tooltip_text = edit_tool.get_display_tooltip()
+	
+	edit_tool_button.toggled.connect(
+			Callable(_edit_tool_toggled).bind(edit_tool.get_name()))
+	
+	_edit_tools[edit_tool.get_name()] = [
+		edit_tool,
+		edit_tool_button
+	]
+	
+	%EditTools.add_child(edit_tool_button)
+	
+	edit_tool.loaded(edit_tool_button)
 
 
-func remove_edit_tool(edit_tool : EditTool) -> void:
-	pass
+func remove_edit_tool(edit_tool_name : String) -> void:
+	var edit_tool : EditTool = get_edit_tool(edit_tool_name)
+	
+	var edit_tool_button : Button = get_edit_tool_button(edit_tool_name)
+	%Edittools.remove_child(edit_tool_button)
+	edit_tool_button.queue_free()
+	
+	edit_tool.unloaded()
+
+
+func activate_edit_tool(edit_tool_name : String) -> void:
+	var edit_tool : EditTool = get_edit_tool(edit_tool_name)
+	if is_instance_valid(edit_tool):
+		edit_tool.activate()
+
+
+func deactivate_edit_tool(edit_tool_name : String) -> void:
+	var edit_tool : EditTool = get_edit_tool(edit_tool_name)
+	if is_instance_valid(edit_tool):
+		edit_tool.deactivate()
 
 
 
@@ -122,3 +183,10 @@ func _edit_mode_toggled(button_pressed : bool, edit_mode_name : String) -> void:
 		activate_edit_mode(edit_mode_name)
 	else:
 		deactivate_edit_mode(edit_mode_name)
+
+
+func _edit_tool_toggled(button_pressed : bool, edit_tool_name : String) -> void:
+	if button_pressed:
+		activate_edit_tool(edit_tool_name)
+	else:
+		deactivate_edit_tool(edit_tool_name)
