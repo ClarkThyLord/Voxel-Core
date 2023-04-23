@@ -5,33 +5,37 @@ extends RefCounted
 
 
 # Public Methods
-func get_edit_mode_name() -> String:
+func get_name() -> String:
 	return ""
 
 
-func get_edit_mode_visible_name() -> String:
+func get_display_name() -> String:
 	return ""
 
 
-func get_edit_mode_icon() -> Texture2D:
+func get_display_icon() -> Texture2D:
 	return null
 
 
+func get_display_tooltip() -> String:
+	return ""
+
+
 func loaded(button : Button) -> void:
-	pass
+	print_debug("LOADED EDIT MODE \"%s\"" % get_name())
 
 
 func unloaded() -> void:
-	pass
+	print_debug("UNLOADED EDIT MODE \"%s\"" % get_name())
 
 
 func activate() -> void:
-	pass
+	print_debug("ACTIVATED EDIT MODE \"%s\"" % get_name())
 
 
 func use() -> void:
-	pass
+	print_debug("USED EDIT MODE \"%s\"" % get_name())
 
 
 func deactivate() -> void:
-	pass
+	print_debug("DEACTIVATED EDIT MODE \"%s\"" % get_name())
