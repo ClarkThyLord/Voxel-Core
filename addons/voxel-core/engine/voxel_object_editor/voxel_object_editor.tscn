@@ -106,6 +106,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="XMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Mirror X"
@@ -113,6 +114,7 @@ icon = ExtResource("3_ysyga")
 expand_icon = true
 
 [node name="YMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Mirror Y"
@@ -120,6 +122,7 @@ icon = ExtResource("4_8drke")
 expand_icon = true
 
 [node name="ZMirrorModeButton" type="CheckBox" parent="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 text = "Mirror Z"
@@ -197,3 +200,7 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/XMirrorModeButton" to="." method="_on_x_mirror_mode_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/YMirrorModeButton" to="." method="_on_y_mirror_mode_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/ZMirrorModeButton" to="." method="_on_z_mirror_mode_button_pressed"]

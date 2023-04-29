@@ -27,12 +27,12 @@ func get_cursor_offset() -> int:
 
 
 func can_mirror_x() -> bool:
-	return true
+	return false
 
 
 func can_mirror_y() -> bool:
-	return true
+	return false
 
 
 func can_mirror_z() -> bool:
-	return true
+	return false

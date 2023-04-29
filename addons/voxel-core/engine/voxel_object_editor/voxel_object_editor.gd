@@ -24,6 +24,12 @@ var _edit_tools : Dictionary = {}
 
 var _edit_tools_button_group : ButtonGroup = ButtonGroup.new()
 
+var _mirror_x : bool = false
+
+var _mirror_y : bool = false
+
+var _mirror_z : bool = false
+
 
 
 # Built-In Virtual Methods
@@ -222,6 +228,21 @@ func activate_edit_tool(edit_tool_name : String) -> void:
 		
 		_current_edit_tool_name = edit_tool_name
 		
+		if edit_tool.can_mirror_x():
+			enable_mirror_x()
+		else:
+			disable_mirror_x()
+		
+		if edit_tool.can_mirror_y():
+			enable_mirror_y()
+		else:
+			disable_mirror_y()
+		
+		if edit_tool.can_mirror_z():
+			enable_mirror_z()
+		else:
+			disable_mirror_z()
+		
 		edit_tool.activate()
 
 
@@ -248,6 +269,96 @@ func disable_edit_tool(edit_tool_name : String) -> void:
 		edit_tool_button.disabled = true
 
 
+func mirror_x() -> bool:
+	return _mirror_x
+
+
+func activate_mirror_x() -> void:
+	if not %XMirrorModeButton.button_pressed:
+		%XMirrorModeButton.button_pressed = true
+		return
+	
+	_mirror_x = true
+
+
+func deactivate_mirror_x() -> void:
+	if not %XMirrorModeButton.button_pressed:
+		%XMirrorModeButton.button_pressed = false
+		return
+	
+	_mirror_x = false
+
+
+func enable_mirror_x() -> void:
+	%XMirrorModeButton.disabled = false
+	_mirror_x = false
+
+
+func disable_mirror_x() -> void:
+	%XMirrorModeButton.disabled = true
+	_mirror_x = %XMirrorModeButton.button_pressed
+
+
+func mirror_y() -> bool:
+	return _mirror_y
+
+
+func activate_mirror_y() -> void:
+	if not %YMirrorModeButton.button_pressed:
+		%YMirrorModeButton.button_pressed = true
+		return
+	
+	_mirror_y = true
+
+
+func deactivate_mirror_y() -> void:
+	if not %YMirrorModeButton.button_pressed:
+		%YMirrorModeButton.button_pressed = false
+		return
+	
+	_mirror_y = false
+
+
+func enable_mirror_y() -> void:
+	%YMirrorModeButton.disabled = false
+	_mirror_y = false
+
+
+func disable_mirror_y() -> void:
+	%YMirrorModeButton.disabled = true
+	_mirror_y = %YMirrorModeButton.button_pressed
+
+
+func mirror_z() -> bool:
+	return _mirror_z
+
+
+func activate_mirror_z() -> void:
+	if not %ZMirrorModeButton.button_pressed:
+		%ZMirrorModeButton.button_pressed = true
+		return
+	
+	_mirror_z = true
+
+
+func deactivate_mirror_z() -> void:
+	if not %ZMirrorModeButton.button_pressed:
+		%ZMirrorModeButton.button_pressed = false
+		return
+	
+	_mirror_z = false
+
+
+func enable_mirror_z() -> void:
+	%ZMirrorModeButton.disabled = false
+	_mirror_z = false
+
+
+func disable_mirror_z() -> void:
+	%ZMirrorModeButton.disabled = true
+	_mirror_z = %ZMirrorModeButton.button_pressed
+
+
 
 # Private Methods
 func _edit_mode_toggled(button_pressed : bool, edit_mode_name : String) -> void:
@@ -262,3 +373,15 @@ func _edit_tool_toggled(button_pressed : bool, edit_tool_name : String) -> void:
 		activate_edit_tool(edit_tool_name)
 	else:
 		deactivate_edit_tool(edit_tool_name)
+
+
+func _on_x_mirror_mode_button_pressed():
+	_mirror_x = %XMirrorModeButton.button_pressed
+
+
+func _on_y_mirror_mode_button_pressed():
+	_mirror_y = %YMirrorModeButton.button_pressed
+
+
+func _on_z_mirror_mode_button_pressed():
+	_mirror_z = %ZMirrorModeButton.button_pressed
