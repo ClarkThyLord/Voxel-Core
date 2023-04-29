@@ -123,6 +123,11 @@ func activate_edit_mode(edit_mode_name : String) -> void:
 func deactivate_edit_mode(edit_mode_name : String) -> void:
 	var edit_mode : EditMode = get_edit_mode(edit_mode_name)
 	if is_instance_valid(edit_mode):
+		var edit_mode_button : Button = get_edit_mode_button(edit_mode_name)
+		if edit_mode_button.button_pressed:
+			edit_mode_button.button_pressed = false
+			return
+		
 		edit_mode.deactivate()
 
 
@@ -198,6 +203,11 @@ func remove_edit_tool(edit_tool_name : String) -> void:
 func activate_edit_tool(edit_tool_name : String) -> void:
 	var edit_tool : EditTool = get_edit_tool(edit_tool_name)
 	if is_instance_valid(edit_tool):
+		var edit_tool_button : Button = get_edit_tool_button(edit_tool_name)
+		if not edit_tool_button.button_pressed:
+			edit_tool_button.button_pressed = true
+			return
+		
 		var supported_edit_modes : Array[String] = \
 				edit_tool.get_supported_edit_modes()
 		
@@ -218,7 +228,24 @@ func activate_edit_tool(edit_tool_name : String) -> void:
 func deactivate_edit_tool(edit_tool_name : String) -> void:
 	var edit_tool : EditTool = get_edit_tool(edit_tool_name)
 	if is_instance_valid(edit_tool):
+		var edit_tool_button : Button = get_edit_tool_button(edit_tool_name)
+		if edit_tool_button.button_pressed:
+			edit_tool_button.button_pressed = false
+			return
+		
 		edit_tool.deactivate()
+
+
+func enable_edit_tool(edit_tool_name : String) -> void:
+	var edit_tool_button : Button = get_edit_tool_button(edit_tool_name)
+	if is_instance_valid(edit_tool_button):
+		edit_tool_button.disabled = false
+
+
+func disable_edit_tool(edit_tool_name : String) -> void:
+	var edit_tool_button : Button = get_edit_tool_button(edit_tool_name)
+	if is_instance_valid(edit_tool_button):
+		edit_tool_button.disabled = true
 
 
 
