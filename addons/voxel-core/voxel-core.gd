@@ -76,6 +76,14 @@ func show_voxel_object_editor() -> void:
 	
 	make_bottom_panel_item_visible(_voxel_object_editor)
 	_voxel_object_editor.handle_voxel_object(_current_handled_voxel_object)
+	if not _voxel_object_editor.is_connected(
+			"started_editing", _on_voxel_object_editor_started_editing):
+		_voxel_object_editor.connect(
+				"started_editing", _on_voxel_object_editor_started_editing)
+	if not _voxel_object_editor.is_connected(
+			"stopped_editing", _on_voxel_object_editor_stopped_editing):
+		_voxel_object_editor.connect(
+				"stopped_editing", _on_voxel_object_editor_stopped_editing)
 
 
 func hide_voxel_object_editor() -> void:
@@ -119,3 +127,11 @@ func _on_main_screen_changed(current_main_screen : String) -> void:
 			current_main_screen, 
 			_current_handled_voxel_object, 
 			_current_handled_voxel_set)
+
+
+func _on_voxel_object_editor_started_editing() -> void:
+	print(1)
+
+
+func _on_voxel_object_editor_stopped_editing() -> void:
+	print(2)

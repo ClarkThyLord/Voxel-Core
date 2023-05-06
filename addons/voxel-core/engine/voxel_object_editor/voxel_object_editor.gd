@@ -13,6 +13,13 @@ const EditTool = preload("res://addons/voxel-core/engine/voxel_object_editor/vox
 
 
 
+# Signals
+signal started_editing
+
+signal stopped_editing
+
+
+
 # Private Variables
 var _editing : bool = false
 
@@ -75,6 +82,9 @@ func is_editing() -> bool:
 
 
 func start_editing() -> void:
+	if _editing:
+		return
+	
 	if not %EditingCheckBox.button_pressed:
 		%EditingCheckBox.button_pressed = true
 		return
@@ -83,9 +93,13 @@ func start_editing() -> void:
 		_attach_grid()
 	
 	_editing = true
+	emit_signal("started_editing")
 
 
 func stop_editing() -> void:
+	if not _editing:
+		return
+	
 	if %EditingCheckBox.button_pressed:
 		%EditingCheckBox.button_pressed = false
 		return
@@ -94,6 +108,7 @@ func stop_editing() -> void:
 		_detach_grid()
 	
 	_editing = false
+	emit_signal("stopped_editing")
 
 
 func get_current_edit_mode_name() -> String:
