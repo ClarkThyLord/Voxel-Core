@@ -5,6 +5,8 @@ extends HBoxContainer
 
 
 # Constants
+const Grid = preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_grid/voxel_object_editor_grid.gd")
+
 const EditMode = preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_mode/voxel_object_editor_edit_mode.gd")
 
 const EditTool = preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_edit_tool/voxel_object_editor_edit_tool.gd")
@@ -12,6 +14,10 @@ const EditTool = preload("res://addons/voxel-core/engine/voxel_object_editor/vox
 
 
 # Private Variables
+var _editing : bool = false
+
+var _editing_voxel_object = null
+
 var _current_edit_mode_name : String = ""
 
 var _edit_modes : Dictionary = {}
@@ -29,6 +35,8 @@ var _mirror_x : bool = false
 var _mirror_y : bool = false
 
 var _mirror_z : bool = false
+
+var _grid : Grid = null
 
 
 
@@ -55,8 +63,39 @@ func _ready() -> void:
 	get_edit_tool_button(_edit_tools.keys()[0]).button_pressed = true
 
 
+func _exit_tree() -> void:
+	if is_instance_valid(_grid):
+		_grid.queue_free()
+
+
 
 # Public Variables
+func is_editing() -> bool:
+	return _editing
+
+
+func start_editing() -> void:
+	if not %EditingCheckBox.button_pressed:
+		%EditingCheckBox.button_pressed = true
+		return
+	
+	if is_instance_valid(_editing_voxel_object):
+		_attach_grid()
+	
+	_editing = true
+
+
+func stop_editing() -> void:
+	if %EditingCheckBox.button_pressed:
+		%EditingCheckBox.button_pressed = false
+		return
+	
+	if is_instance_valid(_editing_voxel_object):
+		_detach_grid()
+	
+	_editing = false
+
+
 func get_current_edit_mode_name() -> String:
 	return _current_edit_mode_name
 
@@ -269,7 +308,7 @@ func disable_edit_tool(edit_tool_name : String) -> void:
 		edit_tool_button.disabled = true
 
 
-func mirror_x() -> bool:
+func is_mirroring_x() -> bool:
 	return _mirror_x
 
 
@@ -299,7 +338,7 @@ func disable_mirror_x() -> void:
 	_mirror_x = %XMirrorModeButton.button_pressed
 
 
-func mirror_y() -> bool:
+func is_mirroring_y() -> bool:
 	return _mirror_y
 
 
@@ -329,7 +368,7 @@ func disable_mirror_y() -> void:
 	_mirror_y = %YMirrorModeButton.button_pressed
 
 
-func mirror_z() -> bool:
+func is_mirroring_z() -> bool:
 	return _mirror_z
 
 
@@ -359,8 +398,27 @@ func disable_mirror_z() -> void:
 	_mirror_z = %ZMirrorModeButton.button_pressed
 
 
+func handle_voxel_object(voxel_object) -> void:
+	stop_editing()
+	
+	_editing_voxel_object = voxel_object
+
+
 
 # Private Methods
+func _attach_grid() -> void:
+	if not is_instance_valid(_grid):
+		_grid = Grid.new()
+		_grid.update()
+	
+	_editing_voxel_object.add_child(_grid)
+
+
+func _detach_grid() -> void:
+	if is_instance_valid(_grid) and is_instance_valid(_grid.get_parent()):
+		_grid.get_parent().remove_child(_grid)
+
+
 func _edit_mode_toggled(button_pressed : bool, edit_mode_name : String) -> void:
 	if button_pressed:
 		activate_edit_mode(edit_mode_name)
@@ -375,13 +433,20 @@ func _edit_tool_toggled(button_pressed : bool, edit_tool_name : String) -> void:
 		deactivate_edit_tool(edit_tool_name)
 
 
-func _on_x_mirror_mode_button_pressed():
+func _on_x_mirror_mode_button_pressed() -> void:
 	_mirror_x = %XMirrorModeButton.button_pressed
 
 
-func _on_y_mirror_mode_button_pressed():
+func _on_y_mirror_mode_button_pressed() -> void:
 	_mirror_y = %YMirrorModeButton.button_pressed
 
 
-func _on_z_mirror_mode_button_pressed():
+func _on_z_mirror_mode_button_pressed() -> void:
 	_mirror_z = %ZMirrorModeButton.button_pressed
+
+
+func _on_editing_check_box_toggled(button_pressed : bool) -> void:
+	if button_pressed:
+		start_editing()
+	else:
+		stop_editing()

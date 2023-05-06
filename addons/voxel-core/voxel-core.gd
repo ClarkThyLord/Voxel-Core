@@ -11,7 +11,7 @@ const _voxel_object_editor_scene := preload("res://addons/voxel-core/engine/voxe
 # Private Variables
 var _current_main_screen : String
 
-var _current_handled_voxel_object : Object
+var _current_handled_voxel_object
 
 var _voxel_object_editor
 
@@ -41,7 +41,7 @@ func _exit_tree():
 
 
 func _handles(object) -> bool:
-	if object is VoxelMeshInstance3D:
+	if is_voxel_object(object):
 		_handle_state_change(
 			_current_main_screen, 
 			object, 
@@ -61,6 +61,10 @@ func _edit(object) -> void:
 
 
 # Public Methods
+func is_voxel_object(object : Object) -> bool:
+	return object is VoxelMeshInstance3D
+
+
 func is_voxel_object_editor_shown() -> bool:
 	return is_instance_valid(_voxel_object_editor)
 
@@ -69,11 +73,14 @@ func show_voxel_object_editor() -> void:
 	if not is_instance_valid(_voxel_object_editor):
 		_voxel_object_editor = _voxel_object_editor_scene.instantiate()
 		_voxel_object_editor_button = add_control_to_bottom_panel(_voxel_object_editor, "VoxelObject Editor")
+	
 	make_bottom_panel_item_visible(_voxel_object_editor)
+	_voxel_object_editor.handle_voxel_object(_current_handled_voxel_object)
 
 
 func hide_voxel_object_editor() -> void:
 	if is_instance_valid(_voxel_object_editor):
+		_voxel_object_editor.stop_editing()
 		remove_control_from_bottom_panel(_voxel_object_editor)
 		_voxel_object_editor.queue_free()
 
@@ -95,6 +102,7 @@ func _handle_state_change(
 	if current_main_screen == "3D":
 		if (current_main_screen != _current_main_screen and is_instance_valid(current_handled_voxel_object))\
 				or current_handled_voxel_object != _current_handled_voxel_object:
+			_current_handled_voxel_object = current_handled_voxel_object
 			show_voxel_object_editor()
 		elif not is_instance_valid(current_handled_voxel_object):
 			hide_voxel_object_editor()

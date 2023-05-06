@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ck5qw02fl5k2"]
+[gd_scene load_steps=9 format=3 uid="uid://ck5qw02fl5k2"]
 
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" id="1_mndkv"]
 [ext_resource type="Texture2D" uid="uid://42q0dxaqrd7i" path="res://addons/voxel-core/voxel-core.svg" id="1_ryfs5"]
@@ -6,6 +6,14 @@
 [ext_resource type="Texture2D" uid="uid://bprrno3u347pl" path="res://addons/voxel-core/engine/icons/mirror_y.svg" id="4_8drke"]
 [ext_resource type="Texture2D" uid="uid://dkkvkahp3qfgk" path="res://addons/voxel-core/engine/icons/mirror_z.svg" id="5_3wg01"]
 [ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="9_whlw1"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_3ynwk"]
+device = -1
+keycode = 32
+unicode = 32
+
+[sub_resource type="Shortcut" id="Shortcut_v2imf"]
+events = [SubResource("InputEventKey_3ynwk")]
 
 [node name="VoxelObjectEditor" type="HBoxContainer"]
 custom_minimum_size = Vector2(0, 232)
@@ -40,7 +48,9 @@ text = "VoxelObject Editor
 layout_mode = 2
 
 [node name="EditingCheckBox" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+shortcut = SubResource("Shortcut_v2imf")
 text = "Editing"
 
 [node name="EditMenuButton" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
@@ -201,6 +211,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/EditingCheckBox" to="." method="_on_editing_check_box_toggled"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/XMirrorModeButton" to="." method="_on_x_mirror_mode_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/YMirrorModeButton" to="." method="_on_y_mirror_mode_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/ZMirrorModeButton" to="." method="_on_z_mirror_mode_button_pressed"]

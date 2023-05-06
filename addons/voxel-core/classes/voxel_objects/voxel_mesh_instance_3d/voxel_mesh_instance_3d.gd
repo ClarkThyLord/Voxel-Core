@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/voxel-core/classes/voxel_mesh_instance_3d/voxel_mesh_instance_3d.svg")
+@icon("res://addons/voxel-core/classes/voxel_objects/voxel_mesh_instance_3d/voxel_mesh_instance_3d.svg")
 class_name VoxelMeshInstance3D
 extends MeshInstance3D
 ## Voxel visualization object, for a moderate amount of voxels;
@@ -53,7 +53,8 @@ extends MeshInstance3D
 ## Algorithm used to generate voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
 @export
-var voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType = VoxelSurfaceTool.VoxelMeshType.NAIVE :
+var voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType = \
+		VoxelSurfaceTool.VoxelMeshType.NAIVE :
 	get = get_voxel_mesh_type,
 	set = set_voxel_mesh_type
 
@@ -119,7 +120,8 @@ func get_voxel_mesh_type() -> VoxelSurfaceTool.VoxelMeshType:
 
 
 ## Sets [member voxel_mesh_type]; and, if in engine, calls on [method update].
-func set_voxel_mesh_type(new_voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType) -> void:
+func set_voxel_mesh_type(
+		new_voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType) -> void:
 	voxel_mesh_type = new_voxel_mesh_type
 	if Engine.is_editor_hint():
 		update()
@@ -150,7 +152,7 @@ func set_voxels_textured(new_voxels_textured : bool) -> void:
 
 
 ## Returns [member voxel_set].
-func get_voxel_set():
+func get_voxel_set() -> VoxelSet:
 	return voxel_set
 
 
@@ -183,12 +185,12 @@ func get_voxels() -> Dictionary:
 
 
 ## Returns a list of used voxel positions.
-func get_voxel_positions():
+func get_voxel_positions() -> Array[Vector3i]:
 	return _voxels.keys()
 
 
 ## Returns a list of used voxel ids.
-func get_voxel_ids():
+func get_voxel_ids() -> Array[int]:
 	return _voxels.values()
 
 
