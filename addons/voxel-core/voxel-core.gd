@@ -11,28 +11,28 @@ const _voxel_object_editor_scene := preload("res://addons/voxel-core/engine/voxe
 # Private Variables
 var _current_main_screen : String
 
-var _current_handled_voxel_object
+var _current_handled_voxel_object : Node
 
-var _voxel_object_editor
+var _voxel_object_editor : Control
 
 var _voxel_object_editor_button : Button
 
 var _current_handled_voxel_set : VoxelSet
 
-var _voxel_set_editor
+var _voxel_set_editor : VoxelSet
 
 var _voxel_set_editor_button : Button
 
 
 
 # Built-In Virtual Methods
-func _enter_tree():
+func _enter_tree() -> void:
 	main_screen_changed.connect(_on_main_screen_changed, CONNECT_PERSIST)
 	
 	print("Voxel-Core is active!")
 
 
-func _exit_tree():
+func _exit_tree() -> void:
 	hide_voxel_object_editor()
 	
 	main_screen_changed.disconnect(_on_main_screen_changed)
@@ -40,7 +40,7 @@ func _exit_tree():
 	print("Voxel-Core is inactive!")
 
 
-func _handles(object) -> bool:
+func _handles(object : Object) -> bool:
 	if is_voxel_object(object):
 		_handle_state_change(
 			_current_main_screen, 
@@ -55,8 +55,12 @@ func _handles(object) -> bool:
 	return false
 
 
-func _edit(object) -> void:
-	pass
+func _forward_3d_gui_input(camera : Camera3D, event : InputEvent) -> int:
+	if _voxel_object_editor.is_editing():
+		print(camera, event)
+		return EditorPlugin.AFTER_GUI_INPUT_STOP
+	else:
+		return EditorPlugin.AFTER_GUI_INPUT_PASS
 
 
 
@@ -102,23 +106,42 @@ func toggle_voxel_object_editor() -> void:
 
 
 # Private Methods
+func _set_current_handled_voxel_object(
+		current_handled_voxel_object : Node) -> void:
+	if is_instance_valid(_current_handled_voxel_object):
+		_current_handled_voxel_object.disconnect(
+				"tree_exiting", _on_current_handled_voxel_object_tree_exiting)
+	
+	_current_handled_voxel_object = current_handled_voxel_object
+	
+	if is_instance_valid(_current_handled_voxel_object):
+		_current_handled_voxel_object.connect(
+				"tree_exiting", _on_current_handled_voxel_object_tree_exiting)
+
+
+func _on_current_handled_voxel_object_tree_exiting() -> void:
+	_handle_state_change(
+			_current_main_screen, 
+			null, 
+			_current_handled_voxel_set)
+
+
 func _handle_state_change(
 	current_main_screen : String,
-	current_handled_voxel_object : Object,
-	current_handled_voxel_set : Object) -> void:
-	
+	current_handled_voxel_object : Node,
+	current_handled_voxel_set : VoxelSet) -> void:
 	if current_main_screen == "3D":
-		if (current_main_screen != _current_main_screen and is_instance_valid(current_handled_voxel_object))\
-				or current_handled_voxel_object != _current_handled_voxel_object:
-			_current_handled_voxel_object = current_handled_voxel_object
-			show_voxel_object_editor()
-		elif not is_instance_valid(current_handled_voxel_object):
+		if not is_instance_valid(current_handled_voxel_object):
 			hide_voxel_object_editor()
+		elif (current_main_screen != _current_main_screen and is_instance_valid(current_handled_voxel_object))\
+				or current_handled_voxel_object != _current_handled_voxel_object:
+			_set_current_handled_voxel_object(current_handled_voxel_object)
+			show_voxel_object_editor()
 	else:
 		hide_voxel_object_editor()
 	
 	_current_main_screen = current_main_screen
-	_current_handled_voxel_object = current_handled_voxel_object
+	_set_current_handled_voxel_object(current_handled_voxel_object)
 	_current_handled_voxel_set = current_handled_voxel_set
 
 
