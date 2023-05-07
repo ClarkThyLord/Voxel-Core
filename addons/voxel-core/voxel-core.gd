@@ -27,6 +27,8 @@ var _voxel_set_editor_button : Button
 
 # Built-In Virtual Methods
 func _enter_tree() -> void:
+	set_input_event_forwarding_always_enabled()
+	
 	main_screen_changed.connect(_on_main_screen_changed, CONNECT_PERSIST)
 	
 	print("Voxel-Core is active!")
@@ -57,7 +59,6 @@ func _handles(object : Object) -> bool:
 
 func _forward_3d_gui_input(camera : Camera3D, event : InputEvent) -> int:
 	if _voxel_object_editor.is_editing():
-		print(camera, event)
 		return EditorPlugin.AFTER_GUI_INPUT_STOP
 	else:
 		return EditorPlugin.AFTER_GUI_INPUT_PASS
@@ -153,8 +154,13 @@ func _on_main_screen_changed(current_main_screen : String) -> void:
 
 
 func _on_voxel_object_editor_started_editing() -> void:
-	print(1)
+	pass
+	get_editor_interface().get_selection().clear()
 
 
 func _on_voxel_object_editor_stopped_editing() -> void:
-	print(2)
+	if not is_instance_valid(_current_handled_voxel_object):
+		return
+#	get_editor_interface().get_selection().add_node(
+#			_current_handled_voxel_object)
+	get_editor_interface().edit_node(_current_handled_voxel_object)
