@@ -69,6 +69,9 @@ func _handles(object : Object) -> bool:
 
 
 func _forward_3d_gui_input(camera : Camera3D, event : InputEvent) -> int:
+	if not is_instance_valid(_voxel_object_editor):
+		return EditorPlugin.AFTER_GUI_INPUT_PASS
+	
 	if _voxel_object_editor.is_editing():
 		return EditorPlugin.AFTER_GUI_INPUT_STOP
 	else:
