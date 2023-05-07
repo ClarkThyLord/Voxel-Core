@@ -4,6 +4,12 @@ extends EditorPlugin
 
 
 # Constants
+const PLUGIN_NAME = "VOXEL-CORE"
+
+const PLUGIN_VERSION = "4.0.0"
+
+const PLUGIN_GITHUB = "https://github.com/ClarkThyLord/Voxel-Core"
+
 const _voxel_object_editor_scene := preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.tscn")
 
 
@@ -27,19 +33,24 @@ var _voxel_set_editor_button : Button
 
 # Built-In Virtual Methods
 func _enter_tree() -> void:
+	print("===")
 	set_input_event_forwarding_always_enabled()
 	
 	main_screen_changed.connect(_on_main_screen_changed, CONNECT_PERSIST)
 	
-	print("Voxel-Core is active!")
+	print("PLUGIN ACTIVE: %s v%s" % [PLUGIN_NAME, PLUGIN_VERSION])
+	print_rich("SOUCE: [url]%s[/url]" % PLUGIN_GITHUB)
+	print("===")
 
 
 func _exit_tree() -> void:
+	print("===")
 	hide_voxel_object_editor()
 	
 	main_screen_changed.disconnect(_on_main_screen_changed)
 	
-	print("Voxel-Core is inactive!")
+	print("PLUGIN INACTIVE: %s v%s" % [PLUGIN_NAME, PLUGIN_VERSION])
+	print("===")
 
 
 func _handles(object : Object) -> bool:
