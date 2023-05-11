@@ -419,6 +419,17 @@ func handle_voxel_object(voxel_object) -> void:
 	_editing_voxel_object = voxel_object
 
 
+func consume_forward_3d_gui_input(
+		camera : Camera3D, event : InputEvent) -> bool:
+	if not is_editing():
+		return false
+	
+	if event is InputEventMouse:
+		pass
+	
+	return false
+
+
 
 # Private Methods
 func _attach_grid() -> void:
