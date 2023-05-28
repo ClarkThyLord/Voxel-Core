@@ -166,6 +166,7 @@ alignment = 1
 layout_mode = 2
 
 [node name="NoVoxelSet" type="CenterContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -180,13 +181,14 @@ text = "VoxelObject has no VoxelSet attached.
 Load a VoxelSet or create a new VoxelSet."
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="NoVoxelSet/VBoxContainer2"]
+[node name="NewVoxelSet" type="Button" parent="NoVoxelSet/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "New VoxelSet"
 icon = ExtResource("6_m72rv")
 
 [node name="VoxelSetEditor" parent="." instance=ExtResource("6_ddj0d")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
@@ -194,3 +196,4 @@ layout_mode = 2
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/XMirrorModeButton" to="." method="_on_x_mirror_mode_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/YMirrorModeButton" to="." method="_on_y_mirror_mode_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/ZMirrorModeButton" to="." method="_on_z_mirror_mode_button_pressed"]
+[connection signal="pressed" from="NoVoxelSet/VBoxContainer2/NewVoxelSet" to="." method="_on_new_voxel_set_pressed"]

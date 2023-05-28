@@ -23,6 +23,10 @@ signal stopped_editing
 # Private Variables
 var _editing : bool = false
 
+var _editor_disabled : bool = false
+
+var _voxel_set_editor_visible : bool = false
+
 var _editing_voxel_object = null
 
 var _current_edit_mode_name : String = ""
@@ -93,6 +97,8 @@ func enable_editor() -> void:
 	%XMirrorModeButton.disabled = false
 	%YMirrorModeButton.disabled = false
 	%ZMirrorModeButton.disabled = false
+	
+	_editor_disabled = false
 
 
 func disable_editor() -> void:
@@ -107,6 +113,8 @@ func disable_editor() -> void:
 	%XMirrorModeButton.disabled = true
 	%YMirrorModeButton.disabled = true
 	%ZMirrorModeButton.disabled = true
+	
+	_editor_disabled = false
 
 
 func start_editing() -> void:
@@ -441,13 +449,31 @@ func disable_mirror_z() -> void:
 	_mirror_z = %ZMirrorModeButton.button_pressed
 
 
+func show_voxel_set_editor() -> void:
+	%NoVoxelSet.hide()
+	%VoxelSetEditor.show()
+	
+	_voxel_set_editor_visible = true
+
+
+func hide_voxel_set_editor() -> void:
+	%NoVoxelSet.show()
+	%VoxelSetEditor.hide()
+	
+	_voxel_set_editor_visible = false
+
+
 func handle_voxel_object(voxel_object) -> void:
 	release_editing_voxel_object()
 	
 	_editing_voxel_object = voxel_object
 	
-	if not is_instance_valid(_editing_voxel_object.voxel_set):
+	if is_instance_valid(_editing_voxel_object.voxel_set):
+		enable_editor()
+		show_voxel_set_editor()
+	else:
 		disable_editor()
+		hide_voxel_set_editor()
 	
 	_editing_voxel_object.voxel_set_changed.connect(
 		_on_editing_voxel_object_voxel_set_changed)
@@ -527,5 +553,12 @@ func _on_editing_check_box_toggled(button_pressed : bool) -> void:
 func _on_editing_voxel_object_voxel_set_changed() -> void:
 	if is_instance_valid(_editing_voxel_object.voxel_set):
 		enable_editor()
+		show_voxel_set_editor()
 	else:
 		disable_editor()
+		hide_voxel_set_editor()
+
+
+func _on_new_voxel_set_pressed():
+	if is_instance_valid(_editing_voxel_object):
+		_editing_voxel_object.voxel_set = VoxelSet.new()
