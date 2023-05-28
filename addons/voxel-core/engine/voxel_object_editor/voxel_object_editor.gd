@@ -81,6 +81,14 @@ func is_editing() -> bool:
 	return _editing
 
 
+func enable_editor() -> void:
+	pass
+
+
+func disable_editor() -> void:
+	pass
+
+
 func start_editing() -> void:
 	if _editing:
 		return
@@ -414,9 +422,24 @@ func disable_mirror_z() -> void:
 
 
 func handle_voxel_object(voxel_object) -> void:
-	stop_editing()
+	release_editing_voxel_object()
 	
 	_editing_voxel_object = voxel_object
+	
+	_editing_voxel_object.voxel_set_changed.connect(
+		_on_editing_voxel_object_voxel_set_changed)
+
+
+func release_editing_voxel_object() -> void:
+	if not is_instance_valid(_editing_voxel_object):
+		return
+	
+	stop_editing()
+	
+	if _editing_voxel_object.voxel_set_changed.is_connected(
+			_on_editing_voxel_object_voxel_set_changed):
+		_editing_voxel_object.voxel_set_changed.disconnect(
+			_on_editing_voxel_object_voxel_set_changed)
 
 
 func consume_forward_3d_gui_input(
@@ -476,3 +499,7 @@ func _on_editing_check_box_toggled(button_pressed : bool) -> void:
 		start_editing()
 	else:
 		stop_editing()
+
+
+func _on_editing_voxel_object_voxel_set_changed() -> void:
+	print(_editing_voxel_object.voxel_set)

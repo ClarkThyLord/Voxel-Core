@@ -18,6 +18,11 @@ extends Node
 
 
 
+# Signals
+signal voxel_set_changed
+
+
+
 # Exported Variables
 ## Algorithm used to generate voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].

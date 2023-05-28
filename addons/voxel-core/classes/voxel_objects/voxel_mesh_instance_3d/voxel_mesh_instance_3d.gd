@@ -49,6 +49,11 @@ extends MeshInstance3D
 
 
 
+# Signals
+signal voxel_set_changed
+
+
+
 # Exported Variables
 ## Algorithm used to generate voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
@@ -159,6 +164,9 @@ func get_voxel_set() -> VoxelSet:
 ## Sets [member voxel_set]; and, if in engine, calls on [method update].
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
+	
+	voxel_set_changed.emit()
+	
 	if Engine.is_editor_hint():
 		update()
 

@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://42unwks13w5f"]
+
+[ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="1_5ixgb"]
+[ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_set_editor/voxel_set_editor.gd" id="1_d5alk"]
+
+[node name="VoxelSetEditor" type="VBoxContainer"]
+custom_minimum_size = Vector2(0, 232)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 70.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_d5alk")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+texture = ExtResource("1_5ixgb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "VoxelSet"
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="AddMenuButton" type="MenuButton" parent="HBoxContainer"]
+layout_mode = 2
+text = "Add"
+
+[node name="RemoveMenuButton" type="MenuButton" parent="HBoxContainer"]
+layout_mode = 2
+text = "Remove"
+
+[node name="EditMenuButton" type="MenuButton" parent="HBoxContainer"]
+layout_mode = 2
+text = "Edit"
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VoxelSetViewer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VoxelSetViewer"]
+layout_mode = 2
+
+[node name="SearchLineEdit" type="LineEdit" parent="VoxelSetViewer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search voxels by id or name..."
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VoxelSetViewer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VoxelsContainer" type="HFlowContainer" parent="VoxelSetViewer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VoxelButton" type="Button" parent="VoxelSetViewer/ScrollContainer/VoxelsContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2

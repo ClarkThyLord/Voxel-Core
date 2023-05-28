@@ -1,11 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://ck5qw02fl5k2"]
+[gd_scene load_steps=10 format=3 uid="uid://ck5qw02fl5k2"]
 
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor.gd" id="1_mndkv"]
 [ext_resource type="Texture2D" uid="uid://42q0dxaqrd7i" path="res://addons/voxel-core/voxel-core.svg" id="1_ryfs5"]
 [ext_resource type="Texture2D" uid="uid://b1oy3ngqgq8qs" path="res://addons/voxel-core/engine/icons/mirror_x.svg" id="3_ysyga"]
 [ext_resource type="Texture2D" uid="uid://bprrno3u347pl" path="res://addons/voxel-core/engine/icons/mirror_y.svg" id="4_8drke"]
 [ext_resource type="Texture2D" uid="uid://dkkvkahp3qfgk" path="res://addons/voxel-core/engine/icons/mirror_z.svg" id="5_3wg01"]
-[ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="9_whlw1"]
+[ext_resource type="PackedScene" uid="uid://42unwks13w5f" path="res://addons/voxel-core/engine/voxel_set_editor/voxel_set_editor.tscn" id="6_ddj0d"]
+[ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="6_m72rv"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_3ynwk"]
 device = -1
@@ -54,18 +55,21 @@ shortcut = SubResource("Shortcut_v2imf")
 text = "Editing"
 
 [node name="EditMenuButton" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 text = "Edit"
 expand_icon = true
 
 [node name="EffectsMenuButton" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 text = "Effects"
 expand_icon = true
 
 [node name="SettingsMenuButton" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 text = "Settings"
@@ -161,55 +165,30 @@ alignment = 1
 [node name="VSeparator" type="VSeparator" parent="."]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="NoVoxelSet" type="CenterContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer2/HBoxContainer"]
-custom_minimum_size = Vector2(26, 26)
-layout_mode = 2
-texture = ExtResource("9_whlw1")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-text = "VoxelSet"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-
-[node name="AddMenuButton" type="MenuButton" parent="VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-text = "Add..."
-
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer2/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="NoVoxelSet"]
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2"]
+[node name="Label" type="Label" parent="NoVoxelSet/VBoxContainer2"]
 layout_mode = 2
+text = "VoxelObject has no VoxelSet attached.
+Load a VoxelSet or create a new VoxelSet."
+horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2/VBoxContainer"]
+[node name="Button" type="Button" parent="NoVoxelSet/VBoxContainer2"]
 layout_mode = 2
+size_flags_horizontal = 4
+text = "New VoxelSet"
+icon = ExtResource("6_m72rv")
 
-[node name="SearchLineEdit" type="LineEdit" parent="VBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="VoxelSetEditor" parent="." instance=ExtResource("6_ddj0d")]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Search voxels by id or name..."
-
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer2"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="VoxelsContainer" type="HFlowContainer" parent="VBoxContainer2/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/EditingCheckBox" to="." method="_on_editing_check_box_toggled"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/XMirrorModeButton" to="." method="_on_x_mirror_mode_button_pressed"]
