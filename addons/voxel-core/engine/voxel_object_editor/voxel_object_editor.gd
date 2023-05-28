@@ -82,11 +82,31 @@ func is_editing() -> bool:
 
 
 func enable_editor() -> void:
-	pass
+	%EditingCheckBox.disabled = false
+	
+	for edit_mode_name in _edit_modes:
+		enable_edit_mode(edit_mode_name)
+	
+	for edit_tool_name in _edit_tools:
+		enable_edit_tool(edit_tool_name)
+	
+	%XMirrorModeButton.disabled = false
+	%YMirrorModeButton.disabled = false
+	%ZMirrorModeButton.disabled = false
 
 
 func disable_editor() -> void:
-	pass
+	%EditingCheckBox.disabled = true
+	
+	for edit_mode_name in _edit_modes:
+		disable_edit_mode(edit_mode_name)
+	
+	for edit_tool_name in _edit_tools:
+		disable_edit_tool(edit_tool_name)
+	
+	%XMirrorModeButton.disabled = true
+	%YMirrorModeButton.disabled = true
+	%ZMirrorModeButton.disabled = true
 
 
 func start_editing() -> void:
@@ -426,6 +446,9 @@ func handle_voxel_object(voxel_object) -> void:
 	
 	_editing_voxel_object = voxel_object
 	
+	if not is_instance_valid(_editing_voxel_object.voxel_set):
+		disable_editor()
+	
 	_editing_voxel_object.voxel_set_changed.connect(
 		_on_editing_voxel_object_voxel_set_changed)
 
@@ -502,4 +525,7 @@ func _on_editing_check_box_toggled(button_pressed : bool) -> void:
 
 
 func _on_editing_voxel_object_voxel_set_changed() -> void:
-	print(_editing_voxel_object.voxel_set)
+	if is_instance_valid(_editing_voxel_object.voxel_set):
+		enable_editor()
+	else:
+		disable_editor()
