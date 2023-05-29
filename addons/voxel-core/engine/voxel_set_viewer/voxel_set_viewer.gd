@@ -144,13 +144,13 @@ func _get_voxel_button(voxel_id : int) -> Button:
 	return %VoxelsContainer.find_child(str(voxel_id), false, false)
 
 
-func _show_voxel_popup_menu(global_position : Vector2) -> void:
+func _show_voxel_popup_menu(position : Vector2) -> void:
 	%VoxelPopupMenu.clear()
 	%VoxelPopupMenu.add_item("Add", 0)
 	%VoxelPopupMenu.add_item("Remove", 1)
 	%VoxelPopupMenu.add_item("Duplicate", 2)
 	
-	%VoxelPopupMenu.position = get_screen_position() + get_local_mouse_position()
+	%VoxelPopupMenu.position = position
 	%VoxelPopupMenu.reset_size()
 	%VoxelPopupMenu.popup()
 
@@ -182,6 +182,7 @@ func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int) -> void:
 			
 			accept_event()
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			_show_voxel_popup_menu(event.global_position)
+			_show_voxel_popup_menu(
+					get_screen_position() + get_local_mouse_position())
 			
 			accept_event()
