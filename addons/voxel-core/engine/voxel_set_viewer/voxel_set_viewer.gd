@@ -44,28 +44,28 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 		update()
 
 
-func is_selected(voxel_id : int) -> bool:
+func is_voxel_selected(voxel_id : int) -> bool:
 	return voxel_id in _selected_voxel_ids
 
 
-func select_all() -> void:
+func select_all_voxels() -> void:
 	if not is_instance_valid(voxel_set):
 		return
 	
 	for voxel_id in voxel_set.get_voxel_ids():
-		select(voxel_id)
+		select_voxel(voxel_id)
 
 
-func unselect_all() -> void:
+func unselect_all_voxels() -> void:
 	if not is_instance_valid(voxel_set):
 		return
 	
 	for voxel_id in voxel_set.get_voxel_ids():
-		unselect(voxel_id)
+		unselect_voxel(voxel_id)
 
 
-func select(voxel_id : int) -> void:
-	if is_selected(voxel_id):
+func select_voxel(voxel_id : int) -> void:
+	if is_voxel_selected(voxel_id):
 		return
 	
 	var voxel_button : Button = _get_voxel_button(voxel_id)
@@ -74,8 +74,8 @@ func select(voxel_id : int) -> void:
 	_selected_voxel_ids.append(voxel_id)
 
 
-func unselect(voxel_id : int) -> void:
-	if not is_selected(voxel_id):
+func unselect_voxel(voxel_id : int) -> void:
+	if not is_voxel_selected(voxel_id):
 		return
 	
 	var voxel_button : Button = _get_voxel_button(voxel_id)
@@ -84,7 +84,7 @@ func unselect(voxel_id : int) -> void:
 	_selected_voxel_ids.erase(voxel_id)
 
 
-func remove(voxel_id : int) -> void:
+func remove_voxel(voxel_id : int) -> void:
 	voxel_set.remove_voxel(voxel_id)
 
 
@@ -118,10 +118,16 @@ func _get_voxel_button(voxel_id : int) -> Button:
 func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int, button : Button) -> void:
 	if event is InputEventMouseButton and not event.is_pressed():
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			if is_selected(voxel_id):
-				unselect(voxel_id)
+			var selected : bool = is_voxel_selected(voxel_id)
+			
+			if not Input.is_key_pressed(KEY_CTRL):
+				unselect_all_voxels()
+			
+			if selected:
+				unselect_voxel(voxel_id)
 			else:
-				select(voxel_id)
+				select_voxel(voxel_id)
+			
 			accept_event()
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			accept_event()
