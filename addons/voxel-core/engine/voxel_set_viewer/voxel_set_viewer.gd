@@ -25,7 +25,9 @@ var voxel_set : VoxelSet = null :
 
 
 # Private Variables
-var _hovered_voxel_id : int = -1
+var _hovered_voxel : int = -1
+
+var _last_hovered_voxel : int = -1
 
 var _selected_voxels : Array[int] = []
 
@@ -189,8 +191,18 @@ func _show_voxel_popup_menu(position : Vector2) -> void:
 	%VoxelPopupMenu.clear()
 	
 	%VoxelPopupMenu.add_item("Add", 0)
-	%VoxelPopupMenu.add_item("Remove", 1)
-	%VoxelPopupMenu.add_item("Duplicate", 2)
+	
+	if _hovered_voxel > -1:
+		%VoxelPopupMenu.add_separator()
+		
+		%VoxelPopupMenu.add_item("Remove Hovered", 1)
+		%VoxelPopupMenu.add_item("Duplicate Hovered", 2)
+	
+	if _selected_voxels.size() > 0:
+		%VoxelPopupMenu.add_separator()
+		
+		%VoxelPopupMenu.add_item("Remove Selected", 3)
+		%VoxelPopupMenu.add_item("Duplicate Selected", 4)
 	
 	if %VoxelPopupMenu.item_count == 0:
 		return
@@ -210,17 +222,13 @@ func _on_voxels_container_gui_input(event : InputEvent) -> void:
 
 
 func _on_voxel_button_mouse_entered(voxel_id : int) -> void:
-	print('enter ', voxel_id)
-	
-	_hovered_voxel_id = voxel_id
+	_hovered_voxel = voxel_id
 
 
 func _on_voxel_button_mouse_exited() -> void:
-	print('exit')
 	if %VoxelPopupMenu.visible:
 		return
-	print("exited")
-	_hovered_voxel_id = -1
+	_hovered_voxel = -1
 
 
 func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int) -> void:
@@ -240,16 +248,21 @@ func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int) -> void:
 
 
 func _on_voxel_popup_menu_id_pressed(id : int) -> void:
-	print(_hovered_voxel_id)
 	match id:
 		0: # Add
 			add_voxel()
 		1: # Remove
-			remove_voxel(_hovered_voxel_id)
+			remove_voxel(_last_hovered_voxel)
 		2: # Duplicate
-			duplicate_voxel(_hovered_voxel_id)
+			duplicate_voxel(_last_hovered_voxel)
+		3: # Remove Selected
+			for voxel_id in _selected_voxels:
+				remove_voxel(voxel_id)
+		4: # Duplicate Selected
+			for voxel_id in _selected_voxels:
+				duplicate_voxel(voxel_id)
 
 
 func _on_voxel_popup_menu_popup_hide():
-	print('hide ', _hovered_voxel_id)
-	_hovered_voxel_id = -1
+	_last_hovered_voxel = _hovered_voxel
+	_hovered_voxel = -1
