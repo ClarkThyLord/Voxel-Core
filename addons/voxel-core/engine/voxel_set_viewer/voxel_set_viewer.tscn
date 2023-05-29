@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://xic23wnwpp1w"]
+
+[ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_set_viewer/voxel_set_viewer.gd" id="1_jrdou"]
+
+[node name="VoxelSetViewer" type="VBoxContainer"]
+offset_right = 256.0
+offset_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_jrdou")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="SearchLineEdit" type="LineEdit" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search voxels by id or name..."
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VoxelsContainer" type="HFlowContainer" parent="ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VoxelButton" type="Button" parent="ScrollContainer/VoxelsContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2

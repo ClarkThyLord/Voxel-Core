@@ -157,7 +157,7 @@ func set_default_material(new_default_material) -> void:
 
 
 ## Returns [member indexed_materials].
-func get_indexed_materials() -> Array[BaseMaterial3D]:
+func get_indexed_materials() -> Array:
 	return indexed_materials
 
 
@@ -211,7 +211,7 @@ func has_voxel_id(voxel_id : int) -> bool:
 
 
 ## Returns array populated by all used voxel ids.
-func get_voxel_ids() -> Array[int]:
+func get_voxel_ids() -> Array:
 	return _voxels.keys()
 
 

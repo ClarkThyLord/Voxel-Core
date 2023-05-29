@@ -182,10 +182,12 @@ Load a VoxelSet or create a new VoxelSet."
 horizontal_alignment = 1
 
 [node name="NewVoxelSet" type="Button" parent="NoVoxelSet/VBoxContainer2"]
+custom_minimum_size = Vector2(164, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "New VoxelSet"
 icon = ExtResource("6_m72rv")
+expand_icon = true
 
 [node name="VoxelSetEditor" parent="." instance=ExtResource("6_ddj0d")]
 unique_name_in_owner = true

@@ -5,6 +5,9 @@ type="CompressedTexture2D"
 uid="uid://wc186ldhiu0a"
 path="res://.godot/imported/voxel_surface_tool.svg-d247bdbfa03fb12d95d5d229e52b7126.ctex"
 metadata={
+"editor_dark_theme": true,
+"editor_scale": 1.0,
+"has_editor_variant": true,
 "vram_texture": false
 }
 
@@ -16,9 +19,9 @@ dest_files=["res://.godot/imported/voxel_surface_tool.svg-d247bdbfa03fb12d95d5d2
 [params]
 
 compress/mode=0
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
@@ -30,8 +33,8 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
-detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
+process/size_limit=16
+detect_3d/compress_to=0
+svg/scale=3.0
+editor/scale_with_editor_scale=true
+editor/convert_colors_with_editor_theme=true

@@ -1,2 +1,72 @@
 @tool
 extends VBoxContainer
+## VoxelSet Editor Class
+
+
+# Signals
+signal voxel_set_changed
+
+
+
+# Exported Variables
+@export
+var voxel_set : VoxelSet = null :
+	get = get_voxel_set,
+	set = set_voxel_set
+
+
+# Private Variables
+var _editor_disabled : bool = false
+
+
+
+# Public Methods
+## Returns [member voxel_set].
+func get_voxel_set() -> VoxelSet:
+	return voxel_set
+
+
+## Sets [member voxel_set]; and, if in engine, calls on [method update].
+func set_voxel_set(new_voxel_set : VoxelSet) -> void:
+	voxel_set = new_voxel_set
+	
+	if is_instance_valid(%VoxelSetViewer):
+		%VoxelSetViewer.set_voxel_set(voxel_set)
+	
+	voxel_set_changed.emit()
+	
+	if Engine.is_editor_hint():
+		update()
+
+
+func enable_editor() -> void:
+	%AddVoxelButton.disabled = false
+	%RemoveVoxelButton.disabled = false
+	%EditMenuButton.disabled = false
+	
+	_editor_disabled = false
+
+
+func disable_editor() -> void:
+	%AddVoxelButton.disabled = true
+	%RemoveVoxelButton.disabled = true
+	%EditMenuButton.disabled = true
+	
+	_editor_disabled = true
+
+
+func update() -> void:
+	if not is_instance_valid(voxel_set):
+		disable_editor()
+		return
+	enable_editor()
+
+
+
+# Private Methods
+func _on_add_voxel_button_pressed():
+	if not is_instance_valid(voxel_set):
+		return
+	
+	voxel_set.add_voxel(Voxel.new())
+	print(1)

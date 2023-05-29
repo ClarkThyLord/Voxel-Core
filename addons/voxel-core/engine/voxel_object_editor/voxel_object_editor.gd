@@ -474,6 +474,7 @@ func handle_voxel_object(voxel_object) -> void:
 	else:
 		disable_editor()
 		hide_voxel_set_editor()
+	%VoxelSetEditor.set_voxel_set(_editing_voxel_object.voxel_set)
 	
 	_editing_voxel_object.voxel_set_changed.connect(
 		_on_editing_voxel_object_voxel_set_changed)
@@ -557,6 +558,8 @@ func _on_editing_voxel_object_voxel_set_changed() -> void:
 	else:
 		disable_editor()
 		hide_voxel_set_editor()
+	
+	%VoxelSetEditor.set_voxel_set(_editing_voxel_object.voxel_set)
 
 
 func _on_new_voxel_set_pressed():

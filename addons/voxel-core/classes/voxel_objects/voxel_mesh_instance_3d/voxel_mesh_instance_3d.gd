@@ -193,12 +193,12 @@ func get_voxels() -> Dictionary:
 
 
 ## Returns a list of used voxel positions.
-func get_voxel_positions() -> Array[Vector3i]:
+func get_voxel_positions() -> Array:
 	return _voxels.keys()
 
 
 ## Returns a list of used voxel ids.
-func get_voxel_ids() -> Array[int]:
+func get_voxel_ids() -> Array:
 	return _voxels.values()
 
 
@@ -247,7 +247,7 @@ func get_voxel_count() -> int:
 ## Updates voxel mesh with currently used voxels.
 func update() -> void:
 	if not is_instance_valid(voxel_set):
-		push_error("VoxelMeshInstance3D has no VoxelSet assigned!")
+		push_warning("Trying to update VoxelMeshInstance3D with no VoxelSet attached!")
 		return
 	
 	var voxel_surface_tool : VoxelSurfaceTool = VoxelSurfaceTool.new()
