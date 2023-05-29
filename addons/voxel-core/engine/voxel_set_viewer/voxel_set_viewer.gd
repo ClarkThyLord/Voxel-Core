@@ -164,6 +164,9 @@ func update() -> void:
 	if not is_instance_valid(voxel_set):
 		return
 	
+	var selected_voxels : Array[int] = _selected_voxels.duplicate()
+	_selected_voxels.clear()
+	
 	for voxel_id in voxel_set.get_voxel_ids():
 		var voxel_button : Button = Button.new()
 		
@@ -179,6 +182,10 @@ func update() -> void:
 				.bind(voxel_id))
 		
 		%VoxelsContainer.add_child(voxel_button)
+		
+		if voxel_id in selected_voxels:
+			voxel_button.set_pressed_no_signal(true)
+			_selected_voxels.append(voxel_id)
 
 
 
