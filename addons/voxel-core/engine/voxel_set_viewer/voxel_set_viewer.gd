@@ -252,6 +252,14 @@ func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int) -> void:
 					get_screen_position() + get_local_mouse_position())
 			
 			accept_event()
+	elif event is InputEventKey and not event.is_pressed():
+		if event.keycode in [ KEY_ENTER, KEY_SPACE ]:
+			if is_voxel_selected(voxel_id):
+				unselect_voxel(voxel_id)
+			else:
+				select_voxel(voxel_id)
+			
+			accept_event()
 
 
 func _on_voxel_popup_menu_id_pressed(id : int) -> void:
