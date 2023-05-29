@@ -10,8 +10,12 @@ signal voxel_set_changed
 
 
 # Exported Variables
+@export_range(0, 10, 1, "or_greater")
+var selection_limit : int = 1 :
+	set = set_selection_limit
+
 @export
-var can_select_multiple : bool = true
+var cyclic_selection : bool = true
 
 @export
 var voxel_set : VoxelSet = null :
@@ -23,11 +27,18 @@ var voxel_set : VoxelSet = null :
 # Private Variables
 var _hovered_voxel_id : int = -1
 
-var _selected_voxel_ids : Array[int] = []
+var _selected_voxels : Array[int] = []
 
 
 
 # Public Methods
+func set_selection_limit(new_select_limit : int) -> void:
+	selection_limit = new_select_limit
+	
+	while _selected_voxels.size() > selection_limit:
+		unselect_voxel(_selected_voxels.pop_back())
+
+
 ## Returns [member voxel_set].
 func get_voxel_set() -> VoxelSet:
 	return voxel_set
@@ -51,11 +62,17 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 
 
 func is_voxel_selected(voxel_id : int) -> bool:
-	return voxel_id in _selected_voxel_ids
+	return voxel_id in _selected_voxels
+
+
+func get_first_selected_voxel() -> int:
+	if _selected_voxels.size() == 0:
+		return -1
+	return _selected_voxels[0]
 
 
 func get_selected_voxels() -> Array[int]:
-	return _selected_voxel_ids
+	return _selected_voxels
 
 
 func select_all_voxels() -> void:
@@ -75,23 +92,39 @@ func unselect_all_voxels() -> void:
 
 
 func select_voxel(voxel_id : int) -> void:
-	if is_voxel_selected(voxel_id):
+	if selection_limit == 0:
 		return
+	elif not is_instance_valid(voxel_set):
+		return
+	elif not voxel_set.has_voxel_id(voxel_id):
+		return
+	elif is_voxel_selected(voxel_id):
+		return
+	
+	if _selected_voxels.size() == selection_limit:
+		if cyclic_selection:
+			unselect_voxel(get_first_selected_voxel())
+		else:
+			return
 	
 	var voxel_button : Button = _get_voxel_button(voxel_id)
 	voxel_button.button_pressed = true
 	
-	_selected_voxel_ids.append(voxel_id)
+	_selected_voxels.append(voxel_id)
 
 
 func unselect_voxel(voxel_id : int) -> void:
-	if not is_voxel_selected(voxel_id):
+	if not is_instance_valid(voxel_set):
+		return
+	elif not voxel_set.has_voxel_id(voxel_id):
+		return
+	elif not is_voxel_selected(voxel_id):
 		return
 	
 	var voxel_button : Button = _get_voxel_button(voxel_id)
 	voxel_button.button_pressed = false
 	
-	_selected_voxel_ids.erase(voxel_id)
+	_selected_voxels.erase(voxel_id)
 
 
 func add_voxel() -> void:
@@ -104,12 +137,16 @@ func add_voxel() -> void:
 func remove_voxel(voxel_id : int) -> void:
 	if not is_instance_valid(voxel_set):
 		return
+	elif not voxel_set.has_voxel_id(voxel_id):
+		return
 	
 	voxel_set.remove_voxel(voxel_id)
 
 
 func duplicate_voxel(voxel_id : int) -> void:
 	if not is_instance_valid(voxel_set):
+		return
+	elif not voxel_set.has_voxel_id(voxel_id):
 		return
 	
 	if voxel_set.has_voxel_id(voxel_id):
@@ -132,6 +169,10 @@ func update() -> void:
 		voxel_button.custom_minimum_size = Vector2(32, 32)
 		voxel_button.toggle_mode = true
 		
+		voxel_button.mouse_entered.connect(
+				Callable(_on_voxel_button_mouse_entered).bind(voxel_id))
+		voxel_button.mouse_exited.connect(
+				Callable(_on_voxel_button_mouse_exited))
 		voxel_button.gui_input.connect(Callable(_on_voxel_button_gui_input)
 				.bind(voxel_id))
 		
@@ -146,36 +187,46 @@ func _get_voxel_button(voxel_id : int) -> Button:
 
 func _show_voxel_popup_menu(position : Vector2) -> void:
 	%VoxelPopupMenu.clear()
+	
 	%VoxelPopupMenu.add_item("Add", 0)
 	%VoxelPopupMenu.add_item("Remove", 1)
 	%VoxelPopupMenu.add_item("Duplicate", 2)
+	
+	if %VoxelPopupMenu.item_count == 0:
+		return
 	
 	%VoxelPopupMenu.position = position
 	%VoxelPopupMenu.reset_size()
 	%VoxelPopupMenu.popup()
 
 
-func _on_voxel_popup_menu_id_pressed(id : int) -> void:
-	match id:
-		0: # Add
-			add_voxel()
-		1: # Remove
-			remove_voxel(_hovered_voxel_id)
-		2: # Duplicate
-			duplicate_voxel(_hovered_voxel_id)
+func _on_voxels_container_gui_input(event : InputEvent) -> void:
+	if event is InputEventMouseButton and not event.is_pressed():
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			_show_voxel_popup_menu(
+					get_screen_position() + get_local_mouse_position())
+			
+			accept_event()
+
+
+func _on_voxel_button_mouse_entered(voxel_id : int) -> void:
+	print('enter ', voxel_id)
+	
+	_hovered_voxel_id = voxel_id
+
+
+func _on_voxel_button_mouse_exited() -> void:
+	print('exit')
+	if %VoxelPopupMenu.visible:
+		return
+	print("exited")
+	_hovered_voxel_id = -1
 
 
 func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int) -> void:
-	_hovered_voxel_id = voxel_id
-	
 	if event is InputEventMouseButton and not event.is_pressed():
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			var selected : bool = is_voxel_selected(voxel_id)
-			
-			if not can_select_multiple or not Input.is_key_pressed(KEY_CTRL):
-				unselect_all_voxels()
-			
-			if selected:
+			if is_voxel_selected(voxel_id):
 				unselect_voxel(voxel_id)
 			else:
 				select_voxel(voxel_id)
@@ -186,3 +237,19 @@ func _on_voxel_button_gui_input(event : InputEvent, voxel_id : int) -> void:
 					get_screen_position() + get_local_mouse_position())
 			
 			accept_event()
+
+
+func _on_voxel_popup_menu_id_pressed(id : int) -> void:
+	print(_hovered_voxel_id)
+	match id:
+		0: # Add
+			add_voxel()
+		1: # Remove
+			remove_voxel(_hovered_voxel_id)
+		2: # Duplicate
+			duplicate_voxel(_hovered_voxel_id)
+
+
+func _on_voxel_popup_menu_popup_hide():
+	print('hide ', _hovered_voxel_id)
+	_hovered_voxel_id = -1

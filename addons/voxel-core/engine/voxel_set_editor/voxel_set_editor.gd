@@ -3,16 +3,26 @@ extends VBoxContainer
 ## VoxelSet Editor Class
 
 
+
 # Signals
 signal voxel_set_changed
 
 
 
 # Exported Variables
+@export_range(0, 10, 1, "or_greater")
+var selection_limit : int = 1 :
+	set = set_selection_limit
+
+@export
+var cyclic_selection : bool = true :
+	set = set_cyclic_selection
+
 @export
 var voxel_set : VoxelSet = null :
 	get = get_voxel_set,
 	set = set_voxel_set
+
 
 
 # Private Variables
@@ -21,6 +31,20 @@ var _editor_disabled : bool = false
 
 
 # Public Methods
+func set_selection_limit(new_selection_limit : int) -> void:
+	selection_limit = new_selection_limit
+	
+	if is_instance_valid(%VoxelSetViewer):
+		%VoxelSetViewer.selection_limit = selection_limit
+
+
+func set_cyclic_selection(new_cyclic_selection : bool) -> void:
+	cyclic_selection = new_cyclic_selection
+	
+	if is_instance_valid(%VoxelSetViewer):
+		%VoxelSetViewer.cyclic_selection = cyclic_selection
+
+
 ## Returns [member voxel_set].
 func get_voxel_set() -> VoxelSet:
 	return voxel_set
@@ -69,4 +93,3 @@ func _on_add_voxel_button_pressed():
 		return
 	
 	voxel_set.add_voxel(Voxel.new())
-	print(1)
