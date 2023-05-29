@@ -377,6 +377,7 @@ func set_face_texture_uv(voxel_face : Vector3i, new_texture_uv : Vector2) -> voi
 ## Duplicates the voxel, returning a new voxel.
 func duplicate() -> Voxel:
 	var voxel : Voxel = Voxel.new()
+	
 	voxel.name = name
 	voxel.material_index = material_index
 	
@@ -395,4 +396,5 @@ func duplicate() -> Voxel:
 	voxel.texture_uv_bottom = texture_uv_bottom
 	voxel.texture_uv_front = texture_uv_front
 	voxel.texture_uv_back = texture_uv_back
+	
 	return voxel

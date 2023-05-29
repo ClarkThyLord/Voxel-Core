@@ -28,5 +28,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="ScrollContainer/VoxelsContainer"]
-layout_mode = 2
+[node name="VoxelPopupMenu" type="PopupMenu" parent="."]
+unique_name_in_owner = true
+
+[connection signal="id_pressed" from="VoxelPopupMenu" to="." method="_on_voxel_popup_menu_id_pressed"]
