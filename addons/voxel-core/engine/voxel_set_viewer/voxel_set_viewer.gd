@@ -161,9 +161,7 @@ func duplicate_voxel(voxel_id : int) -> void:
 	elif not voxel_set.has_voxel_id(voxel_id):
 		return
 	
-	if voxel_set.has_voxel_id(voxel_id):
-		var voxel : Voxel = voxel_set.get_voxel(voxel_id)
-		voxel_set.add_voxel(voxel.duplicate())
+	voxel_set.duplicate_voxel(voxel_id)
 
 
 func update() -> void:

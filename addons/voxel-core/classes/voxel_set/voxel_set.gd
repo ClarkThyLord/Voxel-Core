@@ -296,6 +296,14 @@ func remove_voxels() -> void:
 	emit_changed()
 
 
+func duplicate_voxel(voxel_id : int) -> int:
+	if not _voxels.has(voxel_id):
+		push_error("No voxel with voxel_id `%s` in VoxelSet" % voxel_id)
+		return -1
+	var voxel : Voxel = get_voxel(voxel_id).duplicate()
+	return add_voxel(voxel)
+
+
 ## Returns [code]voxel_id[/code] of voxel in VoxelSet matching given 
 ## [code]voxel_name[/code], returns [code]-1[/code] if no voxel matching name
 ## is found.

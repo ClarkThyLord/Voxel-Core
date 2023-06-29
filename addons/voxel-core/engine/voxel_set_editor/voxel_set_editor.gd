@@ -104,8 +104,7 @@ func _on_duplicate_voxel_button_pressed():
 		return
 	
 	for voxel_id in %VoxelSetViewer.get_selected_voxel_ids():
-		var voxel : Voxel = voxel_set.get_voxel(voxel_id).duplicate()
-		voxel_set.add_voxel(voxel)
+		voxel_set.duplicate_voxel(voxel_id)
 
 
 func _on_voxel_set_viewer_selected_voxels_changed():
