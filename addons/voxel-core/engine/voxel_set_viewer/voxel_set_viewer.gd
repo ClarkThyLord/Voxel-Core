@@ -5,6 +5,8 @@ extends VBoxContainer
 
 
 # Signals
+signal selected_voxels_changed
+
 signal voxel_set_changed
 
 
@@ -77,6 +79,10 @@ func get_selected_voxel_ids() -> Array[int]:
 	return _selected_voxel_ids
 
 
+func get_selected_voxel_ids_count() -> int:
+	return len(_selected_voxel_ids)
+
+
 func select_all_voxel_ids() -> void:
 	if not is_instance_valid(voxel_set):
 		return
@@ -113,6 +119,8 @@ func select_voxel_id(voxel_id : int) -> void:
 	voxel_button.button_pressed = true
 	
 	_selected_voxel_ids.append(voxel_id)
+	
+	selected_voxels_changed.emit()
 
 
 func unselect_voxel_id(voxel_id : int) -> void:
@@ -127,6 +135,8 @@ func unselect_voxel_id(voxel_id : int) -> void:
 	voxel_button.button_pressed = false
 	
 	_selected_voxel_ids.erase(voxel_id)
+	
+	selected_voxels_changed.emit()
 
 
 func add_voxel() -> void:
@@ -186,6 +196,8 @@ func update() -> void:
 		if voxel_id in selected_voxel_ids:
 			voxel_button.set_pressed_no_signal(true)
 			_selected_voxel_ids.append(voxel_id)
+	
+	selected_voxels_changed.emit()
 
 
 

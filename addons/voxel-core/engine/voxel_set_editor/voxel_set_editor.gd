@@ -65,16 +65,12 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 
 func enable_editor() -> void:
 	%AddVoxelButton.disabled = false
-	%RemoveVoxelButton.disabled = false
-	%EditMenuButton.disabled = false
 	
 	_editor_disabled = false
 
 
 func disable_editor() -> void:
 	%AddVoxelButton.disabled = true
-	%RemoveVoxelButton.disabled = true
-	%EditMenuButton.disabled = true
 	
 	_editor_disabled = true
 
@@ -93,3 +89,24 @@ func _on_add_voxel_button_pressed():
 		return
 	
 	voxel_set.add_voxel(Voxel.new())
+
+
+func _on_remove_voxel_button_pressed():
+	if not is_instance_valid(voxel_set):
+		return
+	
+	for voxel_id in %VoxelSetViewer.get_selected_voxel_ids():
+		voxel_set.remove_voxel(voxel_id)
+
+
+func _on_duplicate_voxel_button_pressed():
+	if not is_instance_valid(voxel_set):
+		return
+	
+	for voxel_id in %VoxelSetViewer.get_selected_voxel_ids():
+		var voxel : Voxel = voxel_set.get_voxel(voxel_id).duplicate()
+		voxel_set.add_voxel(voxel)
+
+
+func _on_voxel_set_viewer_selected_voxels_changed():
+	%VoxelSelected.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
