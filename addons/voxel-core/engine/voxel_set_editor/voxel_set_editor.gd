@@ -5,6 +5,8 @@ extends VBoxContainer
 
 
 # Signals
+signal selection_changed
+
 signal voxel_set_changed
 
 
@@ -107,5 +109,7 @@ func _on_duplicate_voxel_button_pressed():
 		voxel_set.duplicate_voxel(voxel_id)
 
 
-func _on_voxel_set_viewer_selected_voxels_changed():
+func _on_voxel_set_viewer_selection_changed():
 	%VoxelSelected.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
+	
+	selection_changed.emit()

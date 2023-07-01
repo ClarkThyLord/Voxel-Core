@@ -65,4 +65,4 @@ layout_mode = 2
 [connection signal="pressed" from="HBoxContainer/AddVoxelButton" to="." method="_on_add_voxel_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VoxelSelected/RemoveVoxelButton" to="." method="_on_remove_voxel_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VoxelSelected/DuplicateVoxelButton" to="." method="_on_duplicate_voxel_button_pressed"]
-[connection signal="selected_voxels_changed" from="VoxelSetViewer" to="." method="_on_voxel_set_viewer_selected_voxels_changed"]
+[connection signal="selection_changed" from="VoxelSetViewer" to="." method="_on_voxel_set_viewer_selection_changed"]
