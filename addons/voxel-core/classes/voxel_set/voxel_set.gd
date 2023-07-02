@@ -363,3 +363,16 @@ func format_materials() -> void:
 	format_material(default_material)
 	for indexed_material in indexed_materials:
 		format_material(indexed_material)
+
+
+func get_voxel_preview(voxel_id : int) -> Image:
+	var voxel_preview : Image = Image.create(
+			32, 32, true, Image.FORMAT_RGBA8)
+	
+	voxel_preview.fill(Color.WHITE)
+	
+	return voxel_preview
+
+
+func get_voxel_face_preview(voxel_face : Vector3i) -> Image:
+	return null

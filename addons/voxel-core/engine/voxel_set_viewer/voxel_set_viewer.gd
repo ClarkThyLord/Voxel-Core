@@ -182,6 +182,9 @@ func update() -> void:
 		voxel_button.custom_minimum_size = Vector2(32, 32)
 		voxel_button.toggle_mode = true
 		
+		var voxel_preview : Image = voxel_set.get_voxel_preview(voxel_id)
+		voxel_button.icon = ImageTexture.create_from_image(voxel_preview)
+		
 		voxel_button.mouse_entered.connect(
 				Callable(_on_voxel_id_button_mouse_entered).bind(voxel_id))
 		voxel_button.mouse_exited.connect(
