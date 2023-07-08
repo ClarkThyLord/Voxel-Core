@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://cr6qbn4h3qaed"]
+
+[ext_resource type="PackedScene" uid="uid://d11bdvjcyfcvm" path="res://addons/voxel-core/engine/voxel_viewer/voxel_viewer.tscn" id="1_40jvm"]
+
+[node name="VoxelEditor" type="VBoxContainer"]
+custom_minimum_size = Vector2(256, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="IDLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "ID:
+"
+
+[node name="VoxelIDLineEdit" type="LineEdit" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="NameLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Name:
+"
+
+[node name="VoxelNameLineEdit" type="LineEdit" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VoxelViewer" parent="." instance=ExtResource("1_40jvm")]
+unique_name_in_owner = true
+layout_mode = 2

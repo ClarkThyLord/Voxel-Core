@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://42unwks13w5f"]
+[gd_scene load_steps=5 format=3 uid="uid://42unwks13w5f"]
 
 [ext_resource type="Texture2D" uid="uid://xlyg0voolpap" path="res://addons/voxel-core/classes/voxel_set/voxel_set.svg" id="1_5ixgb"]
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_set_editor/voxel_set_editor.gd" id="1_d5alk"]
 [ext_resource type="PackedScene" uid="uid://xic23wnwpp1w" path="res://addons/voxel-core/engine/voxel_set_viewer/voxel_set_viewer.tscn" id="3_lqev2"]
+[ext_resource type="PackedScene" uid="uid://cr6qbn4h3qaed" path="res://addons/voxel-core/engine/voxel_editor/voxel_editor.tscn" id="4_mchsf"]
 
 [node name="VoxelSetEditor" type="VBoxContainer"]
 custom_minimum_size = Vector2(0, 232)
@@ -58,11 +59,25 @@ flat = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VoxelSetViewer" parent="." instance=ExtResource("3_lqev2")]
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VoxelSetViewer" parent="HBoxContainer2" instance=ExtResource("3_lqev2")]
 unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VoxelEditorHContainer" type="HBoxContainer" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer2/VoxelEditorHContainer"]
+layout_mode = 2
+
+[node name="VoxelEditor" parent="HBoxContainer2/VoxelEditorHContainer" instance=ExtResource("4_mchsf")]
 layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/AddVoxelButton" to="." method="_on_add_voxel_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VoxelSelected/RemoveVoxelButton" to="." method="_on_remove_voxel_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VoxelSelected/DuplicateVoxelButton" to="." method="_on_duplicate_voxel_button_pressed"]
-[connection signal="selection_changed" from="VoxelSetViewer" to="." method="_on_voxel_set_viewer_selection_changed"]
+[connection signal="selection_changed" from="HBoxContainer2/VoxelSetViewer" to="." method="_on_voxel_set_viewer_selection_changed"]
