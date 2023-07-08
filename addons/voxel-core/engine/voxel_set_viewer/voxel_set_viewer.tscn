@@ -3,8 +3,11 @@
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_set_viewer/voxel_set_viewer.gd" id="1_jrdou"]
 
 [node name="VoxelSetViewer" type="VBoxContainer"]
-offset_right = 256.0
-offset_bottom = 128.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_jrdou")
@@ -13,6 +16,7 @@ script = ExtResource("1_jrdou")
 layout_mode = 2
 
 [node name="SearchLineEdit" type="LineEdit" parent="HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Search voxels by id or name..."
@@ -31,6 +35,7 @@ size_flags_vertical = 3
 [node name="ContextMenuPopup" type="PopupMenu" parent="."]
 unique_name_in_owner = true
 
+[connection signal="text_changed" from="HBoxContainer/SearchLineEdit" to="." method="_on_search_line_edit_text_changed"]
 [connection signal="gui_input" from="ScrollContainer/VoxelsContainer" to="." method="_on_voxels_container_gui_input"]
 [connection signal="id_pressed" from="ContextMenuPopup" to="." method="_on_context_menu_popup_id_pressed"]
 [connection signal="popup_hide" from="ContextMenuPopup" to="." method="_on_context_menu_popup_hide"]

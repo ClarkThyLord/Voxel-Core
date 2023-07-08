@@ -110,6 +110,6 @@ func _on_duplicate_voxel_button_pressed():
 
 
 func _on_voxel_set_viewer_selection_changed():
-	%VoxelSelected.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
-	
+	%SelectedVoxelsOptions.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
+	%VoxelEditorHBoxContainer.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
 	selection_changed.emit()

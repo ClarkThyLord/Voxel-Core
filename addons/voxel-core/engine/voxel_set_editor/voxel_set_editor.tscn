@@ -38,18 +38,18 @@ text = "Add
 "
 flat = true
 
-[node name="VoxelSelected" type="HBoxContainer" parent="HBoxContainer"]
+[node name="SelectedVoxelsOptions" type="HBoxContainer" parent="HBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="RemoveVoxelButton" type="Button" parent="HBoxContainer/VoxelSelected"]
+[node name="RemoveVoxelButton" type="Button" parent="HBoxContainer/SelectedVoxelsOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Remove Selected"
 flat = true
 
-[node name="DuplicateVoxelButton" type="Button" parent="HBoxContainer/VoxelSelected"]
+[node name="DuplicateVoxelButton" type="Button" parent="HBoxContainer/SelectedVoxelsOptions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Duplicate Selected"
@@ -67,17 +67,18 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VoxelEditorHContainer" type="HBoxContainer" parent="HBoxContainer2"]
+[node name="VoxelEditorHBoxContainer" type="HBoxContainer" parent="HBoxContainer2"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer2/VoxelEditorHContainer"]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer2/VoxelEditorHBoxContainer"]
 layout_mode = 2
 
-[node name="VoxelEditor" parent="HBoxContainer2/VoxelEditorHContainer" instance=ExtResource("4_mchsf")]
+[node name="VoxelEditor" parent="HBoxContainer2/VoxelEditorHBoxContainer" instance=ExtResource("4_mchsf")]
 layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/AddVoxelButton" to="." method="_on_add_voxel_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/VoxelSelected/RemoveVoxelButton" to="." method="_on_remove_voxel_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/VoxelSelected/DuplicateVoxelButton" to="." method="_on_duplicate_voxel_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/SelectedVoxelsOptions/RemoveVoxelButton" to="." method="_on_remove_voxel_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/SelectedVoxelsOptions/DuplicateVoxelButton" to="." method="_on_duplicate_voxel_button_pressed"]
 [connection signal="selection_changed" from="HBoxContainer2/VoxelSetViewer" to="." method="_on_voxel_set_viewer_selection_changed"]

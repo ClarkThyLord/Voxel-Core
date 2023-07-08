@@ -175,7 +175,16 @@ func update() -> void:
 	var selected_voxel_ids : Array[int] = _selected_voxel_ids.duplicate()
 	_selected_voxel_ids.clear()
 	
+	var filter : String = %SearchLineEdit.text.to_lower()
+	
 	for voxel_id in voxel_set.get_voxel_ids():
+		var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+		
+		if filter.is_empty():
+			pass
+		elif not (filter in str(voxel_id) or filter in voxel.get_name()):
+			continue
+		
 		var voxel_button : Button = Button.new()
 		
 		voxel_button.name = str(voxel_id)
@@ -291,6 +300,10 @@ func _on_context_menu_popup_id_pressed(id : int) -> void:
 				duplicate_voxel(voxel_id)
 
 
-func _on_context_menu_popup_hide():
+func _on_context_menu_popup_hide() -> void:
 	_last_hovered_voxel_id = _hovered_voxel_id
 	_hovered_voxel_id = -1
+
+
+func _on_search_line_edit_text_changed(new_text : String) -> void:
+	update()
