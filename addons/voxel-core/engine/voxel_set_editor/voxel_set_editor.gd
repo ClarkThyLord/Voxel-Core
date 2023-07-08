@@ -90,7 +90,9 @@ func _on_add_voxel_button_pressed():
 	if not is_instance_valid(voxel_set):
 		return
 	
-	voxel_set.add_voxel(Voxel.new())
+	var voxel : Voxel = Voxel.new()
+	
+	voxel_set.add_voxel(voxel)
 
 
 func _on_remove_voxel_button_pressed():
@@ -110,6 +112,13 @@ func _on_duplicate_voxel_button_pressed():
 
 
 func _on_voxel_set_viewer_selection_changed():
-	%SelectedVoxelsOptions.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
-	%VoxelEditorHBoxContainer.visible = %VoxelSetViewer.get_selected_voxel_ids_count() > 0
+	var selected_voxel_ids_count : int = %VoxelSetViewer.get_selected_voxel_ids_count()
+	
+	%SelectedVoxelsOptions.visible = selected_voxel_ids_count > 0
+	%VoxelEditorHBoxContainer.visible = selected_voxel_ids_count > 0
+	
+	if selected_voxel_ids_count == 1:
+		print(%VoxelEditor, is_instance_valid(%VoxelEditor))
+		%VoxelEditor.edit_voxel(voxel_set, %VoxelSetViewer.get_first_selected_voxel_id())
+	
 	selection_changed.emit()
