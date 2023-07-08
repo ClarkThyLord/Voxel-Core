@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://d11bdvjcyfcvm"]
+
+[ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_viewer/voxel_viewer.gd" id="1_rsbwo"]
+[ext_resource type="Script" path="res://addons/voxel-core/classes/voxel_objects/voxel_mesh_instance_3d/voxel_mesh_instance_3d.gd" id="2_kt0ya"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ppj3d"]
+
+[sub_resource type="Sky" id="Sky_vkqsf"]
+sky_material = SubResource("ProceduralSkyMaterial_ppj3d")
+
+[sub_resource type="Environment" id="Environment_sh6c7"]
+background_mode = 2
+sky = SubResource("Sky_vkqsf")
+
+[sub_resource type="World3D" id="World3D_pitmw"]
+environment = SubResource("Environment_sh6c7")
+
+[sub_resource type="BoxMesh" id="BoxMesh_qkuon"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[node name="VoxelViewer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("1_rsbwo")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+own_world_3d = true
+world_3d = SubResource("World3D_pitmw")
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="Node3D" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="CameraPivot" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Node3D/CameraPivot"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+current = true
+
+[node name="Voxel" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
+mesh = SubResource("BoxMesh_qkuon")
+script = ExtResource("2_kt0ya")
+voxels = {}
+
+[connection signal="gui_input" from="SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]
