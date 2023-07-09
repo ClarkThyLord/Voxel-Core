@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d11bdvjcyfcvm"]
+[gd_scene load_steps=7 format=3 uid="uid://d11bdvjcyfcvm"]
 
 [ext_resource type="Script" path="res://addons/voxel-core/engine/voxel_viewer/voxel_viewer.gd" id="1_rsbwo"]
 [ext_resource type="Script" path="res://addons/voxel-core/classes/voxel_objects/voxel_mesh_instance_3d/voxel_mesh_instance_3d.gd" id="2_kt0ya"]
@@ -14,9 +14,6 @@ sky = SubResource("Sky_vkqsf")
 
 [sub_resource type="World3D" id="World3D_pitmw"]
 environment = SubResource("Environment_sh6c7")
-
-[sub_resource type="BoxMesh" id="BoxMesh_qkuon"]
-size = Vector3(0.25, 0.25, 0.25)
 
 [node name="VoxelViewer" type="Control"]
 layout_mode = 3
@@ -61,10 +58,9 @@ current = true
 [node name="Voxel" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, -0.125, -0.125)
-mesh = SubResource("BoxMesh_qkuon")
 script = ExtResource("2_kt0ya")
 voxels = {
-Vector3i(0, 0, 0): 0
+Vector3i(0, 0, 0): 2
 }
 
 [connection signal="gui_input" from="SubViewportContainer" to="." method="_on_sub_viewport_container_gui_input"]

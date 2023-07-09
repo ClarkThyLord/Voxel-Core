@@ -40,3 +40,15 @@ size_flags_horizontal = 3
 [node name="VoxelViewer" parent="." instance=ExtResource("1_40jvm")]
 unique_name_in_owner = true
 layout_mode = 2
+camera_sensitivity = 8
+
+[node name="VoxelIdChangeConfirmationDialog" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 1
+dialog_text = "Change voxel id?"
+
+[connection signal="focus_exited" from="HBoxContainer/VoxelIDLineEdit" to="." method="_on_voxel_id_line_edit_focus_exited"]
+[connection signal="text_submitted" from="HBoxContainer/VoxelIDLineEdit" to="." method="_on_voxel_id_line_edit_text_submitted"]
+[connection signal="text_submitted" from="HBoxContainer/VoxelNameLineEdit" to="." method="_on_voxel_name_line_edit_text_submitted"]
+[connection signal="canceled" from="VoxelIdChangeConfirmationDialog" to="." method="_on_voxel_id_change_confirmation_dialog_canceled"]
+[connection signal="confirmed" from="VoxelIdChangeConfirmationDialog" to="." method="_on_voxel_id_change_confirmation_dialog_confirmed"]

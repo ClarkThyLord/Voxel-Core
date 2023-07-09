@@ -262,7 +262,7 @@ func set_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if _voxels.has(voxel_id):
 		push_error("Voxel with given voxel_id `%s` already exist in VoxelSet" % voxel_id)
 		return
-	_voxels[_id] = voxel
+	_voxels[voxel_id] = voxel
 	emit_changed()
 
 

@@ -50,7 +50,7 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 func update() -> void:
 	%Voxel.erase_voxels()
 	
-	if voxel_id > -1:
+	if voxel_set.has_voxel_id(voxel_id):
 		%Voxel.set_voxel(Vector3i.ZERO, voxel_id)
 		
 		%Voxel.update()

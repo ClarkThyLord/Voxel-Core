@@ -29,6 +29,13 @@ var _is_dragging : bool = false
 func set_voxel_id(new_voxel_id : int) -> void:
 	voxel_id = new_voxel_id
 	
+	if is_instance_valid(%VoxelIDLineEdit):
+		%VoxelIDLineEdit.text = str(voxel_id)
+	
+	if is_instance_valid(%VoxelNameLineEdit) and is_instance_valid(voxel_set):
+		var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+		%VoxelNameLineEdit.text = str(voxel.get_name())
+	
 	if is_instance_valid(%VoxelViewer):
 		%VoxelViewer.voxel_id = voxel_id
 
@@ -56,3 +63,36 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 func edit_voxel(voxel_set : VoxelSet, voxel_id : int) -> void:
 	set_voxel_set(voxel_set)
 	set_voxel_id(voxel_id)
+
+
+# Private Methods
+func _is_voxel_id_line_edit_text_valid() -> bool:
+	var valid : bool = %VoxelIDLineEdit.text.is_valid_int()
+	if not valid:
+		%VoxelIDLineEdit.text = str(voxel_id)
+	return valid
+
+
+func _on_voxel_id_line_edit_text_submitted(new_voxel_id : String) -> void:
+	if _is_voxel_id_line_edit_text_valid():
+		%VoxelIdChangeConfirmationDialog.popup()
+
+
+func _on_voxel_id_line_edit_focus_exited():
+	if _is_voxel_id_line_edit_text_valid() and \
+			%VoxelIDLineEdit.text != str(voxel_id):
+		%VoxelIdChangeConfirmationDialog.popup()
+
+
+func _on_voxel_id_change_confirmation_dialog_canceled():
+	%VoxelIDLineEdit.text = str(voxel_id)
+
+
+func _on_voxel_id_change_confirmation_dialog_confirmed():
+	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+	voxel_set.remove_voxel(voxel_id)
+	voxel_set.set_voxel(int(%VoxelIDLineEdit.text), voxel)
+
+
+func _on_voxel_name_line_edit_text_submitted(new_text : String) -> void:
+	print(new_text)
