@@ -288,16 +288,21 @@ func _on_context_menu_popup_id_pressed(id : int) -> void:
 	match id:
 		0: # Add
 			add_voxel()
+			voxel_set.emit_changed()
 		1: # Remove
 			remove_voxel(_last_hovered_voxel_id)
+			voxel_set.emit_changed()
 		2: # Duplicate
 			duplicate_voxel(_last_hovered_voxel_id)
+			voxel_set.emit_changed()
 		3: # Remove Selected
 			for voxel_id in _selected_voxel_ids:
 				remove_voxel(voxel_id)
+			voxel_set.emit_changed()
 		4: # Duplicate Selected
 			for voxel_id in _selected_voxel_ids:
 				duplicate_voxel(voxel_id)
+			voxel_set.emit_changed()
 
 
 func _on_context_menu_popup_hide() -> void:

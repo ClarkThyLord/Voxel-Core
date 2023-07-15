@@ -93,6 +93,8 @@ func _on_add_voxel_button_pressed():
 	var voxel : Voxel = Voxel.new()
 	
 	voxel_set.add_voxel(voxel)
+	
+	voxel_set.emit_changed()
 
 
 func _on_remove_voxel_button_pressed():
@@ -101,6 +103,8 @@ func _on_remove_voxel_button_pressed():
 	
 	for voxel_id in %VoxelSetViewer.get_selected_voxel_ids():
 		voxel_set.remove_voxel(voxel_id)
+	
+	voxel_set.emit_changed()
 
 
 func _on_duplicate_voxel_button_pressed():
@@ -109,6 +113,8 @@ func _on_duplicate_voxel_button_pressed():
 	
 	for voxel_id in %VoxelSetViewer.get_selected_voxel_ids():
 		voxel_set.duplicate_voxel(voxel_id)
+	
+	voxel_set.emit_changed()
 
 
 func _on_voxel_set_viewer_selection_changed():
@@ -126,5 +132,4 @@ func _on_voxel_set_viewer_selection_changed():
 
 
 func _on_voxel_editor_voxel_id_changed(old_voxel_id, new_voxel_id):
-	%VoxelSetViewer.unselect_voxel_id(old_voxel_id)
-	%VoxelSetViewer.select_voxel_id(old_voxel_id)
+	%VoxelSetViewer.select_voxel_id(new_voxel_id)

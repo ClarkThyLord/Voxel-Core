@@ -86,7 +86,6 @@ func _on_voxel_id_line_edit_text_submitted(new_voxel_id : String) -> void:
 
 
 func _on_voxel_id_line_edit_focus_exited():
-	print(%VoxelIDLineEdit.text, " ", str(voxel_id))
 	if _is_voxel_id_line_edit_text_valid() and \
 			%VoxelIDLineEdit.text != str(voxel_id):
 		%VoxelIdChangeConfirmationDialog.popup()
@@ -104,14 +103,16 @@ func _on_voxel_id_change_confirmation_dialog_canceled():
 
 func _on_voxel_id_change_confirmation_dialog_confirmed():
 	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
-	voxel_set.remove_voxel(voxel_id)
 	
 	var old_voxel_id : int = voxel_id
 	var new_voxel_id : int = int(%VoxelIDLineEdit.text)
 	
+	voxel_set.remove_voxel(voxel_id)
+	voxel_set.set_voxel(new_voxel_id, voxel)
+	
 	set_voxel_id(new_voxel_id)
 	
-	voxel_set.set_voxel(new_voxel_id, voxel)
+	voxel_set.emit_changed()
 	
 	voxel_id_changed.emit(old_voxel_id, new_voxel_id)
 

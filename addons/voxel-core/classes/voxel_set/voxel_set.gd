@@ -115,9 +115,9 @@ func _get_property_list():
 # Public Methods
 ## This method must be called whenever the state of this resource has changed 
 ## (such as modification of materials).
-func emit_changes() -> void:
+func emit_changed() -> void:
 	format_materials()
-	emit_changed()
+	super.emit_changed()
 
 
 ## Returns [member texture].
@@ -125,12 +125,12 @@ func get_texture() -> Texture2D:
 	return texture
 
 
-## Sets [member texture], calls on [method emit_changes] if in editor.
+## Sets [member texture], calls on [method emit_changed] if in editor.
 func set_texture(new_texture : Texture2D) -> void:
 	texture = new_texture
 	
 	if Engine.is_editor_hint():
-		emit_changes()
+		emit_changed()
 
 
 ## Returns [member texture_size].
@@ -151,7 +151,7 @@ func get_default_material() -> StandardMaterial3D:
 	return default_material
 
 
-## Sets [member default_material], calls on [method emit_changes] if in editor.
+## Sets [member default_material], calls on [method emit_changed] if in editor.
 ## NOTE: A default material must always be set.
 func set_default_material(new_default_material) -> void:
 	if not is_instance_valid(new_default_material):
@@ -159,7 +159,7 @@ func set_default_material(new_default_material) -> void:
 	default_material = new_default_material
 	
 	if Engine.is_editor_hint():
-		emit_changes()
+		emit_changed()
 
 
 ## Returns [member indexed_materials].
@@ -167,12 +167,12 @@ func get_indexed_materials() -> Array:
 	return indexed_materials
 
 
-## Sets [member indexed_materials], call on [method emit_changes] if in editor.
+## Sets [member indexed_materials], call on [method emit_changed] if in editor.
 func set_indexed_materials(new_indexed_materials : Array[BaseMaterial3D]) -> void:
 	indexed_materials = new_indexed_materials
 	
 	if Engine.is_editor_hint():
-		emit_changes()
+		emit_changed()
 
 
 ## Adds given [BaseMaterial3D] to [member indexed_materials] and returns 
@@ -265,9 +265,6 @@ func add_voxel(voxel : Voxel) -> int:
 ## VoxelSet.
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxel(voxel_id : int, voxel : Voxel) -> void:
-	if _voxels.has(voxel_id):
-		push_error("Voxel with given voxel_id `%s` already exist in VoxelSet" % voxel_id)
-		return
 	_voxels[voxel_id] = voxel
 
 
