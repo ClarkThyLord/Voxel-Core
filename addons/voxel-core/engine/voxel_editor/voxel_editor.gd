@@ -4,6 +4,11 @@ extends VBoxContainer
 
 
 
+# Signals
+signal voxel_id_changed(old_voxel_id : int, new_voxel_id : int)
+
+
+
 # Public Variables
 @export
 var voxel_id : int = -1 :
@@ -32,9 +37,10 @@ func set_voxel_id(new_voxel_id : int) -> void:
 	if is_instance_valid(%VoxelIDLineEdit):
 		%VoxelIDLineEdit.text = str(voxel_id)
 	
-	if is_instance_valid(%VoxelNameLineEdit) and is_instance_valid(voxel_set):
-		var voxel : Voxel = voxel_set.get_voxel(voxel_id)
-		%VoxelNameLineEdit.text = str(voxel.get_name())
+	if is_instance_valid(voxel_set) and voxel_set.has_voxel_id(voxel_id):
+		if is_instance_valid(%VoxelNameLineEdit):
+			var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+			%VoxelNameLineEdit.text = str(voxel.get_name())
 	
 	if is_instance_valid(%VoxelViewer):
 		%VoxelViewer.voxel_id = voxel_id
@@ -74,14 +80,22 @@ func _is_voxel_id_line_edit_text_valid() -> bool:
 
 
 func _on_voxel_id_line_edit_text_submitted(new_voxel_id : String) -> void:
-	if _is_voxel_id_line_edit_text_valid():
+	if _is_voxel_id_line_edit_text_valid() and \
+			%VoxelIDLineEdit.text != str(voxel_id):
 		%VoxelIdChangeConfirmationDialog.popup()
 
 
 func _on_voxel_id_line_edit_focus_exited():
+	print(%VoxelIDLineEdit.text, " ", str(voxel_id))
 	if _is_voxel_id_line_edit_text_valid() and \
 			%VoxelIDLineEdit.text != str(voxel_id):
 		%VoxelIdChangeConfirmationDialog.popup()
+
+
+func _on_voxel_id_change_confirmation_dialog_about_to_popup():
+	%VoxelIdChangeConfirmationDialog.dialog_text = "Change voxel id?"
+	if voxel_set.has_voxel_id(int(%VoxelIDLineEdit.text)):
+		%VoxelIdChangeConfirmationDialog.dialog_text += "\nWARNING: Will overwrite existing voxel!"
 
 
 func _on_voxel_id_change_confirmation_dialog_canceled():
@@ -91,7 +105,15 @@ func _on_voxel_id_change_confirmation_dialog_canceled():
 func _on_voxel_id_change_confirmation_dialog_confirmed():
 	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
 	voxel_set.remove_voxel(voxel_id)
-	voxel_set.set_voxel(int(%VoxelIDLineEdit.text), voxel)
+	
+	var old_voxel_id : int = voxel_id
+	var new_voxel_id : int = int(%VoxelIDLineEdit.text)
+	
+	set_voxel_id(new_voxel_id)
+	
+	voxel_set.set_voxel(new_voxel_id, voxel)
+	
+	voxel_id_changed.emit(old_voxel_id, new_voxel_id)
 
 
 func _on_voxel_name_line_edit_text_submitted(new_text : String) -> void:

@@ -123,3 +123,8 @@ func _on_voxel_set_viewer_selection_changed():
 				voxel_set, %VoxelSetViewer.get_first_selected_voxel_id())
 	
 	selection_changed.emit()
+
+
+func _on_voxel_editor_voxel_id_changed(old_voxel_id, new_voxel_id):
+	%VoxelSetViewer.unselect_voxel_id(old_voxel_id)
+	%VoxelSetViewer.select_voxel_id(old_voxel_id)

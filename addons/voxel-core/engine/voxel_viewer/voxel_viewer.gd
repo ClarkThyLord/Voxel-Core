@@ -5,7 +5,7 @@ extends Control
 
 
 # Public Variables
-@export
+@export_range(-1, 100, 1, "or_greater")
 var voxel_id : int = -1 :
 	set = set_voxel_id
 
@@ -15,7 +15,7 @@ var voxel_set : VoxelSet = null :
 	set = set_voxel_set
 
 @export_range(1, 100, 1)
-var camera_sensitivity : int = 8
+var camera_sensitivity : int = 7
 
 
 
@@ -50,7 +50,7 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 func update() -> void:
 	%Voxel.erase_voxels()
 	
-	if voxel_set.has_voxel_id(voxel_id):
+	if is_instance_valid(voxel_set) and voxel_set.has_voxel_id(voxel_id):
 		%Voxel.set_voxel(Vector3i.ZERO, voxel_id)
 		
 		%Voxel.update()
