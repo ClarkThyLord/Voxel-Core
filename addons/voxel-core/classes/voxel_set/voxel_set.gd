@@ -125,10 +125,12 @@ func get_texture() -> Texture2D:
 	return texture
 
 
-## Sets [member texture] and calls on [method emit_changes].
+## Sets [member texture], calls on [method emit_changes] if in editor.
 func set_texture(new_texture : Texture2D) -> void:
 	texture = new_texture
-	emit_changes()
+	
+	if Engine.is_editor_hint():
+		emit_changes()
 
 
 ## Returns [member texture_size].
@@ -136,10 +138,12 @@ func get_texture_size() -> Vector2i:
 	return texture_size
 
 
-## Sets [member texture_size] and calls on [method emit_changed].
+## Sets [member texture_size], calls on [method emit_changed] if in editor.
 func set_texture_size(new_texture_size : Vector2i) -> void:
 	texture_size = new_texture_size.abs()
-	emit_changed()
+	
+	if Engine.is_editor_hint():
+		emit_changed()
 
 
 ## Returns [member default_material].
@@ -147,13 +151,15 @@ func get_default_material() -> StandardMaterial3D:
 	return default_material
 
 
-## Sets [member default_material] and calls on [method emit_changes]; can't 
-## be set to [code]null[/code].
+## Sets [member default_material], calls on [method emit_changes] if in editor.
+## NOTE: A default material must always be set.
 func set_default_material(new_default_material) -> void:
 	if not is_instance_valid(new_default_material):
 		return
 	default_material = new_default_material
-	emit_changes()
+	
+	if Engine.is_editor_hint():
+		emit_changes()
 
 
 ## Returns [member indexed_materials].
@@ -161,17 +167,18 @@ func get_indexed_materials() -> Array:
 	return indexed_materials
 
 
-## Sets [member indexed_materials] and call on [method emit_changes].
+## Sets [member indexed_materials], call on [method emit_changes] if in editor.
 func set_indexed_materials(new_indexed_materials : Array[BaseMaterial3D]) -> void:
 	indexed_materials = new_indexed_materials
-	emit_changes()
+	
+	if Engine.is_editor_hint():
+		emit_changes()
 
 
-## Adds given [BaseMaterial3D] to [member indexed_materials], calls on
-## [method emit_changes] and returns material's index.
+## Adds given [BaseMaterial3D] to [member indexed_materials] and returns 
+## assigned material index.
 func add_material(new_material : BaseMaterial3D) -> int:
 	indexed_materials.append(new_material)
-	emit_changes()
 	return indexed_materials.size() - 1
 
 
@@ -185,23 +192,24 @@ func get_material_by_index(material_index : int) -> BaseMaterial3D:
 
 
 ## Replaces material at given index in [member indexed_materials] by given
-## material and calls on [method emit_changes].
+## material.
 func set_material_by_index(material_index : int, new_material : BaseMaterial3D) -> void:
 	if material_index <= -1 or material_index >= indexed_materials.size():
 		push_error("Material index `%s` out of range" % material_index)
 		return
 	indexed_materials[material_index] = new_material
-	emit_changes()
 
 
 ## Removes material at given index in [member indexed_materials] and calls on 
-## [method emit_changed].
+## [method emit_changed] if in editor.
 func remove_material_by_index(material_index : int) -> void:
 	if material_index <= -1 or material_index >= indexed_materials.size():
 		push_error("Material index `%s` out of range" % material_index)
 		return
 	indexed_materials.remove_at(material_index)
-	emit_changed()
+	
+	if Engine.is_editor_hint():
+		emit_changed()
 
 
 ## Returns [code]true[/code] if voxel with given [code]voxel_id[/code] is
@@ -244,56 +252,48 @@ func get_voxels() -> Dictionary:
 	return _voxels.duplicate(true)
 
 
-## Adds [Voxel] to VoxelSet, calls on [method emit_changed] and returns 
-## [code]voxel_id[/code].
+## Adds [Voxel] to VoxelSet and returns [code]voxel_id[/code] assigned.
 func add_voxel(voxel : Voxel) -> int:
 	_id += 1
 	if _voxels.has(_id):
 		return add_voxel(voxel)
 	_voxels[_id] = voxel
-	emit_changed()
 	return _id
 
 
 ## Assigns given [code]voxel[/code] to the given [code]voxel_id[/code] in
-## VoxelSet, calls on [method emit_changed].
+## VoxelSet.
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if _voxels.has(voxel_id):
 		push_error("Voxel with given voxel_id `%s` already exist in VoxelSet" % voxel_id)
 		return
 	_voxels[voxel_id] = voxel
-	emit_changed()
 
 
-## Replaces all voxels used by VoxelSet, calls on [method emit_changed].
+## Replaces all voxels used by VoxelSet.
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxels(voxels : Dictionary) -> void:
 	_voxels = voxels
-	emit_changed()
 
 
 ## Replaces voxel associated with given [code]voxel_id[/code] with the given 
-## [code]voxel[/code] in VoxelSet, calls on [method emit_changed].
+## [code]voxel[/code] in VoxelSet.
 func update_voxel(voxel_id : int, voxel : Voxel) -> void:
 	if not _voxels.has(voxel_id):
 		push_error("No voxel with voxel_id `%s` in VoxelSet" % voxel_id)
 		return
 	_voxels[voxel_id] = voxel
-	emit_changed()
 
 
-## Removes voxel with given [code]voxel_id[/code] from VoxelSet and calls on
-## [method emit_changed].
+## Removes voxel with given [code]voxel_id[/code] from VoxelSet.
 func remove_voxel(voxel_id : int) -> void:
 	_voxels.erase(voxel_id)
-	emit_changed()
 
 
-## Removes all voxels from VoxelSet and calls on [method emit_changed].
+## Removes all voxels from VoxelSet.
 func remove_voxels() -> void:
 	_voxels.clear()
-	emit_changed()
 
 
 func duplicate_voxel(voxel_id : int) -> int:
@@ -325,23 +325,20 @@ func get_voxel_by_name(voxel_name : String) -> Voxel:
 
 
 ## Replaces voxel associated with given [code]voxel_name[/code] with the given 
-## [code]voxel[/code] in VoxelSet, calls on [method emit_changed].
+## [code]voxel[/code] in VoxelSet.
 func update_voxel_by_name(voxel_name : String, voxel : Voxel) -> void:
 	for voxel_id in _voxels:
 		if _voxels[voxel_id].name == voxel_name:
 			_voxels[voxel_id] = voxel
-			emit_changed()
 			return
 	push_error("No voxel with voxel_name `%s` in VoxelSet" % voxel_name)
 
 
-## Removes voxel that matches given [code]voxel_name[/code] in VoxelSet and
-## calls on [method emit_changed].
+## Removes voxel that matches given [code]voxel_name[/code] in VoxelSet.
 func remove_voxel_by_name(voxel_name : String) -> void:
 	for voxel_id in _voxels.keys():
 		if _voxels[voxel_id].name == voxel_name:
 			_voxels.erase(voxel_id)
-			emit_changed()
 			return
 	push_error("No voxel with voxel_name `%s` in VoxelSet" % voxel_name)
 
