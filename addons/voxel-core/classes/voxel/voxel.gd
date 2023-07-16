@@ -138,45 +138,45 @@ var color_front : Color = Color.TRANSPARENT :
 var color_back : Color = Color.TRANSPARENT :
 	get: return color if color_back.a == 0 else color_back
 
-## The default uv position of the texture applied to all voxel faces, in 
+## The default tile position of the texture applied to all voxel faces, in 
 ## refrence to [member VoxelSet.texture].
-var texture_uv : Vector2i = -Vector2i.ONE
+var texture_tile : Vector2i = -Vector2i.ONE
 
-## The uv position of the texture applied to the right face of the voxel, 
+## The tile position of the texture applied to the right face of the voxel, 
 ## in refrence to [member VoxelSet.texture]; if negative, returns 
-## [member texture_uv].
-var texture_uv_right : Vector2i = -Vector2i.ONE :
-	get: return texture_uv if texture_uv_right == -Vector2i.ONE else texture_uv_right
+## [member texture_tile].
+var texture_tile_right : Vector2i = -Vector2i.ONE :
+	get: return texture_tile if texture_tile_right == -Vector2i.ONE else texture_tile_right
 
-## The uv position of the texture applied to the left face of the voxel, 
+## The tile position of the texture applied to the left face of the voxel, 
 ## in refrence to [member VoxelSet.texture]; if negative, returns 
-## [member texture_uv].
-var texture_uv_left : Vector2i = -Vector2i.ONE :
-	get: return texture_uv if texture_uv_left == -Vector2i.ONE else texture_uv_left
+## [member texture_tile].
+var texture_tile_left : Vector2i = -Vector2i.ONE :
+	get: return texture_tile if texture_tile_left == -Vector2i.ONE else texture_tile_left
 
-## The uv position of the texture applied to the top face of the voxel, 
+## The tile position of the texture applied to the top face of the voxel, 
 ## in refrence to [member VoxelSet.texture]; if negative, returns 
-## [member texture_uv].
-var texture_uv_top : Vector2i = -Vector2i.ONE :
-	get: return texture_uv if texture_uv_top == -Vector2i.ONE else texture_uv_top
+## [member texture_tile].
+var texture_tile_top : Vector2i = -Vector2i.ONE :
+	get: return texture_tile if texture_tile_top == -Vector2i.ONE else texture_tile_top
 
-## The uv position of the texture applied to the bottom face of the voxel, 
+## The tile position of the texture applied to the bottom face of the voxel, 
 ## in refrence to [member VoxelSet.texture]; if negative, returns 
-## [member texture_uv].
-var texture_uv_bottom : Vector2i = -Vector2i.ONE :
-	get: return texture_uv if texture_uv_bottom == -Vector2i.ONE else texture_uv_bottom
+## [member texture_tile].
+var texture_tile_bottom : Vector2i = -Vector2i.ONE :
+	get: return texture_tile if texture_tile_bottom == -Vector2i.ONE else texture_tile_bottom
 
-## The uv position of the texture applied to the front face of the voxel, 
+## The tile position of the texture applied to the front face of the voxel, 
 ## in refrence to [member VoxelSet.texture]; if negative, returns 
-## [member texture_uv].
-var texture_uv_front : Vector2i = -Vector2i.ONE :
-	get: return texture_uv if texture_uv_front == -Vector2i.ONE else texture_uv_front
+## [member texture_tile].
+var texture_tile_front : Vector2i = -Vector2i.ONE :
+	get: return texture_tile if texture_tile_front == -Vector2i.ONE else texture_tile_front
 
-## The uv position of the texture applied to the back face of the voxel, 
+## The tile position of the texture applied to the back face of the voxel, 
 ## in refrence to [member VoxelSet.texture]; if negative, returns 
-## [member texture_uv].
-var texture_uv_back : Vector2i = -Vector2i.ONE :
-	get: return texture_uv if texture_uv_back == -Vector2i.ONE else texture_uv_back
+## [member texture_tile].
+var texture_tile_back : Vector2i = -Vector2i.ONE :
+	get: return texture_tile if texture_tile_back == -Vector2i.ONE else texture_tile_back
 
 
 
@@ -195,13 +195,13 @@ func _to_string() -> String:
 		"color_front": color_front,
 		"color_back": color_back,
 		
-		"texture_uv": texture_uv,
-		"texture_uv_right": texture_uv_right,
-		"texture_uv_left": texture_uv_left,
-		"texture_uv_top": texture_uv_top,
-		"texture_uv_bottom": texture_uv_bottom,
-		"texture_uv_front": texture_uv_front,
-		"texture_uv_back": texture_uv_back,
+		"texture_tile": texture_tile,
+		"texture_tile_right": texture_tile_right,
+		"texture_tile_left": texture_tile_left,
+		"texture_tile_top": texture_tile_top,
+		"texture_tile_bottom": texture_tile_bottom,
+		"texture_tile_front": texture_tile_front,
+		"texture_tile_back": texture_tile_back,
 	})
 
 
@@ -301,76 +301,76 @@ func set_face_color(voxel_face : Vector3i, new_color : Color) -> void:
 	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 
 
-## Returns [code]true[/code] if voxel's [member texture_uv] is not negative; 
+## Returns [code]true[/code] if voxel's [member texture_tile] is not negative; 
 ## otherwise returns [code]false[/code].
-func has_texture() -> bool:
-	return texture_uv != -Vector2i.ONE
+func has_texture_tile() -> bool:
+	return texture_tile != -Vector2i.ONE
 
 
-## Returns voxel's [member texture_uv] applied to all faces by default.
-func get_texture_uv() -> Vector2i:
-	return texture_uv
+## Returns voxel's [member texture_tile] applied to all faces by default.
+func get_texture_tile() -> Vector2i:
+	return texture_tile
 
 
-## Sets voxel's [member texture_uv] applied to all faces by default.
-func set_texture(new_texture_uv : Vector2i) -> void:
-	texture_uv = new_texture_uv
+## Sets voxel's [member texture_tile] applied to all faces by default.
+func set_texture(new_texture_tile : Vector2i) -> void:
+	texture_tile = new_texture_tile
 
 ## Returns [code]true[/code] if voxel's given [code]voxel_face[/code] has an 
-## assigned non negative texture uv; otherwise returns [code]false[/code].
+## assigned non negative texture tile; otherwise returns [code]false[/code].
 func has_face_texture(voxel_face : Vector3i) -> bool:
 	match voxel_face:
 		FACE_RIGHT:
-			return texture_uv_right != -Vector2i.ONE
+			return texture_tile_right != -Vector2i.ONE
 		FACE_LEFT:
-			return texture_uv_left != -Vector2i.ONE
+			return texture_tile_left != -Vector2i.ONE
 		FACE_TOP:
-			return texture_uv_top != -Vector2i.ONE
+			return texture_tile_top != -Vector2i.ONE
 		FACE_BOTTOM:
-			return texture_uv_bottom != -Vector2i.ONE
+			return texture_tile_bottom != -Vector2i.ONE
 		FACE_FRONT:
-			return texture_uv_front != -Vector2i.ONE
+			return texture_tile_front != -Vector2i.ONE
 		FACE_BACK:
-			return texture_uv_back != -Vector2i.ONE
+			return texture_tile_back != -Vector2i.ONE
 	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
-	return has_texture()
+	return has_texture_tile()
 
 
-## Returns texture uv assigned to voxel's given [code]voxel_face[/code] if it's 
-## not negative; otherwise returns [member texture_uv].
-func get_face_texture_uv(voxel_face : Vector3i) -> Vector2i:
+## Returns texture tile assigned to voxel's given [code]voxel_face[/code] if it's 
+## not negative; otherwise returns [member texture_tile].
+func get_face_texture_tile(voxel_face : Vector3i) -> Vector2i:
 	match voxel_face:
 		FACE_RIGHT:
-			return texture_uv_right
+			return texture_tile_right
 		FACE_LEFT:
-			return texture_uv_left
+			return texture_tile_left
 		FACE_TOP:
-			return texture_uv_top
+			return texture_tile_top
 		FACE_BOTTOM:
-			return texture_uv_bottom
+			return texture_tile_bottom
 		FACE_FRONT:
-			return texture_uv_front
+			return texture_tile_front
 		FACE_BACK:
-			return texture_uv_back
+			return texture_tile_back
 	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
-	return get_texture_uv()
+	return get_texture_tile()
 
 
-## Sets texture uv to voxel's given [code]voxel_face[/code].
-func set_face_texture_uv(voxel_face : Vector3i, new_texture_uv : Vector2) -> void:
+## Sets texture tile to voxel's given [code]voxel_face[/code].
+func set_face_texture_tile(voxel_face : Vector3i, new_texture_tile : Vector2) -> void:
 	match voxel_face:
 		FACE_RIGHT:
-			texture_uv_right = new_texture_uv
+			texture_tile_right = new_texture_tile
 		FACE_LEFT:
-			texture_uv_left = new_texture_uv
+			texture_tile_left = new_texture_tile
 		FACE_TOP:
-			texture_uv_top = new_texture_uv
+			texture_tile_top = new_texture_tile
 		FACE_BOTTOM:
-			texture_uv_bottom = new_texture_uv
+			texture_tile_bottom = new_texture_tile
 		FACE_FRONT:
-			texture_uv_front = new_texture_uv
+			texture_tile_front = new_texture_tile
 		FACE_BACK:
-			texture_uv_back = new_texture_uv
+			texture_tile_back = new_texture_tile
 	push_error("Bad argument `%s` isn't a valid voxel_face" % voxel_face)
 
 
@@ -389,12 +389,12 @@ func duplicate() -> Voxel:
 	voxel.color_front = color_front
 	voxel.color_back = color_back
 	
-	voxel.texture_uv = texture_uv
-	voxel.texture_uv_right = texture_uv_right
-	voxel.texture_uv_left = texture_uv_left
-	voxel.texture_uv_top = texture_uv_top
-	voxel.texture_uv_bottom = texture_uv_bottom
-	voxel.texture_uv_front = texture_uv_front
-	voxel.texture_uv_back = texture_uv_back
+	voxel.texture_tile = texture_tile
+	voxel.texture_tile_right = texture_tile_right
+	voxel.texture_tile_left = texture_tile_left
+	voxel.texture_tile_top = texture_tile_top
+	voxel.texture_tile_bottom = texture_tile_bottom
+	voxel.texture_tile_front = texture_tile_front
+	voxel.texture_tile_back = texture_tile_back
 	
 	return voxel

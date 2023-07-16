@@ -12,8 +12,8 @@ extends Resource
 ## # Create a new VoxelSet resource
 ## var voxel_set : VoxelSet = VoxelSet.new()
 ##
-## # Assign the VoxelSet a texture
-## voxel_set.texture = preload("res://texture.png")
+## # Assign the VoxelSet a texture atlas
+## voxel_set.texture_atlas = preload("res://texture_atlas.png")
 ## 
 ## # Add materials to the VoxelSet
 ## var material_id : int = voxel_set.add_material(preload("res://material.tres"))
@@ -38,20 +38,23 @@ extends Resource
 
 
 # Exported Variables
+@export_group("Textures")
 ## Texture atlas containing sub-textures referenced by voxels; texture is 
 ## assigned to all applicable [member materials] as 
 ## [member BaseMaterial3D.albedo_texture].
 @export
-var texture : Texture2D = null :
-	get = get_texture,
-	set = set_texture
+var texture_atlas : Texture2D = null :
+	get = get_texture_atlas,
+	set = set_texture_atlas
 
-## Rectangular shape of sub-textures within [member texture], in pixels.
+## The tile size, in pixels, corresponds to the encompassing rectangle of the 
+## tile shape within [member texture_atlas].
 @export
-var texture_size : Vector2i = Vector2i(32, 32) :
-	get = get_texture_size,
-	set = set_texture_size
+var tile_size : Vector2i = Vector2i(32, 32) :
+	get = get_tile_size,
+	set = set_tile_size
 
+@export_group("Materials")
 ## Material applied to all voxels by default, can't be [code]null[/code].
 @export
 var default_material : BaseMaterial3D = StandardMaterial3D.new() :
@@ -60,38 +63,52 @@ var default_material : BaseMaterial3D = StandardMaterial3D.new() :
 
 ## Collection of materials; referenced by voxels via their index.
 @export
-var indexed_materials : Array[BaseMaterial3D] = [] :
-	get = get_indexed_materials,
-	set = set_indexed_materials
+var materials : Array[BaseMaterial3D] = [] :
+	get = get_materials,
+	set = set_materials
 
 
 
 # Private Variables
 # Last assigned voxel id.
-var _id : int = -1
+var _last_id : int = -1
 
 # Collection of [Voxel]s; where keys are voxel ids and values are [Voxel]s.
 var _voxels : Dictionary = {}
+
+var _voxel_id_to_name : Dictionary = {}
+
+var _voxel_name_to_id : Dictionary = {}
 
 
 
 # Built-In Virtual Methods
 func _get(property : StringName):
 	match str(property):
-		"id":
-			return _id
+		"last_id":
+			return _last_id
 		"voxels":
 			return _voxels
+		"voxel_id_to_name":
+			return _voxel_id_to_name
+		"voxel_name_to_id":
+			return _voxel_name_to_id
 	return null
 
 
 func _set(property : StringName, value):
 	match str(property):
-		"id":
-			_id = value
+		"last_id":
+			_last_id = value
 			return true
 		"voxels":
 			_voxels = value
+			return true
+		"voxel_id_to_name":
+			_voxel_id_to_name = value
+			return true
+		"voxel_name_to_id":
+			_voxel_name_to_id = value
 			return true
 	return false
 
@@ -99,7 +116,7 @@ func _set(property : StringName, value):
 func _get_property_list():
 	return [
 		{
-			"name": "id",
+			"name": "last_id",
 			"type": TYPE_INT,
 			"usage": PROPERTY_USAGE_STORAGE,
 		},
@@ -108,7 +125,27 @@ func _get_property_list():
 			"type": TYPE_DICTIONARY,
 			"usage": PROPERTY_USAGE_STORAGE,
 		},
+		{
+			"name": "voxel_id_to_name",
+			"type": TYPE_DICTIONARY,
+			"usage": PROPERTY_USAGE_STORAGE,
+		},
+		{
+			"name": "voxel_name_to_id",
+			"type": TYPE_DICTIONARY,
+			"usage": PROPERTY_USAGE_STORAGE,
+		},
 	]
+
+
+
+# Public Static Methods
+static func is_valid_voxel_id(voxel_id : int) -> bool:
+	return voxel_id > 0
+
+
+static func is_valid_material_index(material_index : int) -> bool:
+	return material_index > 0
 
 
 
@@ -120,35 +157,27 @@ func emit_changed() -> void:
 	super.emit_changed()
 
 
-## Returns [member texture].
-func get_texture() -> Texture2D:
-	return texture
+## Returns [member texture_atlas].
+func get_texture_atlas() -> Texture2D:
+	return texture_atlas
 
 
-static func is_valid_voxel_id(voxel_id : int) -> bool:
-	return voxel_id > 0
-
-
-static func is_valid_material_index(material_index : int) -> bool:
-	return material_index > 0
-
-
-## Sets [member texture], calls on [method emit_changed] if in editor.
-func set_texture(new_texture : Texture2D) -> void:
-	texture = new_texture
+## Sets [member texture_atlas], calls on [method emit_changed] if in editor.
+func set_texture_atlas(new_texture_atlas : Texture2D) -> void:
+	texture_atlas = new_texture_atlas
 	
 	if Engine.is_editor_hint():
 		emit_changed()
 
 
-## Returns [member texture_size].
-func get_texture_size() -> Vector2i:
-	return texture_size
+## Returns [member tile_size].
+func get_tile_size() -> Vector2i:
+	return tile_size
 
 
-## Sets [member texture_size], calls on [method emit_changed] if in editor.
-func set_texture_size(new_texture_size : Vector2i) -> void:
-	texture_size = new_texture_size.abs()
+## Sets [member tile_size], calls on [method emit_changed] if in editor.
+func set_tile_size(new_tile_size : Vector2i) -> void:
+	tile_size = new_tile_size.abs()
 	
 	if Engine.is_editor_hint():
 		emit_changed()
@@ -170,51 +199,51 @@ func set_default_material(new_default_material) -> void:
 		emit_changed()
 
 
-## Returns [member indexed_materials].
-func get_indexed_materials() -> Array:
-	return indexed_materials
+## Returns [member materials].
+func get_materials() -> Array:
+	return materials
 
 
-## Sets [member indexed_materials], call on [method emit_changed] if in editor.
-func set_indexed_materials(new_indexed_materials : Array[BaseMaterial3D]) -> void:
-	indexed_materials = new_indexed_materials
+## Sets [member materials], call on [method emit_changed] if in editor.
+func set_materials(new_materials : Array[BaseMaterial3D]) -> void:
+	materials = new_materials
 	
 	if Engine.is_editor_hint():
 		emit_changed()
 
 
-## Adds given [BaseMaterial3D] to [member indexed_materials] and returns 
+## Adds given [BaseMaterial3D] to [member materials] and returns 
 ## assigned material index.
 func add_material(new_material : BaseMaterial3D) -> int:
-	indexed_materials.append(new_material)
-	return indexed_materials.size() - 1
+	materials.append(new_material)
+	return materials.size() - 1
 
 
-## Returns material by index from [member indexed_materials], if invalid index
+## Returns material by index from [member materials], if invalid index
 ## returns [member default_material].
 func get_material_by_index(material_index : int) -> BaseMaterial3D:
-	if material_index >= indexed_materials.size():
+	if material_index >= materials.size():
 		push_error("Material index `%s` out of range" % material_index)
 		return default_material
-	return default_material if material_index == -1 else indexed_materials[material_index]
+	return default_material if material_index == -1 else materials[material_index]
 
 
-## Replaces material at given index in [member indexed_materials] by given
+## Replaces material at given index in [member materials] by given
 ## material.
 func set_material_by_index(material_index : int, new_material : BaseMaterial3D) -> void:
-	if material_index <= -1 or material_index >= indexed_materials.size():
+	if material_index <= -1 or material_index >= materials.size():
 		push_error("Material index `%s` out of range" % material_index)
 		return
-	indexed_materials[material_index] = new_material
+	materials[material_index] = new_material
 
 
-## Removes material at given index in [member indexed_materials] and calls on 
+## Removes material at given index in [member materials] and calls on 
 ## [method emit_changed] if in editor.
 func remove_material_by_index(material_index : int) -> void:
-	if material_index <= -1 or material_index >= indexed_materials.size():
+	if material_index <= -1 or material_index >= materials.size():
 		push_error("Material index `%s` out of range" % material_index)
 		return
-	indexed_materials.remove_at(material_index)
+	materials.remove_at(material_index)
 	
 	if Engine.is_editor_hint():
 		emit_changed()
@@ -262,11 +291,11 @@ func get_voxels() -> Dictionary:
 
 ## Adds [Voxel] to VoxelSet and returns [code]voxel_id[/code] assigned.
 func add_voxel(voxel : Voxel) -> int:
-	_id += 1
-	if _voxels.has(_id):
+	_last_id += 1
+	if _voxels.has(_last_id):
 		return add_voxel(voxel)
-	_voxels[_id] = voxel
-	return _id
+	_voxels[_last_id] = voxel
+	return _last_id
 
 
 ## Assigns given [code]voxel[/code] to the given [code]voxel_id[/code] in
@@ -361,14 +390,14 @@ func get_voxel_count() -> int:
 ## conform with VoxelSet.
 func format_material(material : BaseMaterial3D) -> void:
 	material.vertex_color_use_as_albedo = true
-	material.albedo_texture = texture
+	material.albedo_texture = texture_atlas
 
 
 ## Helper function used to correctly format all attached [member material]s.
 func format_materials() -> void:
 	format_material(default_material)
-	for indexed_material in indexed_materials:
-		format_material(indexed_material)
+	for index in materials:
+		format_material(index)
 
 
 func get_voxel_preview(voxel_id : int) -> Image:
