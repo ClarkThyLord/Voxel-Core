@@ -46,9 +46,18 @@ unique_name_in_owner = true
 initial_position = 1
 dialog_text = "Change voxel id?"
 
+[node name="VoxelNameChangeConfirmationDialog" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 1
+dialog_text = "Change voxel name?"
+
 [connection signal="focus_exited" from="HBoxContainer/VoxelIDLineEdit" to="." method="_on_voxel_id_line_edit_focus_exited"]
 [connection signal="text_submitted" from="HBoxContainer/VoxelIDLineEdit" to="." method="_on_voxel_id_line_edit_text_submitted"]
+[connection signal="focus_exited" from="HBoxContainer/VoxelNameLineEdit" to="." method="_on_voxel_name_line_edit_focus_exited"]
 [connection signal="text_submitted" from="HBoxContainer/VoxelNameLineEdit" to="." method="_on_voxel_name_line_edit_text_submitted"]
 [connection signal="about_to_popup" from="VoxelIdChangeConfirmationDialog" to="." method="_on_voxel_id_change_confirmation_dialog_about_to_popup"]
 [connection signal="canceled" from="VoxelIdChangeConfirmationDialog" to="." method="_on_voxel_id_change_confirmation_dialog_canceled"]
 [connection signal="confirmed" from="VoxelIdChangeConfirmationDialog" to="." method="_on_voxel_id_change_confirmation_dialog_confirmed"]
+[connection signal="about_to_popup" from="VoxelNameChangeConfirmationDialog" to="." method="_on_voxel_id_change_confirmation_dialog_about_to_popup"]
+[connection signal="canceled" from="VoxelNameChangeConfirmationDialog" to="." method="_on_voxel_name_change_confirmation_dialog_canceled"]
+[connection signal="confirmed" from="VoxelNameChangeConfirmationDialog" to="." method="_on_voxel_name_change_confirmation_dialog_confirmed"]

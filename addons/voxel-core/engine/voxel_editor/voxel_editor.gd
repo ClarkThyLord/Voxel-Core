@@ -7,6 +7,8 @@ extends VBoxContainer
 # Signals
 signal voxel_id_changed(old_voxel_id : int, new_voxel_id : int)
 
+signal voxel_name_changed(old_voxel_name : int, new_voxel_name : int)
+
 
 
 # Public Variables
@@ -34,6 +36,7 @@ var _is_dragging : bool = false
 func set_voxel_id(new_voxel_id : int) -> void:
 	voxel_id = new_voxel_id
 	
+	
 	if is_instance_valid(%VoxelIDLineEdit):
 		%VoxelIDLineEdit.text = str(voxel_id)
 	
@@ -41,6 +44,10 @@ func set_voxel_id(new_voxel_id : int) -> void:
 		if is_instance_valid(%VoxelNameLineEdit):
 			var voxel : Voxel = voxel_set.get_voxel(voxel_id)
 			%VoxelNameLineEdit.text = str(voxel.get_name())
+		
+		if is_instance_valid(%VoxelNameLineEdit):
+			var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+			%VoxelNameLineEdit.text = voxel.name
 	
 	if is_instance_valid(%VoxelViewer):
 		%VoxelViewer.voxel_id = voxel_id
@@ -73,7 +80,8 @@ func edit_voxel(voxel_set : VoxelSet, voxel_id : int) -> void:
 
 # Private Methods
 func _is_voxel_id_line_edit_text_valid() -> bool:
-	var valid : bool = %VoxelIDLineEdit.text.is_valid_int()
+	var valid : bool = %VoxelIDLineEdit.text.is_valid_int() and \
+			VoxelSet.is_valid_voxel_id(int(%VoxelIDLineEdit.text))
 	if not valid:
 		%VoxelIDLineEdit.text = str(voxel_id)
 	return valid
@@ -118,4 +126,32 @@ func _on_voxel_id_change_confirmation_dialog_confirmed():
 
 
 func _on_voxel_name_line_edit_text_submitted(new_text : String) -> void:
-	print(new_text)
+	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+	
+	if %VoxelNameLineEdit.text != voxel.name:
+		%VoxelNameChangeConfirmationDialog.popup()
+
+
+func _on_voxel_name_line_edit_focus_exited():
+	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+	
+	if %VoxelNameLineEdit.text != voxel.name:
+		%VoxelNameChangeConfirmationDialog.popup()
+
+
+func _on_voxel_name_change_confirmation_dialog_canceled():
+	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+	%VoxelNameLineEdit.text = voxel.name
+
+
+func _on_voxel_name_change_confirmation_dialog_confirmed():
+	var voxel : Voxel = voxel_set.get_voxel(voxel_id)
+	
+	var old_voxel_name : String = voxel.name
+	var new_voxel_name : String = %VoxelNameLineEdit.text
+	
+	voxel.name = new_voxel_name
+	
+	voxel_set.emit_changed()
+	
+	voxel_name_changed.emit(old_voxel_name, new_voxel_name)

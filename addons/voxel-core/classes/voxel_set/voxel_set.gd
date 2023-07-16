@@ -125,6 +125,14 @@ func get_texture() -> Texture2D:
 	return texture
 
 
+static func is_valid_voxel_id(voxel_id : int) -> bool:
+	return voxel_id > 0
+
+
+static func is_valid_material_index(material_index : int) -> bool:
+	return material_index > 0
+
+
 ## Sets [member texture], calls on [method emit_changed] if in editor.
 func set_texture(new_texture : Texture2D) -> void:
 	texture = new_texture
@@ -265,6 +273,10 @@ func add_voxel(voxel : Voxel) -> int:
 ## VoxelSet.
 ## NOTE: Use this only if you really know what you are doing!
 func set_voxel(voxel_id : int, voxel : Voxel) -> void:
+	if not is_valid_voxel_id(voxel_id):
+		push_error("Invalid voxel id provided '%s'" % voxel_id)
+		return
+	
 	_voxels[voxel_id] = voxel
 
 
