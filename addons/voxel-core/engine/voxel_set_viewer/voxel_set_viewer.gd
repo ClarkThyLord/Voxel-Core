@@ -193,6 +193,11 @@ func update() -> void:
 		
 		var voxel_preview : Image = voxel_set.get_voxel_preview(voxel_id)
 		voxel_button.icon = ImageTexture.create_from_image(voxel_preview)
+		voxel_button.tooltip_text = ""
+		if voxel.name.is_empty():
+			voxel_button.tooltip_text = "ID: %s" % voxel_id
+		else:
+			voxel_button.tooltip_text = "%s\nID: %s" % [voxel.name, voxel_id]
 		
 		voxel_button.mouse_entered.connect(
 				Callable(_on_voxel_id_button_mouse_entered).bind(voxel_id))
