@@ -60,6 +60,20 @@ func update() -> void:
 # Private Methods
 func _on_sub_viewport_container_gui_input(event : InputEvent):
 	if event is InputEventMouseButton:
+		if event.double_click:
+			var camera_3d : Camera3D = %SubViewport.get_camera_3d()
+			var direct_space_state : PhysicsDirectSpaceState3D = \
+					%SubViewport.world_3d.direct_space_state
+			var from : Vector3 = camera_3d.project_ray_origin(event.position)
+			var normal : Vector3 = camera_3d.project_ray_normal(event.position)
+			var to : Vector3 = from + normal * 100
+			
+			print(from, " ", normal, " ", to)
+			
+			var ray_query : PhysicsRayQueryParameters3D = \
+					PhysicsRayQueryParameters3D.create(from, to)
+			print(direct_space_state.intersect_ray(ray_query))
+		
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_is_dragging = event.pressed
 	elif event is InputEventMouseMotion:
