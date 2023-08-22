@@ -105,16 +105,22 @@ func _on_remove_voxel_button_pressed():
 		voxel_set.remove_voxel(voxel_id)
 	
 	voxel_set.emit_changed()
+	
+	%VoxelSetViewer.unselect_all_voxel_ids()
 
 
 func _on_duplicate_voxel_button_pressed():
 	if not is_instance_valid(voxel_set):
 		return
 	
+	var duplicated_voxel_id : int = -1
 	for voxel_id in %VoxelSetViewer.get_selected_voxel_ids():
-		voxel_set.duplicate_voxel(voxel_id)
+		duplicated_voxel_id = voxel_set.duplicate_voxel(voxel_id)
 	
 	voxel_set.emit_changed()
+	
+	%VoxelSetViewer.unselect_all_voxel_ids()
+	%VoxelSetViewer.select_voxel_id(duplicated_voxel_id)
 
 
 func _on_voxel_set_viewer_selection_changed():

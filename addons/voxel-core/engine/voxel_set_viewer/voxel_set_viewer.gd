@@ -139,11 +139,11 @@ func unselect_voxel_id(voxel_id : int) -> void:
 	selection_changed.emit()
 
 
-func add_voxel() -> void:
+func add_voxel() -> int:
 	if not is_instance_valid(voxel_set):
-		return
+		return -1
 	
-	voxel_set.add_voxel(Voxel.new())
+	return voxel_set.add_voxel(Voxel.new())
 
 
 func remove_voxel(voxel_id : int) -> void:
@@ -155,13 +155,13 @@ func remove_voxel(voxel_id : int) -> void:
 	voxel_set.remove_voxel(voxel_id)
 
 
-func duplicate_voxel(voxel_id : int) -> void:
+func duplicate_voxel(voxel_id : int) -> int:
 	if not is_instance_valid(voxel_set):
-		return
+		return -1
 	elif not voxel_set.has_voxel_id(voxel_id):
-		return
+		return -1
 	
-	voxel_set.duplicate_voxel(voxel_id)
+	return voxel_set.duplicate_voxel(voxel_id)
 
 
 func update() -> void:
@@ -292,22 +292,32 @@ func _on_voxel_id_button_gui_input(event : InputEvent, voxel_id : int) -> void:
 func _on_context_menu_popup_id_pressed(id : int) -> void:
 	match id:
 		0: # Add
-			add_voxel()
+			var added_voxel_id = add_voxel()
 			voxel_set.emit_changed()
+			unselect_all_voxel_ids()
+			select_voxel_id(added_voxel_id)
 		1: # Remove
 			remove_voxel(_last_hovered_voxel_id)
 			voxel_set.emit_changed()
+			unselect_voxel_id(_last_hovered_voxel_id)
 		2: # Duplicate
-			duplicate_voxel(_last_hovered_voxel_id)
+			var duplicated_voxel_id = duplicate_voxel(_last_hovered_voxel_id)
 			voxel_set.emit_changed()
+			unselect_all_voxel_ids()
+			select_voxel_id(duplicated_voxel_id)
 		3: # Remove Selected
 			for voxel_id in _selected_voxel_ids:
 				remove_voxel(voxel_id)
 			voxel_set.emit_changed()
+			unselect_all_voxel_ids()
 		4: # Duplicate Selected
+			var duplicated_voxel_ids : Array[int] = []
 			for voxel_id in _selected_voxel_ids:
-				duplicate_voxel(voxel_id)
+				duplicated_voxel_ids.append(duplicate_voxel(voxel_id))
 			voxel_set.emit_changed()
+			unselect_all_voxel_ids()
+			for duplicated_voxel_id in duplicated_voxel_ids:
+				select_voxel_id(duplicated_voxel_id)
 
 
 func _on_context_menu_popup_hide() -> void:

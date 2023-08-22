@@ -69,7 +69,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, -0.125, -0.125)
 mesh = SubResource("ArrayMesh_llqp8")
 script = ExtResource("2_kt0ya")
 voxels = {
-Vector3i(0, 0, 0): 2
+Vector3i(0, 0, 0): 19
 }
 
 [node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Node3D/Voxel"]

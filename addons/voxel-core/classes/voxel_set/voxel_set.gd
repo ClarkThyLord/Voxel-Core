@@ -141,11 +141,11 @@ func _get_property_list():
 
 # Public Static Methods
 static func is_valid_voxel_id(voxel_id : int) -> bool:
-	return voxel_id > 0
+	return voxel_id >= 0
 
 
 static func is_valid_material_index(material_index : int) -> bool:
-	return material_index > 0
+	return material_index >= 0
 
 
 

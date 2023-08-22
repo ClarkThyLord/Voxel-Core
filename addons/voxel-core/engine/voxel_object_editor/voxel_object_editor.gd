@@ -559,6 +559,7 @@ func _on_editing_voxel_object_voxel_set_changed() -> void:
 		enable_editor()
 		show_voxel_set_editor()
 	else:
+		stop_editing()
 		disable_editor()
 		hide_voxel_set_editor()
 	
