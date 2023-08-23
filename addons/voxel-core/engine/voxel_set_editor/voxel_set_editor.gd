@@ -92,9 +92,12 @@ func _on_add_voxel_button_pressed():
 	
 	var voxel : Voxel = Voxel.new()
 	
-	voxel_set.add_voxel(voxel)
+	var added_voxel_id : int = voxel_set.add_voxel(voxel)
 	
 	voxel_set.emit_changed()
+	
+	%VoxelSetViewer.unselect_all_voxel_ids()
+	%VoxelSetViewer.select_voxel_id(added_voxel_id)
 
 
 func _on_remove_voxel_button_pressed():
