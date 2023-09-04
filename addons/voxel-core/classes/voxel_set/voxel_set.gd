@@ -170,6 +170,10 @@ func set_texture_atlas(new_texture_atlas : Texture2D) -> void:
 		emit_changed()
 
 
+func has_texture_atlas() -> bool:
+	return is_instance_valid(texture_atlas)
+
+
 ## Returns [member tile_size].
 func get_tile_size() -> Vector2i:
 	return tile_size

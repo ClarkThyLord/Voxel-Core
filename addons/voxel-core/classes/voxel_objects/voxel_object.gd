@@ -27,7 +27,7 @@ signal voxel_set_changed
 ## Algorithm used to generate voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
 @export
-var voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType = -1 :
+var voxel_mesh_type : VoxelSurfaceTool.MeshType = -1 :
 	get = get_voxel_mesh_type,
 	set = set_voxel_mesh_type
 
@@ -40,9 +40,9 @@ var voxel_size : float = 0.0 :
 ## Enabled will generate uv textured voxels; disabled will generate voxels 
 ## without uv texturing.
 @export
-var voxels_textured : bool = false :
-	get = get_voxels_textured,
-	set = set_voxels_textured
+var voxel_textured : bool = false :
+	get = get_voxel_textured,
+	set = set_voxel_textured
 
 ## VoxelSet used to generate voxel mesh.
 @export
@@ -54,13 +54,13 @@ var voxel_set : VoxelSet = null :
 
 # Public Methods
 ## Returns [member voxel_mesh_type].
-func get_voxel_mesh_type() -> VoxelSurfaceTool.VoxelMeshType:
+func get_voxel_mesh_type() -> VoxelSurfaceTool.MeshType:
 	return -1
 
 
 ## Sets [member voxel_mesh_type]; and, if in engine, calls on [method update].
 func set_voxel_mesh_type(
-		new_voxel_mesh_type : VoxelSurfaceTool.VoxelMeshType) -> void:
+		new_voxel_mesh_type : VoxelSurfaceTool.MeshType) -> void:
 	pass
 
 
@@ -74,13 +74,13 @@ func set_voxel_size(new_voxel_size : float) -> void:
 	pass
 
 
-## Returns [member voxels_textured].
-func get_voxels_textured() -> bool:
+## Returns [member voxel_textured].
+func get_voxel_textured() -> bool:
 	return false
 
 
-## Sets [member voxels_textured]; and, if in engine, calls on [method update].
-func set_voxels_textured(new_voxels_textured : bool) -> void:
+## Sets [member voxel_textured]; and, if in engine, calls on [method update].
+func set_voxel_textured(new_voxel_textured : bool) -> void:
 	pass
 
 
@@ -92,6 +92,10 @@ func get_voxel_set() -> VoxelSet:
 ## Sets [member voxel_set]; and, if in engine, calls on [method update].
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	pass
+
+
+func has_voxel_set() -> bool:
+	return false
 
 
 ## Returns the corresponding voxel id at the given [code]voxel_position[/code]. 

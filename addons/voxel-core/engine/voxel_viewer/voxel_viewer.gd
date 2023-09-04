@@ -3,7 +3,6 @@ extends Control
 ## Voxel Viewer Class
 
 
-
 # Public Variables
 @export_range(-1, 100, 1, "or_greater")
 var voxel_id : int = -1 :
@@ -46,8 +45,14 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	if Engine.is_editor_hint():
 		update()
 
+func has_voxel_set() -> bool:
+	return is_instance_valid(voxel_set)
+
 
 func update() -> void:
+	if not has_voxel_set():
+		return
+	
 	%Voxel.erase_voxels()
 	
 	if is_instance_valid(voxel_set) and voxel_set.has_voxel_id(voxel_id):
@@ -70,9 +75,11 @@ func _on_sub_viewport_container_gui_input(event : InputEvent):
 			
 			print(from, " ", normal, " ", to)
 			
-			var ray_query : PhysicsRayQueryParameters3D = \
-					PhysicsRayQueryParameters3D.create(from, to)
-			print(direct_space_state.intersect_ray(ray_query))
+			print(%Voxel.world_position_to_voxel_position(from))
+			print(%Voxel.raycast(
+					from,
+					normal,
+					10))
 		
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_is_dragging = event.pressed

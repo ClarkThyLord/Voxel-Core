@@ -188,9 +188,9 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(164, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_constants/icon_max_width = 32
 text = "New VoxelSet"
 icon = ExtResource("6_m72rv")
-expand_icon = true
 
 [node name="VoxelSetEditor" parent="." instance=ExtResource("6_ddj0d")]
 unique_name_in_owner = true
