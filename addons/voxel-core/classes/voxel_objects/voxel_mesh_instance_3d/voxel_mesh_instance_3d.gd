@@ -235,7 +235,7 @@ func has_voxel_set() -> bool:
 ## If no voxel id is found at given [code]voxel_position[/code], 
 ## returns [code]-1[/code].
 func get_voxel_id(voxel_position : Vector3i) -> int:
-	return _voxels.get(voxel_position) or -1
+	return _voxels.get(voxel_position, -1)
 
 
 ## Returns the corresponding [Voxel] from the assigned [member voxel_set], 

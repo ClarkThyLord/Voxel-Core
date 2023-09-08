@@ -23,8 +23,24 @@ var camera_environment : Environment = null :
 
 
 # Private Variables
+@onready
+var _highlights : Array[MeshInstance3D] = [
+	%RightHighlight,
+	%LeftHighlight,
+	%TopHighlight,
+	%BottomHighlight,
+	%FrontHighlight,
+	%BackHighlight
+]
+
 var _is_dragging : bool = false
 
+
+
+# Built-In Virtual Methods
+func _ready() -> void:
+	for highlight in _highlights:
+		highlight.visible = false
 
 
 # Public Methods
@@ -71,6 +87,31 @@ func update() -> void:
 
 
 # Private Methods
+func _get_highlight(voxel_face : Vector3i) -> MeshInstance3D:
+	match voxel_face:
+		Voxel.FACE_RIGHT:
+			return %RightHighlight
+		Voxel.FACE_LEFT:
+			return %LeftHighlight
+		Voxel.FACE_TOP:
+			return %TopHighlight
+		Voxel.FACE_BOTTOM:
+			return %BottomHighlight
+		Voxel.FACE_FRONT:
+			return %FrontHighlight
+		Voxel.FACE_BACK:
+			return %BackHighlight
+	return null
+
+
+func _show_highlight(voxel_face : Vector3i) -> void:
+	_get_highlight(voxel_face).visible = true
+
+
+func _hide_highlight(voxel_face : Vector3i) -> void:
+	_get_highlight(voxel_face).visible = false
+
+
 func _on_sub_viewport_container_gui_input(event : InputEvent):
 	if event is InputEventMouseButton:
 		if event.double_click:
@@ -83,11 +124,13 @@ func _on_sub_viewport_container_gui_input(event : InputEvent):
 			
 			print(from, " ", normal, " ", to)
 			
+			var hit : Dictionary = %Voxel.raycast(from, normal, 10)
+			
 			print(%Voxel.world_position_to_voxel_position(from))
-			print(%Voxel.raycast(
-					from,
-					normal,
-					10))
+			print(hit)
+			
+			if hit.has("hit_voxel_face"):
+				_show_highlight(hit["hit_voxel_face"])
 		
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_is_dragging = event.pressed

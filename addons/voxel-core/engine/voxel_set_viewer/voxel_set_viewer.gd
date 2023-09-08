@@ -197,7 +197,7 @@ func update() -> void:
 		if voxel.name.is_empty():
 			voxel_button.tooltip_text = "ID: %s" % voxel_id
 		else:
-			voxel_button.tooltip_text = "%s\nID: %s" % [voxel.name, voxel_id]
+			voxel_button.tooltip_text = "ID: %s\n%s" % [voxel_id, voxel.name]
 		
 		voxel_button.mouse_entered.connect(
 				Callable(_on_voxel_id_button_mouse_entered).bind(voxel_id))
