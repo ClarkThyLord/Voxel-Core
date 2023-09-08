@@ -4,23 +4,28 @@ extends Control
 
 
 # Public Variables
-@export_range(-1, 100, 1, "or_greater")
+@export_range(-1, INF, 1, "or_greater")
 var voxel_id : int = -1 :
 	set = set_voxel_id
 
 @export
 var voxel_set : VoxelSet = null :
-	get = get_voxel_set,
 	set = set_voxel_set
 
+@export_group("Camera")
 @export_range(1, 100, 1)
 var camera_sensitivity : int = 7
+
+@export
+var camera_environment : Environment = null :
+	set = set_camera_environment
 
 
 
 # Private Variables
 var _is_dragging : bool = false
- 
+
+
 
 # Public Methods
 func set_voxel_id(new_voxel_id : int) -> void:
@@ -28,11 +33,6 @@ func set_voxel_id(new_voxel_id : int) -> void:
 	
 	if Engine.is_editor_hint():
 		update()
-
-
-## Returns [member voxel_set].
-func get_voxel_set() -> VoxelSet:
-	return voxel_set
 
 
 ## Sets [member voxel_set]; and, if in engine, calls on [method update].
@@ -45,8 +45,16 @@ func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	if Engine.is_editor_hint():
 		update()
 
+
 func has_voxel_set() -> bool:
 	return is_instance_valid(voxel_set)
+
+
+func set_camera_environment(new_camera_environment : Environment) -> void:
+	camera_environment = new_camera_environment
+	
+	if is_instance_valid(%Camera3D):
+		%Camera3D.environment = camera_environment
 
 
 func update() -> void:
@@ -57,8 +65,8 @@ func update() -> void:
 	
 	if is_instance_valid(voxel_set) and voxel_set.has_voxel_id(voxel_id):
 		%Voxel.set_voxel(Vector3i.ZERO, voxel_id)
-		
-		%Voxel.update()
+	
+	%Voxel.update()
 
 
 

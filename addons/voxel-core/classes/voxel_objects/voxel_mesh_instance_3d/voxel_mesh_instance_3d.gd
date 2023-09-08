@@ -316,6 +316,9 @@ func update() -> void:
 		push_warning("Trying to update VoxelMeshInstance3D with no VoxelSet attached!")
 		mesh = null
 		return
+	elif not has_voxels():
+		mesh = null
+		return
 	
 	var voxel_surface_tool : VoxelSurfaceTool = VoxelSurfaceTool.new()
 	voxel_surface_tool.set_offset(-origin * voxel_size)
