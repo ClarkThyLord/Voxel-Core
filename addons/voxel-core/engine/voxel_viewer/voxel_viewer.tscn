@@ -73,7 +73,7 @@ shape = Vector3i(1, 1, 1)
 origin = Vector3(0.5, 0.5, 0.5)
 voxel_textured = true
 voxels = {
-Vector3i(0, 0, 0): 1
+Vector3i(0, 0, 0): 0
 }
 
 [node name="Highlights" type="Node3D" parent="SubViewportContainer/SubViewport/Node3D"]
@@ -81,6 +81,7 @@ Vector3i(0, 0, 0): 1
 [node name="RightHighlight" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/Highlights"]
 unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_1vfk4")
 mesh = SubResource("PlaneMesh_djkvu")
 skeleton = NodePath("../..")
@@ -88,12 +89,14 @@ skeleton = NodePath("../..")
 [node name="LeftHighlight" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/Highlights"]
 unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_1vfk4")
 mesh = SubResource("PlaneMesh_djkvu")
 skeleton = NodePath("../..")
 
 [node name="TopHighlight" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/Highlights"]
 unique_name_in_owner = true
+visible = false
 material_override = SubResource("StandardMaterial3D_1vfk4")
 mesh = SubResource("PlaneMesh_djkvu")
 skeleton = NodePath("../..")
@@ -101,6 +104,7 @@ skeleton = NodePath("../..")
 [node name="BottomHighlight" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/Highlights"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_1vfk4")
 mesh = SubResource("PlaneMesh_djkvu")
 skeleton = NodePath("../..")
@@ -108,6 +112,7 @@ skeleton = NodePath("../..")
 [node name="FrontHighlight" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/Highlights"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_1vfk4")
 mesh = SubResource("PlaneMesh_djkvu")
 skeleton = NodePath("../..")
@@ -115,6 +120,7 @@ skeleton = NodePath("../..")
 [node name="BackHighlight" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Node3D/Highlights"]
 unique_name_in_owner = true
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_1vfk4")
 mesh = SubResource("PlaneMesh_djkvu")
 skeleton = NodePath("../..")

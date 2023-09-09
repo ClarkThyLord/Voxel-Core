@@ -175,8 +175,8 @@ func add_edit_mode(edit_mode : EditMode) -> void:
 	var edit_mode_button : Button = Button.new()
 	edit_mode_button.toggle_mode = true
 	edit_mode_button.button_group = _edit_modes_button_group
-	edit_mode_button.add_theme_constant_override("icon_max_width", 24)
-	edit_mode_button.custom_minimum_size = Vector2(128, 32)
+	edit_mode_button.add_theme_constant_override("icon_max_width", 18)
+	edit_mode_button.custom_minimum_size = Vector2(96, 32)
 	
 	edit_mode_button.text = edit_mode.get_display_name()
 	edit_mode_button.icon = edit_mode.get_display_icon()
@@ -269,8 +269,8 @@ func add_edit_tool(edit_tool : EditTool) -> void:
 	var edit_tool_button : Button = Button.new()
 	edit_tool_button.toggle_mode = true
 	edit_tool_button.button_group = _edit_tools_button_group
-	edit_tool_button.add_theme_constant_override("icon_max_width", 24)
-	edit_tool_button.custom_minimum_size = Vector2(86, 32)
+	edit_tool_button.add_theme_constant_override("icon_max_width", 18)
+	edit_tool_button.custom_minimum_size = Vector2(96, 32)
 	
 	edit_tool_button.text = edit_tool.get_display_name()
 	edit_tool_button.icon = edit_tool.get_display_icon()
