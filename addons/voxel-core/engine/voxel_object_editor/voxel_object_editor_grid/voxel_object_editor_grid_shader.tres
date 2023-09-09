@@ -1,0 +1,72 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cu76r5wr234q"]
+
+[sub_resource type="Shader" id="Shader_6tlal"]
+code = "shader_type spatial;
+render_mode unshaded, cull_disabled;
+
+uniform vec4 color : source_color = vec4(1, 1, 1, 0);
+
+varying vec3 local_normal;
+
+varying vec3 world_normal;
+
+varying vec3 world_position;
+
+void vertex()
+{
+	local_normal = NORMAL;
+	world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 1.0)).xyz);
+	world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
+
+void fragment() {
+	vec3 _color = color.rgb;
+	
+	if (color.a < 1.0) {
+		if (local_normal.x > 0.9 || local_normal.x < -0.9) {
+			_color = vec3(0, 0, 1);
+		} else if (local_normal.y > 0.9 || local_normal.y < -0.9) {
+			_color = vec3(0, 1, 0);
+		} else if (local_normal.z > 0.9 || local_normal.z < -0.9) {
+			_color = vec3(1, 0, 0);
+		}
+	}
+	
+	ALBEDO = _color;
+	
+	float threshold = 0.7;
+	
+	if (world_normal.x < -threshold) {
+		if (world_position.x < CAMERA_POSITION_WORLD.x) {
+			discard;
+		}
+	} else if (world_normal.x > threshold) {
+		if (world_position.x > CAMERA_POSITION_WORLD.x) {
+			discard;
+		}
+	} else if (world_normal.y < -threshold) {
+		if (world_position.y < CAMERA_POSITION_WORLD.y) {
+			discard;
+		}
+	} else if (world_normal.y > threshold) {
+		if (world_position.y > CAMERA_POSITION_WORLD.y) {
+			discard;
+		}
+	} else if (world_normal.z < -threshold) {
+		if (world_position.z < CAMERA_POSITION_WORLD.z) {
+			discard;
+		}
+	} else if (world_normal.z > threshold) {
+		if (world_position.z > CAMERA_POSITION_WORLD.z) {
+			discard;
+		}
+	} else {
+		discard;
+	}
+}
+"
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_6tlal")
+shader_parameter/color = Color(1, 1, 1, 0)

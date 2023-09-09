@@ -1,6 +1,12 @@
 @tool
 extends MeshInstance3D
-## Class for VoxelObject Editor's Grid
+## VoxelObject Editor's Grid Class
+
+
+
+# Const
+const grid_shader : ShaderMaterial = \
+		preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_grid/voxel_object_editor_grid_shader.tres")
 
 
 
@@ -10,6 +16,11 @@ enum GridModes {
 	WIRED,
 }
 
+enum GridThemes {
+	AXIS,
+	CUSTOM_COLOR,
+}
+
 
 
 # Exported Variables
@@ -17,26 +28,26 @@ enum GridModes {
 var disabled : bool = false :
 	set = set_disabled
 
-@export_color_no_alpha
-var grid_color : Color = Color.WHITE :
-	set = set_grid_color
-
+@export_category("Grid")
 @export
 var grid_mode : GridModes = GridModes.WIRED :
 	set = set_grid_mode
 
 @export
-var grid_size : Vector3i = Vector3i(16, 0, 16) :
-	set = set_grid_size
+var grid_theme : GridThemes = GridThemes.AXIS :
+	set = set_grid_theme
 
-@export_range(0.01, 1.0, 0.01, "or_greater")
-var cell_size : float = 0.25 :
-	set = set_cell_size
+@export_color_no_alpha
+var grid_color : Color = Color.WHITE :
+	set = set_grid_color
 
+@export
+var grid_shape : Vector3i = Vector3i(32, 32, 32) :
+	set = set_grid_shape
 
-
-# Private Variables
-var _surface_tool := SurfaceTool.new()
+@export_range(0.01, 1, 0.01, "or_greater")
+var grid_cell_size : float = 0.25 :
+	set = set_grid_cell_size
 
 
 
@@ -47,162 +58,254 @@ func _ready() -> void:
 
 
 # Public Methods
-func set_disabled(new_value : bool) -> void:
-	disabled = new_value
+func set_disabled(new_disabled : bool) -> void:
+	disabled = new_disabled
+	
 	visible = not disabled
 	
-	if not disabled:
-		update()
+	update()
 
 
-func set_grid_color(new_value : Color) -> void:
-	grid_color = new_value
+func set_grid_mode(new_grid_mode : GridModes) -> void:
+	grid_mode = new_grid_mode
 	
-	if not disabled:
-		update()
+	update()
 
 
-func set_grid_mode(new_value : GridModes) -> void:
-	grid_mode = new_value
+func set_grid_theme(new_grid_theme : GridThemes) -> void:
+	grid_theme = new_grid_theme
 	
-	if not disabled:
-		update()
+	update()
 
 
-func set_grid_size(new_value : Vector3i) -> void:
-	grid_size = new_value.clamp(Vector3i.ONE, new_value.abs())
+
+func set_grid_color(new_grid_color : Color) -> void:
+	grid_color = new_grid_color
 	
-	if not disabled:
-		update()
+	update()
 
 
-func set_cell_size(new_value : float) -> void:
-	cell_size = new_value
+func set_grid_shape(new_grid_shape : Vector3i) -> void:
+	grid_shape = new_grid_shape.clamp(
+			Vector3i.ONE, new_grid_shape.abs())
 	
-	if not disabled:
-		update()
+	update()
+
+
+func set_grid_cell_size(new_grid_cell_size : float) -> void:
+	grid_cell_size = new_grid_cell_size
+	
+	update()
 
 
 func update() -> void:
-	_surface_tool.clear()
+	if disabled:
+		return
+	
+	var surface_tool : SurfaceTool = SurfaceTool.new()
 	
 	match grid_mode:
 		GridModes.SOLID:
-			_surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-			_surface_tool.set_normal(Vector3.UP)
+			surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 			
-			_surface_tool.add_vertex(
-				Vector3(0, 0, grid_size.z) * cell_size)
-			_surface_tool.add_vertex(
-				Vector3(0, 0, 0) * cell_size)
-			_surface_tool.add_vertex(
-				Vector3(grid_size.x, 0, grid_size.z) * cell_size)
-			_surface_tool.add_vertex(
-				Vector3(grid_size.x, 0, 0) * cell_size)
-			
-			_surface_tool.add_index(0)
-			_surface_tool.add_index(1)
-			_surface_tool.add_index(2)
-			_surface_tool.add_index(1)
-			_surface_tool.add_index(3)
-			_surface_tool.add_index(2)
-		GridModes.WIRED:
-			_surface_tool.begin(Mesh.PRIMITIVE_LINES)
-			
-			# TOP OF GRID
-			_surface_tool.set_normal(Vector3.DOWN)
-
-			for x in range(grid_size.x + 1):
-				_surface_tool.add_vertex(
-					Vector3(x, grid_size.y, 0) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(x, grid_size.y, grid_size.z) * cell_size)
-
-			for z in range(grid_size.z + 1):
-				_surface_tool.add_vertex(
-					Vector3(0, grid_size.y, z) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, grid_size.y, z) * cell_size)
-			
-			# BOTTOM OF GRID
-			_surface_tool.set_normal(Vector3.UP)
-
-			for x in range(grid_size.x + 1):
-				_surface_tool.add_vertex(
-					Vector3(x, 0, 0) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(x, 0, grid_size.z) * cell_size)
-
-			for z in range(grid_size.z + 1):
-				_surface_tool.add_vertex(
-					Vector3(0, 0, z) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, 0, z) * cell_size)
-			
-			# LEFT OF GRID
-			_surface_tool.set_normal(Vector3.RIGHT)
-
-			for y in range(grid_size.y + 1):
-				_surface_tool.add_vertex(
-					Vector3(0, y, 0) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(0, y, grid_size.z) * cell_size)
-
-			for z in range(grid_size.z + 1):
-				_surface_tool.add_vertex(
-					Vector3(0, 0, z) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(0, grid_size.y, z) * cell_size)
+			var index : int = 0
 			
 			# RIGHT OF GRID
-			_surface_tool.set_normal(Vector3.LEFT)
-
-			for y in range(grid_size.y + 1):
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, y, 0) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, y, grid_size.z) * cell_size)
-
-			for z in range(grid_size.z + 1):
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, 0, z) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, grid_size.y, z) * cell_size)
+			surface_tool.set_normal(Vector3.LEFT)
+			
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
+			
+			surface_tool.add_index(index + 0)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 2)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 3)
+			surface_tool.add_index(index + 2)
+			index += 4
+			
+			# LEFT OF GRID
+			surface_tool.set_normal(Vector3.RIGHT)
+			
+			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
+			
+			surface_tool.add_index(index + 0)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 2)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 3)
+			surface_tool.add_index(index + 2)
+			index += 4
+			
+			# TOP OF GRID
+			surface_tool.set_normal(Vector3.DOWN)
+			
+			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
+			
+			surface_tool.add_index(index + 0)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 2)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 3)
+			surface_tool.add_index(index + 2)
+			index += 4
+			
+			# BOTTOM OF GRID
+			surface_tool.set_normal(Vector3.UP)
+			
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
+			
+			surface_tool.add_index(index + 0)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 2)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 3)
+			surface_tool.add_index(index + 2)
+			index += 4
 			
 			# FRONT OF GRID
-			_surface_tool.set_normal(Vector3.BACK)
+			surface_tool.set_normal(Vector3.BACK)
+			
+			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
+			
+			surface_tool.add_index(index + 0)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 2)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 3)
+			surface_tool.add_index(index + 2)
+			index += 4
+			
+			# BACK OF GRID
+			surface_tool.set_normal(Vector3.FORWARD)
+			
+			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
+			
+			surface_tool.add_index(index + 0)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 2)
+			surface_tool.add_index(index + 1)
+			surface_tool.add_index(index + 3)
+			surface_tool.add_index(index + 2)
+			index += 4
+			
+			
+		GridModes.WIRED:
+			surface_tool.begin(Mesh.PRIMITIVE_LINES)
+			
+			# RIGHT OF GRID
+			surface_tool.set_normal(Vector3.LEFT)
 
-			for x in range(grid_size.x + 1):
-				_surface_tool.add_vertex(
-					Vector3(x, 0, 0) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(x, grid_size.y, 0) * cell_size)
+			for y in range(grid_shape.y + 1):
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, y, 0) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, y, grid_shape.z) * grid_cell_size)
 
-			for y in range(grid_size.y + 1):
-				_surface_tool.add_vertex(
-					Vector3(0, y, 0) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, y, 0) * cell_size)
+			for z in range(grid_shape.z + 1):
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, 0, z) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, grid_shape.y, z) * grid_cell_size)
+			
+			# LEFT OF GRID
+			surface_tool.set_normal(Vector3.RIGHT)
+
+			for y in range(grid_shape.y + 1):
+				surface_tool.add_vertex(
+					Vector3(0, y, 0) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(0, y, grid_shape.z) * grid_cell_size)
+
+			for z in range(grid_shape.z + 1):
+				surface_tool.add_vertex(
+					Vector3(0, 0, z) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(0, grid_shape.y, z) * grid_cell_size)
+			
+			# TOP OF GRID
+			surface_tool.set_normal(Vector3.DOWN)
+
+			for x in range(grid_shape.x + 1):
+				surface_tool.add_vertex(
+					Vector3(x, grid_shape.y, 0) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(x, grid_shape.y, grid_shape.z) * grid_cell_size)
+
+			for z in range(grid_shape.z + 1):
+				surface_tool.add_vertex(
+					Vector3(0, grid_shape.y, z) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, grid_shape.y, z) * grid_cell_size)
+			
+			# BOTTOM OF GRID
+			surface_tool.set_normal(Vector3.UP)
+
+			for x in range(grid_shape.x + 1):
+				surface_tool.add_vertex(
+					Vector3(x, 0, 0) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(x, 0, grid_shape.z) * grid_cell_size)
+
+			for z in range(grid_shape.z + 1):
+				surface_tool.add_vertex(
+					Vector3(0, 0, z) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, 0, z) * grid_cell_size)
 			
 			# FRONT OF GRID
-			_surface_tool.set_normal(Vector3.FORWARD)
+			surface_tool.set_normal(Vector3.BACK)
 
-			for x in range(grid_size.x + 1):
-				_surface_tool.add_vertex(
-					Vector3(x, 0, grid_size.z) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(x, grid_size.y, grid_size.z) * cell_size)
+			for x in range(grid_shape.x + 1):
+				surface_tool.add_vertex(
+					Vector3(x, 0, 0) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(x, grid_shape.y, 0) * grid_cell_size)
 
-			for y in range(grid_size.y + 1):
-				_surface_tool.add_vertex(
-					Vector3(0, y, grid_size.z) * cell_size)
-				_surface_tool.add_vertex(
-					Vector3(grid_size.x, y, grid_size.z) * cell_size)
+			for y in range(grid_shape.y + 1):
+				surface_tool.add_vertex(
+					Vector3(0, y, 0) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, y, 0) * grid_cell_size)
+			
+			# BACK OF GRID
+			surface_tool.set_normal(Vector3.FORWARD)
+
+			for x in range(grid_shape.x + 1):
+				surface_tool.add_vertex(
+					Vector3(x, 0, grid_shape.z) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(x, grid_shape.y, grid_shape.z) * grid_cell_size)
+
+			for y in range(grid_shape.y + 1):
+				surface_tool.add_vertex(
+					Vector3(0, y, grid_shape.z) * grid_cell_size)
+				surface_tool.add_vertex(
+					Vector3(grid_shape.x, y, grid_shape.z) * grid_cell_size)
 	
-	mesh = _surface_tool.commit()
+	mesh = surface_tool.commit()
 	
-	# TODO Custom color
-#	if not is_instance_valid(material_override):
-#		material_override = StandardMaterial3D.new()
-#	material_override.albedo_color = grid_color
-#	material_override.set_cull_mode(2)
+	if not is_instance_valid(material_override):
+		material_override = grid_shader
+	match grid_theme:
+		GridThemes.AXIS:
+			material_override.set_shader_parameter("color", Color.TRANSPARENT)
+		GridThemes.CUSTOM_COLOR:
+			material_override.set_shader_parameter("color", grid_color)
