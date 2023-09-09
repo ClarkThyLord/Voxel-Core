@@ -40,7 +40,13 @@ var _surface_tool := SurfaceTool.new()
 
 
 
-## Public Methods
+# Built-In Virtual Methods
+func _ready() -> void:
+	update()
+
+
+
+# Public Methods
 func set_disabled(new_value : bool) -> void:
 	disabled = new_value
 	visible = not disabled
@@ -64,7 +70,7 @@ func set_grid_mode(new_value : GridModes) -> void:
 
 
 func set_grid_size(new_value : Vector3i) -> void:
-	grid_size = new_value
+	grid_size = new_value.clamp(Vector3i.ONE, new_value.abs())
 	
 	if not disabled:
 		update()
@@ -102,23 +108,102 @@ func update() -> void:
 			_surface_tool.add_index(2)
 		GridModes.WIRED:
 			_surface_tool.begin(Mesh.PRIMITIVE_LINES)
-			_surface_tool.set_normal(Vector3.UP)
 			
+			# TOP OF GRID
+			_surface_tool.set_normal(Vector3.DOWN)
+
+			for x in range(grid_size.x + 1):
+				_surface_tool.add_vertex(
+					Vector3(x, grid_size.y, 0) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(x, grid_size.y, grid_size.z) * cell_size)
+
+			for z in range(grid_size.z + 1):
+				_surface_tool.add_vertex(
+					Vector3(0, grid_size.y, z) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, grid_size.y, z) * cell_size)
+			
+			# BOTTOM OF GRID
+			_surface_tool.set_normal(Vector3.UP)
+
 			for x in range(grid_size.x + 1):
 				_surface_tool.add_vertex(
 					Vector3(x, 0, 0) * cell_size)
 				_surface_tool.add_vertex(
 					Vector3(x, 0, grid_size.z) * cell_size)
-			
+
 			for z in range(grid_size.z + 1):
 				_surface_tool.add_vertex(
 					Vector3(0, 0, z) * cell_size)
 				_surface_tool.add_vertex(
 					Vector3(grid_size.x, 0, z) * cell_size)
+			
+			# LEFT OF GRID
+			_surface_tool.set_normal(Vector3.RIGHT)
+
+			for y in range(grid_size.y + 1):
+				_surface_tool.add_vertex(
+					Vector3(0, y, 0) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(0, y, grid_size.z) * cell_size)
+
+			for z in range(grid_size.z + 1):
+				_surface_tool.add_vertex(
+					Vector3(0, 0, z) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(0, grid_size.y, z) * cell_size)
+			
+			# RIGHT OF GRID
+			_surface_tool.set_normal(Vector3.LEFT)
+
+			for y in range(grid_size.y + 1):
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, y, 0) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, y, grid_size.z) * cell_size)
+
+			for z in range(grid_size.z + 1):
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, 0, z) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, grid_size.y, z) * cell_size)
+			
+			# FRONT OF GRID
+			_surface_tool.set_normal(Vector3.BACK)
+
+			for x in range(grid_size.x + 1):
+				_surface_tool.add_vertex(
+					Vector3(x, 0, 0) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(x, grid_size.y, 0) * cell_size)
+
+			for y in range(grid_size.y + 1):
+				_surface_tool.add_vertex(
+					Vector3(0, y, 0) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, y, 0) * cell_size)
+			
+			# FRONT OF GRID
+			_surface_tool.set_normal(Vector3.FORWARD)
+
+			for x in range(grid_size.x + 1):
+				_surface_tool.add_vertex(
+					Vector3(x, 0, grid_size.z) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(x, grid_size.y, grid_size.z) * cell_size)
+
+			for y in range(grid_size.y + 1):
+				_surface_tool.add_vertex(
+					Vector3(0, y, grid_size.z) * cell_size)
+				_surface_tool.add_vertex(
+					Vector3(grid_size.x, y, grid_size.z) * cell_size)
 	
 	mesh = _surface_tool.commit()
+	print(_surface_tool)
 	
-	if not is_instance_valid(material_override):
-		material_override = StandardMaterial3D.new()
-	material_override.albedo_color = grid_color
-	material_override.set_cull_mode(2)
+	# TODO Custom color
+#	if not is_instance_valid(material_override):
+#		material_override = StandardMaterial3D.new()
+#	material_override.albedo_color = grid_color
+#	material_override.set_cull_mode(2)
