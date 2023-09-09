@@ -200,7 +200,6 @@ func update() -> void:
 					Vector3(grid_size.x, y, grid_size.z) * cell_size)
 	
 	mesh = _surface_tool.commit()
-	print(_surface_tool)
 	
 	# TODO Custom color
 #	if not is_instance_valid(material_override):
