@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cu76r5wr234q"]
+
+[ext_resource type="Shader" path="res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_grid/voxel_object_editor_grid_shader.gdshader" id="1_wcawp"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_wcawp")
+shader_parameter/color = Color(1, 1, 1, 0)

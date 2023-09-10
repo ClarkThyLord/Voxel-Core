@@ -17,7 +17,7 @@ enum GridModes {
 }
 
 enum GridThemes {
-	AXIS,
+	AXES,
 	CUSTOM_COLOR,
 }
 
@@ -34,7 +34,7 @@ var grid_mode : GridModes = GridModes.WIRED :
 	set = set_grid_mode
 
 @export
-var grid_theme : GridThemes = GridThemes.AXIS :
+var grid_theme : GridThemes = GridThemes.AXES :
 	set = set_grid_theme
 
 @export_color_no_alpha
@@ -211,7 +211,7 @@ func update() -> void:
 			surface_tool.begin(Mesh.PRIMITIVE_LINES)
 			
 			# RIGHT OF GRID
-			surface_tool.set_normal(Vector3.LEFT)
+			surface_tool.set_normal(Vector3.RIGHT)
 
 			for y in range(grid_shape.y + 1):
 				surface_tool.add_vertex(
@@ -226,7 +226,7 @@ func update() -> void:
 					Vector3(grid_shape.x, grid_shape.y, z) * grid_cell_size)
 			
 			# LEFT OF GRID
-			surface_tool.set_normal(Vector3.RIGHT)
+			surface_tool.set_normal(Vector3.LEFT)
 
 			for y in range(grid_shape.y + 1):
 				surface_tool.add_vertex(
@@ -241,7 +241,7 @@ func update() -> void:
 					Vector3(0, grid_shape.y, z) * grid_cell_size)
 			
 			# TOP OF GRID
-			surface_tool.set_normal(Vector3.DOWN)
+			surface_tool.set_normal(Vector3.UP)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -256,7 +256,7 @@ func update() -> void:
 					Vector3(grid_shape.x, grid_shape.y, z) * grid_cell_size)
 			
 			# BOTTOM OF GRID
-			surface_tool.set_normal(Vector3.UP)
+			surface_tool.set_normal(Vector3.DOWN)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -271,7 +271,7 @@ func update() -> void:
 					Vector3(grid_shape.x, 0, z) * grid_cell_size)
 			
 			# FRONT OF GRID
-			surface_tool.set_normal(Vector3.BACK)
+			surface_tool.set_normal(Vector3.FORWARD)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -286,7 +286,7 @@ func update() -> void:
 					Vector3(grid_shape.x, y, 0) * grid_cell_size)
 			
 			# BACK OF GRID
-			surface_tool.set_normal(Vector3.FORWARD)
+			surface_tool.set_normal(Vector3.BACK)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -305,7 +305,7 @@ func update() -> void:
 	if not is_instance_valid(material_override):
 		material_override = grid_shader
 	match grid_theme:
-		GridThemes.AXIS:
+		GridThemes.AXES:
 			material_override.set_shader_parameter("color", Color.TRANSPARENT)
 		GridThemes.CUSTOM_COLOR:
 			material_override.set_shader_parameter("color", grid_color)
