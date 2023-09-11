@@ -6,7 +6,7 @@ extends MeshInstance3D
 
 # Const
 const grid_shader : ShaderMaterial = \
-		preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_grid/voxel_object_editor_grid_shader.tres")
+		preload("res://addons/voxel-core/engine/voxel_object_editor/voxel_object_editor_grid/voxel_object_editor_grid_shader_material.tres")
 
 
 
@@ -113,10 +113,10 @@ func update() -> void:
 			# RIGHT OF GRID
 			surface_tool.set_normal(Vector3.LEFT)
 			
-			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
-			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
 			
 			surface_tool.add_index(index + 0)
 			surface_tool.add_index(index + 1)
@@ -129,10 +129,10 @@ func update() -> void:
 			# LEFT OF GRID
 			surface_tool.set_normal(Vector3.RIGHT)
 			
-			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
-			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
 			
 			surface_tool.add_index(index + 0)
 			surface_tool.add_index(index + 1)
@@ -145,10 +145,10 @@ func update() -> void:
 			# TOP OF GRID
 			surface_tool.set_normal(Vector3.DOWN)
 			
-			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
-			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
 			
 			surface_tool.add_index(index + 0)
 			surface_tool.add_index(index + 1)
@@ -161,10 +161,10 @@ func update() -> void:
 			# BOTTOM OF GRID
 			surface_tool.set_normal(Vector3.UP)
 			
-			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
-			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
 			
 			surface_tool.add_index(index + 0)
 			surface_tool.add_index(index + 1)
@@ -177,10 +177,10 @@ func update() -> void:
 			# FRONT OF GRID
 			surface_tool.set_normal(Vector3.BACK)
 			
-			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.UP) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.ZERO) * grid_shape * grid_cell_size)
-			surface_tool.add_vertex((Vector3i.UP) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.RIGHT) * grid_shape * grid_cell_size)
 			
 			surface_tool.add_index(index + 0)
 			surface_tool.add_index(index + 1)
@@ -193,10 +193,10 @@ func update() -> void:
 			# BACK OF GRID
 			surface_tool.set_normal(Vector3.FORWARD)
 			
-			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.RIGHT + Vector3i.BACK) * grid_shape * grid_cell_size)
 			surface_tool.add_vertex((Vector3i.UP + Vector3i.BACK) * grid_shape * grid_cell_size)
-			surface_tool.add_vertex((Vector3i.BACK) * grid_shape * grid_cell_size)
+			surface_tool.add_vertex((Vector3i.ONE) * grid_shape * grid_cell_size)
 			
 			surface_tool.add_index(index + 0)
 			surface_tool.add_index(index + 1)
@@ -205,13 +205,11 @@ func update() -> void:
 			surface_tool.add_index(index + 3)
 			surface_tool.add_index(index + 2)
 			index += 4
-			
-			
 		GridModes.WIRED:
 			surface_tool.begin(Mesh.PRIMITIVE_LINES)
 			
 			# RIGHT OF GRID
-			surface_tool.set_normal(Vector3.RIGHT)
+			surface_tool.set_normal(Vector3.LEFT)
 
 			for y in range(grid_shape.y + 1):
 				surface_tool.add_vertex(
@@ -226,7 +224,7 @@ func update() -> void:
 					Vector3(grid_shape.x, grid_shape.y, z) * grid_cell_size)
 			
 			# LEFT OF GRID
-			surface_tool.set_normal(Vector3.LEFT)
+			surface_tool.set_normal(Vector3.RIGHT)
 
 			for y in range(grid_shape.y + 1):
 				surface_tool.add_vertex(
@@ -241,7 +239,7 @@ func update() -> void:
 					Vector3(0, grid_shape.y, z) * grid_cell_size)
 			
 			# TOP OF GRID
-			surface_tool.set_normal(Vector3.UP)
+			surface_tool.set_normal(Vector3.DOWN)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -256,7 +254,7 @@ func update() -> void:
 					Vector3(grid_shape.x, grid_shape.y, z) * grid_cell_size)
 			
 			# BOTTOM OF GRID
-			surface_tool.set_normal(Vector3.DOWN)
+			surface_tool.set_normal(Vector3.UP)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -271,7 +269,7 @@ func update() -> void:
 					Vector3(grid_shape.x, 0, z) * grid_cell_size)
 			
 			# FRONT OF GRID
-			surface_tool.set_normal(Vector3.FORWARD)
+			surface_tool.set_normal(Vector3.BACK)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(
@@ -286,7 +284,7 @@ func update() -> void:
 					Vector3(grid_shape.x, y, 0) * grid_cell_size)
 			
 			# BACK OF GRID
-			surface_tool.set_normal(Vector3.BACK)
+			surface_tool.set_normal(Vector3.FORWARD)
 
 			for x in range(grid_shape.x + 1):
 				surface_tool.add_vertex(

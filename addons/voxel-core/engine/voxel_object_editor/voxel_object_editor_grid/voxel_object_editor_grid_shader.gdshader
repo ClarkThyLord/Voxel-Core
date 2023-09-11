@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded, cull_disabled;
+render_mode unshaded;
 
 uniform vec4 color : source_color = vec4(1, 1, 1, 0);
 
@@ -12,32 +12,33 @@ void vertex() {
 
 void fragment() {
 	// Declare albedo color used for the fragment
-	vec3 albedo_color = color.rgb;
+	vec4 albedo_color = color;
 	
 	// Assign axis color if solid color isn't already set
 	if (color.a < 1.0) {
 		if (local_normal.x > 0.9 || local_normal.x < -0.9) {
-			albedo_color = vec3(0, 0, 1);
+			albedo_color = vec4(0, 0, 1, 1);
 		} else if (local_normal.y > 0.9 || local_normal.y < -0.9) {
-			albedo_color = vec3(0, 1, 0);
+			albedo_color = vec4(0, 1, 0, 1);
 		} else if (local_normal.z > 0.9 || local_normal.z < -0.9) {
-			albedo_color = vec3(1, 0, 0);
+			albedo_color = vec4(1, 0, 0, 1);
 		}
 	}
 	
 	// Calculate the vector from the camera to the fragment's position
 	vec3 to_camera = normalize(vec4(VIEW_MATRIX * vec4(CAMERA_POSITION_WORLD, 1)).xyz - VERTEX);
-	
+
 	// Calculate the view angle between the camera's view direction and the normal
 	float view_angle = dot(normalize(NORMAL), to_camera);
-	
+
 	// Set a threshold for visibility (e.g., 0.0 for completely invisible)
 	float visibility_threshold = 0.0;
-	
+
 	// Check if the line should be rendered
-	if (view_angle >= visibility_threshold) {
+	if (view_angle <= visibility_threshold) {
 		discard;
 	}
 	
-	ALBEDO = albedo_color;
+	ALBEDO = albedo_color.rgb;
+	ALPHA = albedo_color.a;
 }
