@@ -479,6 +479,13 @@ func handle_voxel_object(voxel_object) -> void:
 		hide_voxel_set_editor()
 	%VoxelSetEditor.set_voxel_set(_editing_voxel_object.voxel_set)
 	
+	_editing_voxel_object.origin_changed.connect(
+			_update_attached_grid)
+	_editing_voxel_object.shape_changed.connect(
+			_update_attached_grid)
+	_editing_voxel_object.voxel_size_changed.connect(
+			_update_attached_grid)
+	
 	_editing_voxel_object.voxel_set_changed.connect(
 		_on_editing_voxel_object_voxel_set_changed)
 
@@ -511,9 +518,20 @@ func consume_forward_3d_gui_input(
 func _attach_grid() -> void:
 	if not is_instance_valid(_grid):
 		_grid = Grid.new()
-		_grid.update()
 	
 	_editing_voxel_object.add_child(_grid)
+	
+	_update_attached_grid()
+
+
+func _update_attached_grid() -> void:
+	if not is_instance_valid(_grid):
+		return
+	
+	_grid.grid_shape = _editing_voxel_object.shape
+	_grid.grid_cell_size = _editing_voxel_object.voxel_size
+	
+	_grid.update()
 
 
 func _detach_grid() -> void:

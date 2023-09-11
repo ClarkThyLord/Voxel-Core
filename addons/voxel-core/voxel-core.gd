@@ -168,13 +168,12 @@ func _on_main_screen_changed(current_main_screen : String) -> void:
 
 
 func _on_voxel_object_editor_started_editing() -> void:
-	pass
 	get_editor_interface().get_selection().clear()
 
 
 func _on_voxel_object_editor_stopped_editing() -> void:
 	if not is_instance_valid(_current_handled_voxel_object):
 		return
-#	get_editor_interface().get_selection().add_node(
-#			_current_handled_voxel_object)
+	get_editor_interface().get_selection().add_node(
+			_current_handled_voxel_object)
 	get_editor_interface().edit_node(_current_handled_voxel_object)

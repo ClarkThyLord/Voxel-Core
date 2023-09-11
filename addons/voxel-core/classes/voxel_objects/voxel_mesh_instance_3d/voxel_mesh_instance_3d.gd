@@ -50,25 +50,43 @@ extends MeshInstance3D
 
 
 # Signals
+## Emited with [origin] changed.
+signal origin_changed
+
+## Emited with [shape] changed.
+signal shape_changed
+
+## Emited with [mesh_type] changed.
+signal mesh_type_changed
+
+## Emited with [voxel_size] changed.
+signal voxel_size_changed
+
+## Emited with [voxel_textured] changed.
+signal voxel_textured_changed
+
 ## Emited with [VoxelSet] changed.
 signal voxel_set_changed
+
+## Emited with every [update].
+signal updated
 
 
 
 # Exported Variables
-## Determines the size of the three-dimensional space in which the voxels can
-## be arranged. (width, height, depth)
-@export
-var shape : Vector3i = Vector3i(32, 32, 32) :
-	get = get_shape,
-	set = set_shape
-
 ## Defines the coordinates of the bottom-back-left corner of the 
 ## three-dimensional space.
 @export
 var origin : Vector3 = Vector3(0, 0, 0) :
 	get = get_origin,
 	set = set_origin
+
+## Determines the size of the three-dimensional space in which the voxels can
+## be arranged. (width, height, depth)
+@export
+var shape : Vector3i = Vector3i(32, 32, 32) :
+	get = get_shape,
+	set = set_shape
 
 ## Algorithm used to generate voxel mesh, refrence 
 ## [member VoxelSurfaceTool.MeshModes].
@@ -133,6 +151,22 @@ func _get_property_list():
 
 
 # Public Methods
+## Returns [member origin].
+func get_origin() -> Vector3:
+	return origin
+
+
+## Sets [member origin]; and, if in engine, calls on [method update].
+func set_origin(
+		new_origin : Vector3) -> void:
+	origin = new_origin.clamp(Vector3(0, 0, 0), Vector3(shape))
+	
+	if Engine.is_editor_hint():
+		update()
+	
+	origin_changed.emit()
+
+
 ## Returns [member shape].
 func get_shape() -> Vector3i:
 	return shape
@@ -149,27 +183,17 @@ func set_shape(
 		for y in range(min(shape.y, new_shape.y)):
 			for z in range(min(shape.z, new_shape.z)):
 				var voxel_position : Vector3i = Vector3i(x, y, z)
-				new_voxels[voxel_position] = get_voxel(voxel_position)
+				var voxel_id : int = get_voxel_id(voxel_position)
+				if voxel_id > -1:
+					new_voxels[voxel_position] = voxel_id
 	
 	shape = new_shape
 	_voxels = new_voxels
 	
 	if Engine.is_editor_hint():
 		update()
-
-
-## Returns [member origin].
-func get_origin() -> Vector3:
-	return origin
-
-
-## Sets [member origin]; and, if in engine, calls on [method update].
-func set_origin(
-		new_origin : Vector3) -> void:
-	origin = new_origin.clamp(Vector3(0, 0, 0), Vector3(shape))
 	
-	if Engine.is_editor_hint():
-		update()
+	shape_changed.emit()
 
 
 ## Returns [member mesh_type].
@@ -184,6 +208,8 @@ func set_mesh_type(
 	
 	if Engine.is_editor_hint():
 		update()
+	
+	mesh_type_changed.emit()
 
 
 ## Returns [member voxel_size].
@@ -197,6 +223,8 @@ func set_voxel_size(new_voxel_size : float) -> void:
 	
 	if Engine.is_editor_hint():
 		update()
+	
+	voxel_size_changed.emit()
 
 
 ## Returns [member voxel_textured].
@@ -210,6 +238,8 @@ func set_voxel_textured(new_voxel_textured : bool) -> void:
 	
 	if Engine.is_editor_hint():
 		update()
+	
+	voxel_textured_changed.emit()
 
 
 ## Returns [member voxel_set].
@@ -221,10 +251,10 @@ func get_voxel_set() -> VoxelSet:
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
 	
-	voxel_set_changed.emit()
-	
 	if Engine.is_editor_hint():
 		update()
+	
+	voxel_set_changed.emit()
 
 
 func has_voxel_set() -> bool:
@@ -324,6 +354,8 @@ func update() -> void:
 	voxel_surface_tool.set_offset(-origin * voxel_size)
 	voxel_surface_tool.create_from(self, mesh_type)
 	mesh = voxel_surface_tool.commit()
+	
+	updated.emit()
 
 
 func world_position_to_voxel_position(world_position : Vector3) -> Vector3i:
