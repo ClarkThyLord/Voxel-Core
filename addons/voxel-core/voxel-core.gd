@@ -88,6 +88,10 @@ func is_voxel_object_editor_shown() -> bool:
 	return is_instance_valid(_voxel_object_editor)
 
 
+func is_voxel_object_editor_editing() -> bool:
+	return is_voxel_object_editor_shown() and _voxel_object_editor.is_editing()
+
+
 func show_voxel_object_editor() -> void:
 	if not is_instance_valid(_voxel_object_editor):
 		_voxel_object_editor = _voxel_object_editor_scene.instantiate()
@@ -145,16 +149,35 @@ func _handle_state_change(
 	current_main_screen : String,
 	current_handled_voxel_object : Node,
 	current_handled_voxel_set : VoxelSet) -> void:
+	# If current main screen is 3D
 	if current_main_screen == "3D":
-		if not is_instance_valid(current_handled_voxel_object):
-			hide_voxel_object_editor()
-		elif (current_main_screen != _current_main_screen and is_instance_valid(current_handled_voxel_object))\
-				or current_handled_voxel_object != _current_handled_voxel_object:
+		# If we're handling a voxel object
+		if is_instance_valid(current_handled_voxel_object):
+			# If we switched main screen
+			if current_main_screen != _current_main_screen:
+				_set_current_handled_voxel_object(current_handled_voxel_object)
+				show_voxel_object_editor()
+			# If we switched handled voxel object update editor with it
+			elif current_handled_voxel_object != _current_handled_voxel_object:
+				_set_current_handled_voxel_object(current_handled_voxel_object)
+				show_voxel_object_editor()
+		# Otherwise we're not handling a voxel object hide editor
+		else:
 			_set_current_handled_voxel_object(current_handled_voxel_object)
-			show_voxel_object_editor()
+			hide_voxel_object_editor()
+		
+		# On any state change stop voxel object editor
+		if is_voxel_object_editor_editing():
+			_set_current_handled_voxel_object(current_handled_voxel_object)
+			_voxel_object_editor.stop_editing()
+	# If current main screen is not 3D hide editor
 	else:
+		if current_main_screen == "2D" and is_voxel_object_editor_editing():
+			current_handled_voxel_object = null
+		_set_current_handled_voxel_object(current_handled_voxel_object)
 		hide_voxel_object_editor()
 	
+	# Update internal state variables
 	_current_main_screen = current_main_screen
 	_set_current_handled_voxel_object(current_handled_voxel_object)
 	_current_handled_voxel_set = current_handled_voxel_set
