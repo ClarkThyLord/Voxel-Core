@@ -65,6 +65,7 @@ func _handles(object : Object) -> bool:
 			_current_main_screen, 
 			null, 
 			_current_handled_voxel_set)
+	
 	return false
 
 
@@ -114,6 +115,7 @@ func hide_voxel_object_editor() -> void:
 		_voxel_object_editor.stop_editing()
 		remove_control_from_bottom_panel(_voxel_object_editor)
 		_voxel_object_editor.queue_free()
+		_voxel_object_editor = null
 
 
 func toggle_voxel_object_editor() -> void:
@@ -136,6 +138,13 @@ func _set_current_handled_voxel_object(
 	if is_instance_valid(_current_handled_voxel_object):
 		_current_handled_voxel_object.connect(
 				"tree_exiting", _on_current_handled_voxel_object_tree_exiting)
+
+
+func _on_main_screen_changed(current_main_screen : String) -> void:
+	_handle_state_change(
+			current_main_screen, 
+			_current_handled_voxel_object, 
+			_current_handled_voxel_set)
 
 
 func _on_current_handled_voxel_object_tree_exiting() -> void:
@@ -172,8 +181,6 @@ func _handle_state_change(
 			_voxel_object_editor.stop_editing()
 	# If current main screen is not 3D hide editor
 	else:
-		if current_main_screen == "2D" and is_voxel_object_editor_editing():
-			current_handled_voxel_object = null
 		_set_current_handled_voxel_object(current_handled_voxel_object)
 		hide_voxel_object_editor()
 	
@@ -181,13 +188,9 @@ func _handle_state_change(
 	_current_main_screen = current_main_screen
 	_set_current_handled_voxel_object(current_handled_voxel_object)
 	_current_handled_voxel_set = current_handled_voxel_set
-
-
-func _on_main_screen_changed(current_main_screen : String) -> void:
-	_handle_state_change(
-			current_main_screen, 
-			_current_handled_voxel_object, 
-			_current_handled_voxel_set)
+	
+	# Enforce main screen editor
+	get_editor_interface().set_main_screen_editor(_current_main_screen)
 
 
 func _on_voxel_object_editor_started_editing() -> void:
@@ -197,6 +200,9 @@ func _on_voxel_object_editor_started_editing() -> void:
 func _on_voxel_object_editor_stopped_editing() -> void:
 	if not is_instance_valid(_current_handled_voxel_object):
 		return
+	elif len(get_editor_interface().get_selection().get_selected_nodes()) > 0:
+		return
+	
+	get_editor_interface().edit_node(_current_handled_voxel_object)
 	get_editor_interface().get_selection().add_node(
 			_current_handled_voxel_object)
-	get_editor_interface().edit_node(_current_handled_voxel_object)
