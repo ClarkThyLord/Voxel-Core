@@ -479,15 +479,16 @@ func handle_voxel_object(voxel_object) -> void:
 		hide_voxel_set_editor()
 	%VoxelSetEditor.set_voxel_set(_editing_voxel_object.voxel_set)
 	
-	_editing_voxel_object.origin_changed.connect(
-			_update_attached_grid)
-	_editing_voxel_object.shape_changed.connect(
-			_update_attached_grid)
-	_editing_voxel_object.voxel_size_changed.connect(
-			_update_attached_grid)
+	if not _editing_voxel_object.origin_changed.is_connected(_update_attached_grid):
+		_editing_voxel_object.origin_changed.connect(_update_attached_grid)
+	if not _editing_voxel_object.shape_changed.is_connected(_update_attached_grid):
+		_editing_voxel_object.shape_changed.connect(_update_attached_grid)
+	if not _editing_voxel_object.voxel_size_changed.is_connected(_update_attached_grid):
+		_editing_voxel_object.voxel_size_changed.connect(_update_attached_grid)
 	
-	_editing_voxel_object.voxel_set_changed.connect(
-		_on_editing_voxel_object_voxel_set_changed)
+	if not _editing_voxel_object.voxel_set_changed.is_connected(_on_editing_voxel_object_voxel_set_changed):
+		_editing_voxel_object.voxel_set_changed.connect(
+			_on_editing_voxel_object_voxel_set_changed)
 
 
 func release_editing_voxel_object() -> void:
@@ -496,13 +497,21 @@ func release_editing_voxel_object() -> void:
 	
 	stop_editing()
 	
+	if _editing_voxel_object.origin_changed.is_connected(_update_attached_grid):
+		_editing_voxel_object.origin_changed.disconnect(_update_attached_grid)
+	if _editing_voxel_object.shape_changed.is_connected(_update_attached_grid):
+		_editing_voxel_object.shape_changed.disconnect(_update_attached_grid)
+	if _editing_voxel_object.voxel_size_changed.is_connected(_update_attached_grid):
+		_editing_voxel_object.voxel_size_changed.disconnect(_update_attached_grid)
+	
 	if _editing_voxel_object.voxel_set_changed.is_connected(
 			_on_editing_voxel_object_voxel_set_changed):
 		_editing_voxel_object.voxel_set_changed.disconnect(
 			_on_editing_voxel_object_voxel_set_changed)
+	
 
 
-func consume_forward_3d_gui_input(
+func consume_3d_gui_input(
 		camera : Camera3D, event : InputEvent) -> bool:
 	if not is_editing():
 		return false
@@ -544,6 +553,13 @@ func _edit_mode_toggled(button_pressed : bool, edit_mode_name : String) -> void:
 		activate_edit_mode(edit_mode_name)
 	else:
 		deactivate_edit_mode(edit_mode_name)
+
+
+func _on_update_button_pressed():
+	if not is_instance_valid(_editing_voxel_object):
+		return
+	
+	_editing_voxel_object.update()
 
 
 func _edit_tool_toggled(button_pressed : bool, edit_tool_name : String) -> void:

@@ -161,7 +161,7 @@ func set_origin(
 		new_origin : Vector3) -> void:
 	origin = new_origin.clamp(Vector3(0, 0, 0), Vector3(shape))
 	
-	if Engine.is_editor_hint():
+	if is_node_ready() and Engine.is_editor_hint():
 		update()
 	
 	origin_changed.emit()
@@ -190,7 +190,7 @@ func set_shape(
 	shape = new_shape
 	_voxels = new_voxels
 	
-	if Engine.is_editor_hint():
+	if is_node_ready() and Engine.is_editor_hint():
 		update()
 	
 	shape_changed.emit()
@@ -206,7 +206,7 @@ func set_mesh_type(
 		new_mesh_type : VoxelSurfaceTool.MeshType) -> void:
 	mesh_type = new_mesh_type
 	
-	if Engine.is_editor_hint():
+	if is_node_ready() and Engine.is_editor_hint():
 		update()
 	
 	mesh_type_changed.emit()
@@ -221,7 +221,7 @@ func get_voxel_size() -> float:
 func set_voxel_size(new_voxel_size : float) -> void:
 	voxel_size = new_voxel_size
 	
-	if Engine.is_editor_hint():
+	if is_node_ready() and Engine.is_editor_hint():
 		update()
 	
 	voxel_size_changed.emit()
@@ -236,7 +236,7 @@ func get_voxel_textured() -> bool:
 func set_voxel_textured(new_voxel_textured : bool) -> void:
 	voxel_textured = new_voxel_textured
 	
-	if Engine.is_editor_hint():
+	if is_node_ready() and Engine.is_editor_hint():
 		update()
 	
 	voxel_textured_changed.emit()
@@ -251,7 +251,7 @@ func get_voxel_set() -> VoxelSet:
 func set_voxel_set(new_voxel_set : VoxelSet) -> void:
 	voxel_set = new_voxel_set
 	
-	if Engine.is_editor_hint():
+	if is_node_ready() and Engine.is_editor_hint():
 		update()
 	
 	voxel_set_changed.emit()

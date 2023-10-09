@@ -44,20 +44,25 @@ func can_mirror_z() -> bool:
 
 
 func loaded(button : Button) -> void:
-	print_debug("LOADED EDIT TOOL \"%s\"" % get_name())
+	pass
+	# print_debug("LOADED EDIT TOOL \"%s\"" % get_name())
 
 
 func unloaded() -> void:
-	print_debug("UNLOADED EDIT TOOL \"%s\"" % get_name())
+	pass
+	# print_debug("UNLOADED EDIT TOOL \"%s\"" % get_name())
 
 
 func activate() -> void:
-	print_debug("ACTIVATED EDIT TOOL \"%s\"" % get_name())
+	pass
+	# print_debug("ACTIVATED EDIT TOOL \"%s\"" % get_name())
 
 
 func use() -> void:
-	print_debug("USED EDIT TOOL \"%s\"" % get_name())
+	pass
+	# print_debug("USED EDIT TOOL \"%s\"" % get_name())
 
 
 func deactivate() -> void:
-	print_debug("DEACTIVATED EDIT TOOL \"%s\"" % get_name())
+	pass
+	# print_debug("DEACTIVATED EDIT TOOL \"%s\"" % get_name())

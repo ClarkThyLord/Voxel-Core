@@ -54,6 +54,12 @@ layout_mode = 2
 shortcut = SubResource("Shortcut_v2imf")
 text = "Editing"
 
+[node name="UpdateButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Update"
+flat = true
+
 [node name="EditMenuButton" type="MenuButton" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
@@ -199,6 +205,7 @@ visible = false
 layout_mode = 2
 
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/EditingCheckBox" to="." method="_on_editing_check_box_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/UpdateButton" to="." method="_on_update_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/XMirrorModeButton" to="." method="_on_x_mirror_mode_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/YMirrorModeButton" to="." method="_on_y_mirror_mode_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/MirrorModes/ZMirrorModeButton" to="." method="_on_z_mirror_mode_button_pressed"]

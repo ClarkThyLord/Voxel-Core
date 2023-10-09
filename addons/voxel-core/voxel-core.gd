@@ -73,7 +73,7 @@ func _forward_3d_gui_input(camera : Camera3D, event : InputEvent) -> int:
 	if not is_instance_valid(_voxel_object_editor):
 		return AFTER_GUI_INPUT_PASS
 	
-	if _voxel_object_editor.consume_forward_3d_gui_input(camera, event):
+	if _voxel_object_editor.consume_3d_gui_input(camera, event):
 		return AFTER_GUI_INPUT_STOP
 	else:
 		return AFTER_GUI_INPUT_PASS
