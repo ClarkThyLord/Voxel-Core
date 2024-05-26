@@ -541,6 +541,8 @@ func _update_attached_grid() -> void:
 	_grid.grid_cell_size = _editing_voxel_object.voxel_size
 	
 	_grid.update()
+	
+	_grid.position = -_editing_voxel_object.origin * _editing_voxel_object.voxel_size
 
 
 func _detach_grid() -> void:
