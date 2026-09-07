@@ -33,6 +33,12 @@
 # About
 Voxel-Core is a voxel plugin for the [Godot](https://github.com/godotengine/godot) game engine made with GDScript, created as the ‘core’ for my other project [Voxly](https://github.com/ClarkThyLord/Voxly), offering various voxel features, utilities and fully fledged in-engine editors.
 
+# NOTE
+This plugin is functional for Godot 3; however, any future support / updates are unlikely.
+If you're looking to work with voxels with Godot 4 then please take a look at my new voxel plugin: [Voxly-Core](https://github.com/ClarkThyLord/voxly-core)
+While plugins are not cross-compatible, Voxly-Core offers everything Voxel-Core does and more!
+
+
 ## Why Voxel-Core?
 - Create, import and edit voxel content in-engine and in-game
 - Runs anywhere Godot does (e.g. desktop, web, mobile, etc.)
